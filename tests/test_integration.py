@@ -1,0 +1,231 @@
+# tests/test_integration.py
+"""
+Integration tests for pyradtran with actual libradtran installation.
+
+These tests verify that pyradtran can properly interact with a real 
+libradtran (uvspec) installation and produce valid results.
+"""
+
+import os
+import tempfile
+import pytest
+import numpy as np
+import pandas as pd
+import xarray as xr
+from pathlib import Path
+from datetime import datetime
+
+from pyradtran.config import (
+    PathsConfig, 
+    SimulationDefaults,
+    SimulationConfig,
+    load_config
+)
+from pyradtran.core import Simulation
+from pyradtran.io import parse_uvspec_output
+from pyradtran.interface import run_pyradtran_simulation
+
+# --- Test Configuration ---
+
+# Use the actual paths from the user's environment
+LIBRADTRAN_DATA_PATH = '/opt/libradtran/2.0.4/share/libRadtran/data'
+LIBRADTRAN_EXEC_PATH = '/opt/libradtran/2.0.4/bin/uvspec'
+ATMOSPHERE_FILE = '/projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat'
+SOLAR_SPECTRUM_FILE = '/projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat'
+RADIOSONDE_BASE_PATH = '/projekt_agmwend/data/HALO-AC3/01_soundings/RS_for_libradtran/Dropsondes_HALO/'
+
+# Skip tests if LibRadtran is not installed
+def has_libradtran():
+    """Check if LibRadtran executable exists"""
+    return os.path.isfile(LIBRADTRAN_EXEC_PATH) and os.path.isdir(LIBRADTRAN_DATA_PATH)
+
+# --- Fixtures ---
+
+@pytest.fixture
+def integration_config():
+    """Create a config using actual LibRadtran paths for testing"""
+    return SimulationConfig(
+        paths=PathsConfig(
+            libradtran_bin=Path(LIBRADTRAN_EXEC_PATH),
+            libradtran_data=Path(LIBRADTRAN_DATA_PATH),
+            atmosphere_profile=Path(ATMOSPHERE_FILE),
+            solar_spectrum=Path(SOLAR_SPECTRUM_FILE),
+            radiosonde_base=Path(RADIOSONDE_BASE_PATH),
+            output_dir=Path(tempfile.gettempdir()),
+            working_dir=Path(tempfile.gettempdir())
+        ),
+        simulation_defaults=SimulationDefaults(
+            rte_solver='disort',
+            mol_abs_param='reptran medium',
+            wavelength_nm=[400, 700],  # Visible range
+            output_columns=['sza', 'eglo', 'eup', 'albedo'],
+            output_altitudes_km=[0.0],
+            albedo_type='const',
+            albedo_value=0.3,
+        ),
+    )
+
+@pytest.fixture
+def test_dataset():
+    """Create a test dataset with a single time point"""
+    # Single time point
+    time = pd.to_datetime(['2025-05-05 12:00:00'])
+    lat = np.array([75.0])  # Arctic
+    lon = np.array([0.0])   # Prime meridian
+    
+    # Create dataset
+    ds = xr.Dataset(
+        coords={
+            'time': time,
+            'latitude': ('time', lat),
+            'longitude': ('time', lon)
+        }
+    )
+    return ds
+
+# --- Integration Tests ---
+
+@pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
+def test_simulation_initialization(integration_config):
+    """Test that a Simulation can be initialized with the actual LibRadtran paths"""
+    
+    sim = Simulation(integration_config)
+    
+    # Verify paths were set correctly
+    assert str(sim.config.paths.libradtran_bin) == LIBRADTRAN_EXEC_PATH
+    assert str(sim.config.paths.libradtran_data) == LIBRADTRAN_DATA_PATH
+    assert str(sim.config.paths.atmosphere_profile) == ATMOSPHERE_FILE
+    assert str(sim.config.paths.solar_spectrum) == SOLAR_SPECTRUM_FILE
+
+@pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
+def test_simple_simulation_run(integration_config):
+    """Test running a simple simulation with LibRadtran"""
+    
+    # Create a simulation instance
+    sim = Simulation(integration_config)
+    
+    # Generate input content
+    dt = datetime(2025, 5, 5, 12, 0, 0)  # Noon on May 5, 2025
+    lat = 75.0  # Arctic
+    lon = 0.0   # Prime meridian
+    
+    # Run the simulation
+    try:
+        output_file = sim.run(
+            datetime=dt,
+            latitude=lat,
+            longitude=lon,
+            radiosonde_path=None  # No radiosonde for this simple test
+        )
+        
+        # Verify output file exists
+        assert output_file.exists(), f"Output file {output_file} does not exist"
+        
+        # Parse the output
+        parsed_output = parse_uvspec_output(output_file, integration_config)
+        
+        # Verify output contains expected columns
+        for column in integration_config.simulation_defaults.output_columns:
+            assert column in parsed_output, f"Column {column} missing from output"
+        
+        # Verify SZA is reasonable (not NaN)
+        assert not np.isnan(parsed_output['sza'][0]), "SZA is NaN"
+        
+        # Verify irradiance is reasonable (positive value)
+        assert parsed_output['eglo'][0] > 0, "Global irradiance should be positive"
+        
+    finally:
+        # Clean up temporary files
+        sim._cleanup_temp_files()
+
+@pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
+def test_xarray_integration(integration_config, test_dataset):
+    """Test xarray integration with PyRadtran"""
+    
+    # Get a temporary output path
+    with tempfile.NamedTemporaryFile(suffix='.nc', delete=False) as tmp:
+        output_path = Path(tmp.name)
+    
+    try:
+        # Run simulation using xarray accessor (this will register the accessor)
+        import pyradtran  # Import to register accessor
+        
+        # Run with the accessor
+        result = test_dataset.pyradtran.run_uvspec(
+            config=integration_config,  # Pass config directly
+            output_path=output_path,
+            return_dataset=True
+        )
+        
+        # Verify result is an xarray Dataset
+        assert isinstance(result, xr.Dataset), "Result should be an xarray Dataset"
+        
+        # Verify it contains the expected variables
+        for column in integration_config.simulation_defaults.output_columns:
+            assert column in result, f"Variable {column} missing from result"
+        
+        # Verify data values are reasonable
+        assert not np.isnan(result.sza.values).any(), "SZA contains NaN values"
+        assert (result.eglo.values > 0).all(), "Global irradiance should be positive"
+        
+        # Verify output file was created
+        assert output_path.exists(), f"Output file {output_path} was not created"
+        
+    finally:
+        # Clean up
+        if output_path.exists():
+            os.unlink(output_path)
+
+@pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
+def test_disort_vs_twostr_comparison(integration_config):
+    """Test comparing disort and twostr radiative transfer solvers"""
+    
+    # Create dataset with single point
+    time = pd.to_datetime(['2025-05-05 12:00:00'])
+    lat = np.array([75.0])  # Arctic
+    lon = np.array([0.0])   # Prime meridian
+    
+    ds = xr.Dataset(
+        coords={
+            'time': time,
+            'latitude': ('time', lat),
+            'longitude': ('time', lon)
+        }
+    )
+    
+    # Run with disort (already set in config)
+    disort_result = ds.pyradtran.run_uvspec(
+        config=integration_config,
+        return_dataset=True,
+        save_to_file=False
+    )
+    
+    # Update config to use twostr
+    twostr_config = integration_config
+    twostr_config.simulation_defaults.rte_solver = 'twostr'
+    
+    # Run with twostr
+    twostr_result = ds.pyradtran.run_uvspec(
+        config=twostr_config,
+        return_dataset=True,
+        save_to_file=False
+    )
+    
+    # Verify both have expected columns
+    for column in integration_config.simulation_defaults.output_columns:
+        assert column in disort_result, f"Column {column} missing from disort result"
+        assert column in twostr_result, f"Column {column} missing from twostr result"
+    
+    # Verify SZA is the same (should be identical for same time/location)
+    np.testing.assert_allclose(
+        disort_result.sza.values, 
+        twostr_result.sza.values, 
+        rtol=1e-5, 
+        err_msg="SZA should be identical between solvers"
+    )
+    
+    # Verify irradiance differences are within reasonable bounds
+    # twostr is typically less accurate than disort but faster
+    # Differences should not exceed 10%
+    eglo_diff_pct = abs(disort_result.eglo.values - twostr_result.eglo.values) / disort_result.eglo.values * 100
+    assert eglo_diff_pct.max() < 10, "Irradiance difference between solvers exceeds 10%"
