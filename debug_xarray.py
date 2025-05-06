@@ -70,7 +70,7 @@ def create_sea_ice_config():
             rte_solver='disort',
             mol_abs_param='lowtran per_nm',
             wavelength_nm=[400, 3600],
-            output_columns=['sza', 'edir', 'eglo', 'edn', 'eup', 'enet', 'esum', 'albedo'],
+            output_columns=['zout', 'sza', 'edir', 'eglo', 'edn', 'eup', 'enet', 'esum', 'albedo'],
             output_altitudes_km=[0.0],
             
             # Surface properties
