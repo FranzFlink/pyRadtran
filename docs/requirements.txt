@@ -1,0 +1,6 @@
+sphinx>=7.0
+sphinx_rtd_theme
+sphinx-autoapi
+nbsphinx
+ipykernel # Required by nbsphinx to execute notebooks
+myst-parser
