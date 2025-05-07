@@ -113,6 +113,7 @@ def execute_simulation_batch(
     time_var: str = 'time',
     lat_var: str = 'latitude',
     lon_var: str = 'longitude',
+    albedo_var: Optional[str] = None,
     progress_callback: Optional[Callable[[int, int], None]] = None
 ) -> Dict[str, Any]:
     """
@@ -124,6 +125,7 @@ def execute_simulation_batch(
         time_var: Name of time dimension/coordinate in the dataset
         lat_var: Name of latitude dimension/coordinate in the dataset
         lon_var: Name of longitude dimension/coordinate in the dataset
+        albedo_var: Optional name of albedo data_var in the dataset
         progress_callback: Optional callback function(current, total) for progress updates
         
     Returns:
@@ -137,7 +139,10 @@ def execute_simulation_batch(
     
     # Extract coordinates
     times = input_ds[time_var].values
-    
+    albedos = None
+    if albedo_var and albedo_var in input_ds:
+        albedos = input_ds[albedo_var].values
+
     # Handle different dataset structures
     if lat_var in input_ds.dims:
         # Lat/lon are dimensions
@@ -148,13 +153,14 @@ def execute_simulation_batch(
         for t in times:
             for lat in latitudes:
                 for lon in longitudes:
-                    points.append((t, lat, lon))
+                    points.append((t, lat, lon, None))
     else:
         # Lat/lon are per timestamp (coordinates)
         points = [
             (t, input_ds[lat_var].sel({time_var: t}).item(), 
-             input_ds[lon_var].sel({time_var: t}).item())
-            for t in times
+             input_ds[lon_var].sel({time_var: t}).item(),
+             albedos[i] if albedos is not None and i < len(albedos) else None)
+            for i, t in enumerate(times)
         ]
     
     # Important: We're not creating separate simulation points for each altitude level,
@@ -180,8 +186,8 @@ def execute_simulation_batch(
         # Submit all tasks
         future_to_point = {
             executor.submit(
-                _run_single_simulation, runner, t, lat, lon
-            ): (t, lat, lon) for t, lat, lon in points
+                _run_single_simulation, runner, t, lat, lon, alb
+            ): (t, lat, lon) for t, lat, lon, alb in points
         }
         
         # Process results as they complete
@@ -251,7 +257,8 @@ def _run_single_simulation(
     runner: Simulation,
     dt: np.datetime64,
     latitude: float,
-    longitude: float
+    longitude: float,
+    albedo: Optional[float] = None
 ) -> Optional[Dict[str, Any]]:
     """
     Run a single simulation using the Simulation object (used by execute_simulation_batch).
@@ -262,7 +269,7 @@ def _run_single_simulation(
         py_dt = pd.to_datetime(dt).to_pydatetime()
         
         # Run uvspec
-        output_file = runner.run(py_dt, latitude, longitude)
+        output_file = runner.run(py_dt, latitude, longitude, override_albedo=albedo)
         if output_file and output_file.exists():
             # Parse output
             result = parse_uvspec_output(output_file, runner.config)
@@ -303,6 +310,7 @@ class PyRadtranAccessor:
         time_var: str = 'time',
         lat_var: str = 'latitude',
         lon_var: str = 'longitude',
+        albedo_var: Optional[str] = None,
         return_dataset: bool = True,
         save_to_file: bool = True,
         progress_callback: Optional[Callable[[int, int], None]] = None
@@ -317,6 +325,7 @@ class PyRadtranAccessor:
             time_var: Name of time dimension/coordinate in the dataset
             lat_var: Name of latitude dimension/coordinate in the dataset
             lon_var: Name of longitude dimension/coordinate in the dataset
+            albedo_var: Optional name of albedo data_var in the dataset
             return_dataset: If True, return the results as an xarray Dataset
             save_to_file: If True, save results to a NetCDF file
             progress_callback: Optional callback function(current, total) for progress updates
@@ -352,6 +361,10 @@ class PyRadtranAccessor:
         if lon_var not in self._obj.dims and lon_var not in self._obj.coords and lon_var not in self._obj.data_vars:
             raise PyRadtranError(f"Longitude variable '{lon_var}' not found in dataset")
         
+        # Validate albedo variable if provided
+        if albedo_var and albedo_var not in self._obj.data_vars:
+            raise PyRadtranError(f"Albedo variable '{albedo_var}' not found in dataset data_vars")
+
         # Check if we have altitude information in the input dataset - if so, override config
         alt_var = 'altitude'
         if alt_var in self._obj.dims or alt_var in self._obj.coords:
@@ -383,6 +396,7 @@ class PyRadtranAccessor:
             time_var=time_var,
             lat_var=lat_var,
             lon_var=lon_var,
+            albedo_var=albedo_var,
             progress_callback=progress_callback
         )
         

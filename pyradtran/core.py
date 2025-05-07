@@ -19,7 +19,7 @@ def generate_input_content(
     latitude: float,
     longitude: float,
     radiosonde_path: Optional[Path] = None,
-    override_albedo: Optional[float] = None,
+    override_albedo: Optional[float] = None, # Added override_albedo
     override_sza: Optional[float] = None,
 ) -> str:
     """
@@ -31,7 +31,7 @@ def generate_input_content(
         latitude: Location latitude in degrees (-90 to 90)
         longitude: Location longitude in degrees (-180 to 180)
         radiosonde_path: Optional path to a radiosonde file
-        override_albedo: Optional override for surface albedo value
+        override_albedo: Optional override for surface albedo value # Added
         override_sza: Optional override for solar zenith angle
         
     Returns:
@@ -341,8 +341,7 @@ class Simulation:
         dt: datetime,
         latitude: float,
         longitude: float,
-        # Add specific overrides here if needed, e.g.
-        # override_albedo: Optional[float] = None,
+        override_albedo: Optional[float] = None, # Added override_albedo
         ) -> Tuple[Optional[Path], Optional[Path]]:
         """
         Generates the uvspec input file for a specific run.
@@ -371,7 +370,7 @@ class Simulation:
                 latitude=latitude,
                 longitude=longitude,
                 radiosonde_path=radiosonde_path,
-                # Pass overrides here: override_albedo=override_albedo
+                override_albedo=override_albedo, # Pass override_albedo
             )
         except Exception as e:
              logger.error(f"Failed to generate input content for {dt} @ ({latitude},{longitude}): {e}")
@@ -418,7 +417,7 @@ class Simulation:
         dt: datetime,
         latitude: float,
         longitude: float,
-        # Add specific overrides here if needed
+        override_albedo: Optional[float] = None, # Added override_albedo
         ) -> Optional[Path]:
         """
         Generates input, runs one uvspec instance, and returns the output file path.
@@ -427,6 +426,7 @@ class Simulation:
             dt: Timestamp for the simulation.
             latitude: Latitude for the simulation.
             longitude: Longitude for the simulation.
+            override_albedo: Optional albedo value to override config. # Added
 
         Returns:
             Path to the generated output file, or None if the simulation failed
@@ -445,7 +445,7 @@ class Simulation:
             # 1. Generate Input File
             if self.config.execution.debug_mode:
                 logger.debug("[run] Step 1: Generating input file...")
-            input_file, _ = self._generate_input_file(dt, latitude, longitude) # Radiosonde path used internally
+            input_file, _ = self._generate_input_file(dt, latitude, longitude, override_albedo=override_albedo) # Pass override_albedo
             if not input_file:
                 logger.error("[run] Input file generation failed. Aborting run.")
                 return None # Error already logged
