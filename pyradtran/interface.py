@@ -157,13 +157,23 @@ def execute_simulation_batch(
             for t in times
         ]
     
+    # Important: We're not creating separate simulation points for each altitude level,
+    # as altitude levels are handled by a single libRadtran run
+    
     # Prepare for parallel execution
     total_points = len(points)
     completed = 0
-    logger.info(f"Running {total_points} simulations...")
+    logger.info(f"Running {total_points} simulations across time/location points...")
     
     # Store results
     results_dict: Dict[str, Dict[str, List[float]]] = {}
+    
+    # Store metadata about result structure
+    metadata = {
+        '_simulation_type': None,
+        '_wavelength_values': [],
+        '_altitude_values': []
+    }
     
     # Run simulations (parallel if configured)
     with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
@@ -180,6 +190,18 @@ def execute_simulation_batch(
             try:
                 result = future.result()
                 if result:
+                    # Store simulation type if we don't have it yet
+                    if '_simulation_type' in result and metadata['_simulation_type'] is None:
+                        metadata['_simulation_type'] = result['_simulation_type']
+                    
+                    # Store wavelength values if spectral simulation
+                    if '_wavelength_values' in result and not metadata['_wavelength_values']:
+                        metadata['_wavelength_values'] = result['_wavelength_values']
+                    
+                    # Store altitude values if multi-altitude simulation
+                    if '_unique_altitudes' in result and not metadata['_altitude_values']:
+                        metadata['_altitude_values'] = result['_unique_altitudes']
+                    
                     # First result initializes the dictionary structure
                     if not results_dict:
                         results_dict = {
@@ -217,6 +239,11 @@ def execute_simulation_batch(
     
     if not results_dict:
         raise PyRadtranError("All simulations failed, no valid results")
+    
+    # Add metadata to the results
+    for key, value in metadata.items():
+        if value is not None and (not isinstance(value, list) or len(value) > 0):
+            results_dict[key] = value
     
     return results_dict
 
@@ -325,6 +352,30 @@ class PyRadtranAccessor:
         if lon_var not in self._obj.dims and lon_var not in self._obj.coords and lon_var not in self._obj.data_vars:
             raise PyRadtranError(f"Longitude variable '{lon_var}' not found in dataset")
         
+        # Check if we have altitude information in the input dataset - if so, override config
+        alt_var = 'altitude'
+        if alt_var in self._obj.dims or alt_var in self._obj.coords:
+            # Get altitudes from dataset
+            dataset_altitudes = self._obj[alt_var].values
+            
+            # Override configuration with dataset altitudes if any are provided
+            if len(dataset_altitudes) > 0:
+                logger.info(f"Overriding configuration altitude with {len(dataset_altitudes)} levels from dataset: {dataset_altitudes}")
+                self._config.simulation_defaults.output_altitudes_km = [float(alt) for alt in dataset_altitudes]
+        
+        # Generate output path if saving and not provided
+        if save_to_file:
+            if output_path is None:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                output_path = Path(self._config.paths.output_dir) / f"{self._config.output.filename_prefix}_{timestamp}{self._config.output.filename_suffix}"
+                # Make sure output directory exists
+                output_path.parent.mkdir(exist_ok=True, parents=True)
+                logger.info(f"Auto-generating output path: {output_path}")
+            else:
+                output_path = Path(output_path)
+                # Make sure the parent directory exists
+                output_path.parent.mkdir(exist_ok=True, parents=True)
+        
         # Run the simulation batch
         results = execute_simulation_batch(
             config=self._config,
@@ -334,14 +385,6 @@ class PyRadtranAccessor:
             lon_var=lon_var,
             progress_callback=progress_callback
         )
-        
-        # Generate output path if saving and not provided
-        if save_to_file:
-            if output_path is None:
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                output_path = Path(self._config.paths.output_dir) / f"{self._config.output.filename_prefix}_{timestamp}{self._config.output.filename_suffix}"
-            else:
-                output_path = Path(output_path)
         
         # Create result dataset
         if results:
@@ -364,83 +407,114 @@ class PyRadtranAccessor:
                     if coord_name in self._obj:
                         ds[coord_name] = self._obj[coord_name]
                 
-                # Add altitude coordinate if we have multi-level data
-                has_multi_level = False
-                for col_name, values in results.items():
-                    if isinstance(values, dict) and not col_name.startswith('_'):  # Multi-level data
-                        has_multi_level = True
-                        break
+                # Check if we have spectral data
+                has_spectral_data = False
+                wavelength_values = None
                 
+                # Check for spectral data metadata from results
+                if '_simulation_type' in results and results['_simulation_type'] in ['spectral', 'spectral_multi_altitude']:
+                    has_spectral_data = True
+                    if '_wavelength_values' in results:
+                        wavelength_values = results['_wavelength_values']
+                        logger.info(f"Found spectral data with {len(wavelength_values)} wavelength points")
+                
+                # Check if we have multi-level altitude data
+                has_multi_level = False
+                unique_altitudes = []
+                
+                # First check if config specifies multiple altitude levels
+                # This ensures dimensions are preserved even if not explicitly in results
+                if hasattr(self._config.simulation_defaults, 'output_altitudes_km'):
+                    if len(self._config.simulation_defaults.output_altitudes_km) > 1:
+                        has_multi_level = True
+                        unique_altitudes = sorted(set(float(alt) for alt in self._config.simulation_defaults.output_altitudes_km))
+                        logger.debug(f"Using altitude levels from config: {unique_altitudes}")
+                
+                # Then check for the special _unique_altitudes metadata field from results
+                if '_unique_altitudes' in results:
+                    has_multi_level = True
+                    unique_altitudes = results['_unique_altitudes']
+                    logger.debug(f"Found '_unique_altitudes' with {len(unique_altitudes)} levels in results")
+                
+                # Fallback: check if values are stored in altitude-indexed dictionaries
+                if not has_multi_level and not has_spectral_data:
+                    for col_name, values in results.items():
+                        if isinstance(values, dict) and not col_name.startswith('_'):
+                            # This could be multi-level data
+                            # Check if the keys look like altitude values (can be converted to float)
+                            try:
+                                # Convert a sample key to float to check if it's a number (altitude)
+                                sample_key = next(iter(values.keys()))
+                                float(sample_key)  # Just to check if it raises an error
+                                has_multi_level = True
+                                unique_altitudes.extend(float(alt) for alt in values.keys())
+                                logger.debug(f"Detected multi-level data in variable {col_name} with keys: {list(values.keys())}")
+                                break
+                            except (ValueError, StopIteration):
+                                # Not numeric keys or empty dict
+                                continue
+                
+                # Check simulation type from results - this is a strong indicator
+                simulation_type = results.get('_simulation_type', 'standard')
+                if simulation_type in ['multi_altitude', 'multi_altitude_structured']:
+                    has_multi_level = True
+                    logger.info(f"Results indicate multi-altitude structure with type: {simulation_type}")
+                
+                # If we have spectral data, add the wavelength dimension
+                if has_spectral_data and wavelength_values is not None:
+                    # Define wavelength variable name
+                    wl_var = 'wavelength'
+                    # Sort and deduplicate wavelength values
+                    unique_wavelengths = sorted(set(float(wl) for wl in wavelength_values))
+                    ds[wl_var] = xr.DataArray(
+                        unique_wavelengths,
+                        dims=(wl_var,),
+                        attrs={'units': 'nm', 'long_name': 'Wavelength'}
+                    )
+                    logger.info(f"Created wavelength dimension with {len(unique_wavelengths)} points: {min(unique_wavelengths)} to {max(unique_wavelengths)} nm")
+                
+                # If we have altitude levels, create the altitude dimension
                 if has_multi_level:
-                    # Extract altitude levels
-                    altitude_levels = []
-                    for col_name, level_data in results.items():
-                        if isinstance(level_data, dict) and not col_name.startswith('_'):
-                            altitude_levels.extend(float(alt) for alt in level_data.keys())
-                    
+                    # Define altitude variable name
+                    alt_var = 'altitude'
                     # Sort and deduplicate altitude levels
-                    altitude_levels = sorted(set(altitude_levels))
-                    ds['altitude'] = xr.DataArray(
-                        altitude_levels,
-                        dims=('altitude',),
+                    unique_altitudes = sorted(set(float(alt) for alt in unique_altitudes))
+                    ds[alt_var] = xr.DataArray(
+                        unique_altitudes,
+                        dims=(alt_var,),
                         attrs={'units': 'km', 'long_name': 'Altitude above sea level'}
                     )
+                    logger.info(f"Created altitude dimension with {len(unique_altitudes)} levels: {unique_altitudes}")
                 
-                # Add variables
+                # Add variables based on data type
                 for col_name, values in results.items():
                     if col_name.startswith('_'):
                         continue  # Skip metadata fields
                         
-                    if isinstance(values, dict):  # Multi-level data
-                        # Create variable with altitude dimension
-                        var_data = np.zeros((len(ds[time_var]), len(ds['altitude'])))
-                        var_data.fill(np.nan)  # Initialize with NaN values
-                        
-                        # Fill in data for each altitude level
-                        for i, alt in enumerate(ds['altitude'].values):
-                            if alt in values and len(values[alt]) > 0:  # Check if we have data
-                                # Handle potential size mismatch
-                                data_length = min(len(values[alt]), len(ds[time_var]))
-                                var_data[:data_length, i] = values[alt][:data_length]
-                        
-                        ds[col_name] = xr.DataArray(
-                            var_data,
-                            dims=(time_var, 'altitude'),
-                            coords={time_var: ds[time_var], 'altitude': ds['altitude']},
-                            attrs={'units': self._get_variable_units(col_name)}
-                        )
-                    else:  # Single-level data
-                        # Convert to numpy array
-                        if not isinstance(values, np.ndarray):
-                            values = np.array(values, dtype=float)
-                        
-                        # Ensure 1D shape
-                        if values.ndim > 1:
-                            values = values.flatten()
-                            
-                        # Handle potential size mismatch
-                        if len(values) == len(ds[time_var]):
-                            ds[col_name] = xr.DataArray(
-                                values,
-                                dims=(time_var,),
-                                coords={time_var: ds[time_var]},
-                                attrs={'units': self._get_variable_units(col_name)}
-                            )
+                    # Handle differently based on data type
+                    if isinstance(values, dict):
+                        if has_spectral_data and not has_multi_level:
+                            # Spectral data without altitude dimension
+                            self._add_spectral_variable(ds, col_name, values, unique_wavelengths, time_var, 'wavelength')
+                        elif has_multi_level and not has_spectral_data:
+                            # Altitude data without spectral dimension
+                            self._add_altitude_variable(ds, col_name, values, unique_altitudes, time_var, alt_var)
+                        elif has_spectral_data and has_multi_level:
+                            # Both spectral and altitude dimensions
+                            self._add_spectral_altitude_variable(ds, col_name, values, unique_wavelengths, unique_altitudes, time_var, 'wavelength', alt_var)
                         else:
-                            logger.warning(f"Size mismatch for {col_name}: expected {len(ds[time_var])}, got {len(values)}")
-                            # Create with proper length, padding with NaN if needed
-                            temp_data = np.full(len(ds[time_var]), np.nan)
-                            if len(values) > 0:
-                                temp_data[:min(len(values), len(ds[time_var]))] = values[:min(len(values), len(ds[time_var]))]
-                            ds[col_name] = xr.DataArray(
-                                temp_data,
-                                dims=(time_var,),
-                                coords={time_var: ds[time_var]},
-                                attrs={'units': self._get_variable_units(col_name)}
-                            )
+                            # Dictionary format but not recognized structure
+                            logger.warning(f"Unrecognized dictionary structure for variable {col_name}, skipping")
+                    else:
+                        # Regular 1D array - no altitude or wavelength dimension
+                        self._add_simple_variable(ds, col_name, values, time_var)
                 
                 # Add metadata
                 ds.attrs['generated_by'] = 'pyradtran'
+                if has_spectral_data:
+                    ds.attrs['wavelength_range'] = f"{min(wavelength_values)} to {max(wavelength_values)} nm"
+                if has_multi_level:
+                    ds.attrs['altitude_levels'] = f"{len(unique_altitudes)} levels (km): {', '.join(str(alt) for alt in unique_altitudes)}"
                 
                 return ds
             else:
@@ -484,3 +558,207 @@ class PyRadtranAccessor:
                 return unit
         
         return units_dict.get(variable_name.lower(), 'unknown')
+    
+    def _add_simple_variable(self, ds, col_name, values, time_var):
+        """Add a simple variable with only time dimension"""
+        try:
+            # Convert to numpy array if needed
+            if not isinstance(values, np.ndarray):
+                values = np.array(values, dtype=float)
+            
+            # Ensure 1D shape if needed
+            if values.ndim > 1:
+                values = values.flatten()
+                logger.debug(f"Flattened array for {col_name} from shape {values.shape}")
+                
+            # Handle potential size mismatch
+            if len(values) == len(ds[time_var]):
+                ds[col_name] = xr.DataArray(
+                    values,
+                    dims=(time_var,),
+                    coords={time_var: ds[time_var]},
+                    attrs={'units': self._get_variable_units(col_name)}
+                )
+            else:
+                logger.warning(f"Size mismatch for {col_name}: expected {len(ds[time_var])}, got {len(values)}")
+                # Create with proper length, padding with NaN if needed
+                temp_data = np.full(len(ds[time_var]), np.nan)
+                if len(values) > 0:
+                    temp_data[:min(len(values), len(ds[time_var]))] = values[:min(len(values), len(ds[time_var]))]
+                ds[col_name] = xr.DataArray(
+                    temp_data,
+                    dims=(time_var,),
+                    coords={time_var: ds[time_var]},
+                    attrs={'units': self._get_variable_units(col_name)}
+                )
+        except Exception as e:
+            logger.error(f"Error adding simple variable {col_name}: {e}")
+    
+    def _add_spectral_variable(self, ds, col_name, values, wavelengths, time_var, wl_var):
+        """Add a variable with spectral (wavelength) dimension"""
+        try:
+            # Create a 2D array [time, wavelength]
+            time_len = len(ds[time_var])
+            wl_len = len(wavelengths)
+            
+            # Create a data array to hold values for all times and all wavelengths
+            data_array = np.full((time_len, wl_len), np.nan)
+            
+            # Fill in the data - For spectral data, values is a dict with wavelength keys
+            for t_idx in range(time_len):
+                for wl_idx, wl in enumerate(wavelengths):
+                    wl_key = float(wl)
+                    # Try to get the value from dict using both float and string keys
+                    val = None
+                    if wl_key in values:
+                        val = values[wl_key]
+                    elif str(wl_key) in values:
+                        val = values[str(wl_key)]
+                    
+                    if val is not None:
+                        # Get the value - might be list or scalar
+                        if isinstance(val, (list, tuple, np.ndarray)):
+                            # If val is a sequence, check if it has enough elements
+                            if len(val) > t_idx:
+                                try:
+                                    # Get scalar value for this specific time and wavelength
+                                    data_array[t_idx, wl_idx] = float(val[t_idx])
+                                except (ValueError, TypeError):
+                                    logger.warning(f"Could not convert value to float for {col_name} at time {t_idx}, wavelength {wl}")
+                        else:
+                            # Same value for all times (scalar)
+                            try:
+                                data_array[t_idx, wl_idx] = float(val)
+                            except (ValueError, TypeError):
+                                logger.warning(f"Could not convert scalar value to float for {col_name} at wavelength {wl}")
+            
+            # Create the data array with proper dimensions
+            ds[col_name] = xr.DataArray(
+                data_array,
+                dims=(time_var, wl_var),
+                coords={
+                    time_var: ds[time_var],
+                    wl_var: wavelengths
+                },
+                attrs={'units': self._get_variable_units(col_name)}
+            )
+            logger.debug(f"Added spectral variable {col_name} with shape {data_array.shape}")
+        except Exception as e:
+            logger.error(f"Error adding spectral variable {col_name}: {e}")
+    
+    def _add_altitude_variable(self, ds, col_name, values, altitudes, time_var, alt_var):
+        """Add a variable with altitude dimension"""
+        try:
+            # Create a 2D array [time, altitude]
+            time_len = len(ds[time_var])
+            alt_len = len(altitudes)
+            
+            # Create a data array to hold values for all times and all altitudes
+            data_array = np.full((time_len, alt_len), np.nan)
+            
+            # Fill in the data - For multi-altitude data, values is a dict with altitude keys
+            for t_idx in range(time_len):
+                for alt_idx, alt in enumerate(altitudes):
+                    alt_key = float(alt)
+                    # Try to get the value from dict using both float and string keys
+                    val = None
+                    if alt_key in values:
+                        val = values[alt_key]
+                    elif str(alt_key) in values:
+                        val = values[str(alt_key)]
+                    
+                    if val is not None:
+                        # Get the value - might be list or scalar
+                        if isinstance(val, (list, tuple, np.ndarray)):
+                            # If val is a sequence, check if it has enough elements
+                            if len(val) > t_idx:
+                                try:
+                                    # Get scalar value for this specific time and altitude
+                                    data_array[t_idx, alt_idx] = float(val[t_idx])
+                                except (ValueError, TypeError):
+                                    logger.warning(f"Could not convert value to float for {col_name} at time {t_idx}, altitude {alt}")
+                        else:
+                            # Same value for all times (scalar)
+                            try:
+                                data_array[t_idx, alt_idx] = float(val)
+                            except (ValueError, TypeError):
+                                logger.warning(f"Could not convert scalar value to float for {col_name} at altitude {alt}")
+            
+            # Create the data array with proper dimensions
+            ds[col_name] = xr.DataArray(
+                data_array,
+                dims=(time_var, alt_var),
+                coords={
+                    time_var: ds[time_var],
+                    alt_var: altitudes
+                },
+                attrs={'units': self._get_variable_units(col_name)}
+            )
+            logger.debug(f"Added altitude variable {col_name} with shape {data_array.shape}")
+        except Exception as e:
+            logger.error(f"Error adding altitude variable {col_name}: {e}")
+    
+    def _add_spectral_altitude_variable(self, ds, col_name, values, wavelengths, altitudes, time_var, wl_var, alt_var):
+        """Add a variable with both wavelength and altitude dimensions"""
+        try:
+            # Create a 3D array [time, altitude, wavelength]
+            time_len = len(ds[time_var])
+            alt_len = len(altitudes)
+            wl_len = len(wavelengths)
+            
+            # Create a data array to hold values for all times, altitudes, and wavelengths
+            data_array = np.full((time_len, alt_len, wl_len), np.nan)
+            
+            # Fill in the data - For spectral multi-altitude data, values is a nested dict: altitude -> wavelength -> value
+            for t_idx in range(time_len):
+                for alt_idx, alt in enumerate(altitudes):
+                    alt_key = float(alt)
+                    # Get the wavelength dict for this altitude
+                    wl_dict = None
+                    if alt_key in values:
+                        wl_dict = values[alt_key]
+                    elif str(alt_key) in values:
+                        wl_dict = values[str(alt_key)]
+                    
+                    if wl_dict is not None and isinstance(wl_dict, dict):
+                        # Process each wavelength in this altitude's dict
+                        for wl_idx, wl in enumerate(wavelengths):
+                            wl_key = float(wl)
+                            # Try to get the value from dict using both float and string keys
+                            val = None
+                            if wl_key in wl_dict:
+                                val = wl_dict[wl_key]
+                            elif str(wl_key) in wl_dict:
+                                val = wl_dict[str(wl_key)]
+                            
+                            if val is not None:
+                                # Get the value - might be list or scalar
+                                if isinstance(val, (list, tuple, np.ndarray)):
+                                    # If val is a sequence, check if it has enough elements
+                                    if len(val) > t_idx:
+                                        try:
+                                            # Get scalar value for this specific time, altitude, and wavelength
+                                            data_array[t_idx, alt_idx, wl_idx] = float(val[t_idx])
+                                        except (ValueError, TypeError):
+                                            logger.warning(f"Could not convert value to float for {col_name} at time {t_idx}, altitude {alt}, wavelength {wl}")
+                                else:
+                                    # Same value for all times (scalar)
+                                    try:
+                                        data_array[t_idx, alt_idx, wl_idx] = float(val)
+                                    except (ValueError, TypeError):
+                                        logger.warning(f"Could not convert scalar value to float for {col_name} at altitude {alt}, wavelength {wl}")
+            
+            # Create the data array with proper dimensions
+            ds[col_name] = xr.DataArray(
+                data_array,
+                dims=(time_var, alt_var, wl_var),
+                coords={
+                    time_var: ds[time_var],
+                    alt_var: altitudes,
+                    wl_var: wavelengths
+                },
+                attrs={'units': self._get_variable_units(col_name)}
+            )
+            logger.debug(f"Added spectral-altitude variable {col_name} with shape {data_array.shape}")
+        except Exception as e:
+            logger.error(f"Error adding spectral-altitude variable {col_name}: {e}")

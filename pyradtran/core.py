@@ -37,6 +37,9 @@ def generate_input_content(
     Returns:
         String containing the complete input file content
     """
+    if config.execution.debug_mode:
+        logger.debug(f"Generating input content for dt={dt}, lat={latitude}, lon={longitude}, rs_path={radiosonde_path}")
+    
     lines = []
     
     # --- RTE (Radiative Transfer Equation) solver ---
@@ -182,9 +185,9 @@ def generate_input_content(
     # --- Solar and Geometry settings ---
     # Use specified solar spectrum file if available
     if config.paths.solar_spectrum:
-        lines.append(f"source solar {config.paths.solar_spectrum}")
+        lines.append(f"source solar {config.paths.solar_spectrum} per_nm")
     else:
-        lines.append("source solar")
+        lines.append("source solar per_nm")
     
     if override_sza is not None:
         # Use the explicitly provided solar zenith angle
@@ -268,28 +271,47 @@ def generate_input_content(
     
     # --- Output settings ---
     
+    # Collect output directives in the correct order
+    output_directives = []
+    
     # Vertical levels for output (altitudes in km)
     altitudes = config.simulation_defaults.output_altitudes_km
     if altitudes:
         if isinstance(altitudes, list):
             # Format each altitude with explicit format
             alt_str = " ".join(f"{alt:.1f}" for alt in altitudes)
-            lines.append(f"zout {alt_str}")
+            output_directives.append(f"zout {alt_str}")
         else:
-            lines.append(f"zout {altitudes:.1f}")
+            output_directives.append(f"zout {altitudes:.1f}")
     
-    # Output quantities
-    if config.simulation_defaults.output_columns:
-        output_format = " ".join(config.simulation_defaults.output_columns)
-        lines.append(f"output_user {output_format}")
-    else:
-        # Default output format if none specified
-        lines.append("output_user lambda edir edn eup")
+    # Add output_process directives in the correct order
+    # First add output_process per_nm for proper normalization 
+    output_directives.append("output_process per_nm")
     
-    # Any additional options specified in the configuration
+    # Add integrate directive if wavelength integration is requested
+    if hasattr(config.simulation_defaults, 'integrate_wavelength') and config.simulation_defaults.integrate_wavelength:
+        output_directives.append("output_process integrate")
+    
+    # Add any additional output-related options from additional_options
     if hasattr(config.simulation_defaults, 'additional_options'):
         for option in config.simulation_defaults.additional_options:
-            lines.append(option)
+            # Skip output_process directives as we've already handled them above
+            if not option.startswith('output_process'):
+                output_directives.append(option)
+    
+    # Output quantities - MUST be the very last directive
+    if config.simulation_defaults.output_columns:
+        output_format = " ".join(config.simulation_defaults.output_columns)
+        output_directives.append(f"output_user {output_format}")
+    else:
+        # Default output format if none specified
+        output_directives.append("output_user lambda edir edn eup")
+    
+    # Add all output directives in the correct order
+    lines.extend(output_directives)
+    
+    if config.execution.debug_mode:
+        logger.debug(f"Final input content before returning:\n{lines}")
     
     return "\n".join(lines)
 
@@ -329,6 +351,9 @@ class Simulation:
             A tuple containing (input_file_path, radiosonde_path_used).
             Returns (None, None) if input generation fails.
         """
+        if self.config.execution.debug_mode:
+            logger.debug(f"[_generate_input_file] Called for dt={dt}, lat={latitude}, lon={longitude}")
+
         # Find closest radiosonde if configured and finder is available
         radiosonde_path: Optional[Path] = None
         if self.config.simulation_defaults.h2o_source == 'radiosonde' and self.radiosonde_finder:
@@ -350,11 +375,17 @@ class Simulation:
             )
         except Exception as e:
              logger.error(f"Failed to generate input content for {dt} @ ({latitude},{longitude}): {e}")
-             logger.debug(traceback.format_exc())
+             if self.config.execution.debug_mode:
+                logger.debug(traceback.format_exc())
              return None, None
 
         try:
             # Create a temporary file in the working directory
+            # Ensure working_dir exists
+            self.config.paths.working_dir.mkdir(parents=True, exist_ok=True)
+            if self.config.execution.debug_mode:
+                logger.debug(f"[_generate_input_file] Working directory for temp file: {self.config.paths.working_dir}")
+
             # Suffix helps identify files if cleanup fails
             with tempfile.NamedTemporaryFile(
                 mode='w',
@@ -365,16 +396,20 @@ class Simulation:
             ) as tmp_inp:
                 tmp_inp.write(input_content)
                 input_file_path = Path(tmp_inp.name)
-            logger.debug(f"Generated input file: {input_file_path}")
+            logger.debug(f"Generated input file: {input_file_path}") # This log is good for all modes
             if self.config.execution.debug_mode:
                  logger.debug(f"--- Input Content ({input_file_path.name}) ---\n{input_content}\n--- End Input ---")
             return input_file_path, radiosonde_path
 
         except IOError as e:
             logger.error(f"Error writing temporary input file: {e}")
+            if self.config.execution.debug_mode:
+                logger.debug(traceback.format_exc())
             return None, None
         except Exception as e:
             logger.exception(f"Unexpected error creating input file: {e}")
+            if self.config.execution.debug_mode:
+                logger.debug(traceback.format_exc())
             return None, None
 
 
@@ -398,73 +433,131 @@ class Simulation:
             at any stage (input generation, execution, timeout).
         """
         input_file = None
-        output_file = None
+        output_file = None # Initialize to None
         process = None
+        
+        if self.config.execution.debug_mode:
+            logger.debug(f"[run] Called for dt={dt}, lat={latitude}, lon={longitude}")
+            logger.debug(f"[run] Config cleanup_temp_files: {self.config.execution.cleanup_temp_files}")
+            logger.debug(f"[run] Config debug_mode: {self.config.execution.debug_mode}")
 
         try:
             # 1. Generate Input File
+            if self.config.execution.debug_mode:
+                logger.debug("[run] Step 1: Generating input file...")
             input_file, _ = self._generate_input_file(dt, latitude, longitude) # Radiosonde path used internally
             if not input_file:
+                logger.error("[run] Input file generation failed. Aborting run.")
                 return None # Error already logged
 
             # Define output file path based on input file name
             output_file = input_file.with_suffix(".out")
+            if self.config.execution.debug_mode:
+                logger.debug(f"[run] Input file: {input_file}, Proposed output file: {output_file}")
 
             # 2. Run uvspec
+            if self.config.execution.debug_mode:
+                logger.debug("[run] Step 2: Running uvspec...")
             cmd = [str(self.config.paths.libradtran_bin)]
+            # Capture stderr if in debug mode, otherwise discard
             stderr_pipe = subprocess.PIPE if self.config.execution.debug_mode else subprocess.DEVNULL
             timeout = self.config.execution.timeout_seconds
 
-            logger.debug(f"Running uvspec: {' '.join(cmd)} < {input_file.name} > {output_file.name}")
+            logger.debug(f"Running uvspec: {' '.join(cmd)} < {input_file.name} > {output_file.name}") # Good for all modes
 
-            with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
+            # Ensure working_dir exists for uvspec execution
+            self.config.paths.working_dir.mkdir(parents=True, exist_ok=True)
+            if self.config.execution.debug_mode:
+                logger.debug(f"[run] Executing uvspec in CWD: {self.config.paths.working_dir}")
+
+            with open(input_file, 'r') as infile, open(output_file, 'w') as outfile_handle:
                 process = subprocess.Popen(
                     cmd,
                     stdin=infile,
-                    stdout=outfile,
+                    stdout=outfile_handle, # Write directly to the output file
                     stderr=stderr_pipe,
-                    cwd=self.config.paths.working_dir, # Run in working dir
+                    cwd=self.config.paths.working_dir, 
                     encoding='utf-8'
                 )
-
                 stdout_data, stderr_data = process.communicate(timeout=timeout)
 
                 # 3. Check Results
                 if process.returncode != 0:
                     logger.error(f"uvspec failed for {input_file.name}. Return code: {process.returncode}.")
-                    if stderr_data:
+                    if stderr_data: # Will only have data if debug_mode was true for stderr_pipe
                         logger.error(f"--- uvspec stderr ---\n{stderr_data}\n--- end stderr ---")
-                    # Keep output file for debugging if cleanup is disabled
-                    if self.config.execution.cleanup_temp_files:
-                         output_file.unlink(missing_ok=True) # Remove failed output
+                    # Keep output file for debugging if cleanup is disabled, otherwise remove failed output
+                    if self.config.execution.cleanup_temp_files and output_file.exists():
+                         logger.debug(f"[run] cleanup_temp_files is True, removing failed output: {output_file}")
+                         output_file.unlink(missing_ok=True) 
                     return None # Indicate failure
                 else:
-                    logger.debug(f"uvspec finished successfully for {input_file.name}.")
+                    logger.debug(f"uvspec finished successfully for {input_file.name}.") # Good for all modes
                     if self.config.execution.debug_mode and stderr_data:
                         logger.debug(f"--- uvspec stderr (Success) ---\n{stderr_data}\n--- end stderr ---")
-                    return output_file # Success! Return output path
+                    
+                    # Ensure output file actually has content if uvspec succeeded
+                    if output_file.exists() and output_file.stat().st_size > 0:
+                        if self.config.execution.debug_mode:
+                            logger.debug(f"[run] Output file {output_file} exists and is not empty.")
+                        return output_file # Success! Return output path
+                    else:
+                        logger.error(f"[run] uvspec reported success, but output file {output_file} is missing or empty.")
+                        if self.config.execution.cleanup_temp_files and output_file.exists():
+                            logger.debug(f"[run] cleanup_temp_files is True, removing (unexpectedly) empty/missing output: {output_file}")
+                            output_file.unlink(missing_ok=True)
+                        return None
+
 
         except FileNotFoundError:
              logger.error(f"LibRadtran executable not found at {self.config.paths.libradtran_bin}")
+             if self.config.execution.debug_mode:
+                logger.debug(traceback.format_exc())
              return None
         except subprocess.TimeoutExpired:
              logger.error(f"uvspec process timed out after {timeout}s for {input_file.name if input_file else 'N/A'}. Killing process.")
              if process:
                  process.kill()
-                 process.communicate() # Ensure process is cleaned up
-             # Keep output file (likely empty/incomplete) for debugging if cleanup disabled
-             if self.config.execution.cleanup_temp_files and output_file:
+                 process.communicate() 
+             if self.config.execution.cleanup_temp_files and output_file and output_file.exists():
+                  logger.debug(f"[run] Timeout: cleanup_temp_files is True, removing output file: {output_file}")
                   output_file.unlink(missing_ok=True)
              return None
         except Exception as e:
             logger.exception(f"An unexpected error occurred running uvspec for {input_file.name if input_file else 'N/A'}: {e}")
+            if self.config.execution.debug_mode:
+                logger.debug(traceback.format_exc())
+            # Clean up potentially corrupted output file if it exists and cleanup is on
+            if self.config.execution.cleanup_temp_files and output_file and output_file.exists():
+                logger.debug(f"[run] Exception: cleanup_temp_files is True, removing output file: {output_file}")
+                output_file.unlink(missing_ok=True)
             return None
         finally:
             # 4. Cleanup Input File
-            if input_file and input_file.exists() and self.config.execution.cleanup_temp_files:
-                try:
-                    input_file.unlink()
-                    logger.debug(f"Cleaned up input file: {input_file.name}")
-                except OSError as e:
-                    logger.warning(f"Could not remove temporary input file {input_file}: {e}")
-            # Output file cleanup happens based on success/failure/config above
+            if self.config.execution.debug_mode:
+                logger.debug(f"[run] Finally block. Input file: {input_file}")
+            if input_file and input_file.exists():
+                if self.config.execution.cleanup_temp_files:
+                    try:
+                        input_file.unlink()
+                        logger.debug(f"Cleaned up input file: {input_file.name}")
+                    except OSError as e_unlink:
+                        logger.warning(f"Could not remove temporary input file {input_file}: {e_unlink}")
+                else:
+                    if self.config.execution.debug_mode:
+                        logger.debug(f"[run] cleanup_temp_files is False. Input file {input_file} preserved.")
+            elif input_file: # input_file path was set but it does not exist
+                 if self.config.execution.debug_mode:
+                    logger.debug(f"[run] Input file {input_file} was defined but does not exist in finally block.")
+            else: # input_file was None
+                if self.config.execution.debug_mode:
+                    logger.debug("[run] Input file was None in finally block (likely failed generation).")
+            
+            # Output file cleanup is handled based on success/failure/config within the try/except blocks for uvspec run
+            if self.config.execution.debug_mode:
+                if output_file and output_file.exists():
+                    logger.debug(f"[run] End of run. Output file {output_file} exists.")
+                elif output_file:
+                    logger.debug(f"[run] End of run. Output file {output_file} was defined but does not exist.")
+                else:
+                    logger.debug(f"[run] End of run. Output file was not defined (None).")
