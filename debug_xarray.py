@@ -15,6 +15,7 @@ import xarray as xr
 from pathlib import Path
 from datetime import datetime
 import traceback
+import yaml
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, 
@@ -54,66 +55,131 @@ FIXED_IWV_MM = 2.0
 FIXED_SURFACE_TEMP_K = 250.0
 SEA_ICE_BRDF_TYPE = 20  # Sea ice albedo type
 
-def create_sea_ice_config():
-    """Create a configuration for sea ice simulations similar to disort.py"""
-    return SimulationConfig(
+def create_pyradtran_config(wavelength_range=[400, 700], integrate_wavelength=False, spectral_mode=True):
+    """
+    Create a configuration for PyRadtran simulation.
+    
+    Parameters:
+    -----------
+    wavelength_range : list
+        Min and max wavelength in nm [min, max]
+    integrate_wavelength : bool
+        Whether to integrate over wavelength (False provides spectral output)
+    spectral_mode : bool
+        If True, includes 'lambda' in output columns for proper spectral handling
+        
+    Returns:
+    --------
+    SimulationConfig
+        Complete configuration for PyRadtran
+    """
+    # Paths to LibRadtran files
+    LIBRADTRAN_EXEC_PATH = "/home/uvlibtmp/libRadtran-2.0.4/bin"
+    LIBRADTRAN_DATA_PATH = "/home/uvlibtmp/libRadtran-2.0.4/data"
+    ATMOSPHERE_FILE = "/home/uvlibtmp/libRadtran-2.0.4/data/atmmod/afglus.dat"
+    SOLAR_SPECTRUM_FILE = "/home/uvlibtmp/libRadtran-2.0.4/data/solar_flux/kurudz_1.0nm.dat"
+    
+    # Determine output columns based on spectral mode
+    if spectral_mode:
+        output_columns = ['lambda', 'edir', 'eglo', 'edn', 'eup', 'enet', 'albedo']
+    else:
+        output_columns = ['sza', 'edir', 'eglo', 'edn', 'eup', 'enet', 'albedo']
+    
+    # Create the base configuration
+    config = SimulationConfig(
         paths=PathsConfig(
             libradtran_bin=Path(LIBRADTRAN_EXEC_PATH),
             libradtran_data=Path(LIBRADTRAN_DATA_PATH),
             atmosphere_profile=Path(ATMOSPHERE_FILE),
             solar_spectrum=Path(SOLAR_SPECTRUM_FILE),
-            radiosonde_base=Path(RADIOSONDE_BASE_PATH),
-            output_dir=Path(SIMULATION_OUTPUT_DIR),
-            working_dir=Path(WORKING_DIR)  # Use dedicated working directory
+            output_dir=Path(WORKING_DIR),
+            working_dir=Path(WORKING_DIR)
         ),
         simulation_defaults=SimulationDefaults(
             rte_solver='disort',
-            mol_abs_param='lowtran per_nm',
-            wavelength_nm=[400, 3600],
-            output_columns=['zout', 'sza', 'edir', 'eglo', 'edn', 'eup', 'enet', 'esum', 'albedo'],
-            output_altitudes_km=[0.0],
-            
-            # Surface properties
-            albedo_type='library',
-            albedo_library='IGBP',
-            brdf_type='rpv',
-            brdf_rpv_type=SEA_ICE_BRDF_TYPE,
-            surface_temperature_k=FIXED_SURFACE_TEMP_K,
-            
-            # Fixed atmospheric composition
-            mol_modify={
-                'O3': {'value': FIXED_OZONE_DU, 'unit': 'DU'},
-                'H2O': {'value': FIXED_IWV_MM, 'unit': 'MM'}
-            },
-            
-            # Default aerosols
-            aerosols={
-                'enabled': True,
-                'aerosol_type': 'default'
-            },
-            
-            # No clouds by default
-            clouds={
-                'enabled': False
-            }
+            mol_abs_param='reptran',  # Using reptran instead of lowtran for better spectral resolution
+            wavelength_nm=wavelength_range,
+            output_columns=output_columns,
+            output_altitudes_km=[0.0, 1.0, 2.0, 3.0],  # Multiple altitudes for testing
+            albedo_type='const',
+            albedo_value=0.3,
+            aerosols={'enabled': False},
+            clouds={'enabled': False},
+            integrate_wavelength=integrate_wavelength,
+            additional_options=["output_process per_nm"]  # Start with per_nm normalization
         ),
         execution=ExecutionConfig(
             max_workers=1,
-            cleanup_temp_files=True,
+            cleanup_temp_files=False,
             debug_mode=True,
-            timeout_seconds=300
+            timeout_seconds=60
         ),
         output=OutputConfig(
-            filename_prefix="xarray_debug",
-            filename_suffix="_results.nc",
-            netcdf_encoding={"zlib": True, "complevel": 5}
+            filename_prefix="spectral_example" if spectral_mode else "xarray_example",
+            filename_suffix=".nc",
+            netcdf_encoding={'zlib': True, 'complevel': 4}  # Add default compression
         )
     )
+    
+    # Add wavelength integration if requested
+    if integrate_wavelength:
+        config.simulation_defaults.additional_options.append("output_process integrate")
+        
+    return config
+
+# Create spectral config (with lambda in output columns and no wavelength integration)
+spectral_config = create_pyradtran_config(
+    wavelength_range=[400, 700], 
+    integrate_wavelength=False,
+    spectral_mode=True
+)
+print(f"Spectral config created with {len(spectral_config.simulation_defaults.output_altitudes_km)} altitude levels")
+print(f"Output columns: {spectral_config.simulation_defaults.output_columns}")
+print(f"Additional options: {spectral_config.simulation_defaults.additional_options}")
+print(f"Wavelength integration: {spectral_config.simulation_defaults.integrate_wavelength}")
+
+# Create integrated config (with wavelength integration)
+integrated_config = create_pyradtran_config(
+    wavelength_range=[400, 700], 
+    integrate_wavelength=True,
+    spectral_mode=False
+)
+print(f"\nIntegrated config created with {len(integrated_config.simulation_defaults.output_altitudes_km)} altitude levels")
+print(f"Output columns: {integrated_config.simulation_defaults.output_columns}")
+print(f"Additional options: {integrated_config.simulation_defaults.additional_options}")
+print(f"Wavelength integration: {integrated_config.simulation_defaults.integrate_wavelength}")
+
+# Convert config to dictionary and handle Path objects
+def convert_paths_to_strings(d):
+    if isinstance(d, dict):
+        return {k: convert_paths_to_strings(v) for k, v in d.items()}
+    elif isinstance(d, list):
+        return [convert_paths_to_strings(v) for v in d]
+    elif isinstance(d, Path):
+        return str(d)
+    else:
+        return d
+
+# Save spectral configuration to YAML file
+spectral_config_dict = convert_paths_to_strings(spectral_config.dict())
+spectral_config_file_path = os.path.join(WORKING_DIR, 'showcase_spectral_config.yaml')
+with open(spectral_config_file_path, 'w') as f:
+    yaml.dump(spectral_config_dict, f, default_flow_style=False)
+
+# Save integrated configuration to YAML file
+integrated_config_dict = convert_paths_to_strings(integrated_config.dict())
+integrated_config_file_path = os.path.join(WORKING_DIR, 'showcase_config.yaml')
+with open(integrated_config_file_path, 'w') as f:
+    yaml.dump(integrated_config_dict, f, default_flow_style=False)
+
+print(f"\nConfigurations saved to:")
+print(f"Spectral: {spectral_config_file_path}")
+print(f"Integrated: {integrated_config_file_path}")
 
 def debug_xarray_accessor():
     """Main function to debug the xarray accessor functionality."""
     logger.info("Creating sea ice configuration")
-    sea_ice_config = create_sea_ice_config()
+    sea_ice_config = create_pyradtran_config()
     
     # Make sure working directory exists
     os.makedirs(WORKING_DIR, exist_ok=True)
