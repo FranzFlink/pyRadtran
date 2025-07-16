@@ -5,6 +5,7 @@ Input/output functionality for pyradtran:
 - Generating uvspec input files
 - Parsing uvspec output
 - Saving results to NetCDF
+- Creating ERA5 atmosphere files
 """
 
 import logging
@@ -20,6 +21,156 @@ from .config import SimulationConfig
 from .exceptions import InputGenerationError, OutputParsingError
 
 logger = logging.getLogger(__name__)
+
+
+# --- ERA5 Atmosphere File Creation ---
+
+def create_era5_atmosphere_file(
+    era5_ds: xr.Dataset, 
+    latitude: float, 
+    longitude: float, 
+    time: Union[str, datetime, np.datetime64],
+    output_filepath: Union[str, Path],
+) -> Path:
+    """
+    Creates a libRadtran-compatible atmosphere file from an ERA5 xarray.Dataset.
+
+    This function selects the vertical profile nearest to the given lat/lon,
+    converts variables to the units required by libRadtran, and saves the
+    result to the specified file path.
+
+    It handles cases where optional trace gases (like CO2, NO2) are missing
+    from the input dataset by using standard assumptions.
+
+    Args:
+        era5_ds: The input xarray.Dataset containing atmospheric data.
+            Must include 'z', 't', 'o3', 'q' and coordinates 
+            'pressure_level', 'latitude', 'longitude', 'valid_time'.
+            Can optionally include 'co2' and 'no2'.
+        latitude: The target latitude.
+        longitude: The target longitude.
+        time: The target time (str, datetime, or np.datetime64)
+        output_filepath: The path to the output file that will be created.
+        
+    Returns:
+        Path object of the created atmosphere file
+        
+    Raises:
+        ValueError: If required variables are missing from the dataset
+        InputGenerationError: If file creation fails
+    """
+    try:
+        # --- 1. Define physical and chemical constants for conversions ---
+        G_STD = 9.80665      # Standard gravity (m/s^2)
+        K_B = 1.380649e-23   # Boltzmann constant (J/K)
+        M_AIR = 0.0289647    # Molar mass of dry air (kg/mol)
+        M_O3 = 0.0479982     # Molar mass of Ozone (O3) (kg/mol)
+        M_H2O = 0.01801528   # Molar mass of Water (H2O) (kg/mol)
+        M_CO2 = 0.04401      # Molar mass of Carbon Dioxide (CO2) (kg/mol)
+        M_NO2 = 0.0460055    # Molar mass of Nitrogen Dioxide (NO2) (kg/mol)
+        O2_MIXING_RATIO = 0.2095 # Volumetric mixing ratio of O2 in dry air
+
+        # Validate required variables
+        required_vars = ['z', 't', 'o3', 'q']
+        required_coords = ['pressure_level', 'latitude', 'longitude', 'valid_time']
+        
+        for var in required_vars:
+            if var not in era5_ds.variables:
+                raise ValueError(f"Required variable '{var}' not found in ERA5 dataset")
+        
+        for coord in required_coords:
+            if coord not in era5_ds.coords:
+                raise ValueError(f"Required coordinate '{coord}' not found in ERA5 dataset")
+
+        # --- 2. Select the data for the nearest point and specified time ---
+        profile_data = era5_ds.sel(
+            latitude=latitude, 
+            longitude=longitude, 
+            valid_time=time,
+            method='nearest'
+        )
+
+        # --- 3. Extract variables and perform unit conversions ---
+        altitude_km = (profile_data['z'] / G_STD) / 1000.0
+        pressure_hpa = profile_data['pressure_level']
+        temperature_k = profile_data['t']
+        pressure_pa = pressure_hpa * 100
+
+        # Air number density: calculated from ideal gas law p = NkT
+        air_number_density_m3 = pressure_pa / (K_B * temperature_k)
+        air_number_density_cm3 = air_number_density_m3 / 1e6
+
+        # Function to convert mass mixing ratio (kg/kg) to number density (molecules/cm^3)
+        def mmr_to_nd(mmr, m_gas):
+            return (mmr * (M_AIR / m_gas) * air_number_density_m3) / 1e6
+
+        # --- 4. Calculate number densities for each trace gas ---
+        
+        # Mandatory gases from dataset
+        o3_nd_cm3 = mmr_to_nd(profile_data['o3'], M_O3)
+        h2o_nd_cm3 = mmr_to_nd(profile_data['q'], M_H2O) # Specific humidity is close to MMR
+        
+        # O2 number density is based on a constant mixing ratio of air
+        o2_nd_cm3 = air_number_density_cm3 * O2_MIXING_RATIO
+        
+        # Handle optional gases
+        if 'co2' in era5_ds.variables:
+            co2_nd_cm3 = mmr_to_nd(profile_data['co2'], M_CO2)
+        else:
+            logger.info("'co2' variable not found in dataset. Using constant 420 ppmv.")
+            CO2_VMR = 420e-6  # 420 parts per million by volume
+            co2_nd_cm3 = air_number_density_cm3 * CO2_VMR
+
+        if 'no2' in era5_ds.variables:
+            no2_nd_cm3 = mmr_to_nd(profile_data['no2'], M_NO2)
+        else:
+            logger.info("'no2' variable not found in dataset. Using zero concentration.")
+            no2_nd_cm3 = xr.zeros_like(air_number_density_cm3)
+
+        # --- 5. Assemble data into a pandas DataFrame ---
+        df = pd.DataFrame({
+            'z(km)': altitude_km.values,
+            'p(mb)': pressure_hpa.values, # mb and hPa are equivalent
+            'T(K)': temperature_k.values,
+            'air(cm-3)': air_number_density_cm3.values,
+            'o3(cm-3)': o3_nd_cm3.values,
+            'o2(cm-3)': o2_nd_cm3.values,
+            'h2o(cm-3)': h2o_nd_cm3.values,
+            'co2(cm-3)': co2_nd_cm3.values,
+            'no2(cm-3)': no2_nd_cm3.values,
+        })
+
+        # Drop any rows that have NaN values in key columns
+        df.dropna(subset=['z(km)', 'p(mb)', 'T(K)'], inplace=True)
+
+        # --- 6. Sort and format for libRadtran ---
+        # The atmosphere file must be specified top-down (decreasing pressure/increasing altitude)
+        df_sorted = df.sort_values(by='z(km)', ascending=False)
+
+        # --- 7. Write to the specified output file ---
+        output_path = Path(output_filepath)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(output_path, 'w') as f:
+            # Write descriptive headers
+            f.write("# ERA5 atmospheric profile, generated for libRadtran.\n")
+            f.write(f"# Location: lat={latitude:.2f}, lon={longitude:.2f}\n")
+            f.write(f"# Time: {pd.to_datetime(profile_data.valid_time.values)}\n")
+            
+            # Write the column header line
+            column_header = "# " + " ".join(df_sorted.columns)
+            f.write(column_header + '\n')
+            
+            # Write the dataframe to the file, space-separated, with scientific notation
+            df_sorted.to_csv(f, sep=' ', index=False, header=False, na_rep='0.0', float_format='%.6E')
+
+        logger.info(f"Successfully created libRadtran atmosphere file at: {output_path}")
+        return output_path
+        
+    except Exception as e:
+        logger.error(f"Failed to create ERA5 atmosphere file: {e}")
+        raise InputGenerationError(f"ERA5 atmosphere file creation failed: {e}")
+
 
 # --- Data Loading ---
 

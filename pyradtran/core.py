@@ -21,6 +21,8 @@ def generate_input_content(
     radiosonde_path: Optional[Path] = None,
     override_albedo: Optional[float] = None, # Added override_albedo
     override_sza: Optional[float] = None,
+    override_atmosphere: Optional[str] = None, # Added override_atmosphere
+    era5_atmosphere_file: Optional[Path] = None, # Added ERA5 atmosphere file
 ) -> str:
     """
     Generates the content for a LibRadtran/uvspec input file.
@@ -33,6 +35,8 @@ def generate_input_content(
         radiosonde_path: Optional path to a radiosonde file
         override_albedo: Optional override for surface albedo value # Added
         override_sza: Optional override for solar zenith angle
+        override_atmosphere: Optional override for atmosphere type (e.g., 'tropical', 'subarctic_winter')
+        era5_atmosphere_file: Optional path to custom ERA5 atmosphere file
         
     Returns:
         String containing the complete input file content
@@ -47,16 +51,24 @@ def generate_input_content(
     
     # --- Molecular absorption parameterization ---
     lines.append(f"mol_abs_param {config.simulation_defaults.mol_abs_param}")
+
+    # --- Atmosphere settings ---
+    if era5_atmosphere_file is not None:
+        # Use the custom ERA5 atmosphere file with absolute path
+        era5_abs_path = Path(era5_atmosphere_file).resolve()
+        lines.append(f"atmosphere_file {era5_abs_path}")
+        logger.debug(f"Using ERA5 atmosphere file: {era5_abs_path}")
+    elif override_atmosphere is not None:
+        # Use the explicitly provided atmosphere type
+        lines.append(f"atmosphere {override_atmosphere}")
+    else:
+        # Use the default atmosphere type from configuration
+        lines.append(f"atmosphere_file {config.paths.atmosphere_profile}")
     
     # --- Atmosphere and aerosol settings ---
     if radiosonde_path and config.simulation_defaults.h2o_source == 'radiosonde':
-        # Use standard atmosphere file without H2O RH
-        lines.append(f"atmosphere_file {config.paths.atmosphere_profile}")
         # Add radiosonde with H2O RH parameters
         lines.append(f"radiosonde {radiosonde_path} H2O RH")
-    else:
-        # Use default atmosphere file only
-        lines.append(f"atmosphere_file {config.paths.atmosphere_profile}")
     
     # Add data files path from configuration
     if config.paths.libradtran_data:
@@ -205,6 +217,8 @@ def generate_input_content(
         lon_hemisphere = "E" if longitude >= 0 else "W"
         lon_value = abs(longitude)
         lines.append(f"longitude {lon_hemisphere} {lon_value}")
+
+
     
     # --- Surface properties ---
     if override_albedo is not None:
@@ -342,6 +356,7 @@ class Simulation:
         latitude: float,
         longitude: float,
         override_albedo: Optional[float] = None, # Added override_albedo
+        era5_atmosphere_file: Optional[Path] = None, # Added ERA5 atmosphere file
         ) -> Tuple[Optional[Path], Optional[Path]]:
         """
         Generates the uvspec input file for a specific run.
@@ -371,6 +386,7 @@ class Simulation:
                 longitude=longitude,
                 radiosonde_path=radiosonde_path,
                 override_albedo=override_albedo, # Pass override_albedo
+                era5_atmosphere_file=era5_atmosphere_file, # Pass ERA5 atmosphere file
             )
         except Exception as e:
              logger.error(f"Failed to generate input content for {dt} @ ({latitude},{longitude}): {e}")
@@ -418,6 +434,7 @@ class Simulation:
         latitude: float,
         longitude: float,
         override_albedo: Optional[float] = None, # Added override_albedo
+        era5_atmosphere_file: Optional[Path] = None, # Added ERA5 atmosphere file
         ) -> Optional[Path]:
         """
         Generates input, runs one uvspec instance, and returns the output file path.
@@ -427,6 +444,7 @@ class Simulation:
             latitude: Latitude for the simulation.
             longitude: Longitude for the simulation.
             override_albedo: Optional albedo value to override config. # Added
+            era5_atmosphere_file: Optional path to custom ERA5 atmosphere file.
 
         Returns:
             Path to the generated output file, or None if the simulation failed
@@ -445,7 +463,7 @@ class Simulation:
             # 1. Generate Input File
             if self.config.execution.debug_mode:
                 logger.debug("[run] Step 1: Generating input file...")
-            input_file, _ = self._generate_input_file(dt, latitude, longitude, override_albedo=override_albedo) # Pass override_albedo
+            input_file, _ = self._generate_input_file(dt, latitude, longitude, override_albedo=override_albedo, era5_atmosphere_file=era5_atmosphere_file) # Pass parameters
             if not input_file:
                 logger.error("[run] Input file generation failed. Aborting run.")
                 return None # Error already logged

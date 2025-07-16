@@ -22,7 +22,8 @@ from .core import Simulation
 from .io import (
     load_simulation_input_data, 
     parse_uvspec_output, 
-    save_results_to_netcdf
+    save_results_to_netcdf,
+    create_era5_atmosphere_file
 )
 
 logger = logging.getLogger(__name__)
@@ -114,6 +115,7 @@ def execute_simulation_batch(
     lat_var: str = 'latitude',
     lon_var: str = 'longitude',
     albedo_var: Optional[str] = None,
+    era5_atmosphere: Optional[xr.Dataset] = None,
     progress_callback: Optional[Callable[[int, int], None]] = None
 ) -> Dict[str, Any]:
     """
@@ -126,6 +128,7 @@ def execute_simulation_batch(
         lat_var: Name of latitude dimension/coordinate in the dataset
         lon_var: Name of longitude dimension/coordinate in the dataset
         albedo_var: Optional name of albedo data_var in the dataset
+        era5_atmosphere: Optional ERA5 dataset for custom atmosphere profiles
         progress_callback: Optional callback function(current, total) for progress updates
         
     Returns:
@@ -142,6 +145,14 @@ def execute_simulation_batch(
     albedos = None
     if albedo_var and albedo_var in input_ds:
         albedos = input_ds[albedo_var].values
+    
+    # Handle ERA5 atmosphere files if provided
+    era5_atmosphere_files = {}
+    if era5_atmosphere is not None:
+        logger.info("Creating ERA5 atmosphere files for simulation points...")
+        # Create working directory for atmosphere files
+        atm_dir = config.paths.working_dir / "era5_atmospheres"
+        atm_dir.mkdir(parents=True, exist_ok=True)
 
     # Handle different dataset structures
     if lat_var in input_ds.dims:
@@ -153,15 +164,44 @@ def execute_simulation_batch(
         for t in times:
             for lat in latitudes:
                 for lon in longitudes:
-                    points.append((t, lat, lon, None))
+                    point_id = None
+                    # Create ERA5 atmosphere file if needed
+                    if era5_atmosphere is not None:
+                        try:
+                            point_id = f"{pd.to_datetime(t).strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
+                            atm_file = atm_dir / f"era5_atm_{point_id}.dat"
+                            era5_atmosphere_files[point_id] = create_era5_atmosphere_file(
+                                era5_atmosphere, lat, lon, t, atm_file
+                            )
+                            logger.debug(f"Created ERA5 atmosphere file for {point_id}: {atm_file}")
+                        except Exception as e:
+                            logger.error(f"Failed to create ERA5 atmosphere file for lat={lat}, lon={lon}, time={t}: {e}")
+                            era5_atmosphere_files[point_id] = None
+                    
+                    points.append((t, lat, lon, None, point_id))
     else:
         # Lat/lon are per timestamp (coordinates)
-        points = [
-            (t, input_ds[lat_var].sel({time_var: t}).item(), 
-             input_ds[lon_var].sel({time_var: t}).item(),
-             albedos[i] if albedos is not None and i < len(albedos) else None)
-            for i, t in enumerate(times)
-        ]
+        points = []
+        for i, t in enumerate(times):
+            lat = input_ds[lat_var].sel({time_var: t}).item()
+            lon = input_ds[lon_var].sel({time_var: t}).item()
+            alb = albedos[i] if albedos is not None and i < len(albedos) else None
+            point_id = None
+            
+            # Create ERA5 atmosphere file if needed
+            if era5_atmosphere is not None:
+                try:
+                    point_id = f"{pd.to_datetime(t).strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
+                    atm_file = atm_dir / f"era5_atm_{point_id}.dat"
+                    era5_atmosphere_files[point_id] = create_era5_atmosphere_file(
+                        era5_atmosphere, lat, lon, t, atm_file
+                    )
+                    logger.debug(f"Created ERA5 atmosphere file for {point_id}: {atm_file}")
+                except Exception as e:
+                    logger.error(f"Failed to create ERA5 atmosphere file for lat={lat}, lon={lon}, time={t}: {e}")
+                    era5_atmosphere_files[point_id] = None
+            
+            points.append((t, lat, lon, alb, point_id))
     
     # Important: We're not creating separate simulation points for each altitude level,
     # as altitude levels are handled by a single libRadtran run
@@ -184,11 +224,14 @@ def execute_simulation_batch(
     # Run simulations (parallel if configured)
     with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
         # Submit all tasks
-        future_to_point = {
-            executor.submit(
-                _run_single_simulation, runner, t, lat, lon, alb
-            ): (t, lat, lon) for t, lat, lon, alb in points
-        }
+        future_to_point = {}
+        for t, lat, lon, alb, point_id in points:
+            era5_atm_file = era5_atmosphere_files.get(point_id) if point_id else None
+            future_to_point[
+                executor.submit(
+                    _run_single_simulation, runner, t, lat, lon, alb, era5_atm_file
+                )
+            ] = (t, lat, lon)
         
         # Process results as they complete
         for future in as_completed(future_to_point):
@@ -243,6 +286,17 @@ def execute_simulation_batch(
     
     logger.info(f"Completed {completed}/{total_points} simulations with {len(results_dict)} output variables")
     
+    # Clean up ERA5 atmosphere files if configured to do so
+    if era5_atmosphere is not None and config.execution.cleanup_temp_files:
+        logger.debug("Cleaning up ERA5 atmosphere files...")
+        for point_id, atm_file in era5_atmosphere_files.items():
+            if atm_file and atm_file.exists():
+                try:
+                    atm_file.unlink()
+                    logger.debug(f"Cleaned up ERA5 atmosphere file: {atm_file}")
+                except OSError as e:
+                    logger.warning(f"Failed to clean up ERA5 atmosphere file {atm_file}: {e}")
+    
     if not results_dict:
         raise PyRadtranError("All simulations failed, no valid results")
     
@@ -258,7 +312,8 @@ def _run_single_simulation(
     dt: np.datetime64,
     latitude: float,
     longitude: float,
-    albedo: Optional[float] = None
+    albedo: Optional[float] = None,
+    era5_atmosphere_file: Optional[Path] = None
 ) -> Optional[Dict[str, Any]]:
     """
     Run a single simulation using the Simulation object (used by execute_simulation_batch).
@@ -269,7 +324,7 @@ def _run_single_simulation(
         py_dt = pd.to_datetime(dt).to_pydatetime()
         
         # Run uvspec
-        output_file = runner.run(py_dt, latitude, longitude, override_albedo=albedo)
+        output_file = runner.run(py_dt, latitude, longitude, override_albedo=albedo, era5_atmosphere_file=era5_atmosphere_file)
         if output_file and output_file.exists():
             # Parse output
             result = parse_uvspec_output(output_file, runner.config)
@@ -311,6 +366,7 @@ class PyRadtranAccessor:
         lat_var: str = 'latitude',
         lon_var: str = 'longitude',
         albedo_var: Optional[str] = None,
+        era5_atmosphere: Optional[xr.Dataset] = None,
         return_dataset: bool = True,
         save_to_file: bool = True,
         progress_callback: Optional[Callable[[int, int], None]] = None
@@ -326,6 +382,7 @@ class PyRadtranAccessor:
             lat_var: Name of latitude dimension/coordinate in the dataset
             lon_var: Name of longitude dimension/coordinate in the dataset
             albedo_var: Optional name of albedo data_var in the dataset
+            era5_atmosphere: Optional ERA5 xarray Dataset for custom atmosphere profiles
             return_dataset: If True, return the results as an xarray Dataset
             save_to_file: If True, save results to a NetCDF file
             progress_callback: Optional callback function(current, total) for progress updates
@@ -364,6 +421,21 @@ class PyRadtranAccessor:
         # Validate albedo variable if provided
         if albedo_var and albedo_var not in self._obj.data_vars:
             raise PyRadtranError(f"Albedo variable '{albedo_var}' not found in dataset data_vars")
+        
+        # Validate ERA5 atmosphere dataset if provided
+        if era5_atmosphere is not None:
+            required_era5_vars = ['z', 't', 'o3', 'q']
+            required_era5_coords = ['pressure_level', 'latitude', 'longitude', 'valid_time']
+            
+            for var in required_era5_vars:
+                if var not in era5_atmosphere.variables:
+                    raise PyRadtranError(f"Required variable '{var}' not found in ERA5 atmosphere dataset")
+            
+            for coord in required_era5_coords:
+                if coord not in era5_atmosphere.coords:
+                    raise PyRadtranError(f"Required coordinate '{coord}' not found in ERA5 atmosphere dataset")
+                    
+            logger.info(f"ERA5 atmosphere dataset validated with {len(era5_atmosphere.pressure_level)} pressure levels")
 
         # Check if we have altitude information in the input dataset - if so, override config
         alt_var = 'altitude'
@@ -397,6 +469,7 @@ class PyRadtranAccessor:
             lat_var=lat_var,
             lon_var=lon_var,
             albedo_var=albedo_var,
+            era5_atmosphere=era5_atmosphere,
             progress_callback=progress_callback
         )
         
