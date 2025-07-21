@@ -1,0 +1,78 @@
+execution:
+  cleanup_temp_files: false
+  debug_mode: false
+  max_workers: 1
+  timeout_seconds: 60
+output:
+  filename_prefix: xarray_example
+  filename_suffix: .nc
+  netcdf_encoding: null
+  variable_encoding: {}
+paths:
+  atmosphere_profile: /projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat
+  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
+  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
+  output_dir: work
+  radiosonde_base: /projekt_agmwend/data/HALO-AC3/01_soundings/RS_for_libradtran/Dropsondes_HALO/
+  solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
+  working_dir: work
+simulation_defaults:
+  aerosol_type: default
+  aerosols:
+    enabled: false
+  albedo_file: null
+  albedo_library: null
+  albedo_type: const
+  albedo_value: 0.3
+  brdf_cam:
+    enabled: false
+    pcl: 0.01
+    sal: 34.3
+    solar_wind: false
+    u10: 5.0
+    uphi: 0.0
+  brdf_rpv:
+    enabled: false
+    k: null
+    rho0: null
+    rpv_file: null
+    rpv_library: null
+    rpv_type: null
+    scale: null
+    sigma: null
+    t1: null
+    t2: null
+    theta: null
+  brdf_rpv_type: null
+  brdf_type: lambertian
+  clouds:
+    enabled: false
+  correlated_k: false
+  h2o_mm: 2.0
+  h2o_source: radiosonde
+  integrate_wavelength: false
+  mol_abs_param: lowtran per_nm
+  mol_modify: null
+  mol_tau_file: null
+  output_quantity: transmittance
+  output_altitudes_km:
+  - 0.0
+  output_columns:
+  - lambda
+  - sza
+  - edir
+  - eglo
+  - edn
+  - eup
+  - enet
+  - albedo
+  ozone_du: 300.0
+  phi: null
+  rte_solver: disort
+  surface_temperature_k: 273.15
+  transmittance_source: default
+  umu: null
+  viewing_geometry: nadir
+  wavelength_nm:
+  - 400
+  - 700
