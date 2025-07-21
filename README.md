@@ -1,4 +1,5 @@
 # PyRadtran
+![pyRadtran logo](logo.png)
 
 A flexible and user-friendly Python wrapper for the libradtran radiative transfer model (`uvspec`), with seamless integration into the scientific Python ecosystem, particularly `xarray`.
 
@@ -8,7 +9,6 @@ A flexible and user-friendly Python wrapper for the libradtran radiative transfe
 - **Xarray Integration**: Run simulations directly from xarray Datasets with `ds.pyradtran.run_uvspec()`
 - **Multi-level Output Support**: Handle multi-altitude simulations with proper dimensions/coordinates
 - **Parallel Processing**: Run multiple simulations in parallel for different times/locations
-- **Cloud & Aerosol Support**: Define complex atmospheric conditions with clouds and aerosols
 - **Intelligent Input/Output**: Read from CSV/NetCDF, save results with metadata
 
 ## Installation
@@ -22,7 +22,7 @@ A flexible and user-friendly Python wrapper for the libradtran radiative transfe
 ### Installing from Source
 
 ```bash
-git clone https://github.com/yourusername/pyradtran.git
+git clone https://github.com/FranzFlink/pyradtran.git
 cd pyradtran
 pip install -e .
 ```
@@ -30,24 +30,6 @@ pip install -e .
 ## Basic Usage
 
 ### Simple Example
-
-```python
-import xarray as xr
-from pyradtran import run_pyradtran_simulation
-
-# Run from a CSV/NetCDF file with time, latitude, longitude
-result_path = run_pyradtran_simulation(
-    input_file="your_input_data.csv",
-    config_path="config/your_config.yaml"
-)
-print(f"Results saved to: {result_path}")
-
-# Load and explore results
-ds = xr.open_dataset(result_path)
-print(ds)
-```
-
-### Using the xarray Accessor
 
 ```python
 import xarray as xr
@@ -87,73 +69,6 @@ result_ds = ds.pyradtran.run_uvspec(
 result_ds.eglo.plot()
 ```
 
-### Configuration
-
-Create a YAML configuration file:
-
-```yaml
-# config/my_simulation.yaml
-paths:
-  libradtran_bin: /path/to/uvspec
-  libradtran_data: /path/to/libRadtran/data
-  atmosphere_profile: /path/to/atmosphere.dat
-  solar_spectrum: /path/to/solar.dat
-  radiosonde_base: /path/to/radiosondes/
-  output_dir: ./results
-  working_dir: ./temp
-
-simulation_defaults:
-  rte_solver: disort
-  mol_abs_param: reptran coarse
-  wavelength_nm: [280, 2800]
-  output_columns:
-    - sza
-    - edir
-    - eglo
-    - edn
-    - eup
-    - enet
-    - albedo
-  output_altitudes_km: [0.0, 1.0, 2.0, 3.0, 5.0, 10.0]
-  
-  # Surface properties
-  albedo_type: const
-  albedo_value: 0.3
-  surface_temperature_k: 273.15
-  
-  # Cloud properties
-  clouds:
-    enabled: true
-    cloud_optical_properties: mie
-    cloud_overlap: max-random
-    layer_heights_km:
-      - [1.0, 2.0]
-    layer_water_content:
-      - 0.1
-    layer_effective_radius_um:
-      - 10.0
-  
-  # Aerosol properties
-  aerosols:
-    enabled: true
-    aerosol_type: rural
-    aerosol_visibility_km: 23.0
-    aerosol_optical_properties: default
-
-execution:
-  max_workers: 8
-  cleanup_temp_files: true
-  debug_mode: false
-  timeout_seconds: 300
-
-output:
-  filename_prefix: rtm_sim
-  filename_suffix: _results.nc
-  netcdf_encoding:
-    zlib: true
-    complevel: 5
-```
-
 ## Advanced Usage
 
 ### Override Parameters for Specific Simulations
@@ -164,7 +79,6 @@ result_ds = ds.pyradtran.run_uvspec(
     config_path="config/base_config.yaml",
     parameter_overrides={
         "simulation_defaults.albedo_value": 0.8,
-        "simulation_defaults.clouds.enabled": False,
         "execution.max_workers": 16
     }
 )
@@ -214,21 +128,6 @@ for albedo in albedo_values:
 # (Implementation depends on exact structure of your results)
 ```
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit pull requests.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## Acknowledgments
-
-* The libradtran team for their excellent radiative transfer model
-* The xarray developers for their powerful data structures
+* Emde, C., Buras-Schnell, R., Kylling, A., Mayer, B., Gasteiger, J., Hamann, U., Kylling, J., Richter, B., Pause, C., Dowling, T., and Bugliaro, L.: The libRadtran software package for radiative transfer calculations (version 2.0.1), Geosci. Model Dev., 9, 1647–1672, https://doi.org/10.5194/gmd-9-1647-2016, 2016. 
+* Hoyer, S. & Hamman, J., (2017). xarray: N-D labeled Arrays and Datasets in Python. Journal of Open Research Software. 5(1), p.10. DOI: https://doi.org/10.5334/jors.148
