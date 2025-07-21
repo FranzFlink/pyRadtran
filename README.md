@@ -1,4 +1,6 @@
 # PyRadtran
+![pyRadtranlogo](logo.png)
+
 
 [![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://franzflink.github.io/pyRadtran/)
 [![License](https://img.shields.io/github/license/FranzFlink/pyRadtran)](https://github.com/FranzFlink/pyRadtran/blob/main/LICENSE)
