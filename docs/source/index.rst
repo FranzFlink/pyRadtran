@@ -30,27 +30,14 @@ Key Features
 
 🌞 **Solar & Thermal Simulations**
    Support for both solar radiation (UV, visible, near-IR) and thermal infrared simulations
-
 🗂️ **Flexible Configuration**
    YAML-based configuration system with sensible defaults and easy customization
-
-🐍 **Pythonic Interface**
-   Clean, intuitive Python API with excellent integration into the scientific Python ecosystem
-
 📊 **xarray Integration**
    Native support for xarray datasets with automatic coordinate handling and metadata preservation
-
 🌍 **Atmospheric Profiles**
    Support for standard atmospheric profiles, radiosondes, and ERA5 reanalysis data
-
-⚡ **Batch Processing**
-   Efficient batch processing capabilities for time series and spatial analyses
-
-🔬 **Scientific Accuracy**
-   Built on the robust and well-validated libRadtran radiative transfer model
-
-📈 **Analysis Tools**
-   Built-in utilities for result visualization and analysis
+⚡ **multi-core Processing**
+   Batch processing capabilities to run multiple simulations at once
 
 .. toctree::
    :maxdepth: 2

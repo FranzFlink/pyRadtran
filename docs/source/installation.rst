@@ -17,13 +17,13 @@ You can install ``pyradtran`` directly from GitHub:
 
 .. code-block:: bash
 
-    pip install git+https://github.com/yourusername/pyradtran.git
+    pip install git+git@github.com:FranzFlink/pyRadtran.git
 
 Or install from your local copy:
 
 .. code-block:: bash
 
-    git clone https://github.com/yourusername/pyradtran.git
+    git clone git@github.com:FranzFlink/pyRadtran.git
     cd pyradtran
     pip install -e .
 
@@ -38,6 +38,8 @@ Installing libRadtran
 
 .. code-block:: bash
 
+    gzip -d libradtran-x.yy.tar.gz
+    tar -xvf libradtran-x.yy.tar
     ./configure
     make
     make check

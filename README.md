@@ -46,41 +46,40 @@ pip install -e .
 ### Simple Example
 
 ```python
-import xarray as xr
+from pyradtran.interface import PyRadtranAccessor  # This should register the accessor automatically
+import matplotlib.pyplot as plt
 import numpy as np
+import xarray as xr
+from pathlib import Path
 import pandas as pd
 
-# Create a dataset with time, latitude, longitude
-times = pd.date_range("2023-05-01", periods=24, freq="1H")
-lats = np.linspace(60.0, 60.5, 5)
-lons = np.linspace(10.0, 10.5, 5)
+# Load the configuration from the YAML file
+config_path = Path('../config/spectral_config.yaml')
+import logging
+# change to "DEBUG" if you want to see more output
+logging.getLogger('pyradtran').setLevel(logging.CRITICAL)
 
-# Create a time series at fixed locations
-coords = {
-    "time": times,
-    "latitude": ("time", np.full(len(times), 60.2)),
-    "longitude": ("time", np.full(len(times), 10.3))
-}
+N_timesteps = 24
 
-# Or create a grid with lat/lon dimensions
-# coords = {
-#     "time": times,
-#     "latitude": lats,
-#     "longitude": lons
-# }
-
-# Create the dataset
-ds = xr.Dataset(coords=coords)
-
-# Run uvspec simulations
-result_ds = ds.pyradtran.run_uvspec(
-    config_path="config/your_config.yaml",
-    output_path="results/your_simulation.nc",
-    return_dataset=True
+# stationary simulation at constant altitude, latitude, and longitude but with varying time
+ds = xr.Dataset(
+    coords={
+        'time' : pd.date_range('2025-04-04', periods=N_timesteps, freq='h'),
+        'latitude' : ('time', [61.0] * N_timesteps),
+        'longitude' : ('time', [22.0] * N_timesteps),
+        'altitude' : ('altitude', [10]),
+    }
 )
 
-# Explore and visualize results
-result_ds.eglo.plot()
+# Run a spectral simulation for a single point
+ds_sim = ds.pyradtran.run_uvspec(
+    config_path=config_path,
+    return_dataset=True,
+    save_to_file=True,
+)
+
+# explore the results
+print(ds_sim)
 ```
 
 ## Advanced Usage

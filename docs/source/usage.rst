@@ -65,9 +65,6 @@ You can customize these settings in your YAML configuration file:
       
     output:
       filename_prefix: my_simulation
-      netcdf_encoding:
-        zlib: true
-        complevel: 5
 
 Running Simulations
 ==================
@@ -93,30 +90,14 @@ You can process the simulation results using the I/O utilities:
 
 .. code-block:: python
 
-    from pyradtran.io import read_output
-    import matplotlib.pyplot as plt
-    
-    # Read the output file
-    if output_file:
-        result = read_output(output_file)
-        
-        # Access the data (dictionary format)
-        wavelengths = result['wavelength']  # in nm
-        direct_irradiance = result['edir']  # direct irradiance
-        diffuse_down = result['edn']        # diffuse downward
-        diffuse_up = result['eup']          # diffuse upward
-        
-        # Plot the results
-        plt.figure(figsize=(10, 6))
-        plt.plot(wavelengths, direct_irradiance, label='Direct')
-        plt.plot(wavelengths, diffuse_down, label='Diffuse Down')
-        plt.plot(wavelengths, diffuse_up, label='Diffuse Up')
-        plt.xlabel('Wavelength (nm)')
-        plt.ylabel('Irradiance')
-        plt.legend()
-        plt.grid(True)
-        plt.show()
+  from pyradtran.io import parse_uvspec_output
+  import matplotlib.pyplot as plt
 
+  # Read the output file
+  if output_file:
+      result = parse_uvspec_output(output_file, config)
+      print(result)
+      
 Advanced Configuration
 =====================
 
