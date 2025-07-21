@@ -15,8 +15,14 @@ project = 'pyradtran'
 copyright = '2025, pyradtran developers'
 author = 'pyradtran developers'
 
-version = '0.1'
-release = '0.1'
+# Get version from package
+try:
+    from pyradtran import __version__
+    version = __version__
+    release = __version__
+except ImportError:
+    version = '0.1.0'
+    release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -26,10 +32,20 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.githubpages',  # Adds support for GitHub Pages
     # 'sphinx_autoapi.extension',  # Temporarily disabled
     'nbsphinx',
     'myst_parser',
 ]
+
+# Intersphinx mapping for external documentation
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3/', None),
+    'numpy': ('https://numpy.org/doc/stable/', None),
+    'pandas': ('https://pandas.pydata.org/docs/', None),
+    'xarray': ('https://docs.xarray.dev/en/stable/', None),
+}
 
 # Temporarily disabled autoapi settings
 # autoapi_type = 'python'
@@ -47,6 +63,39 @@ language = 'en'
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
+# Theme options
+html_theme_options = {
+    'canonical_url': '',
+    'analytics_id': '',
+    'logo_only': False,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    'style_nav_header_background': '#2980B9',
+    # Toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
+
+# Custom sidebar
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'relations.html',
+        'searchbox.html',
+        'donate.html',
+    ]
+}
+
+# Additional options for GitHub Pages
+html_baseurl = 'https://franzflink.github.io/pyRadtran/'
+html_title = f"{project} v{release} documentation"
+
 # -- Options for Napoleon extension ------------------------------------------
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
@@ -62,3 +111,25 @@ napoleon_use_rtype = True
 napoleon_preprocess_types = False
 napoleon_type_aliases = None
 napoleon_attr_annotations = True
+
+# -- Options for nbsphinx extension ------------------------------------------
+nbsphinx_execute = 'never'  # Don't execute notebooks during build
+nbsphinx_allow_errors = True  # Allow notebooks with errors to build
+nbsphinx_timeout = 300  # Timeout for notebook execution in seconds
+
+# -- Options for MyST parser ---------------------------------------------
+myst_enable_extensions = [
+    "dollarmath",
+    "amsmath",
+    "deflist",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "colon_fence",
+    "smartquotes",
+    "replacements",
+    "linkify",
+    "strikethrough",
+    "substitution",
+    "tasklist"
+]

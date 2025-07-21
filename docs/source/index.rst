@@ -4,33 +4,80 @@
    contain the root `toctree` directive.
 
 ===================
-pyradtran
+PyRadtran
 ===================
 
 A Python interface for the libRadtran Radiative Transfer Model.
 
-pyradtran provides a Pythonic interface to the libRadtran radiative transfer model, which is used 
+PyRadtran provides a Pythonic interface to the libRadtran radiative transfer model, which is used 
 for modeling radiation transport in Earth's atmosphere. This package aims to make it easier to 
-set up, run, and analyze radiative transfer simulations.
+set up, run, and analyze radiative transfer simulations with support for both solar and thermal infrared radiation.
 
-Features
-========
+.. image:: https://img.shields.io/github/license/FranzFlink/pyRadtran
+   :target: https://github.com/FranzFlink/pyRadtran/blob/main/LICENSE
+   :alt: License
 
-* Pythonic interface to libRadtran
-* Robust configuration management
-* Support for radiative transfer simulations with various parameters
-* Integration with scientific Python tools
-* Input/output utilities
+.. image:: https://img.shields.io/github/stars/FranzFlink/pyRadtran
+   :target: https://github.com/FranzFlink/pyRadtran
+   :alt: GitHub stars
+
+.. image:: https://readthedocs.org/projects/pyradtran/badge/?version=latest
+   :target: https://franzflink.github.io/pyRadtran/
+   :alt: Documentation Status
+
+Key Features
+============
+
+🌞 **Solar & Thermal Simulations**
+   Support for both solar radiation (UV, visible, near-IR) and thermal infrared simulations
+
+🗂️ **Flexible Configuration**
+   YAML-based configuration system with sensible defaults and easy customization
+
+🐍 **Pythonic Interface**
+   Clean, intuitive Python API with excellent integration into the scientific Python ecosystem
+
+📊 **xarray Integration**
+   Native support for xarray datasets with automatic coordinate handling and metadata preservation
+
+🌍 **Atmospheric Profiles**
+   Support for standard atmospheric profiles, radiosondes, and ERA5 reanalysis data
+
+⚡ **Batch Processing**
+   Efficient batch processing capabilities for time series and spatial analyses
+
+🔬 **Scientific Accuracy**
+   Built on the robust and well-validated libRadtran radiative transfer model
+
+📈 **Analysis Tools**
+   Built-in utilities for result visualization and analysis
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Getting Started:
 
    installation
    usage
+
+.. toctree::
+   :maxdepth: 2
+   :caption: User Guide:
+
    examples
-   api
    notebooks
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference:
+
+   api
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Development:
+
+   contributing
+   changelog
 
 Installation
 ===========
