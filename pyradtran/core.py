@@ -347,11 +347,30 @@ def generate_input_content(
     
     # Output quantities - MUST be the very last directive
     if config.simulation_defaults.output_columns:
-        output_format = " ".join(config.simulation_defaults.output_columns)
+        # Ensure zout and lambda are always included for robust parsing
+        output_columns = list(config.simulation_defaults.output_columns)
+        
+        # Always add zout (altitude) if not present
+        if 'zout' not in output_columns:
+            output_columns.insert(0, 'zout')
+        
+        # Always add lambda (wavelength) if not present
+        if 'lambda' not in output_columns:
+            # Insert lambda after zout if zout is first, otherwise at the beginning
+            if output_columns[0] == 'zout':
+                output_columns.insert(1, 'lambda')
+            else:
+                output_columns.insert(0, 'lambda')
+        
+        output_format = " ".join(output_columns)
         output_directives.append(f"output_user {output_format}")
+        
+        # Log the final output format for debugging
+        if config.execution.debug_mode:
+            logger.debug(f"Output format with ensured zout/lambda: {output_format}")
     else:
         # Default output format if none specified
-        output_directives.append("output_user lambda edir edn eup")
+        output_directives.append("output_user lambda zout edir edn eup")
     
     # Add all output directives in the correct order
     lines.extend(output_directives)

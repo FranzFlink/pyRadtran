@@ -19,8 +19,8 @@ from datetime import datetime
 from .config import SimulationConfig, load_config
 from .exceptions import PyRadtranError
 from .core import Simulation
-from .io_new import OutputParser, ParsedOutput, OutputToXarray
-from .io import (
+from .io import OutputParser, ParsedOutput, OutputToXarray
+from .io_old import (
     load_simulation_input_data, 
     save_results_to_netcdf,
     create_era5_atmosphere_file

@@ -18,6 +18,12 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 from .config import load_config, SimulationConfig, PathsConfig, SimulationDefaults
 from .core import Simulation
 from .io import (
+    OutputParser,
+    OutputToXarray,
+    ParsedOutput,
+    OutputType
+)
+from .io_old import (
     load_simulation_input_data,
     generate_uvspec_input_content,
     parse_uvspec_output,
@@ -26,9 +32,7 @@ from .io import (
 from .interface import (
     run_pyradtran_simulation, 
     execute_simulation_batch, 
-    PyRadtranAccessor,
-    create_thermal_simulation_config,
-    run_thermal_simulation
+    PyRadtranAccessor
 )
 from .utils import RadiosondeFinder
 from .exceptions import (
