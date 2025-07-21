@@ -71,7 +71,7 @@ def create_era5_atmosphere_file(
         O2_MIXING_RATIO = 0.2095 # Volumetric mixing ratio of O2 in dry air
 
         # Validate required variables
-        required_vars = ['z', 't', 'o3', 'q']
+        required_vars = ['z', 't', 'q']
         required_coords = ['pressure_level', 'latitude', 'longitude', 'valid_time']
         
         for var in required_vars:
@@ -89,6 +89,9 @@ def create_era5_atmosphere_file(
             valid_time=time,
             method='nearest'
         )
+        # --- TODO: raise a warning if the selected point if distance from the target point is > 0.1 degrees ---
+        ### this would need to be calculated in haversine...
+        
 
         # --- 3. Extract variables and perform unit conversions ---
         altitude_km = (profile_data['z'] / G_STD) / 1000.0
@@ -112,6 +115,12 @@ def create_era5_atmosphere_file(
         
         # O2 number density is based on a constant mixing ratio of air
         o2_nd_cm3 = air_number_density_cm3 * O2_MIXING_RATIO
+        if 'o3' in era5_ds.variables:
+            o3_nd_cm3 = mmr_to_nd(profile_data['o3'], M_O3)
+        else:
+            logger.info("'o3' variable not found in dataset. Using default O3 profile.")
+            # average ozone is around 300 DU, convert to number density
+            o3_nd_cm3 = 300e-6 * air_number_density_cm3  # 300 DU converted to cm^-3
         
         # Handle optional gases
         if 'co2' in era5_ds.variables:

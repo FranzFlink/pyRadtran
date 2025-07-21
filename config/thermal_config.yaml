@@ -66,6 +66,7 @@ simulation_defaults:
   - 9
   - 10
   output_columns:
+  - zout
   - lambda
   - sza
   - edir

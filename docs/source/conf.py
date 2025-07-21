@@ -55,6 +55,19 @@ intersphinx_mapping = {
 templates_path = ['_templates']
 exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
+# Include notebooks directory in source path
+import os
+import shutil
+def setup(app):
+    """Setup function to copy notebooks to source directory"""
+    notebooks_src = os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', 'notebooks')
+    notebooks_dest = os.path.join(os.path.dirname(__file__), 'notebooks')
+    
+    if os.path.exists(notebooks_src):
+        if os.path.exists(notebooks_dest):
+            shutil.rmtree(notebooks_dest)
+        shutil.copytree(notebooks_src, notebooks_dest, ignore=shutil.ignore_patterns('*.pyc', '__pycache__', '.ipynb_checkpoints', 'work', 'data'))
+
 language = 'en'
 
 # -- Options for HTML output -------------------------------------------------
@@ -116,6 +129,42 @@ napoleon_attr_annotations = True
 nbsphinx_execute = 'never'  # Don't execute notebooks during build
 nbsphinx_allow_errors = True  # Allow notebooks with errors to build
 nbsphinx_timeout = 300  # Timeout for notebook execution in seconds
+
+# Configure notebook display settings
+nbsphinx_kernel_name = 'python3'
+nbsphinx_execute_arguments = [
+    "--InlineBackend.figure_formats={'svg', 'pdf'}",
+    "--InlineBackend.rc={'figure.dpi': 96}",
+]
+
+# Custom CSS for notebooks
+nbsphinx_prolog = r"""
+{% set docname = 'notebooks/' + env.doc2path(env.docname, base=None) %}
+
+.. only:: html
+
+    .. role:: raw-html(raw)
+        :format: html
+
+    .. note::
+        This page was generated from `{{ docname|e }} <https://github.com/FranzFlink/pyRadtran/blob/main/{{ docname|e }}>`_.
+        Interactive online version: :raw-html:`<a href="https://mybinder.org/v2/gh/FranzFlink/pyRadtran/main?filepath={{ docname|e }}"><img alt="Binder badge" src="https://mybinder.org/badge_logo.svg" style="vertical-align:text-bottom"></a>`
+
+.. raw:: latex
+
+    \nbsphinxstartnotebook{\scriptsize\noindent\strut
+    \textcolor{gray}{The following section was generated from
+    \sphinxcode{\sphinxupquote{\strut {{ docname | escape_latex }}}} \dotfill}}
+"""
+
+# Notebook epilog
+nbsphinx_epilog = r"""
+.. raw:: latex
+
+    \nbsphinxstopnotebook{\scriptsize\noindent\strut
+    \textcolor{gray}{\dotfill\ \sphinxcode{\sphinxupquote{\strut
+    {{ env.doc2path(env.docname, base=None) | escape_latex }}}} ends here.}}
+"""
 
 # -- Options for MyST parser ---------------------------------------------
 myst_enable_extensions = [
