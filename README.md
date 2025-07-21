@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/github/license/FranzFlink/pyRadtran)](https://github.com/FranzFlink/pyRadtran/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/FranzFlink/pyRadtran)](https://github.com/FranzFlink/pyRadtran)
 
-A flexible and user-friendly Python wrapper for the libradtran radiative transfer model (`uvspec`), with seamless integration into the scientific Python ecosystem, particularly `xarray`.
+A flexible and user-friendly Python wrapper for the libradtran radiative transfer model (`uvspec`), with seamless integration into `xarray`.
 
 ## 📖 Documentation
 
@@ -20,11 +20,11 @@ A flexible and user-friendly Python wrapper for the libradtran radiative transfe
 ## Features
 
 - **Flexible Configuration**: Configure simulations via Python objects, dictionaries, or YAML files
-- **Xarray Integration**: Run simulations directly from xarray Datasets with `ds.pyradtran.run_uvspec()`
-- **Multi-level Output Support**: Handle multi-altitude simulations with proper dimensions/coordinates
+- **Xarray Integration**: Just run your configured simulation on an xarray dataset, that contains all the parameters of the simulation: `ds.pyradtran.run_uvspec()`
+- **Multi-level Output Support**: Simulate spectral solar/thermal simulations on multiple altitudes, for any space-time vector with one line!
 - **Parallel Processing**: Run multiple simulations in parallel for different times/locations
-- **Intelligent Input/Output**: Read from CSV/NetCDF, save results with metadata
-
+- **Intelligent Input/Output**: The wrapper automatically detects the exptected output of the simulation, which is returned as an xarray dataset.
+  
 ## Installation
 
 ### Prerequisites
@@ -84,62 +84,8 @@ print(ds_sim)
 
 ## Advanced Usage
 
-### Override Parameters for Specific Simulations
+... under construction ...
 
-```python
-# Override specific parameters without changing the config file
-result_ds = ds.pyradtran.run_uvspec(
-    config_path="config/base_config.yaml",
-    parameter_overrides={
-        "simulation_defaults.albedo_value": 0.8,
-        "execution.max_workers": 16
-    }
-)
-```
-
-### Parameter Studies
-
-```python
-import xarray as xr
-import numpy as np
-import pandas as pd
-from pyradtran import load_config, execute_simulation_batch
-
-# Load base configuration
-config = load_config("config/base_config.yaml")
-
-# Create a dataset with multiple albedo values
-albedo_values = np.linspace(0.1, 0.9, 9)  # 0.1, 0.2, ..., 0.9
-times = pd.date_range("2023-05-01 12:00", periods=1)
-
-# Create coordinates
-ms_ds = xr.Dataset(
-    coords={
-        "time": times,
-        "latitude": 60.0,
-        "longitude": 10.0,
-        "albedo": albedo_values
-    }
-)
-
-# Run separate simulations for each albedo
-results = {}
-for albedo in albedo_values:
-    # Update config for this simulation
-    config.simulation_defaults.albedo_value = albedo
-    
-    # Run simulation batch
-    result = execute_simulation_batch(
-        config=config,
-        input_ds=ms_ds.sel(albedo=albedo)
-    )
-    
-    # Store results for this albedo
-    results[albedo] = result
-
-# Combine results into a single dataset with albedo dimension
-# (Implementation depends on exact structure of your results)
-```
 
 ## Acknowledgments
 * Emde, C., Buras-Schnell, R., Kylling, A., Mayer, B., Gasteiger, J., Hamann, U., Kylling, J., Richter, B., Pause, C., Dowling, T., and Bugliaro, L.: The libRadtran software package for radiative transfer calculations (version 2.0.1), Geosci. Model Dev., 9, 1647–1672, https://doi.org/10.5194/gmd-9-1647-2016, 2016. 
