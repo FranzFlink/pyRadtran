@@ -91,37 +91,37 @@ Here's a simple example to get you started:
 
 .. code-block:: python
 
-    from datetime import datetime
-    from pyradtran.config import load_config
-    from pyradtran.core import Simulation
-    from pyradtran.io import read_output
-    import matplotlib.pyplot as plt
-    
-    # Load configuration
-    config = load_config()
-    
-    # Create a simulation
-    sim = Simulation(config)
-    
-    # Set up and run a simulation
-    dt = datetime.now()
-    latitude = 78.9  # North latitude in degrees
-    longitude = 11.9  # East longitude in degrees
-    
-    # Run the simulation
-    output_file = sim.run(dt, latitude, longitude)
-    
-    # Process results
-    if output_file:
-        result = read_output(output_file)
-        # Plot results
-        plt.figure(figsize=(10, 6))
-        plt.plot(result['wavelength'], result['edir'])
-        plt.xlabel('Wavelength (nm)')
-        plt.ylabel('Direct Irradiance')
-        plt.title('Spectral Direct Irradiance')
-        plt.grid(True)
-        plt.show()
+from pyradtran.interface import PyRadtranAccessor  # This should register the accessor automatically
+import matplotlib.pyplot as plt
+import numpy as np
+import xarray as xr
+from pathlib import Path
+import pandas as pd
+
+# Load the configuration from the YAML file
+config_path = Path('../config/spectral_config.yaml')
+import logging
+# change to "DEBUG" if you want to see more output
+logging.getLogger('pyradtran').setLevel(logging.CRITICAL)
+
+N_timesteps = 24
+
+# stationary simulation at constant altitude, latitude, and longitude but with varying time
+ds = xr.Dataset(
+    coords={
+        'time' : pd.date_range('2025-04-04', periods=N_timesteps, freq='h'),
+        'latitude' : ('time', [61.0] * N_timesteps),
+        'longitude' : ('time', [22.0] * N_timesteps),
+        'altitude' : ('altitude', [10]),
+    }
+)
+
+# Run a spectral simulation for a single point
+ds_sim = ds.pyradtran.run_uvspec(
+    config_path=config_path,
+    return_dataset=True,
+    save_to_file=True,
+)
 
 See :doc:`examples` for more detailed examples.
 

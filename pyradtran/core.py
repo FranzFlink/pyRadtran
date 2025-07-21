@@ -22,6 +22,8 @@ def generate_input_content(
     override_albedo: Optional[float] = None, # Added override_albedo
     override_sza: Optional[float] = None,
     override_atmosphere: Optional[str] = None, # Added override_atmosphere
+    override_surface_temperature: Optional[float] = None, # Added override_surface_temperature
+    override_altitude_km: Optional[float] = None, # Added override_altitude for scalar altitude
     era5_atmosphere_file: Optional[Path] = None, # Added ERA5 atmosphere file
 ) -> str:
     """
@@ -36,6 +38,8 @@ def generate_input_content(
         override_albedo: Optional override for surface albedo value # Added
         override_sza: Optional override for solar zenith angle
         override_atmosphere: Optional override for atmosphere type (e.g., 'tropical', 'subarctic_winter')
+        override_surface_temperature: Optional override for surface temperature (K) # Added
+        override_altitude_km: Optional override for observation altitude (treated as scalar) # Added
         era5_atmosphere_file: Optional path to custom ERA5 atmosphere file
         
     Returns:
@@ -195,28 +199,41 @@ def generate_input_content(
                     lines.append(f"ic_layer {z_base} {z_base + thick}")
     
     # --- Solar and Geometry settings ---
-    # Use specified solar spectrum file if available
-    if config.paths.solar_spectrum:
-        lines.append(f"source solar {config.paths.solar_spectrum} per_nm")
+    # Handle source type (solar or thermal)
+    if config.simulation_defaults.source == "thermal":
+        lines.append("source thermal")
     else:
-        lines.append("source solar per_nm")
+        # Solar source
+        if config.paths.solar_spectrum:
+            lines.append(f"source solar {config.paths.solar_spectrum} per_nm")
+        else:
+            lines.append("source solar per_nm")
     
-    if override_sza is not None:
-        # Use the explicitly provided solar zenith angle
-        lines.append(f"sza {override_sza}")
-    else:
-        # Calculate SZA from time and location
-        lines.append(f"time {dt.year} {dt.month} {dt.day} {dt.hour} {dt.minute} {dt.second}")
-        
-        # Format latitude with N/S indicator
-        lat_hemisphere = "N" if latitude >= 0 else "S"
-        lat_value = abs(latitude)
-        lines.append(f"latitude {lat_hemisphere} {lat_value}")
-        
-        # Format longitude with E/W indicator
-        lon_hemisphere = "E" if longitude >= 0 else "W"
-        lon_value = abs(longitude)
-        lines.append(f"longitude {lon_hemisphere} {lon_value}")
+    # Solar geometry parameters only apply to solar simulations
+    if config.simulation_defaults.source == "solar":
+        if override_sza is not None:
+            # Use the explicitly provided solar zenith angle
+            lines.append(f"sza {override_sza}")
+        else:
+            # Calculate SZA from time and location
+            lines.append(f"time {dt.year} {dt.month} {dt.day} {dt.hour} {dt.minute} {dt.second}")
+            
+            # Format latitude with N/S indicator
+            lat_hemisphere = "N" if latitude >= 0 else "S"
+            lat_value = abs(latitude)
+            lines.append(f"latitude {lat_hemisphere} {lat_value}")
+            
+            # Format longitude with E/W indicator
+            lon_hemisphere = "E" if longitude >= 0 else "W"
+            lon_value = abs(longitude)
+            lines.append(f"longitude {lon_hemisphere} {lon_value}")
+    
+    # For thermal simulations, add surface temperature
+    if config.simulation_defaults.source == "thermal":
+        # Use override surface temperature if provided, otherwise use config
+        surface_temp = override_surface_temperature if override_surface_temperature is not None else config.simulation_defaults.surface_temperature_k
+        if surface_temp is not None:
+            lines.append(f"sur_temperature {surface_temp}")
 
 
     
@@ -270,18 +287,21 @@ def generate_input_content(
         if hasattr(config.simulation_defaults, 'brdf_rpv_type') and config.simulation_defaults.brdf_rpv_type is not None:
             lines.append(f"brdf_rpv_type {config.simulation_defaults.brdf_rpv_type}")
         
-    # Surface temperature if needed
-    if hasattr(config.simulation_defaults, 'surface_temperature_k') and config.simulation_defaults.surface_temperature_k:
-        lines.append(f"sur_temperature {config.simulation_defaults.surface_temperature_k}")
+    # Surface temperature if needed (only for solar simulations, thermal already added above)
+    if config.simulation_defaults.source != "thermal":
+        # Use override surface temperature if provided, otherwise use config
+        surface_temp = override_surface_temperature if override_surface_temperature is not None else config.simulation_defaults.surface_temperature_k
+        if hasattr(config.simulation_defaults, 'surface_temperature_k') and surface_temp:
+            lines.append(f"sur_temperature {surface_temp}")
     
     # --- Wavelength settings ---
     wavelength = config.simulation_defaults.wavelength_nm
     if isinstance(wavelength, list) and len(wavelength) == 2:
-        # Wavelength range
-        lines.append(f"wavelength {wavelength[0]} {wavelength[1]}")
+        # Wavelength range - format with decimal points for consistency
+        lines.append(f"wavelength {wavelength[0]:.0f}. {wavelength[1]:.0f}.")
     elif isinstance(wavelength, (int, float)):
-        # Single wavelength
-        lines.append(f"wavelength {wavelength}")
+        # Single wavelength - format with decimal point
+        lines.append(f"wavelength {wavelength:.0f}.")
     
     # --- Output settings ---
     
@@ -290,17 +310,29 @@ def generate_input_content(
     
     # Vertical levels for output (altitudes in km)
     altitudes = config.simulation_defaults.output_altitudes_km
+    
+    # Override with scalar altitude if provided (altitude as data variable)
+    if override_altitude_km is not None:
+        altitudes = [override_altitude_km]
+        logger.debug(f"Using override altitude as scalar: {override_altitude_km} km")
+    
     if altitudes:
         if isinstance(altitudes, list):
             # Format each altitude with explicit format
             alt_str = " ".join(f"{alt:.1f}" for alt in altitudes)
             output_directives.append(f"zout {alt_str}")
+            # Add interpolation for multiple altitudes
+            if len(altitudes) > 1:
+                output_directives.append("zout_interpolate")
         else:
             output_directives.append(f"zout {altitudes:.1f}")
     
     # Add output_process directives in the correct order
-    # First add output_process per_nm for proper normalization 
-    output_directives.append("output_process per_nm")
+    # Use per_cm for thermal, per_nm for solar simulations
+    if config.simulation_defaults.source == "thermal":
+        output_directives.append("output_process per_cm")
+    else:
+        output_directives.append("output_process per_nm")
     
     # Add integrate directive if wavelength integration is requested
     if hasattr(config.simulation_defaults, 'integrate_wavelength') and config.simulation_defaults.integrate_wavelength:
@@ -356,6 +388,8 @@ class Simulation:
         latitude: float,
         longitude: float,
         override_albedo: Optional[float] = None, # Added override_albedo
+        override_surface_temperature: Optional[float] = None, # Added override_surface_temperature
+        override_altitude_km: Optional[float] = None, # Added override_altitude
         era5_atmosphere_file: Optional[Path] = None, # Added ERA5 atmosphere file
         ) -> Tuple[Optional[Path], Optional[Path]]:
         """
@@ -386,6 +420,8 @@ class Simulation:
                 longitude=longitude,
                 radiosonde_path=radiosonde_path,
                 override_albedo=override_albedo, # Pass override_albedo
+                override_surface_temperature=override_surface_temperature, # Pass override_surface_temperature
+                override_altitude_km=override_altitude_km, # Pass override_altitude
                 era5_atmosphere_file=era5_atmosphere_file, # Pass ERA5 atmosphere file
             )
         except Exception as e:
@@ -434,6 +470,8 @@ class Simulation:
         latitude: float,
         longitude: float,
         override_albedo: Optional[float] = None, # Added override_albedo
+        override_surface_temperature: Optional[float] = None, # Added override_surface_temperature
+        override_altitude_km: Optional[float] = None, # Added override_altitude
         era5_atmosphere_file: Optional[Path] = None, # Added ERA5 atmosphere file
         ) -> Optional[Path]:
         """
@@ -444,6 +482,8 @@ class Simulation:
             latitude: Latitude for the simulation.
             longitude: Longitude for the simulation.
             override_albedo: Optional albedo value to override config. # Added
+            override_surface_temperature: Optional surface temperature (K) to override config. # Added
+            override_altitude_km: Optional observation altitude (km) to override config. # Added
             era5_atmosphere_file: Optional path to custom ERA5 atmosphere file.
 
         Returns:
@@ -463,7 +503,7 @@ class Simulation:
             # 1. Generate Input File
             if self.config.execution.debug_mode:
                 logger.debug("[run] Step 1: Generating input file...")
-            input_file, _ = self._generate_input_file(dt, latitude, longitude, override_albedo=override_albedo, era5_atmosphere_file=era5_atmosphere_file) # Pass parameters
+            input_file, _ = self._generate_input_file(dt, latitude, longitude, override_albedo=override_albedo, override_surface_temperature=override_surface_temperature, override_altitude_km=override_altitude_km, era5_atmosphere_file=era5_atmosphere_file) # Pass parameters
             if not input_file:
                 logger.error("[run] Input file generation failed. Aborting run.")
                 return None # Error already logged

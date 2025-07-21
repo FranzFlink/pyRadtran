@@ -120,21 +120,4 @@ You can process the simulation results using the I/O utilities:
 Advanced Configuration
 =====================
 
-For more advanced configurations, you can modify the config object directly:
-
-.. code-block:: python
-
-    # Update configuration parameters
-    config.simulation_defaults.rte_solver = "disort"
-    config.simulation_defaults.output_columns = ["lambda", "edir", "edn", "eup"]
-    
-    # Enable aerosols
-    config.simulation_defaults.aerosols.enabled = True
-    config.simulation_defaults.aerosols.aerosol_type = "maritime"
-    config.simulation_defaults.aerosols.aerosol_visibility_km = 50.0
-    
-    # Enable clouds
-    config.simulation_defaults.clouds.enabled = True
-    config.simulation_defaults.clouds.layer_heights_km = [(2.0, 3.0)]
-    config.simulation_defaults.clouds.layer_water_content = [0.1]  # g/m³
-    config.simulation_defaults.clouds.layer_effective_radius_um = [10.0]  # μm
+... under construction ...

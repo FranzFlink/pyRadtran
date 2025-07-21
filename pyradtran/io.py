@@ -1128,10 +1128,13 @@ def save_results_to_netcdf(
     logger.debug(f"Detected simulation type: {sim_type}")
     
     # Check if we have spectral data
-    has_spectral = sim_type in ['spectral', 'spectral_multi_altitude'] and '_wavelength_values' in data
+    has_spectral = sim_type in ['spectral', 'spectral_multi_altitude', 'spectral_scalar_altitude'] and '_wavelength_values' in data
     
-    # Check if we have altitude data
-    has_altitude = '_unique_altitudes' in data and data['_unique_altitudes']
+    # Check if we have multi-altitude data (not scalar altitude)
+    has_multi_altitude = sim_type in ['multi_altitude', 'spectral_multi_altitude'] and '_unique_altitudes' in data and data['_unique_altitudes']
+    
+    # Check if we have scalar altitude data
+    has_scalar_altitude = sim_type in ['scalar_altitude', 'spectral_scalar_altitude']
     
     # Create a new dataset with same coordinates as input
     # First create without altitude or wavelength, then add them if needed
@@ -1146,8 +1149,8 @@ def save_results_to_netcdf(
         if coord_name in input_ds.coords:
             output_ds.coords[coord_name] = input_ds.coords[coord_name]
     
-    # Add altitude coordinate if needed
-    if has_altitude:
+    # Add altitude coordinate if needed (for multi-altitude simulations)
+    if has_multi_altitude:
         # Use explicit altitudes from results
         altitude_values = np.array(data['_unique_altitudes'], dtype=float)
         
@@ -1215,6 +1218,43 @@ def save_results_to_netcdf(
                         attrs={'units': _get_variable_units(col_name)}
                     )
                     logger.debug(f"Added spectral multi-altitude variable {col_name} with shape {data_array.shape}")
+                    
+            elif sim_type == 'spectral_scalar_altitude':
+                # Spectral data with scalar altitude - one value per time step
+                if isinstance(values, list) and values:
+                    # For scalar altitude, values should be a simple list/array per variable
+                    # Create a 1D array [time] - no altitude dimension
+                    time_len = len(output_ds[time_var])
+                    
+                    # Ensure we have the right number of values
+                    if len(values) == time_len:
+                        output_ds[col_name] = xr.DataArray(
+                            values,
+                            dims=(time_var,),
+                            coords={time_var: output_ds[time_var]},
+                            attrs={'units': _get_variable_units(col_name)}
+                        )
+                        logger.debug(f"Added spectral scalar-altitude variable {col_name} with {len(values)} time points")
+                    else:
+                        logger.warning(f"Mismatch in data length for {col_name}: expected {time_len}, got {len(values)}")
+                        
+            elif sim_type == 'scalar_altitude':
+                # Non-spectral data with scalar altitude - one value per time step
+                if isinstance(values, list) and values:
+                    # For scalar altitude, values should be a simple list/array per variable
+                    time_len = len(output_ds[time_var])
+                    
+                    # Ensure we have the right number of values
+                    if len(values) == time_len:
+                        output_ds[col_name] = xr.DataArray(
+                            values,
+                            dims=(time_var,),
+                            coords={time_var: output_ds[time_var]},
+                            attrs={'units': _get_variable_units(col_name)}
+                        )
+                        logger.debug(f"Added scalar-altitude variable {col_name} with {len(values)} time points")
+                    else:
+                        logger.warning(f"Mismatch in data length for {col_name}: expected {time_len}, got {len(values)}")
             
             elif sim_type == 'spectral':
                 # Spectral data with single altitude - values is a dict with wavelength keys

@@ -115,6 +115,8 @@ def execute_simulation_batch(
     lat_var: str = 'latitude',
     lon_var: str = 'longitude',
     albedo_var: Optional[str] = None,
+    surface_temperature_var: Optional[str] = None,
+    altitude_var: Optional[str] = None,
     era5_atmosphere: Optional[xr.Dataset] = None,
     progress_callback: Optional[Callable[[int, int], None]] = None
 ) -> Dict[str, Any]:
@@ -128,6 +130,8 @@ def execute_simulation_batch(
         lat_var: Name of latitude dimension/coordinate in the dataset
         lon_var: Name of longitude dimension/coordinate in the dataset
         albedo_var: Optional name of albedo data_var in the dataset
+        surface_temperature_var: Optional name of surface temperature data_var in the dataset
+        altitude_var: Optional name of altitude data_var in the dataset (treated as scalar)
         era5_atmosphere: Optional ERA5 dataset for custom atmosphere profiles
         progress_callback: Optional callback function(current, total) for progress updates
         
@@ -145,6 +149,14 @@ def execute_simulation_batch(
     albedos = None
     if albedo_var and albedo_var in input_ds:
         albedos = input_ds[albedo_var].values
+    
+    surface_temperatures = None
+    if surface_temperature_var and surface_temperature_var in input_ds:
+        surface_temperatures = input_ds[surface_temperature_var].values
+    
+    altitudes = None
+    if altitude_var and altitude_var in input_ds:
+        altitudes = input_ds[altitude_var].values
     
     # Handle ERA5 atmosphere files if provided
     era5_atmosphere_files = {}
@@ -178,7 +190,7 @@ def execute_simulation_batch(
                             logger.error(f"Failed to create ERA5 atmosphere file for lat={lat}, lon={lon}, time={t}: {e}")
                             era5_atmosphere_files[point_id] = None
                     
-                    points.append((t, lat, lon, None, point_id))
+                    points.append((t, lat, lon, None, None, None, point_id))
     else:
         # Lat/lon are per timestamp (coordinates)
         points = []
@@ -186,6 +198,8 @@ def execute_simulation_batch(
             lat = input_ds[lat_var].sel({time_var: t}).item()
             lon = input_ds[lon_var].sel({time_var: t}).item()
             alb = albedos[i] if albedos is not None and i < len(albedos) else None
+            surf_temp = surface_temperatures[i] if surface_temperatures is not None and i < len(surface_temperatures) else None
+            alt = altitudes[i] if altitudes is not None and i < len(altitudes) else None
             point_id = None
             
             # Create ERA5 atmosphere file if needed
@@ -201,7 +215,7 @@ def execute_simulation_batch(
                     logger.error(f"Failed to create ERA5 atmosphere file for lat={lat}, lon={lon}, time={t}: {e}")
                     era5_atmosphere_files[point_id] = None
             
-            points.append((t, lat, lon, alb, point_id))
+            points.append((t, lat, lon, alb, surf_temp, alt, point_id))
     
     # Important: We're not creating separate simulation points for each altitude level,
     # as altitude levels are handled by a single libRadtran run
@@ -221,15 +235,18 @@ def execute_simulation_batch(
         '_altitude_values': []
     }
     
+    # Check if we're using scalar altitude (altitude_var is provided)
+    using_scalar_altitude = altitude_var is not None
+    
     # Run simulations (parallel if configured)
     with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
         # Submit all tasks
         future_to_point = {}
-        for t, lat, lon, alb, point_id in points:
+        for t, lat, lon, alb, surf_temp, alt, point_id in points:
             era5_atm_file = era5_atmosphere_files.get(point_id) if point_id else None
             future_to_point[
                 executor.submit(
-                    _run_single_simulation, runner, t, lat, lon, alb, era5_atm_file
+                    _run_single_simulation, runner, t, lat, lon, alb, surf_temp, alt, era5_atm_file
                 )
             ] = (t, lat, lon)
         
@@ -241,14 +258,20 @@ def execute_simulation_batch(
                 if result:
                     # Store simulation type if we don't have it yet
                     if '_simulation_type' in result and metadata['_simulation_type'] is None:
-                        metadata['_simulation_type'] = result['_simulation_type']
+                        # Modify simulation type for scalar altitude cases
+                        if using_scalar_altitude and result['_simulation_type'] == 'spectral_multi_altitude':
+                            metadata['_simulation_type'] = 'spectral_scalar_altitude'
+                        elif using_scalar_altitude and result['_simulation_type'] == 'multi_altitude':
+                            metadata['_simulation_type'] = 'scalar_altitude'
+                        else:
+                            metadata['_simulation_type'] = result['_simulation_type']
                     
                     # Store wavelength values if spectral simulation
                     if '_wavelength_values' in result and not metadata['_wavelength_values']:
                         metadata['_wavelength_values'] = result['_wavelength_values']
                     
-                    # Store altitude values if multi-altitude simulation
-                    if '_unique_altitudes' in result and not metadata['_altitude_values']:
+                    # Store altitude values - handle scalar altitude differently
+                    if not using_scalar_altitude and '_unique_altitudes' in result and not metadata['_altitude_values']:
                         metadata['_altitude_values'] = result['_unique_altitudes']
                     
                     # First result initializes the dictionary structure
@@ -313,6 +336,8 @@ def _run_single_simulation(
     latitude: float,
     longitude: float,
     albedo: Optional[float] = None,
+    surface_temperature: Optional[float] = None,
+    altitude: Optional[float] = None,
     era5_atmosphere_file: Optional[Path] = None
 ) -> Optional[Dict[str, Any]]:
     """
@@ -324,10 +349,19 @@ def _run_single_simulation(
         py_dt = pd.to_datetime(dt).to_pydatetime()
         
         # Run uvspec
-        output_file = runner.run(py_dt, latitude, longitude, override_albedo=albedo, era5_atmosphere_file=era5_atmosphere_file)
+        output_file = runner.run(py_dt, latitude, longitude, override_albedo=albedo, override_surface_temperature=surface_temperature, override_altitude_km=altitude, era5_atmosphere_file=era5_atmosphere_file)
         if output_file and output_file.exists():
-            # Parse output
-            result = parse_uvspec_output(output_file, runner.config)
+            # Parse output - create a modified config for scalar altitude cases
+            parse_config = runner.config
+            if altitude is not None:
+                # For scalar altitude cases, modify the config to indicate single altitude level
+                # Create a copy of the config to avoid modifying the original
+                import copy
+                parse_config = copy.deepcopy(runner.config)
+                parse_config.simulation_defaults.output_altitudes_km = [altitude]
+                logger.debug(f"Modified config for scalar altitude parsing: using single altitude {altitude} km")
+            
+            result = parse_uvspec_output(output_file, parse_config)
             
             # Clean up output file if needed
             if runner.config.execution.cleanup_temp_files:
@@ -366,6 +400,7 @@ class PyRadtranAccessor:
         lat_var: str = 'latitude',
         lon_var: str = 'longitude',
         albedo_var: Optional[str] = None,
+        surface_temperature_var: Optional[str] = None,
         era5_atmosphere: Optional[xr.Dataset] = None,
         return_dataset: bool = True,
         save_to_file: bool = True,
@@ -382,6 +417,7 @@ class PyRadtranAccessor:
             lat_var: Name of latitude dimension/coordinate in the dataset
             lon_var: Name of longitude dimension/coordinate in the dataset
             albedo_var: Optional name of albedo data_var in the dataset
+            surface_temperature_var: Optional name of surface temperature data_var in the dataset
             era5_atmosphere: Optional ERA5 xarray Dataset for custom atmosphere profiles
             return_dataset: If True, return the results as an xarray Dataset
             save_to_file: If True, save results to a NetCDF file
@@ -422,6 +458,10 @@ class PyRadtranAccessor:
         if albedo_var and albedo_var not in self._obj.data_vars:
             raise PyRadtranError(f"Albedo variable '{albedo_var}' not found in dataset data_vars")
         
+        # Validate surface temperature variable if provided
+        if surface_temperature_var and surface_temperature_var not in self._obj.data_vars:
+            raise PyRadtranError(f"Surface temperature variable '{surface_temperature_var}' not found in dataset data_vars")
+        
         # Validate ERA5 atmosphere dataset if provided
         if era5_atmosphere is not None:
             required_era5_vars = ['z', 't', 'o3', 'q']
@@ -437,16 +477,25 @@ class PyRadtranAccessor:
                     
             logger.info(f"ERA5 atmosphere dataset validated with {len(era5_atmosphere.pressure_level)} pressure levels")
 
-        # Check if we have altitude information in the input dataset - if so, override config
+        # Check if we have altitude information in the input dataset
         alt_var = 'altitude'
+        altitude_as_coordinate = False
+        altitude_as_data_var = False
+        
         if alt_var in self._obj.dims or alt_var in self._obj.coords:
-            # Get altitudes from dataset
+            # Altitude is a coordinate - use as list of zout levels
+            altitude_as_coordinate = True
             dataset_altitudes = self._obj[alt_var].values
             
             # Override configuration with dataset altitudes if any are provided
             if len(dataset_altitudes) > 0:
-                logger.info(f"Overriding configuration altitude with {len(dataset_altitudes)} levels from dataset: {dataset_altitudes}")
+                logger.info(f"Altitude found as coordinate - using {len(dataset_altitudes)} levels for zout: {dataset_altitudes}")
                 self._config.simulation_defaults.output_altitudes_km = [float(alt) for alt in dataset_altitudes]
+                
+        elif alt_var in self._obj.data_vars:
+            # Altitude is a data variable - treat as scalar per time step
+            altitude_as_data_var = True
+            logger.info(f"Altitude found as data variable - will be treated as scalar altitude for each time step")
         
         # Generate output path if saving and not provided
         if save_to_file:
@@ -469,12 +518,38 @@ class PyRadtranAccessor:
             lat_var=lat_var,
             lon_var=lon_var,
             albedo_var=albedo_var,
+            surface_temperature_var=surface_temperature_var,
+            altitude_var=alt_var if altitude_as_data_var else None,
             era5_atmosphere=era5_atmosphere,
             progress_callback=progress_callback
         )
         
         # Create result dataset
         if results:
+            # For scalar altitude cases, convert dictionary results to lists
+            if altitude_as_data_var:
+                # Check if we have scalar altitude results that need flattening
+                simulation_type = results.get('_simulation_type', 'standard')
+                if simulation_type in ['scalar_altitude', 'spectral_scalar_altitude']:
+                    # Convert dictionaries to simple lists for scalar altitude variables
+                    for col_name, values in list(results.items()):
+                        if not col_name.startswith('_') and isinstance(values, dict):
+                            # For scalar altitude, flatten the dictionary values into a simple list
+                            # The keys should be time indices and values should be scalars
+                            flattened_values = []
+                            for time_idx in sorted(values.keys()):
+                                if isinstance(values[time_idx], (list, tuple)) and len(values[time_idx]) == 1:
+                                    # Single value wrapped in list/tuple
+                                    flattened_values.append(values[time_idx][0])
+                                elif isinstance(values[time_idx], (int, float)):
+                                    # Scalar value
+                                    flattened_values.append(values[time_idx])
+                                else:
+                                    # Keep as is for more complex structures
+                                    flattened_values.append(values[time_idx])
+                            results[col_name] = flattened_values
+                            logger.debug(f"Converted scalar altitude variable {col_name} from dict to list with {len(flattened_values)} values")
+            
             result_path = None
             if save_to_file:
                 result_path = save_results_to_netcdf(
@@ -499,7 +574,7 @@ class PyRadtranAccessor:
                 wavelength_values = None
                 
                 # Check for spectral data metadata from results
-                if '_simulation_type' in results and results['_simulation_type'] in ['spectral', 'spectral_multi_altitude']:
+                if '_simulation_type' in results and results['_simulation_type'] in ['spectral', 'spectral_multi_altitude', 'spectral_scalar_altitude']:
                     has_spectral_data = True
                     if '_wavelength_values' in results:
                         wavelength_values = results['_wavelength_values']
@@ -509,43 +584,45 @@ class PyRadtranAccessor:
                 has_multi_level = False
                 unique_altitudes = []
                 
-                # First check if config specifies multiple altitude levels
-                # This ensures dimensions are preserved even if not explicitly in results
-                if hasattr(self._config.simulation_defaults, 'output_altitudes_km'):
-                    if len(self._config.simulation_defaults.output_altitudes_km) > 1:
-                        has_multi_level = True
-                        unique_altitudes = sorted(set(float(alt) for alt in self._config.simulation_defaults.output_altitudes_km))
-                        logger.debug(f"Using altitude levels from config: {unique_altitudes}")
-                
-                # Then check for the special _unique_altitudes metadata field from results
-                if '_unique_altitudes' in results:
-                    has_multi_level = True
-                    unique_altitudes = results['_unique_altitudes']
-                    logger.debug(f"Found '_unique_altitudes' with {len(unique_altitudes)} levels in results")
-                
-                # Fallback: check if values are stored in altitude-indexed dictionaries
-                if not has_multi_level and not has_spectral_data:
-                    for col_name, values in results.items():
-                        if isinstance(values, dict) and not col_name.startswith('_'):
-                            # This could be multi-level data
-                            # Check if the keys look like altitude values (can be converted to float)
-                            try:
-                                # Convert a sample key to float to check if it's a number (altitude)
-                                sample_key = next(iter(values.keys()))
-                                float(sample_key)  # Just to check if it raises an error
-                                has_multi_level = True
-                                unique_altitudes.extend(float(alt) for alt in values.keys())
-                                logger.debug(f"Detected multi-level data in variable {col_name} with keys: {list(values.keys())}")
-                                break
-                            except (ValueError, StopIteration):
-                                # Not numeric keys or empty dict
-                                continue
-                
-                # Check simulation type from results - this is a strong indicator
+                # Check if we have scalar altitude data
+                has_scalar_altitude = False
                 simulation_type = results.get('_simulation_type', 'standard')
-                if simulation_type in ['multi_altitude', 'multi_altitude_structured']:
-                    has_multi_level = True
-                    logger.info(f"Results indicate multi-altitude structure with type: {simulation_type}")
+                
+                if simulation_type in ['scalar_altitude', 'spectral_scalar_altitude']:
+                    has_scalar_altitude = True
+                    logger.info(f"Detected scalar altitude simulation type: {simulation_type}")
+                elif simulation_type in ['multi_altitude', 'spectral_multi_altitude']:
+                    # First check if config specifies multiple altitude levels
+                    # This ensures dimensions are preserved even if not explicitly in results
+                    if hasattr(self._config.simulation_defaults, 'output_altitudes_km'):
+                        if len(self._config.simulation_defaults.output_altitudes_km) > 1:
+                            has_multi_level = True
+                            unique_altitudes = sorted(set(float(alt) for alt in self._config.simulation_defaults.output_altitudes_km))
+                            logger.debug(f"Using altitude levels from config: {unique_altitudes}")
+                    
+                    # Then check for the special _unique_altitudes metadata field from results
+                    if '_unique_altitudes' in results:
+                        has_multi_level = True
+                        unique_altitudes = results['_unique_altitudes']
+                        logger.debug(f"Found '_unique_altitudes' with {len(unique_altitudes)} levels in results")
+                    
+                    # Fallback: check if values are stored in altitude-indexed dictionaries
+                    if not has_multi_level and not has_spectral_data:
+                        for col_name, values in results.items():
+                            if isinstance(values, dict) and not col_name.startswith('_'):
+                                # This could be multi-level data
+                                # Check if the keys look like altitude values (can be converted to float)
+                                try:
+                                    # Convert a sample key to float to check if it's a number (altitude)
+                                    sample_key = next(iter(values.keys()))
+                                    float(sample_key)  # Just to check if it raises an error
+                                    has_multi_level = True
+                                    unique_altitudes.extend(float(alt) for alt in values.keys())
+                                    logger.debug(f"Detected multi-level data in variable {col_name} with keys: {list(values.keys())}")
+                                    break
+                                except (ValueError, StopIteration):
+                                    # Not numeric keys or empty dict
+                                    continue
                 
                 # If we have spectral data, add the wavelength dimension
                 if has_spectral_data and wavelength_values is not None:
@@ -578,16 +655,26 @@ class PyRadtranAccessor:
                     if col_name.startswith('_'):
                         continue  # Skip metadata fields
                         
-                    # Handle differently based on data type
-                    if isinstance(values, dict):
+                    # Handle scalar altitude cases
+                    if has_scalar_altitude:
+                        # For scalar altitude, values should be simple lists
+                        if isinstance(values, list):
+                            self._add_simple_variable(ds, col_name, values, time_var)
+                        else:
+                            logger.warning(f"Expected list for scalar altitude variable {col_name}, got {type(values)}")
+                    
+                    # Handle multi-level cases (original logic)
+                    elif isinstance(values, dict):
                         if has_spectral_data and not has_multi_level:
                             # Spectral data without altitude dimension
+                            unique_wavelengths = sorted(set(float(wl) for wl in wavelength_values)) if wavelength_values else []
                             self._add_spectral_variable(ds, col_name, values, unique_wavelengths, time_var, 'wavelength')
                         elif has_multi_level and not has_spectral_data:
                             # Altitude data without spectral dimension
                             self._add_altitude_variable(ds, col_name, values, unique_altitudes, time_var, alt_var)
                         elif has_spectral_data and has_multi_level:
                             # Both spectral and altitude dimensions
+                            unique_wavelengths = sorted(set(float(wl) for wl in wavelength_values)) if wavelength_values else []
                             self._add_spectral_altitude_variable(ds, col_name, values, unique_wavelengths, unique_altitudes, time_var, 'wavelength', alt_var)
                         else:
                             # Dictionary format but not recognized structure
@@ -598,7 +685,7 @@ class PyRadtranAccessor:
                 
                 # Add metadata
                 ds.attrs['generated_by'] = 'pyradtran'
-                if has_spectral_data:
+                if has_spectral_data and wavelength_values and len(wavelength_values) > 0:
                     ds.attrs['wavelength_range'] = f"{min(wavelength_values)} to {max(wavelength_values)} nm"
                 if has_multi_level:
                     ds.attrs['altitude_levels'] = f"{len(unique_altitudes)} levels (km): {', '.join(str(alt) for alt in unique_altitudes)}"
@@ -849,3 +936,153 @@ class PyRadtranAccessor:
             logger.debug(f"Added spectral-altitude variable {col_name} with shape {data_array.shape}")
         except Exception as e:
             logger.error(f"Error adding spectral-altitude variable {col_name}: {e}")
+
+
+# --- Thermal Simulation Helper Functions ---
+
+def create_thermal_simulation_config(
+    surface_temperature_k: float = 248.4,
+    wavelength_range_nm: List[float] = None,
+    mol_abs_param: str = "reptran medium",
+    rte_solver: str = "disort", 
+    output_altitudes_km: List[float] = None,
+    output_columns: List[str] = None,
+    config_template_path: Optional[Union[str, Path]] = None,
+    **kwargs
+) -> SimulationConfig:
+    """
+    Create a SimulationConfig optimized for thermal infrared simulations.
+    
+    This helper function sets up default parameters commonly used for thermal
+    simulations and allows easy customization of key parameters.
+    
+    Args:
+        surface_temperature_k: Surface temperature in Kelvin (default: 248.4 K)
+        wavelength_range_nm: [min, max] wavelength in nm (default: [4500, 42000])
+        mol_abs_param: Molecular absorption parameterization (default: "reptran medium")
+        rte_solver: Radiative transfer solver (default: "disort")
+        output_altitudes_km: List of output altitudes in km
+        output_columns: List of output quantities 
+        config_template_path: Path to base configuration file to modify
+        **kwargs: Additional configuration parameters to override
+        
+    Returns:
+        SimulationConfig: Configuration object for thermal simulations
+        
+    Example:
+        >>> config = create_thermal_simulation_config(
+        ...     surface_temperature_k=260.0,
+        ...     wavelength_range_nm=[5000, 25000],
+        ...     output_altitudes_km=[0, 1, 2, 3, 5, 10]
+        ... )
+        >>> pyradtran = PyRadtran(config)
+    """
+    
+    # Default thermal simulation parameters
+    if wavelength_range_nm is None:
+        wavelength_range_nm = [4500, 42000]  # 4.5 to 42 microns
+        
+    if output_altitudes_km is None:
+        output_altitudes_km = [0.0, 0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 15.0]
+        
+    if output_columns is None:
+        output_columns = ["zout", "edir", "edn", "eup"]
+    
+    # Load base config if provided, otherwise use defaults
+    if config_template_path:
+        config = SimulationConfig.from_yaml(config_template_path)
+    else:
+        # Create minimal config - user must provide paths
+        config_dict = {
+            "paths": {
+                "libradtran_bin": "/opt/libradtran/current/bin/uvspec",
+                "libradtran_data": "/opt/libradtran/current/share/libRadtran/data",
+                "atmosphere_profile": "/opt/libradtran/current/share/libRadtran/data/atmmod/afglsw.dat",
+                "solar_spectrum": None,  # Not needed for thermal
+                "output_dir": "./thermal_output",
+                "working_dir": "./thermal_work"
+            },
+            "simulation_defaults": {},
+            "execution": {"max_workers": 4, "timeout_seconds": 120},
+            "output": {"filename_prefix": "thermal", "filename_suffix": ".nc"}
+        }
+        config = SimulationConfig.from_dict(config_dict)
+    
+    # Override with thermal-specific settings
+    config.simulation_defaults.source = "thermal"
+    config.simulation_defaults.surface_temperature_k = surface_temperature_k
+    config.simulation_defaults.wavelength_nm = wavelength_range_nm
+    config.simulation_defaults.mol_abs_param = mol_abs_param
+    config.simulation_defaults.rte_solver = rte_solver
+    config.simulation_defaults.output_altitudes_km = output_altitudes_km
+    config.simulation_defaults.output_columns = output_columns
+    config.simulation_defaults.integrate_wavelength = True  # Usually want integrated
+    
+    # Apply any additional overrides
+    for key, value in kwargs.items():
+        if hasattr(config.simulation_defaults, key):
+            setattr(config.simulation_defaults, key, value)
+        else:
+            logger.warning(f"Unknown configuration parameter: {key}")
+    
+    return config
+
+
+def run_thermal_simulation(
+    dt: datetime,
+    latitude: float = 0.0,
+    longitude: float = 0.0,
+    surface_temperature_k: float = 248.4,
+    wavelength_range_nm: List[float] = None,
+    radiosonde_path: Optional[Union[str, Path]] = None,
+    config_path: Optional[Union[str, Path]] = None,
+    **kwargs
+) -> xr.Dataset:
+    """
+    Run a single thermal infrared simulation with simplified parameters.
+    
+    This is a convenience function that handles the common case of running
+    a single thermal simulation with minimal setup.
+    
+    Args:
+        dt: Date and time (can be arbitrary for thermal sims)
+        latitude: Latitude in degrees (can be arbitrary for thermal sims)  
+        longitude: Longitude in degrees (can be arbitrary for thermal sims)
+        surface_temperature_k: Surface temperature in Kelvin
+        wavelength_range_nm: [min, max] wavelength range in nm
+        radiosonde_path: Optional path to radiosonde file
+        config_path: Optional path to base configuration file
+        **kwargs: Additional configuration parameters
+        
+    Returns:
+        xr.Dataset: Simulation results
+        
+    Example:
+        >>> from datetime import datetime
+        >>> result = run_thermal_simulation(
+        ...     dt=datetime(2022, 4, 1),
+        ...     surface_temperature_k=250.0,
+        ...     wavelength_range_nm=[8000, 12000]
+        ... )
+    """
+    
+    # Create thermal configuration
+    config = create_thermal_simulation_config(
+        surface_temperature_k=surface_temperature_k,
+        wavelength_range_nm=wavelength_range_nm,
+        config_template_path=config_path,
+        **kwargs
+    )
+    
+    # Create PyRadtran instance and run simulation
+    from .interface import PyRadtran  # Import here to avoid circular import
+    pyradtran = PyRadtran(config)
+    
+    result = pyradtran.run_single_simulation(
+        dt=dt,
+        latitude=latitude,
+        longitude=longitude,
+        radiosonde_path=radiosonde_path
+    )
+    
+    return result

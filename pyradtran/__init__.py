@@ -7,6 +7,8 @@ transfer model, with seamless integration into the Python scientific ecosystem,
 particularly xarray.
 """
 
+__version__ = "0.1.0"
+
 import logging
 
 # Configure basic logging for the package
@@ -21,7 +23,13 @@ from .io import (
     parse_uvspec_output,
     save_results_to_netcdf
 )
-from .interface import run_pyradtran_simulation, execute_simulation_batch, PyRadtranAccessor
+from .interface import (
+    run_pyradtran_simulation, 
+    execute_simulation_batch, 
+    PyRadtranAccessor,
+    create_thermal_simulation_config,
+    run_thermal_simulation
+)
 from .utils import RadiosondeFinder
 from .exceptions import (
     PyRadtranError,

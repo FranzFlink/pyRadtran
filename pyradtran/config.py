@@ -151,6 +151,7 @@ class AerosolParameters:
 class SimulationDefaults:
     rte_solver: str = "twostr"
     mol_abs_param: str = "lowtran per_nm"
+    source: str = "solar"  # 'solar' or 'thermal'
     wavelength_nm: List[Union[int, float]] = field(default_factory=lambda: [400, 3600])
     output_columns: List[str] = field(default_factory=lambda: ["sza", "eglo", "eup", "albedo"])
     output_altitudes_km: List[float] = field(default_factory=lambda: [0.0])
@@ -187,6 +188,8 @@ class SimulationDefaults:
             raise ValueError("wavelength_nm must contain [min, max]")
         if not self.output_altitudes_km:
             raise ValueError("output_altitudes_km cannot be empty.")
+        if self.source not in ["solar", "thermal"]:
+            raise ValueError(f"source must be 'solar' or 'thermal', got '{self.source}'")
         self.output_altitudes_km = sorted(list(set(self.output_altitudes_km)))
         
         # Handle transition from old BRDF parameters to new ones
