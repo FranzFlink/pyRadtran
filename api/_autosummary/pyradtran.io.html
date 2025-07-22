@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -175,6 +175,14 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Interactive Notebooks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">HALO-AC3 Campaign Data Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Thermal Infrared Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Modyfing the surface albedo</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyradtran.core.html">pyradtran.core</a></li>
@@ -349,16 +357,16 @@ document.write(`
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.io.generate_uvspec_input_content" title="pyradtran.io.generate_uvspec_input_content"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_uvspec_input_content</span></code></a>(config, dt, ...)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_uvspec_input_content</span></code>(config, dt, ...)</p></td>
 <td><p>Legacy wrapper for input generation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.io.load_simulation_input_data" title="pyradtran.io.load_simulation_input_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_simulation_input_data</span></code></a>(input_file)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_simulation_input_data</span></code>(input_file)</p></td>
 <td><p>Load simulation input data from various file formats.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.io.parse_uvspec_output" title="pyradtran.io.parse_uvspec_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_uvspec_output</span></code></a>(output_file, config[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyradtran.io.parse_uvspec_output.html#pyradtran.io.parse_uvspec_output" title="pyradtran.io.parse_uvspec_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_uvspec_output</span></code></a>(output_file, config[, ...])</p></td>
 <td><p>Legacy wrapper for output parsing.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.io.save_results_to_netcdf" title="pyradtran.io.save_results_to_netcdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_results_to_netcdf</span></code></a>(data, output_path, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_results_to_netcdf</span></code>(data, output_path, ...)</p></td>
 <td><p>Save simulation results to NetCDF file.</p></td>
 </tr>
 </tbody>
@@ -367,19 +375,19 @@ document.write(`
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.io.InputGenerator" title="pyradtran.io.InputGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputGenerator</span></code></a>(config)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputGenerator</span></code>(config)</p></td>
 <td><p>Clean input file generator for LibRadtran.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.io.OutputParser" title="pyradtran.io.OutputParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputParser</span></code></a>(config)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputParser</span></code>(config)</p></td>
 <td><p>Robust parser for LibRadtran output files.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.io.OutputToXarray" title="pyradtran.io.OutputToXarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputToXarray</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputToXarray</span></code>()</p></td>
 <td><p>Convert parsed LibRadtran output to xarray Datasets.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.io.OutputType" title="pyradtran.io.OutputType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputType</span></code></a>(value[, names, module, qualname, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputType</span></code>(value[, names, module, qualname, ...])</p></td>
 <td><p>Enumeration of possible LibRadtran output types.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.io.ParsedOutput" title="pyradtran.io.ParsedOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ParsedOutput</span></code></a>(output_type, data[, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ParsedOutput</span></code>(output_type, data[, ...])</p></td>
 <td><p>Container for parsed LibRadtran output.</p></td>
 </tr>
 </tbody>

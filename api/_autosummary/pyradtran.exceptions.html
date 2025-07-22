@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -175,6 +175,14 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Interactive Notebooks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">HALO-AC3 Campaign Data Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Thermal Infrared Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Modyfing the surface albedo</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyradtran.core.html">pyradtran.core</a></li>
@@ -344,25 +352,25 @@ document.write(`
 <p class="rubric">Exceptions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.exceptions.ConfigurationError" title="pyradtran.exceptions.ConfigurationError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigurationError</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigurationError</span></code></p></td>
 <td><p>Exception raised for configuration errors.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.exceptions.InputGenerationError" title="pyradtran.exceptions.InputGenerationError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputGenerationError</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputGenerationError</span></code></p></td>
 <td><p>Exception raised when input file generation fails.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.exceptions.OutputParsingError" title="pyradtran.exceptions.OutputParsingError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputParsingError</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputParsingError</span></code></p></td>
 <td><p>Exception raised when output parsing fails.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.exceptions.PyRadtranError" title="pyradtran.exceptions.PyRadtranError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PyRadtranError</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">PyRadtranError</span></code></p></td>
 <td><p>Base exception for the pyradtran package.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.exceptions.RadiosondeError" title="pyradtran.exceptions.RadiosondeError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RadiosondeError</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RadiosondeError</span></code></p></td>
 <td><p>Exception raised for errors related to radiosonde handling.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.exceptions.UvspecExecutionError" title="pyradtran.exceptions.UvspecExecutionError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UvspecExecutionError</span></code></a></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">UvspecExecutionError</span></code></p></td>
 <td><p>Exception raised when uvspec execution fails.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.exceptions.ValidationError" title="pyradtran.exceptions.ValidationError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValidationError</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValidationError</span></code></p></td>
 <td><p>Exception raised for validation errors.</p></td>
 </tr>
 </tbody>

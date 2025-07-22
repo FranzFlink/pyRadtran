@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -175,6 +175,14 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="notebooks/index.html">Interactive Notebooks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/radiosonde.html">HALO-AC3 Campaign Data Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/thermal.html">Thermal Infrared Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/era5_atmosphere.html">ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/albedo_test.html">Modyfing the surface albedo</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/_autosummary/pyradtran.core.html">pyradtran.core</a></li>
@@ -340,7 +348,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-installation">Basic Installation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-libradtran">Installing libRadtran</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-configuration">Environment Configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
 </ul>
             </nav>
         </div>
@@ -356,43 +363,42 @@ document.write(`
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
-<p>PyRadtran requires:</p>
+<p>Before installing <code class="docutils literal notranslate"><span class="pre">pyradtran</span></code>, make sure you have:</p>
 <ul class="simple">
-<li><p>Python 3.8 or later</p></li>
-<li><p>libRadtran radiative transfer model</p></li>
-<li><p>NumPy, xarray, PyYAML</p></li>
+<li><p>Python 3.7 or higher</p></li>
+<li><p>libRadtran installed on your system</p></li>
 </ul>
 </section>
 <section id="basic-installation">
 <h2>Basic Installation<a class="headerlink" href="#basic-installation" title="Link to this heading">#</a></h2>
-<p>Install PyRadtran using pip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyradtran
-</pre></div>
-</div>
-<p>Or for development:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/FranzFlink/pyRadtran.git
-<span class="nb">cd</span><span class="w"> </span>pyRadtran
+<p>You can install <code class="docutils literal notranslate"><span class="pre">pyradtran</span></code> directly from GitHub:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:FranzFlink/pyRadtran.git
+<span class="nb">cd</span><span class="w"> </span>pyradtran
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 </section>
 <section id="installing-libradtran">
 <h2>Installing libRadtran<a class="headerlink" href="#installing-libradtran" title="Link to this heading">#</a></h2>
-<p>PyRadtran requires the libRadtran radiative transfer model to be installed separately.</p>
-<p>Download and install libRadtran from: <a class="reference external" href="http://www.libradtran.org/">http://www.libradtran.org/</a></p>
-</section>
-<section id="environment-configuration">
-<h2>Environment Configuration<a class="headerlink" href="#environment-configuration" title="Link to this heading">#</a></h2>
-<p>Set the <code class="docutils literal notranslate"><span class="pre">LIBRADTRAN_PATH</span></code> environment variable:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">LIBRADTRAN_PATH</span><span class="o">=</span>/path/to/libradtran
+<p><code class="docutils literal notranslate"><span class="pre">pyradtran</span></code> requires that you have libRadtran installed on your system. Follow these steps to install libRadtran:</p>
+<ol class="arabic simple">
+<li><p>Download libRadtran from <a class="reference external" href="http://www.libradtran.org">http://www.libradtran.org</a></p></li>
+<li><p>Extract the archive</p></li>
+<li><p>Configure, build, and install:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gzip<span class="w"> </span>-d<span class="w"> </span>libradtran-x.yy.tar.gz
+tar<span class="w"> </span>-xvf<span class="w"> </span>libradtran-x.yy.tar
+./configure
+make
+make<span class="w"> </span>check
+sudo<span class="w"> </span>make<span class="w"> </span>install
 </pre></div>
 </div>
 </section>
-<section id="verification">
-<h2>Verification<a class="headerlink" href="#verification" title="Link to this heading">#</a></h2>
-<p>Test your installation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyradtran</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<section id="environment-configuration">
+<h2>Environment Configuration<a class="headerlink" href="#environment-configuration" title="Link to this heading">#</a></h2>
+<p>Make sure that the libRadtran executables are in your PATH. You can add the following to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/path/to/libradtran/bin
 </pre></div>
 </div>
 </section>
@@ -466,7 +472,6 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-installation">Basic Installation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-libradtran">Installing libRadtran</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-configuration">Environment Configuration</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verification">Verification</a></li>
 </ul>
   </nav></div>
 

@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -175,6 +175,14 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Interactive Notebooks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">HALO-AC3 Campaign Data Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Thermal Infrared Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Modyfing the surface albedo</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyradtran.core.html">pyradtran.core</a></li>
@@ -348,25 +356,25 @@ document.write(`
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.helpers.add_cloud_layer" title="pyradtran.helpers.add_cloud_layer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_cloud_layer</span></code></a>(config, bottom_km, top_km, ...)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_cloud_layer</span></code>(config, bottom_km, top_km, ...)</p></td>
 <td><p>Add a cloud layer to the simulation configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.helpers.configure_aerosol" title="pyradtran.helpers.configure_aerosol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_aerosol</span></code></a>(config, aerosol_type[, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_aerosol</span></code>(config, aerosol_type[, ...])</p></td>
 <td><p>Configure aerosol properties for common atmospheric conditions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.helpers.configure_cloud" title="pyradtran.helpers.configure_cloud"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_cloud</span></code></a>(config, cloud_type)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_cloud</span></code>(config, cloud_type)</p></td>
 <td><p>Configure cloud properties for common cloud types.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.helpers.configure_common_scenario" title="pyradtran.helpers.configure_common_scenario"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_common_scenario</span></code></a>(config, scenario)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_common_scenario</span></code>(config, scenario)</p></td>
 <td><p>Configure complete scenarios with surface, clouds, and aerosols.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.helpers.configure_output_altitudes" title="pyradtran.helpers.configure_output_altitudes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_output_altitudes</span></code></a>(config, altitude_set)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_output_altitudes</span></code>(config, altitude_set)</p></td>
 <td><p>Configure output altitudes for common scenarios.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.helpers.configure_spectral_range" title="pyradtran.helpers.configure_spectral_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_spectral_range</span></code></a>(config, spectral_range)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_spectral_range</span></code>(config, spectral_range)</p></td>
 <td><p>Configure spectral range for common applications.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.helpers.configure_surface" title="pyradtran.helpers.configure_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_surface</span></code></a>(config, surface_type[, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_surface</span></code>(config, surface_type[, ...])</p></td>
 <td><p>Configure surface properties for common surface types.</p></td>
 </tr>
 </tbody>

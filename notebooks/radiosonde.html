@@ -180,7 +180,7 @@
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">HALO-AC3 Campaign Data Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Infrared Simulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">ERA5 Atmospheric Profiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Albedo Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Modyfing the surface albedo</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
@@ -388,7 +388,6 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;data/HALO-AC3_HALO_aircraft_broadband_radiation_clear_sky_with_ocean_600s.nc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">interpolate_na</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
-
 <span class="c1"># the albedo has over 30% missing values, so we interpolate it for now</span>
 </pre></div>
 </div>
@@ -422,52 +421,687 @@ module &#39;numpy&#39; has no attribute &#39;cumproduct&#39;
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Running batch spectral simulation...
 </pre></div>
 </div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Run a spectral simulation for the dataset</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running batch spectral simulation...&quot;</span><span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">ds_sim</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run_uvspec</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="n">save_to_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">output_path</span><span class="o">=</span><span class="s1">&#39;data/Simulated_HALO-AC3_HALO_aircraft_broadband_radiation_clear_sky_with_ocean_600s.nc&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">albedo_var</span><span class="o">=</span><span class="s1">&#39;albedo&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Simulation complete!&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="n">ds_sim</span>
-
-<span class="nn">File /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/pyradtran/interface.py:390,</span> in <span class="ni">PyRadtranAccessor.run_uvspec</span><span class="nt">(self, config_path, output_path, parameter_overrides, time_var, lat_var, lon_var, albedo_var, surface_temperature_var, era5_atmosphere, return_dataset, save_to_file, progress_callback)</span>
-<span class="g g-Whitespace">    </span><span class="mi">365</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">366</span><span class="sd"> Run uvspec for each time/location coordinate in the dataset using the new IO system.</span>
-<span class="g g-Whitespace">    </span><span class="mi">367</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">387</span><span class="sd">     PyRadtranError: If simulation fails</span>
-<span class="g g-Whitespace">    </span><span class="mi">388</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">389</span> <span class="c1"># Load configuration</span>
-<span class="ne">--&gt; </span><span class="mi">390</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">392</span> <span class="c1"># Apply parameter overrides if provided</span>
-<span class="g g-Whitespace">    </span><span class="mi">393</span> <span class="k">if</span> <span class="n">parameter_overrides</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">394</span>     <span class="c1"># Apply parameter overrides to config</span>
-
-<span class="nn">File /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/pyradtran/config.py:344,</span> in <span class="ni">load_config</span><span class="nt">(config_path)</span>
-<span class="g g-Whitespace">    </span><span class="mi">341</span>     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading configuration from: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">343</span> <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">344</span>     <span class="n">config</span> <span class="o">=</span> <span class="n">SimulationConfig</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">345</span>     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Configuration loaded successfully.&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">346</span>     <span class="c1"># Set logging level based on config after loading</span>
-
-<span class="nn">File /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/pyradtran/config.py:271,</span> in <span class="ni">SimulationConfig.from_yaml</span><span class="nt">(cls, yaml_path)</span>
-<span class="g g-Whitespace">    </span><span class="mi">269</span> <span class="n">yaml_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">270</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">yaml_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-<span class="ne">--&gt; </span><span class="mi">271</span>     <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration file not found: </span><span class="si">{</span><span class="n">yaml_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">273</span> <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">274</span>     <span class="n">raw_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-<span class="ne">FileNotFoundError</span>: Configuration file not found: config/HALO-AC3_HALO_solar_disort.yaml
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulation complete!
 </pre></div>
 </div>
-</div>
+<div class="output text_html"><div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewBox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewBox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
+
+:root {
+  --xr-font-color0: var(
+    --jp-content-font-color0,
+    var(--pst-color-text-base rgba(0, 0, 0, 1))
+  );
+  --xr-font-color2: var(
+    --jp-content-font-color2,
+    var(--pst-color-text-base, rgba(0, 0, 0, 0.54))
+  );
+  --xr-font-color3: var(
+    --jp-content-font-color3,
+    var(--pst-color-text-base, rgba(0, 0, 0, 0.38))
+  );
+  --xr-border-color: var(
+    --jp-border-color2,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 10))
+  );
+  --xr-disabled-color: var(
+    --jp-layout-color3,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 40))
+  );
+  --xr-background-color: var(
+    --jp-layout-color0,
+    var(--pst-color-on-background, white)
+  );
+  --xr-background-color-row-even: var(
+    --jp-layout-color1,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 5))
+  );
+  --xr-background-color-row-odd: var(
+    --jp-layout-color2,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 15))
+  );
+}
+
+html[theme="dark"],
+html[data-theme="dark"],
+body[data-theme="dark"],
+body.vscode-dark {
+  --xr-font-color0: var(
+    --jp-content-font-color0,
+    var(--pst-color-text-base, rgba(255, 255, 255, 1))
+  );
+  --xr-font-color2: var(
+    --jp-content-font-color2,
+    var(--pst-color-text-base, rgba(255, 255, 255, 0.54))
+  );
+  --xr-font-color3: var(
+    --jp-content-font-color3,
+    var(--pst-color-text-base, rgba(255, 255, 255, 0.38))
+  );
+  --xr-border-color: var(
+    --jp-border-color2,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 10))
+  );
+  --xr-disabled-color: var(
+    --jp-layout-color3,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 40))
+  );
+  --xr-background-color: var(
+    --jp-layout-color0,
+    var(--pst-color-on-background, #111111)
+  );
+  --xr-background-color-row-even: var(
+    --jp-layout-color1,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 5))
+  );
+  --xr-background-color-row-odd: var(
+    --jp-layout-color2,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 15))
+  );
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 0 20px 0 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: inline-block;
+  opacity: 0;
+  height: 0;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+  border: 2px solid transparent !important;
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:focus + label {
+  border: 2px solid var(--xr-font-color0) !important;
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: "►";
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: "▼";
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: "(";
+}
+
+.xr-dim-list:after {
+  content: ")";
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ",";
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  border-color: var(--xr-background-color-row-odd);
+  margin-bottom: 0;
+  padding-top: 2px;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+  border-color: var(--xr-background-color-row-even);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-index-preview {
+  grid-column: 2 / 5;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  display: none;
+  border-top: 2px dotted var(--xr-background-color);
+  padding-bottom: 20px !important;
+  padding-top: 10px !important;
+}
+
+.xr-var-attrs-in + label,
+.xr-var-data-in + label,
+.xr-index-data-in + label {
+  padding: 0 1px;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data,
+.xr-index-data-in:checked ~ .xr-index-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-data > pre,
+.xr-index-data > pre,
+.xr-var-data > table > tbody > tr {
+  background-color: transparent !important;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-index-name div,
+.xr-index-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2,
+.xr-no-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.xr-var-attrs-in:checked + label > .xr-icon-file-text2,
+.xr-var-data-in:checked + label > .xr-icon-database,
+.xr-index-data-in:checked + label > .xr-icon-database {
+  color: var(--xr-font-color0);
+  filter: drop-shadow(1px 1px 5px var(--xr-font-color2));
+  stroke-width: 0.8px;
+}
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt; Size: 129kB
+Dimensions:    (time: 149, altitude: 15)
+Coordinates:
+  * time       (time) datetime64[ns] 1kB 2022-03-14T10:30:00 ... 2022-04-11T1...
+    latitude   (time) float64 1kB 79.38 82.61 81.79 80.14 ... 84.94 85.93 85.46
+    longitude  (time) float64 1kB 27.16 3.475 1.575 4.314 ... 9.461 16.73 12.38
+  * altitude   (altitude) float64 120B 0.0 1.0 2.0 3.0 ... 11.0 12.0 13.0 14.0
+Data variables:
+    sza        (time, altitude) float64 18kB 180.0 180.0 180.0 ... nan nan nan
+    edir       (time, altitude) float64 18kB 0.0 0.0 0.0 0.0 ... nan nan nan nan
+    eglo       (time, altitude) float64 18kB 0.0 0.0 0.0 0.0 ... nan nan nan nan
+    edn        (time, altitude) float64 18kB 0.0 0.0 0.0 0.0 ... nan nan nan nan
+    eup        (time, altitude) float64 18kB 0.0 0.0 0.0 0.0 ... nan nan nan nan
+    enet       (time, altitude) float64 18kB 0.0 0.0 0.0 0.0 ... nan nan nan nan
+    albedo     (time, altitude) float64 18kB nan nan nan nan ... nan nan nan nan
+Attributes:
+    created:            2025-07-22T03:17:17.801842
+    source:             PyRadtran
+    output_type:        integrated_multi_altitude
+    num_simulations:    142
+    generated_by:       pyradtran
+    pyradtran_version:  new_io_system</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-f1a11a40-9c56-4cfa-8c80-51b51b3bd657' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-f1a11a40-9c56-4cfa-8c80-51b51b3bd657' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 149</li><li><span class='xr-has-index'>altitude</span>: 15</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-687f7257-c9e6-4492-b5eb-95f6a7257a1b' class='xr-section-summary-in' type='checkbox'  checked><label for='section-687f7257-c9e6-4492-b5eb-95f6a7257a1b' class='xr-section-summary' >Coordinates: <span>(4)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>2022-03-14T10:30:00 ... 2022-04-...</div><input id='attrs-61e8a2a2-e1f9-4aa3-8594-f4a1064b1e1f' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-61e8a2a2-e1f9-4aa3-8594-f4a1064b1e1f' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-10ceb932-bd5e-4bd5-926b-54d704c5ff42' class='xr-var-data-in' type='checkbox'><label for='data-10ceb932-bd5e-4bd5-926b-54d704c5ff42' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>time</dd></dl></div><div class='xr-var-data'><pre>array([&#x27;2022-03-14T10:30:00.000000000&#x27;, &#x27;2022-03-14T13:50:00.000000000&#x27;,
+       &#x27;2022-03-14T14:00:00.000000000&#x27;, &#x27;2022-03-14T15:20:00.000000000&#x27;,
+       &#x27;2022-03-16T09:20:00.000000000&#x27;, &#x27;2022-03-16T09:30:00.000000000&#x27;,
+       &#x27;2022-03-16T09:40:00.000000000&#x27;, &#x27;2022-03-16T10:30:00.000000000&#x27;,
+       &#x27;2022-03-16T10:40:00.000000000&#x27;, &#x27;2022-03-16T10:50:00.000000000&#x27;,
+       &#x27;2022-03-16T11:20:00.000000000&#x27;, &#x27;2022-03-16T12:10:00.000000000&#x27;,
+       &#x27;2022-03-16T14:10:00.000000000&#x27;, &#x27;2022-03-16T14:20:00.000000000&#x27;,
+       &#x27;2022-03-16T14:50:00.000000000&#x27;, &#x27;2022-03-16T16:00:00.000000000&#x27;,
+       &#x27;2022-03-16T17:40:00.000000000&#x27;, &#x27;2022-03-16T17:50:00.000000000&#x27;,
+       &#x27;2022-03-20T07:50:00.000000000&#x27;, &#x27;2022-03-20T08:00:00.000000000&#x27;,
+       &#x27;2022-03-20T10:30:00.000000000&#x27;, &#x27;2022-03-20T10:40:00.000000000&#x27;,
+       &#x27;2022-03-20T10:50:00.000000000&#x27;, &#x27;2022-03-20T11:10:00.000000000&#x27;,
+       &#x27;2022-03-20T11:20:00.000000000&#x27;, &#x27;2022-03-20T11:30:00.000000000&#x27;,
+       &#x27;2022-03-20T11:40:00.000000000&#x27;, &#x27;2022-03-20T11:50:00.000000000&#x27;,
+       &#x27;2022-03-20T14:10:00.000000000&#x27;, &#x27;2022-03-20T14:20:00.000000000&#x27;,
+       &#x27;2022-03-20T16:20:00.000000000&#x27;, &#x27;2022-03-20T16:30:00.000000000&#x27;,
+       &#x27;2022-03-20T16:40:00.000000000&#x27;, &#x27;2022-03-21T08:40:00.000000000&#x27;,
+       &#x27;2022-03-21T08:50:00.000000000&#x27;, &#x27;2022-03-21T09:10:00.000000000&#x27;,
+       &#x27;2022-03-21T11:30:00.000000000&#x27;, &#x27;2022-03-21T11:40:00.000000000&#x27;,
+       &#x27;2022-03-28T09:00:00.000000000&#x27;, &#x27;2022-03-28T09:10:00.000000000&#x27;,
+       &#x27;2022-03-28T09:20:00.000000000&#x27;, &#x27;2022-03-28T10:30:00.000000000&#x27;,
+       &#x27;2022-03-28T10:40:00.000000000&#x27;, &#x27;2022-03-28T11:00:00.000000000&#x27;,
+       &#x27;2022-03-28T12:00:00.000000000&#x27;, &#x27;2022-03-28T12:10:00.000000000&#x27;,
+       &#x27;2022-03-28T12:20:00.000000000&#x27;, &#x27;2022-03-28T13:00:00.000000000&#x27;,
+       &#x27;2022-03-28T13:10:00.000000000&#x27;, &#x27;2022-03-28T14:00:00.000000000&#x27;,
+       &#x27;2022-03-28T14:10:00.000000000&#x27;, &#x27;2022-03-28T14:20:00.000000000&#x27;,
+       &#x27;2022-03-28T15:30:00.000000000&#x27;, &#x27;2022-03-29T08:50:00.000000000&#x27;,
+       &#x27;2022-03-29T09:00:00.000000000&#x27;, &#x27;2022-03-29T13:40:00.000000000&#x27;,
+       &#x27;2022-03-29T13:50:00.000000000&#x27;, &#x27;2022-03-29T14:00:00.000000000&#x27;,
+       &#x27;2022-03-29T14:10:00.000000000&#x27;, &#x27;2022-03-29T14:20:00.000000000&#x27;,
+       &#x27;2022-03-29T14:30:00.000000000&#x27;, &#x27;2022-03-30T08:30:00.000000000&#x27;,
+       &#x27;2022-03-30T09:50:00.000000000&#x27;, &#x27;2022-03-30T10:00:00.000000000&#x27;,
+       &#x27;2022-03-30T10:10:00.000000000&#x27;, &#x27;2022-03-30T10:20:00.000000000&#x27;,
+       &#x27;2022-03-30T10:30:00.000000000&#x27;, &#x27;2022-03-30T10:40:00.000000000&#x27;,
+       &#x27;2022-03-30T10:50:00.000000000&#x27;, &#x27;2022-03-30T11:00:00.000000000&#x27;,
+       &#x27;2022-03-30T13:30:00.000000000&#x27;, &#x27;2022-04-01T09:20:00.000000000&#x27;,
+       &#x27;2022-04-01T09:30:00.000000000&#x27;, &#x27;2022-04-01T09:40:00.000000000&#x27;,
+       &#x27;2022-04-01T09:50:00.000000000&#x27;, &#x27;2022-04-01T10:20:00.000000000&#x27;,
+       &#x27;2022-04-01T10:30:00.000000000&#x27;, &#x27;2022-04-01T10:40:00.000000000&#x27;,
+       &#x27;2022-04-01T10:50:00.000000000&#x27;, &#x27;2022-04-01T11:20:00.000000000&#x27;,
+       &#x27;2022-04-01T11:30:00.000000000&#x27;, &#x27;2022-04-01T11:40:00.000000000&#x27;,
+       &#x27;2022-04-01T12:20:00.000000000&#x27;, &#x27;2022-04-01T12:30:00.000000000&#x27;,
+       &#x27;2022-04-01T12:40:00.000000000&#x27;, &#x27;2022-04-01T13:30:00.000000000&#x27;,
+       &#x27;2022-04-01T13:40:00.000000000&#x27;, &#x27;2022-04-01T13:50:00.000000000&#x27;,
+       &#x27;2022-04-04T07:50:00.000000000&#x27;, &#x27;2022-04-04T09:10:00.000000000&#x27;,
+       &#x27;2022-04-04T09:20:00.000000000&#x27;, &#x27;2022-04-04T09:30:00.000000000&#x27;,
+       &#x27;2022-04-04T09:40:00.000000000&#x27;, &#x27;2022-04-04T09:50:00.000000000&#x27;,
+       &#x27;2022-04-04T10:00:00.000000000&#x27;, &#x27;2022-04-04T10:10:00.000000000&#x27;,
+       &#x27;2022-04-04T10:20:00.000000000&#x27;, &#x27;2022-04-04T10:40:00.000000000&#x27;,
+       &#x27;2022-04-04T10:50:00.000000000&#x27;, &#x27;2022-04-04T11:00:00.000000000&#x27;,
+       &#x27;2022-04-04T11:20:00.000000000&#x27;, &#x27;2022-04-04T11:30:00.000000000&#x27;,
+       &#x27;2022-04-04T11:50:00.000000000&#x27;, &#x27;2022-04-04T12:00:00.000000000&#x27;,
+       &#x27;2022-04-04T12:10:00.000000000&#x27;, &#x27;2022-04-04T12:20:00.000000000&#x27;,
+       &#x27;2022-04-04T12:30:00.000000000&#x27;, &#x27;2022-04-04T12:40:00.000000000&#x27;,
+       &#x27;2022-04-04T12:50:00.000000000&#x27;, &#x27;2022-04-04T13:00:00.000000000&#x27;,
+       &#x27;2022-04-04T13:20:00.000000000&#x27;, &#x27;2022-04-04T13:30:00.000000000&#x27;,
+       &#x27;2022-04-04T14:00:00.000000000&#x27;, &#x27;2022-04-04T14:10:00.000000000&#x27;,
+       &#x27;2022-04-04T14:20:00.000000000&#x27;, &#x27;2022-04-04T15:30:00.000000000&#x27;,
+       &#x27;2022-04-07T08:30:00.000000000&#x27;, &#x27;2022-04-07T09:00:00.000000000&#x27;,
+       &#x27;2022-04-07T09:10:00.000000000&#x27;, &#x27;2022-04-07T09:20:00.000000000&#x27;,
+       &#x27;2022-04-07T11:50:00.000000000&#x27;, &#x27;2022-04-07T12:10:00.000000000&#x27;,
+       &#x27;2022-04-07T12:20:00.000000000&#x27;, &#x27;2022-04-07T12:40:00.000000000&#x27;,
+       &#x27;2022-04-07T13:00:00.000000000&#x27;, &#x27;2022-04-07T13:10:00.000000000&#x27;,
+       &#x27;2022-04-07T13:20:00.000000000&#x27;, &#x27;2022-04-07T13:40:00.000000000&#x27;,
+       &#x27;2022-04-07T15:10:00.000000000&#x27;, &#x27;2022-04-08T07:00:00.000000000&#x27;,
+       &#x27;2022-04-08T08:00:00.000000000&#x27;, &#x27;2022-04-08T08:10:00.000000000&#x27;,
+       &#x27;2022-04-08T09:10:00.000000000&#x27;, &#x27;2022-04-08T09:30:00.000000000&#x27;,
+       &#x27;2022-04-08T10:40:00.000000000&#x27;, &#x27;2022-04-08T10:50:00.000000000&#x27;,
+       &#x27;2022-04-08T11:00:00.000000000&#x27;, &#x27;2022-04-10T09:50:00.000000000&#x27;,
+       &#x27;2022-04-10T11:30:00.000000000&#x27;, &#x27;2022-04-10T11:50:00.000000000&#x27;,
+       &#x27;2022-04-10T14:20:00.000000000&#x27;, &#x27;2022-04-10T15:30:00.000000000&#x27;,
+       &#x27;2022-04-10T15:40:00.000000000&#x27;, &#x27;2022-04-10T15:50:00.000000000&#x27;,
+       &#x27;2022-04-11T07:50:00.000000000&#x27;, &#x27;2022-04-11T10:20:00.000000000&#x27;,
+       &#x27;2022-04-11T10:30:00.000000000&#x27;, &#x27;2022-04-11T10:40:00.000000000&#x27;,
+       &#x27;2022-04-11T12:00:00.000000000&#x27;], dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>latitude</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>79.38 82.61 81.79 ... 85.93 85.46</div><input id='attrs-b115989c-db82-4da7-9d98-dd1fb3b9447a' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-b115989c-db82-4da7-9d98-dd1fb3b9447a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-e41e57be-9617-475f-94f6-086cd6ae4454' class='xr-var-data-in' type='checkbox'><label for='data-e41e57be-9617-475f-94f6-086cd6ae4454' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>latitude (WGS84 Datum/Latitude, BAHAMAS)</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>units :</span></dt><dd>degree_north</dd></dl></div><div class='xr-var-data'><pre>array([79.37571511, 82.60988041, 81.79494404, 80.13513768, 70.62135672,
+       70.92555497, 71.05022916, 71.0281033 , 70.88999176, 71.19891684,
+       71.17909431, 73.03814559, 76.09385681, 76.87334442, 81.02707887,
+       81.4170754 , 70.74038951, 70.53967209, 67.79324341, 67.86680543,
+       76.64694618, 78.02431586, 79.39912647, 81.79895644, 81.50928678,
+       80.88354753, 80.22514214, 79.84501964, 80.38148315, 80.02467885,
+       70.69416948, 69.99772369, 69.28838279, 67.79323578, 67.82939039,
+       70.43640682, 76.45083102, 75.3904031 , 70.42053938, 71.31797886,
+       73.13205338, 78.93023766, 79.3352588 , 79.92516062, 78.14365775,
+       78.42205752, 78.96365249, 77.39050337, 77.79315422, 76.29339589,
+       76.769358  , 77.35370974, 71.51023865, 72.02875137, 72.91987133,
+       84.89463098, 84.91968294, 83.95014654, 83.752925  , 82.11426475,
+       81.65772329, 71.12485504, 80.87049798, 81.40591476, 80.65401038,
+       80.26798847, 81.0219066 , 80.86884981, 80.38730422, 78.82547736,
+       78.12307809, 80.26219678, 80.40358031, 81.23202202, 81.09096925,
+       79.78949102, 80.10211319, 80.402565  , 80.21397797, 79.81357744,
+       80.09683252, 79.38044959, 79.80418808, 79.48808966, 78.74146125,
+       79.36768581, 78.61991067, 78.38083459, 69.54427068, 80.47299606,
+       81.23336809, 82.42829001, 83.44966253, 84.45259531, 86.64260747,
+       86.88593463, 86.80174493, 84.16838822, 84.08619701, 84.53395725,
+       86.87724883, 86.97052364, 84.52865495, 83.31906753, 82.13071713,
+       80.95808944, 80.34226329, 80.62759149, 79.90303909, 79.7349393 ,
+       79.29668703, 78.60131976, 76.91161235, 76.26183167, 75.90995454,
+       70.38711166, 67.82826996, 70.58118057, 72.13216612, 72.78128179,
+       81.62577557, 83.91671337, 84.48862689, 87.60542372, 85.24042778,
+       84.041861  , 83.500927  , 80.26414544, 72.66462153, 79.01398922,
+       78.55220757, 78.48572753, 77.52506284, 79.37407251, 72.61516062,
+       71.35870986, 70.20249812, 67.82992172, 73.02823271, 72.96638598,
+       79.58323044, 73.37820513, 71.23889465, 70.78817921, 67.82743454,
+       83.88393255, 84.94326931, 85.93058566, 85.45749019])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>longitude</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>27.16 3.475 1.575 ... 16.73 12.38</div><input id='attrs-2df56cd2-aa16-4bdd-8cd4-e8fe2995dab6' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-2df56cd2-aa16-4bdd-8cd4-e8fe2995dab6' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-28a4f43e-c566-4c8d-ac97-29a0732816da' class='xr-var-data-in' type='checkbox'><label for='data-28a4f43e-c566-4c8d-ac97-29a0732816da' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>longitude (WGS84 Datum/Longitude, BAHAMAS)</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>units :</span></dt><dd>degree_east</dd></dl></div><div class='xr-var-data'><pre>array([ 27.16019404,   3.47548258,   1.57466676,   4.31398985,
+        19.94062505,  18.15565114,  13.77381151,  15.34424554,
+        17.48700142,  13.9214562 ,   3.16224867,  20.44445844,
+        13.06795943,  10.79556115,   7.47181442,   6.36906523,
+        19.9674174 ,  20.16228733,  20.30005941,  20.42265668,
+       -17.77679186, -15.57158177, -12.75360282,  -5.32302095,
+        -1.93182899,   3.18855546,   4.23724318,   2.21990015,
+         5.12565308,   3.14512345,  13.33021905,  15.3599481 ,
+        17.20420343,  20.30335236,  20.44564774,  20.51276834,
+        -9.80743505, -10.4667759 ,  20.42699802,  19.61965251,
+        17.50693512,  -4.76270388,  -4.47044384,   4.24499317,
+        -5.80377367,  -5.69815263,  -3.84172865,  -3.5298894 ,
+        -6.1672046 ,  -5.3036738 ,  -6.68647534,  -5.86214665,
+        17.70641041,  12.0053463 ,  12.78627539,  20.1762414 ,
+        13.08858216,  11.56195367,  17.15468222,  18.78020511,
+        18.91861408,  19.90491772,  14.28107666,   8.78732703,
+         6.61785033,   9.83020953,  14.15001978,  10.939825  ,
+         8.37842604,   7.42370652,  -6.02575036,   7.54268475,
+         5.73693843,   2.0325829 ,   6.27656775,   3.30509497,
+        -1.06448557,   5.77038819,   8.13202445,   3.02756912,
+        -0.97286239,  -1.29732388,   3.13141187,  -3.8501503 ,
+        -4.36118384,  -1.03616344,  -4.36912918,  -2.19242789,
+        16.00826129,  10.49985131,  10.4472488 ,  10.33695565,
+        10.34748171,  10.36433108,  10.46335218, -10.93749117,
+       -15.65016989, -54.04407764, -52.09384784, -51.69754331,
+       -11.71071808,  -3.3647088 ,  10.51500095,  10.49331564,
+        10.48362346,  10.48271649,   6.44435255,   0.26821345,
+         1.44270526,   3.79861496,  -2.50381431,  -3.48306175,
+        -4.1204951 ,  -7.82585627,  -8.63722992,  13.77361917,
+        20.34765244,  16.12655989,  15.33494796,  14.96224721,
+         8.40862054,   7.9651964 ,   7.80213677,   5.57521656,
+         7.51511113,   7.92476128,   8.06336135,   8.58151748,
+        15.00127532,  -3.95714704,  -6.22248811,  -6.32568762,
+        -2.64035429,  -5.59880176,  14.42633429,  16.44049211,
+        18.0068196 ,  20.35058212,  18.8409093 ,  16.62409319,
+        -8.54948071,  17.02139486,  18.61542969,  18.90454686,
+        20.34652996,   4.37449594,   9.46076741,  16.73322655,
+        12.37894246])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>altitude</span></div><div class='xr-var-dims'>(altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 1.0 2.0 3.0 ... 12.0 13.0 14.0</div><input id='attrs-433445a6-bda3-4ea4-bc80-e737647449fa' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-433445a6-bda3-4ea4-bc80-e737647449fa' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-0bf122c5-7023-432a-ad7a-5f35924507ca' class='xr-var-data-in' type='checkbox'><label for='data-0bf122c5-7023-432a-ad7a-5f35924507ca' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>km</dd></dl></div><div class='xr-var-data'><pre>array([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,
+       14.])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-3c20bb3e-ecab-4d9c-8bf9-b4137c4b81b6' class='xr-section-summary-in' type='checkbox'  checked><label for='section-3c20bb3e-ecab-4d9c-8bf9-b4137c4b81b6' class='xr-section-summary' >Data variables: <span>(7)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>sza</span></div><div class='xr-var-dims'>(time, altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>180.0 180.0 180.0 ... nan nan nan</div><input id='attrs-336aae38-d57d-467b-bfcb-d741fa1e4e8e' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-336aae38-d57d-467b-bfcb-d741fa1e4e8e' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-c3396065-da98-42a6-a2ec-88775df8db4f' class='xr-var-data-in' type='checkbox'><label for='data-c3396065-da98-42a6-a2ec-88775df8db4f' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>degrees</dd></dl></div><div class='xr-var-data'><pre>array([[180.   , 180.   , 180.   , ..., 180.   , 180.   , 180.   ],
+       [180.   , 180.   , 180.   , ..., 180.   , 180.   , 180.   ],
+       [ 87.839,  87.839,  87.839, ...,  87.839,  87.839,  87.839],
+       ...,
+       [    nan,     nan,     nan, ...,     nan,     nan,     nan],
+       [    nan,     nan,     nan, ...,     nan,     nan,     nan],
+       [    nan,     nan,     nan, ...,     nan,     nan,     nan]],
+      shape=(149, 15))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>edir</span></div><div class='xr-var-dims'>(time, altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 0.0 ... nan nan nan nan</div><input id='attrs-7263ce46-197e-4fdb-bb7c-4b4746ad0d06' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-7263ce46-197e-4fdb-bb7c-4b4746ad0d06' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-8411278b-7c07-4643-b5bf-35a957073d14' class='xr-var-data-in' type='checkbox'><label for='data-8411278b-7c07-4643-b5bf-35a957073d14' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>W m⁻² nm⁻¹</dd></dl></div><div class='xr-var-data'><pre>array([[    0.  ,     0.  ,     0.  , ...,     0.  ,     0.  ,     0.  ],
+       [    0.  ,     0.  ,     0.  , ...,     0.  ,     0.  ,     0.  ],
+       [12176.23, 14548.61, 16614.56, ..., 32167.82, 33227.54, 34253.78],
+       ...,
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan],
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan],
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan]],
+      shape=(149, 15))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>eglo</span></div><div class='xr-var-dims'>(time, altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 0.0 ... nan nan nan nan</div><input id='attrs-77690f27-8236-445e-8fe7-6763970be820' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-77690f27-8236-445e-8fe7-6763970be820' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-440c6e42-38d9-434f-8617-6a5697323a89' class='xr-var-data-in' type='checkbox'><label for='data-440c6e42-38d9-434f-8617-6a5697323a89' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>W m⁻² nm⁻¹</dd></dl></div><div class='xr-var-data'><pre>array([[    0.  ,     0.  ,     0.  , ...,     0.  ,     0.  ,     0.  ],
+       [    0.  ,     0.  ,     0.  , ...,     0.  ,     0.  ,     0.  ],
+       [20458.47, 22711.53, 24572.88, ..., 36365.  , 37025.42, 37673.52],
+       ...,
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan],
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan],
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan]],
+      shape=(149, 15))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>edn</span></div><div class='xr-var-dims'>(time, altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 0.0 ... nan nan nan nan</div><input id='attrs-db06b93e-ea4f-4c71-9ede-d54e95f2fc08' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-db06b93e-ea4f-4c71-9ede-d54e95f2fc08' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-eb52b43d-a95b-4343-8e82-3c5b567ca4fb' class='xr-var-data-in' type='checkbox'><label for='data-eb52b43d-a95b-4343-8e82-3c5b567ca4fb' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>W m⁻² nm⁻¹</dd></dl></div><div class='xr-var-data'><pre>array([[   0.   ,    0.   ,    0.   , ...,    0.   ,    0.   ,    0.   ],
+       [   0.   ,    0.   ,    0.   , ...,    0.   ,    0.   ,    0.   ],
+       [8282.243, 8162.917, 7958.32 , ..., 4197.182, 3797.886, 3419.74 ],
+       ...,
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan],
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan],
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan]],
+      shape=(149, 15))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>eup</span></div><div class='xr-var-dims'>(time, altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 0.0 ... nan nan nan nan</div><input id='attrs-eb6caefc-d2ca-4a7a-9758-4ae2221e7d28' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-eb6caefc-d2ca-4a7a-9758-4ae2221e7d28' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-18e9ba4b-7a66-4204-a284-939bbcc30ed1' class='xr-var-data-in' type='checkbox'><label for='data-18e9ba4b-7a66-4204-a284-939bbcc30ed1' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>W m⁻² nm⁻¹</dd></dl></div><div class='xr-var-data'><pre>array([[    0.   ,     0.   ,     0.   , ...,     0.   ,     0.   ,
+            0.   ],
+       [    0.   ,     0.   ,     0.   , ...,     0.   ,     0.   ,
+            0.   ],
+       [ 7282.675,  7662.093,  8088.671, ..., 12628.8  , 13011.14 ,
+        13364.47 ],
+       ...,
+       [      nan,       nan,       nan, ...,       nan,       nan,
+              nan],
+       [      nan,       nan,       nan, ...,       nan,       nan,
+              nan],
+       [      nan,       nan,       nan, ...,       nan,       nan,
+              nan]], shape=(149, 15))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>enet</span></div><div class='xr-var-dims'>(time, altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 0.0 ... nan nan nan nan</div><input id='attrs-ea3a4286-bff8-414a-825c-14da09aaca91' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-ea3a4286-bff8-414a-825c-14da09aaca91' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-cc06f771-e014-4cdb-80dc-3da2608c655f' class='xr-var-data-in' type='checkbox'><label for='data-cc06f771-e014-4cdb-80dc-3da2608c655f' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>W m⁻² nm⁻¹</dd></dl></div><div class='xr-var-data'><pre>array([[    0.  ,     0.  ,     0.  , ...,     0.  ,     0.  ,     0.  ],
+       [    0.  ,     0.  ,     0.  , ...,     0.  ,     0.  ,     0.  ],
+       [13175.8 , 15049.43, 16484.21, ..., 23736.2 , 24014.28, 24309.05],
+       ...,
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan],
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan],
+       [     nan,      nan,      nan, ...,      nan,      nan,      nan]],
+      shape=(149, 15))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>albedo</span></div><div class='xr-var-dims'>(time, altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>nan nan nan nan ... nan nan nan nan</div><input id='attrs-91cadaed-efd9-4315-a953-a4fe06bfe466' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-91cadaed-efd9-4315-a953-a4fe06bfe466' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-6784ee4b-0943-410b-891d-887b3525b8b3' class='xr-var-data-in' type='checkbox'><label for='data-6784ee4b-0943-410b-891d-887b3525b8b3' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>dimensionless</dd></dl></div><div class='xr-var-data'><pre>array([[      nan,       nan,       nan, ...,       nan,       nan,
+              nan],
+       [      nan,       nan,       nan, ...,       nan,       nan,
+              nan],
+       [0.3559735, 0.3373658, 0.3291706, ..., 0.3472791, 0.3514111,
+        0.3547445],
+       ...,
+       [      nan,       nan,       nan, ...,       nan,       nan,
+              nan],
+       [      nan,       nan,       nan, ...,       nan,       nan,
+              nan],
+       [      nan,       nan,       nan, ...,       nan,       nan,
+              nan]], shape=(149, 15))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-abe56c6e-9b27-4d80-b714-16e40294d33a' class='xr-section-summary-in' type='checkbox'  ><label for='section-abe56c6e-9b27-4d80-b714-16e40294d33a' class='xr-section-summary' >Indexes: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>time</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-b3a83d2a-f6d4-482d-8d11-78db38d1445a' class='xr-index-data-in' type='checkbox'/><label for='index-b3a83d2a-f6d4-482d-8d11-78db38d1445a' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(DatetimeIndex([&#x27;2022-03-14 10:30:00&#x27;, &#x27;2022-03-14 13:50:00&#x27;,
+               &#x27;2022-03-14 14:00:00&#x27;, &#x27;2022-03-14 15:20:00&#x27;,
+               &#x27;2022-03-16 09:20:00&#x27;, &#x27;2022-03-16 09:30:00&#x27;,
+               &#x27;2022-03-16 09:40:00&#x27;, &#x27;2022-03-16 10:30:00&#x27;,
+               &#x27;2022-03-16 10:40:00&#x27;, &#x27;2022-03-16 10:50:00&#x27;,
+               ...
+               &#x27;2022-04-10 11:50:00&#x27;, &#x27;2022-04-10 14:20:00&#x27;,
+               &#x27;2022-04-10 15:30:00&#x27;, &#x27;2022-04-10 15:40:00&#x27;,
+               &#x27;2022-04-10 15:50:00&#x27;, &#x27;2022-04-11 07:50:00&#x27;,
+               &#x27;2022-04-11 10:20:00&#x27;, &#x27;2022-04-11 10:30:00&#x27;,
+               &#x27;2022-04-11 10:40:00&#x27;, &#x27;2022-04-11 12:00:00&#x27;],
+              dtype=&#x27;datetime64[ns]&#x27;, name=&#x27;time&#x27;, length=149, freq=None))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>altitude</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-6bf7dfab-5209-45ef-970f-205a9fe4b4c3' class='xr-index-data-in' type='checkbox'/><label for='index-6bf7dfab-5209-45ef-970f-205a9fe4b4c3' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0,
+       13.0, 14.0],
+      dtype=&#x27;float64&#x27;, name=&#x27;altitude&#x27;))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-9aa79542-01bb-436f-805c-ea4f433d1151' class='xr-section-summary-in' type='checkbox'  checked><label for='section-9aa79542-01bb-436f-805c-ea4f433d1151' class='xr-section-summary' >Attributes: <span>(6)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>created :</span></dt><dd>2025-07-22T03:17:17.801842</dd><dt><span>source :</span></dt><dd>PyRadtran</dd><dt><span>output_type :</span></dt><dd>integrated_multi_altitude</dd><dt><span>num_simulations :</span></dt><dd>142</dd><dt><span>generated_by :</span></dt><dd>pyradtran</dd><dt><span>pyradtran_version :</span></dt><dd>new_io_system</dd></dl></div></li></ul></div></div></div></div>
 </div>
 <section id="simulation-results">
 <h2>Simulation Results<a class="headerlink" href="#simulation-results" title="Link to this heading">#</a></h2>
@@ -497,16 +1131,10 @@ module &#39;numpy&#39; has no attribute &#39;cumproduct&#39;
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">albedo_sim_z0</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="o">.</span><span class="n">albedo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">albedo_sim_z10</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="o">.</span><span class="n">albedo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">albedo_meas</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">albedo</span>
-
-<span class="ne">NameError</span>: name &#39;ds_sim&#39; is not defined
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7ff5c49477d0&gt;
 </pre></div>
 </div>
+<img alt="../_images/1da1d164543c4fdb788b18bb5a95f051e95d2e16fa909683ed5bf65d865cb55e.png" src="../_images/1da1d164543c4fdb788b18bb5a95f051e95d2e16fa909683ed5bf65d865cb55e.png" />
 </div>
 </div>
 </section>
