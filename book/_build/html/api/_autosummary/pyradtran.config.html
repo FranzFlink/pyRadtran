@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -175,6 +175,14 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Interactive Notebooks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">HALO-AC3 Campaign Data Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Thermal Infrared Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Modyfing the surface albedo</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pyradtran.core.html">pyradtran.core</a></li>
@@ -343,7 +351,7 @@ document.write(`
 <p class="rubric">Functions</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.config.load_config" title="pyradtran.config.load_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_config</span></code></a>([config_path])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyradtran.config.load_config.html#pyradtran.config.load_config" title="pyradtran.config.load_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_config</span></code></a>([config_path])</p></td>
 <td><p>Loads simulation config, using default if path is not provided.</p></td>
 </tr>
 </tbody>
@@ -352,31 +360,31 @@ document.write(`
 <p class="rubric">Classes</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.config.AerosolParameters" title="pyradtran.config.AerosolParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AerosolParameters</span></code></a>([enabled, aerosol_type, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AerosolParameters</span></code>([enabled, aerosol_type, ...])</p></td>
 <td><p>Configuration for aerosol properties in uvspec simulations.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.config.BRDFCamParameters" title="pyradtran.config.BRDFCamParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BRDFCamParameters</span></code></a>([enabled, pcl, sal, u10, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BRDFCamParameters</span></code>([enabled, pcl, sal, u10, ...])</p></td>
 <td><p>Configuration for Cox and Munk (1954) ocean BRDF properties.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.config.BRDFRpvParameters" title="pyradtran.config.BRDFRpvParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BRDFRpvParameters</span></code></a>([enabled, k, rho0, theta, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BRDFRpvParameters</span></code>([enabled, k, rho0, theta, ...])</p></td>
 <td><p>Configuration for Rahman, Pinty, and Verstraete BRDF properties.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.config.CloudParameters" title="pyradtran.config.CloudParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloudParameters</span></code></a>(enabled, layer_heights_km, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloudParameters</span></code>(enabled, layer_heights_km, ...)</p></td>
 <td><p>Configuration for cloud properties in uvspec simulations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.config.ExecutionConfig" title="pyradtran.config.ExecutionConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExecutionConfig</span></code></a>([max_workers, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExecutionConfig</span></code>([max_workers, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.config.OutputConfig" title="pyradtran.config.OutputConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputConfig</span></code></a>(filename_prefix, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputConfig</span></code>(filename_prefix, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.config.PathsConfig" title="pyradtran.config.PathsConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PathsConfig</span></code></a>(libradtran_bin, libradtran_data, ...)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">PathsConfig</span></code>(libradtran_bin, libradtran_data, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../index.html#pyradtran.config.SimulationConfig" title="pyradtran.config.SimulationConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationConfig</span></code></a>(paths, simulation_defaults, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationConfig</span></code>(paths, simulation_defaults, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../index.html#pyradtran.config.SimulationDefaults" title="pyradtran.config.SimulationDefaults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationDefaults</span></code></a>(rte_solver, ...)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationDefaults</span></code>(rte_solver, ...)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Albedo Testing &#8212; PyRadtran</title>
+    <title>Modyfing the surface albedo &#8212; PyRadtran</title>
   
   
   
@@ -180,7 +180,7 @@
 <li class="toctree-l2"><a class="reference internal" href="radiosonde.html">HALO-AC3 Campaign Data Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Infrared Simulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">ERA5 Atmospheric Profiles</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Albedo Testing</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Modyfing the surface albedo</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
@@ -334,7 +334,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Albedo Testing</h1>
+    <h1>Modyfing the surface albedo</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -356,8 +356,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="albedo-testing">
-<h1>Albedo Testing<a class="headerlink" href="#albedo-testing" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="modyfing-the-surface-albedo">
+<h1>Modyfing the surface albedo<a class="headerlink" href="#modyfing-the-surface-albedo" title="Link to this heading">#</a></h1>
 <p>Surface albedo parameterization testing and validation for different surface types.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -406,53 +406,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">31</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span>     <span class="n">coords</span><span class="o">=</span><span class="p">{</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span>         <span class="s1">&#39;time&#39;</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">&#39;2025-04-04T12:00:00&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">N_timesteps</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">),</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">28</span>     <span class="p">}</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">30</span> <span class="c1"># Run a spectral simulation for a single point using NEW IO system</span>
-<span class="ne">---&gt; </span><span class="mi">31</span> <span class="n">ds_sim</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run_uvspec</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">32</span>     <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">33</span>     <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">34</span>     <span class="n">save_to_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">35</span>     <span class="n">albedo_var</span><span class="o">=</span><span class="s1">&#39;albedo&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">36</span> <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">38</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Simulation complete!&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">39</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset variables: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">ds_sim</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="nn">File /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/pyradtran/interface.py:390,</span> in <span class="ni">PyRadtranAccessor.run_uvspec</span><span class="nt">(self, config_path, output_path, parameter_overrides, time_var, lat_var, lon_var, albedo_var, surface_temperature_var, era5_atmosphere, return_dataset, save_to_file, progress_callback)</span>
-<span class="g g-Whitespace">    </span><span class="mi">365</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">366</span><span class="sd"> Run uvspec for each time/location coordinate in the dataset using the new IO system.</span>
-<span class="g g-Whitespace">    </span><span class="mi">367</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">387</span><span class="sd">     PyRadtranError: If simulation fails</span>
-<span class="g g-Whitespace">    </span><span class="mi">388</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">389</span> <span class="c1"># Load configuration</span>
-<span class="ne">--&gt; </span><span class="mi">390</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">392</span> <span class="c1"># Apply parameter overrides if provided</span>
-<span class="g g-Whitespace">    </span><span class="mi">393</span> <span class="k">if</span> <span class="n">parameter_overrides</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">394</span>     <span class="c1"># Apply parameter overrides to config</span>
-
-<span class="nn">File /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/pyradtran/config.py:344,</span> in <span class="ni">load_config</span><span class="nt">(config_path)</span>
-<span class="g g-Whitespace">    </span><span class="mi">341</span>     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading configuration from: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">343</span> <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">344</span>     <span class="n">config</span> <span class="o">=</span> <span class="n">SimulationConfig</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">345</span>     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Configuration loaded successfully.&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">346</span>     <span class="c1"># Set logging level based on config after loading</span>
-
-<span class="nn">File /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/pyradtran/config.py:271,</span> in <span class="ni">SimulationConfig.from_yaml</span><span class="nt">(cls, yaml_path)</span>
-<span class="g g-Whitespace">    </span><span class="mi">269</span> <span class="n">yaml_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">270</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">yaml_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-<span class="ne">--&gt; </span><span class="mi">271</span>     <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration file not found: </span><span class="si">{</span><span class="n">yaml_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">273</span> <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">274</span>     <span class="n">raw_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-<span class="ne">FileNotFoundError</span>: Configuration file not found: config/albedo.yaml
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulation complete!
+Dataset variables: [&#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
+Dataset coordinates: [&#39;time&#39;, &#39;latitude&#39;, &#39;longitude&#39;, &#39;altitude&#39;]
+Dataset shape: FrozenMappingWarningOnValuesAccess({&#39;time&#39;: 24, &#39;altitude&#39;: 11})
 </pre></div>
 </div>
 </div>
@@ -464,14 +421,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;enet&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;ds_sim&#39; is not defined
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.collections.QuadMesh at 0x7f60361c85f0&gt;
 </pre></div>
 </div>
+<img alt="../_images/bae4e12cb60dccad72e9dcf86a79b30b97dbdda1efa1256921db706534d553e1.png" src="../_images/bae4e12cb60dccad72e9dcf86a79b30b97dbdda1efa1256921db706534d553e1.png" />
 </div>
 </div>
 <section id="results">
@@ -488,18 +441,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">ds_sim</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;albedo&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">y</span> <span class="o">=</span> <span class="s1">&#39;eup&#39;</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Upwelling Integrated Irradiance (400nm - 700nm) vs Albedo - NEW IO System&#39;</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;ds_sim&#39; is not defined
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Upwelling Integrated Irradiance (400nm - 700nm) vs Albedo - NEW IO System&#39;)
 </pre></div>
 </div>
+<img alt="../_images/bf95bf78af6afec72346fd674d10cd154783e054cd4ea555b7293a9b62d4e383.png" src="../_images/bf95bf78af6afec72346fd674d10cd154783e054cd4ea555b7293a9b62d4e383.png" />
 </div>
 </div>
 </section>

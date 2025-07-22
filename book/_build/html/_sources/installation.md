@@ -2,46 +2,42 @@
 
 ## Requirements
 
-PyRadtran requires:
-- Python 3.8 or later
-- libRadtran radiative transfer model
-- NumPy, xarray, PyYAML
+Before installing `pyradtran`, make sure you have:
+
+* Python 3.7 or higher
+* libRadtran installed on your system
 
 ## Basic Installation
 
-Install PyRadtran using pip:
+You can install `pyradtran` directly from GitHub:
 
 ```bash
-pip install pyradtran
-```
-
-Or for development:
-
-```bash
-git clone https://github.com/FranzFlink/pyRadtran.git
-cd pyRadtran
+git clone git@github.com:FranzFlink/pyRadtran.git
+cd pyradtran
 pip install -e .
 ```
 
 ## Installing libRadtran
 
-PyRadtran requires the libRadtran radiative transfer model to be installed separately. 
+`pyradtran` requires that you have libRadtran installed on your system. Follow these steps to install libRadtran:
 
-Download and install libRadtran from: http://www.libradtran.org/
+1. Download libRadtran from http://www.libradtran.org
+2. Extract the archive
+3. Configure, build, and install:
+
+```bash
+gzip -d libradtran-x.yy.tar.gz
+tar -xvf libradtran-x.yy.tar
+./configure
+make
+make check
+sudo make install
+```
 
 ## Environment Configuration
 
-Set the `LIBRADTRAN_PATH` environment variable:
+Make sure that the libRadtran executables are in your PATH. You can add the following to your `.bashrc` or `.bash_profile`:
 
 ```bash
-export LIBRADTRAN_PATH=/path/to/libradtran
-```
-
-## Verification
-
-Test your installation:
-
-```python
-import pyradtran
-print(pyradtran.__version__)
+export PATH=$PATH:/path/to/libradtran/bin
 ```

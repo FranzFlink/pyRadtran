@@ -180,7 +180,7 @@
 <li class="toctree-l2"><a class="reference internal" href="radiosonde.html">HALO-AC3 Campaign Data Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermal.html">Thermal Infrared Simulation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">ERA5 Atmospheric Profiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Albedo Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Modyfing the surface albedo</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
@@ -344,6 +344,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sanity-check">Sanity Check</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a></li>
 </ul>
             </nav>
@@ -358,7 +359,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="pyradtran-quickstart">
 <h1>PyRadtran Quickstart<a class="headerlink" href="#pyradtran-quickstart" title="Link to this heading">#</a></h1>
-<p>Basic usage example demonstrating spectral radiative transfer simulations with xarray integration.</p>
+<p>Basic usage example demonstrating spectral radiative transfer from 400nm to 700nm simulations with xarray integration.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import PyRadtran components using NEW IO system</span>
@@ -368,12 +369,14 @@ document.write(`
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+
 
 <span class="c1"># Load the configuration from the YAML file</span>
 <span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../config/spectral_config.yaml&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="c1"># change to &quot;DEBUG&quot; if you want to see more output</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pyradtran&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pyradtran&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
 
 <span class="n">N_timesteps</span> <span class="o">=</span> <span class="mi">10</span>
 
@@ -402,231 +405,6 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:34,035 - pyradtran.interface - INFO - Altitude found as coordinate - using 7 levels for zout: [  0   1   5  10  25  50 100]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:34,037 - pyradtran.interface - INFO - Auto-generating output path: work/xarray_example_20250722_021134.nc
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:34,045 - pyradtran.interface - INFO - Running 10 simulations across time/location points...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:34,189 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_080000_zwjw2v58.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:34,192 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_080000_zwjw2v58.inp &gt; uvspec_20250404_080000_zwjw2v58.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:36,515 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_080000_zwjw2v58.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:36,518 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:36,520 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:36,528 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:36,547 - pyradtran.interface - DEBUG - Successfully processed simulation 1/10 for time 2025-04-04T08:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:36,547 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_090000_xy_hkoon.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:36,548 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_090000_xy_hkoon.inp &gt; uvspec_20250404_090000_xy_hkoon.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:38,870 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_090000_xy_hkoon.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:38,872 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:38,873 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:38,879 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:38,893 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_100000_2pix_hx8.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:38,894 - pyradtran.interface - DEBUG - Successfully processed simulation 2/10 for time 2025-04-04T09:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:38,894 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_100000_2pix_hx8.inp &gt; uvspec_20250404_100000_2pix_hx8.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:41,178 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_100000_2pix_hx8.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:41,180 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:41,181 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:41,189 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:41,210 - pyradtran.interface - DEBUG - Successfully processed simulation 3/10 for time 2025-04-04T10:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:41,209 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_110000_ygr7xbzo.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:41,211 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_110000_ygr7xbzo.inp &gt; uvspec_20250404_110000_ygr7xbzo.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:43,534 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_110000_ygr7xbzo.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:43,536 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:43,537 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:43,544 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:43,562 - pyradtran.interface - DEBUG - Successfully processed simulation 4/10 for time 2025-04-04T11:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:43,561 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_120000_ssoqlq6l.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:43,563 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_120000_ssoqlq6l.inp &gt; uvspec_20250404_120000_ssoqlq6l.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:45,835 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_120000_ssoqlq6l.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:45,838 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:45,840 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:45,848 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:45,865 - pyradtran.interface - DEBUG - Successfully processed simulation 5/10 for time 2025-04-04T12:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:45,865 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_130000_t0rp12lj.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:45,867 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_130000_t0rp12lj.inp &gt; uvspec_20250404_130000_t0rp12lj.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:48,389 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_130000_t0rp12lj.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:48,391 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:48,392 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:48,399 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:48,416 - pyradtran.interface - DEBUG - Successfully processed simulation 6/10 for time 2025-04-04T13:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:48,415 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_140000_4m54fjg1.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:48,417 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_140000_4m54fjg1.inp &gt; uvspec_20250404_140000_4m54fjg1.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:50,741 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_140000_4m54fjg1.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:50,743 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:50,745 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:50,752 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:50,769 - pyradtran.interface - DEBUG - Successfully processed simulation 7/10 for time 2025-04-04T14:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:50,769 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_150000_ngd6aiie.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:50,771 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_150000_ngd6aiie.inp &gt; uvspec_20250404_150000_ngd6aiie.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:53,003 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_150000_ngd6aiie.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:53,005 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:53,006 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:53,013 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:53,030 - pyradtran.interface - DEBUG - Successfully processed simulation 8/10 for time 2025-04-04T15:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:53,030 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_160000_wdyuqrqp.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:53,032 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_160000_wdyuqrqp.inp &gt; uvspec_20250404_160000_wdyuqrqp.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:55,306 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_160000_wdyuqrqp.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:55,308 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:55,309 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:55,316 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:55,335 - pyradtran.interface - DEBUG - Successfully processed simulation 9/10 for time 2025-04-04T16:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:55,334 - pyradtran.core - DEBUG - Generated input file: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/pyradtran/book/notebooks/work/uvspec_20250404_170000_laeem38p.inp
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:55,336 - pyradtran.core - DEBUG - Running uvspec: /opt/libradtran/2.0.4/bin/uvspec &lt; uvspec_20250404_170000_laeem38p.inp &gt; uvspec_20250404_170000_laeem38p.out
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:57,659 - pyradtran.core - DEBUG - uvspec finished successfully for uvspec_20250404_170000_laeem38p.inp.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:57,662 - pyradtran.io - DEBUG - Initialized parser with columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:57,662 - pyradtran.io - DEBUG - Original user columns: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:57,669 - pyradtran.io - INFO - Detected output type: spectral_multi_altitude
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:57,687 - pyradtran.interface - DEBUG - Successfully processed simulation 10/10 for time 2025-04-04T17:00:00.000000000
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:57,714 - pyradtran.interface - INFO - Successfully completed 10/10 simulations
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 02:11:58,128 - pyradtran.interface - INFO - Results saved to work/xarray_example_20250722_021134.nc
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulation complete with NEW IO system!
 Dataset variables: [&#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
 Dataset coordinates: [&#39;time&#39;, &#39;latitude&#39;, &#39;longitude&#39;, &#39;wavelength&#39;, &#39;altitude&#39;]
@@ -635,27 +413,52 @@ Dataset shape: FrozenMappingWarningOnValuesAccess({&#39;time&#39;: 10, &#39;wave
 </div>
 </div>
 </div>
+<section id="sanity-check">
+<h2>Sanity Check<a class="headerlink" href="#sanity-check" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_sim</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">edir</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Edir&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;projection&#39;</span><span class="p">:</span> <span class="s1">&#39;3d&#39;</span><span class="p">})</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))),</span>
+<span class="p">)</span>
+
+<span class="c1"># make a 3d plot with time on the x-axis, wavelength on the y-axis, and irradiance on the z-axis</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">)[</span><span class="s1">&#39;edir&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="mi">1000</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="c1"># format x-axis as time</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Altitude (km)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;$F_\mathrm</span><span class="si">{dir}</span><span class="s1">^\downarrow$ ($\mathrm{W \cdot m^{-2}}$)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7faca15776b0&gt;]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:19: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+&lt;&gt;:19: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_3117616/2336648239.py:19: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+  ax.set_zlabel(&#39;$F_\mathrm{dir}^\downarrow$ ($\mathrm{W \cdot m^{-2}}$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/397b28746fa28ece37add2558e32ececf53b829b05197ef8d70c5faac06ece04.png" src="../_images/397b28746fa28ece37add2558e32ececf53b829b05197ef8d70c5faac06ece04.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;$F_\\mathrm{dir}^\\downarrow$ ($\\mathrm{W \\cdot m^{-2}}$)&#39;)
+</pre></div>
+</div>
+<img alt="../_images/4a7f80c455f5164daa9d48ecf5e122aeb585649a338f40c5723029ea9b6aebf9.png" src="../_images/4a7f80c455f5164daa9d48ecf5e122aeb585649a338f40c5723029ea9b6aebf9.png" />
 </div>
 </div>
+</section>
 <section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
-<p>Visualization of spectral direct irradiance across wavelength and time dimensions.</p>
+<p>Visualization of spectral direct irradiance across wavelength at the first timestep.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
-
-<span class="c1"># make a 3d plot with time on the x-axis, wavelength on the y-axis, and irradiance on the z-axis</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make a 3d plot with time on the x-axis, wavelength on the y-axis, and irradiance on the z-axis</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
 
@@ -663,10 +466,9 @@ Dataset shape: FrozenMappingWarningOnValuesAccess({&#39;time&#39;: 10, &#39;wave
     <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))),</span>
 <span class="p">)</span>
 
-
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;edir&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;edir&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
@@ -675,41 +477,17 @@ Dataset shape: FrozenMappingWarningOnValuesAccess({&#39;time&#39;: 10, &#39;wave
 <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;$F_\mathrm</span><span class="si">{dir}</span><span class="s1">^\downarrow$ ($\mathrm{W m^{-2}}$)&#39;</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;NEW IO System - Spectral Direct Irradiance vs Time&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:20: SyntaxWarning: invalid escape sequence &#39;\m&#39;
-&lt;&gt;:20: SyntaxWarning: invalid escape sequence &#39;\m&#39;
-/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_3082713/1905278869.py:20: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:17: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+&lt;&gt;:17: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_3117616/4243175334.py:17: SyntaxWarning: invalid escape sequence &#39;\m&#39;
   ax.set_zlabel(&#39;$F_\mathrm{dir}^\downarrow$ ($\mathrm{W m^{-2}}$)&#39;)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_3082713/1905278869.py:20: SyntaxWarning: invalid escape sequence &#39;\m&#39;
-  ax.set_zlabel(&#39;$F_\mathrm{dir}^\downarrow$ ($\mathrm{W m^{-2}}$)&#39;)
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">17</span>
-<span class="g g-Whitespace">     </span><span class="mi">14</span> <span class="n">z</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;edir&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">17</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Hour of day&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">19</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">)</span>
-
-<span class="nn">File /projekt_agmwend/home_rad/Joshua/micromamba/envs/mamba_josh/lib/python3.12/site-packages/mpl_toolkits/mplot3d/axes3d.py:1997,</span> in <span class="ni">Axes3D.plot_surface</span><span class="nt">(self, X, Y, Z, norm, vmin, vmax, lightsource, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1994</span> <span class="n">had_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
-<span class="g g-Whitespace">   </span><span class="mi">1996</span> <span class="k">if</span> <span class="n">Z</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1997</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Argument Z must be 2-dimensional.&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1999</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">cbook</span><span class="o">.</span><span class="n">_to_unmasked_float_array</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2000</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
-
-<span class="ne">ValueError</span>: Argument Z must be 2-dimensional.
-</pre></div>
-</div>
-<img alt="../_images/2ea79bbb24222c148870bd5a33ae2ffb3f4fb933810e2730cf3062884ff8f230.png" src="../_images/2ea79bbb24222c148870bd5a33ae2ffb3f4fb933810e2730cf3062884ff8f230.png" />
+<img alt="../_images/09a6c79a3a375cfb720d695d860ea98917ca0945a16916043d7b4aedcfcf2f7d.png" src="../_images/09a6c79a3a375cfb720d695d860ea98917ca0945a16916043d7b4aedcfcf2f7d.png" />
 </div>
 </div>
 </section>
@@ -779,6 +557,7 @@ Dataset shape: FrozenMappingWarningOnValuesAccess({&#39;time&#39;: 10, &#39;wave
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sanity-check">Sanity Check</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a></li>
 </ul>
   </nav></div>

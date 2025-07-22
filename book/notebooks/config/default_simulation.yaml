@@ -1,0 +1,60 @@
+# Default Configuration for libradpy simulations
+
+paths:
+  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
+  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
+  atmosphere_profile: /projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat # Example standard profile
+  solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
+  radiosonde_base: /projekt_agmwend/data/HALO-AC3/01_soundings/RS_for_libradtran/Dropsondes_HALO/
+  output_dir: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/data/simulation/libradpy_output/ # Default output
+  working_dir: /projekt_agmwend/home_rad/Joshua/HALO-AC3_Arctic_leads/sim/libradpy_work/ # For temp files
+
+simulation_defaults:
+  rte_solver: twostr
+  mol_abs_param: lowtran per_nm
+  wavelength_nm: [400, 3600] # Min, Max
+  output_columns:
+    - sza
+    - edir
+    - eglo
+    - edn
+    - eup
+    - enet
+    # - esum # Often redundant
+    - albedo
+  output_altitudes_km: [0.0] # Default to surface
+  # --- Surface Properties ---
+  albedo_type: const # 'const', 'file', 'library'
+  albedo_value: 0.85 # Used if albedo_type is 'const'
+  # albedo_file: path/to/albedo.dat # Used if albedo_type is 'file'
+  # albedo_library: IGBP # Used if albedo_type is 'library'
+  surface_type: tundra # Required when using albedo_library
+  brdf_type: lambertian # 'lambertian', 'rpv'
+  # brdf_rpv_type: 20 # Used if brdf_type is 'rpv' (e.g., sea ice)
+  surface_temperature_k: 250.0
+  # --- Atmospheric Constituents ---
+  ozone_du: 300.0
+  h2o_mm: 2.0 # Specify water vapor source ('fixed', 'radiosonde')
+  h2o_source: radiosonde # 'fixed' or 'radiosonde'
+  aerosol_type: default # 'default', 'none', 'custom'
+  # --- Geometry ---
+  viewing_geometry: nadir # 'nadir', 'zenith', 'custom'
+  # umu: [1.0] # Cosine of viewing zenith angles (if custom)
+  # phi: [0.0] # Viewing azimuth angles (if custom)
+
+execution:
+  max_workers: 8 # Sensible default, adjust based on system
+  cleanup_temp_files: true
+  debug_mode: false
+  timeout_seconds: 300 # Timeout for a single uvspec run
+
+output:
+  filename_prefix: "libradpy_sim"
+  filename_suffix: "_results.nc"
+  netcdf_encoding:
+    zlib: true
+    complevel: 5
+  # Add specific variable encodings if needed
+  # variable_encoding:
+  #   time: {units: "seconds since 1970-01-01 00:00:00 UTC", calendar: "proleptic_gregorian", dtype: "float64"}
+  #   output_altitude_km: {dtype: "float32"}
