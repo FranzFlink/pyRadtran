@@ -1,0 +1,1010 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyradtran.core &#8212; PyRadtran</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyradtran/core';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="PyRadtran - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="PyRadtran - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.html">pyradtran.helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyradtran.core</h1><div class="highlight"><pre>
+<span></span><span class="c1"># libradpy/core.py</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">SimulationConfig</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">RadiosondeFinder</span> <span class="c1"># Import the finder</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Add generate_input_content to core.py to break the circular dependency</span>
+<div class="viewcode-block" id="generate_input_content">
+<a class="viewcode-back" href="../../api/index.html#pyradtran.core.generate_input_content">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_input_content</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">,</span>
+    <span class="n">dt</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">radiosonde_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">override_albedo</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_albedo</span>
+    <span class="n">override_sza</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">override_atmosphere</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_atmosphere</span>
+    <span class="n">override_surface_temperature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_surface_temperature</span>
+    <span class="n">override_altitude_km</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_altitude for scalar altitude</span>
+    <span class="n">era5_atmosphere_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added ERA5 atmosphere file</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates the content for a LibRadtran/uvspec input file.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        config: The simulation configuration object</span>
+<span class="sd">        dt: Date and time for the simulation</span>
+<span class="sd">        latitude: Location latitude in degrees (-90 to 90)</span>
+<span class="sd">        longitude: Location longitude in degrees (-180 to 180)</span>
+<span class="sd">        radiosonde_path: Optional path to a radiosonde file</span>
+<span class="sd">        override_albedo: Optional override for surface albedo value # Added</span>
+<span class="sd">        override_sza: Optional override for solar zenith angle</span>
+<span class="sd">        override_atmosphere: Optional override for atmosphere type (e.g., &#39;tropical&#39;, &#39;subarctic_winter&#39;)</span>
+<span class="sd">        override_surface_temperature: Optional override for surface temperature (K) # Added</span>
+<span class="sd">        override_altitude_km: Optional override for observation altitude (treated as scalar) # Added</span>
+<span class="sd">        era5_atmosphere_file: Optional path to custom ERA5 atmosphere file</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        String containing the complete input file content</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating input content for dt=</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">, lat=</span><span class="si">{</span><span class="n">latitude</span><span class="si">}</span><span class="s2">, lon=</span><span class="si">{</span><span class="n">longitude</span><span class="si">}</span><span class="s2">, rs_path=</span><span class="si">{</span><span class="n">radiosonde_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># --- RTE (Radiative Transfer Equation) solver ---</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rte_solver </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># --- Molecular absorption parameterization ---</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mol_abs_param </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># --- Atmosphere settings ---</span>
+    <span class="k">if</span> <span class="n">era5_atmosphere_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Use the custom ERA5 atmosphere file with absolute path</span>
+        <span class="n">era5_abs_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">era5_atmosphere_file</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;atmosphere_file </span><span class="si">{</span><span class="n">era5_abs_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using ERA5 atmosphere file: </span><span class="si">{</span><span class="n">era5_abs_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">override_atmosphere</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Use the explicitly provided atmosphere type</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;atmosphere </span><span class="si">{</span><span class="n">override_atmosphere</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use the default atmosphere type from configuration</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;atmosphere_file </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">atmosphere_profile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># --- Atmosphere and aerosol settings ---</span>
+    <span class="k">if</span> <span class="n">radiosonde_path</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_source</span> <span class="o">==</span> <span class="s1">&#39;radiosonde&#39;</span><span class="p">:</span>
+        <span class="c1"># Add radiosonde with H2O RH parameters</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;radiosonde </span><span class="si">{</span><span class="n">radiosonde_path</span><span class="si">}</span><span class="s2"> H2O RH&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add data files path from configuration</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data_files_path </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># --- Molecular modifications (ozone, water vapor, etc) ---</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;mol_modify&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_modify</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Handle mol_modify as a dictionary</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_modify</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">molecule</span><span class="p">,</span> <span class="n">mod_info</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_modify</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">mod_info</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                <span class="n">unit</span> <span class="o">=</span> <span class="n">mod_info</span><span class="p">[</span><span class="s1">&#39;unit&#39;</span><span class="p">]</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mol_modify </span><span class="si">{</span><span class="n">molecule</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Handle mol_modify as a string (legacy format)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_modify</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mol_modify </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_modify</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add direct molecule modifications if present and mol_modify not used</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_modify</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;ozone_du&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">ozone_du</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mol_modify O3 </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">ozone_du</span><span class="si">}</span><span class="s2"> DU&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;h2o_mm&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_mm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_source</span> <span class="o">==</span> <span class="s1">&#39;fixed&#39;</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mol_modify H2O </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_mm</span><span class="si">}</span><span class="s2"> MM&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># --- Aerosol settings ---</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;aerosols&#39;</span><span class="p">):</span>
+        <span class="c1"># Check if aerosols enabled (could be dictionary or dataclass)</span>
+        <span class="n">aerosols_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">aerosols_enabled</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">,</span> <span class="s1">&#39;enabled&#39;</span><span class="p">):</span>
+            <span class="n">aerosols_enabled</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="o">.</span><span class="n">enabled</span>
+        
+        <span class="k">if</span> <span class="n">aerosols_enabled</span><span class="p">:</span>
+            <span class="c1"># Get aerosol type (could be in dictionary or as attribute)</span>
+            <span class="n">aerosol_type</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">aerosol_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;aerosol_type&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">,</span> <span class="s1">&#39;aerosol_type&#39;</span><span class="p">):</span>
+                <span class="n">aerosol_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="o">.</span><span class="n">aerosol_type</span>
+            
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aerosol_default&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Add optional aerosol properties if specified</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">if</span> <span class="s1">&#39;tau&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">:</span>
+                    <span class="n">tau</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">[</span><span class="s1">&#39;tau&#39;</span><span class="p">]</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aerosol_set_tau </span><span class="si">{</span><span class="n">tau</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="s1">&#39;ssa&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">:</span>
+                    <span class="n">ssa</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">[</span><span class="s1">&#39;ssa&#39;</span><span class="p">]</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aerosol_set_ssa </span><span class="si">{</span><span class="n">ssa</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="p">,</span> <span class="s1">&#39;aerosol_visibility_km&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="o">.</span><span class="n">aerosol_visibility_km</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;aerosol_visibility </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">aerosols</span><span class="o">.</span><span class="n">aerosol_visibility_km</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+    <span class="c1"># --- Cloud settings ---</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;clouds&#39;</span><span class="p">):</span>
+        <span class="c1"># Check if clouds enabled (could be dictionary or dataclass)</span>
+        <span class="n">clouds_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">clouds_enabled</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="s1">&#39;enabled&#39;</span><span class="p">):</span>
+            <span class="n">clouds_enabled</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">enabled</span>
+        
+        <span class="k">if</span> <span class="n">clouds_enabled</span><span class="p">:</span>
+            <span class="n">cloud_type</span> <span class="o">=</span> <span class="s1">&#39;wc&#39;</span>  <span class="c1"># Default to water clouds</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">cloud_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cloud_type&#39;</span><span class="p">,</span> <span class="s1">&#39;wc&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="s1">&#39;cloud_type&#39;</span><span class="p">):</span>
+                <span class="n">cloud_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span>
+            
+            <span class="c1"># Water or ice clouds</span>
+            <span class="k">if</span> <span class="n">cloud_type</span> <span class="o">==</span> <span class="s1">&#39;wc&#39;</span><span class="p">:</span>  <span class="c1"># Water clouds</span>
+                <span class="n">wc_file</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">wc_file</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wc_file&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="s1">&#39;wc_file&#39;</span><span class="p">):</span>
+                    <span class="n">wc_file</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">wc_file</span>
+                
+                <span class="k">if</span> <span class="n">wc_file</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wc_file </span><span class="si">{</span><span class="n">wc_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Use parametric water cloud</span>
+                    <span class="n">wc_props</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="n">wc_props</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wc_properties&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="s1">&#39;wc_properties&#39;</span><span class="p">):</span>
+                        <span class="n">wc_props</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">wc_properties</span>
+                    
+                    <span class="n">thick</span> <span class="o">=</span> <span class="n">wc_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+                    <span class="n">lwc</span> <span class="o">=</span> <span class="n">wc_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lwc&#39;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+                    <span class="n">r_eff</span> <span class="o">=</span> <span class="n">wc_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;r_eff&#39;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+                    <span class="n">z_base</span> <span class="o">=</span> <span class="n">wc_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;z_base&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+                    
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wc_set_tau </span><span class="si">{</span><span class="n">wc_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">5.0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wc_properties </span><span class="si">{</span><span class="n">thick</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">lwc</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r_eff</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wc_layer </span><span class="si">{</span><span class="n">z_base</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">z_base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">thick</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">elif</span> <span class="n">cloud_type</span> <span class="o">==</span> <span class="s1">&#39;ic&#39;</span><span class="p">:</span>  <span class="c1"># Ice clouds</span>
+                <span class="n">ic_file</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">ic_file</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ic_file&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="s1">&#39;ic_file&#39;</span><span class="p">):</span>
+                    <span class="n">ic_file</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">ic_file</span>
+                
+                <span class="k">if</span> <span class="n">ic_file</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ic_file </span><span class="si">{</span><span class="n">ic_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Use parametric ice cloud</span>
+                    <span class="n">ic_props</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="n">ic_props</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ic_properties&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="p">,</span> <span class="s1">&#39;ic_properties&#39;</span><span class="p">):</span>
+                        <span class="n">ic_props</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">ic_properties</span>
+                    
+                    <span class="n">thick</span> <span class="o">=</span> <span class="n">ic_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+                    <span class="n">iwc</span> <span class="o">=</span> <span class="n">ic_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;iwc&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+                    <span class="n">r_eff</span> <span class="o">=</span> <span class="n">ic_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;r_eff&#39;</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)</span>
+                    <span class="n">z_base</span> <span class="o">=</span> <span class="n">ic_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;z_base&#39;</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">)</span>
+                    
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ic_set_tau </span><span class="si">{</span><span class="n">ic_props</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tau&#39;</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ic_properties </span><span class="si">{</span><span class="n">thick</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">iwc</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r_eff</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ic_layer </span><span class="si">{</span><span class="n">z_base</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">z_base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">thick</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># --- Solar and Geometry settings ---</span>
+    <span class="c1"># Handle source type (solar or thermal)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;thermal&quot;</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;source thermal&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Solar source</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;source solar </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="si">}</span><span class="s2"> per_nm&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;source solar per_nm&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Solar geometry parameters only apply to solar simulations</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;solar&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">override_sza</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Use the explicitly provided solar zenith angle</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sza </span><span class="si">{</span><span class="n">override_sza</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Calculate SZA from time and location</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;time </span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">day</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">minute</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">second</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Format latitude with N/S indicator</span>
+            <span class="n">lat_hemisphere</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span> <span class="k">if</span> <span class="n">latitude</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;S&quot;</span>
+            <span class="n">lat_value</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">latitude</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;latitude </span><span class="si">{</span><span class="n">lat_hemisphere</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">lat_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Format longitude with E/W indicator</span>
+            <span class="n">lon_hemisphere</span> <span class="o">=</span> <span class="s2">&quot;E&quot;</span> <span class="k">if</span> <span class="n">longitude</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;W&quot;</span>
+            <span class="n">lon_value</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">longitude</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;longitude </span><span class="si">{</span><span class="n">lon_hemisphere</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">lon_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># For thermal simulations, add surface temperature</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;thermal&quot;</span><span class="p">:</span>
+        <span class="c1"># Use override surface temperature if provided, otherwise use config</span>
+        <span class="n">surface_temp</span> <span class="o">=</span> <span class="n">override_surface_temperature</span> <span class="k">if</span> <span class="n">override_surface_temperature</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">surface_temperature_k</span>
+        <span class="k">if</span> <span class="n">surface_temp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sur_temperature </span><span class="si">{</span><span class="n">surface_temp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+    
+    <span class="c1"># --- Surface properties ---</span>
+    <span class="k">if</span> <span class="n">override_albedo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Use explicit albedo value</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;albedo </span><span class="si">{</span><span class="n">override_albedo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_type</span> <span class="o">==</span> <span class="s1">&#39;library&#39;</span><span class="p">:</span>
+        <span class="c1"># Use albedo from library</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;albedo_library </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_library</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_type</span> <span class="o">==</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span>
+        <span class="c1"># Use albedo from file</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;albedo_file&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_file</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;albedo_file </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use default constant albedo</span>
+        <span class="n">albedo_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;albedo_value&#39;</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;albedo </span><span class="si">{</span><span class="n">albedo_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># BRDF if specified - RPV only (removed brdf_cam as requested)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;brdf_rpv&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+        <span class="c1"># RPV BRDF parameters</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">rpv_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv_type </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">rpv_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">any</span><span class="p">([</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">rho0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">theta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">sigma</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">t1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">t2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">]):</span>
+            <span class="c1"># Custom RPV parameters</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv k </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">rho0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv rho0 </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">rho0</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">theta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv theta </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">theta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">sigma</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv sigma </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">sigma</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">t1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv t1 </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">t1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">t2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv t2 </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">t2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv scale </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv</span><span class="o">.</span><span class="n">scale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Legacy BRDF handling (for backward compatibility)</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;brdf_type&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_type</span> <span class="o">==</span> <span class="s1">&#39;rpv&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;brdf_rpv_type&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;brdf_rpv_type </span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">brdf_rpv_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+    <span class="c1"># Surface temperature if needed (only for solar simulations, thermal already added above)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span> <span class="o">!=</span> <span class="s2">&quot;thermal&quot;</span><span class="p">:</span>
+        <span class="c1"># Use override surface temperature if provided, otherwise use config</span>
+        <span class="n">surface_temp</span> <span class="o">=</span> <span class="n">override_surface_temperature</span> <span class="k">if</span> <span class="n">override_surface_temperature</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">surface_temperature_k</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;surface_temperature_k&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">surface_temp</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sur_temperature </span><span class="si">{</span><span class="n">surface_temp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># --- Wavelength settings ---</span>
+    <span class="n">wavelength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">wavelength</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Wavelength range - format with decimal points for consistency</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wavelength </span><span class="si">{</span><span class="n">wavelength</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">wavelength</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wavelength</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+        <span class="c1"># Single wavelength - format with decimal point</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;wavelength </span><span class="si">{</span><span class="n">wavelength</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># --- Output settings ---</span>
+    
+    <span class="c1"># Collect output directives in the correct order</span>
+    <span class="n">output_directives</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># Vertical levels for output (altitudes in km)</span>
+    <span class="n">altitudes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span>
+    
+    <span class="c1"># Override with scalar altitude if provided (altitude as data variable)</span>
+    <span class="k">if</span> <span class="n">override_altitude_km</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">altitudes</span> <span class="o">=</span> <span class="p">[</span><span class="n">override_altitude_km</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using override altitude as scalar: </span><span class="si">{</span><span class="n">override_altitude_km</span><span class="si">}</span><span class="s2"> km&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">altitudes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">altitudes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># Format each altitude with explicit format</span>
+            <span class="n">alt_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">alt</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">altitudes</span><span class="p">)</span>
+            <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;zout </span><span class="si">{</span><span class="n">alt_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Add interpolation for multiple altitudes</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">altitudes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;zout_interpolate&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;zout </span><span class="si">{</span><span class="n">altitudes</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add output_process directives in the correct order</span>
+    <span class="c1"># Use per_cm for thermal, per_nm for solar simulations</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;thermal&quot;</span><span class="p">:</span>
+        <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;output_process per_cm&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;output_process per_nm&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add integrate directive if wavelength integration is requested</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;integrate_wavelength&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span><span class="p">:</span>
+        <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;output_process integrate&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add any additional output-related options from additional_options</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;additional_options&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">additional_options</span><span class="p">:</span>
+            <span class="c1"># Skip output_process directives as we&#39;ve already handled them above</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">option</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;output_process&#39;</span><span class="p">):</span>
+                <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+    
+    <span class="c1"># Output quantities - MUST be the very last directive</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span><span class="p">:</span>
+        <span class="c1"># Ensure zout and lambda are always included for robust parsing</span>
+        <span class="n">output_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span><span class="p">)</span>
+        
+        <span class="c1"># Always add zout (altitude) if not present</span>
+        <span class="k">if</span> <span class="s1">&#39;zout&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output_columns</span><span class="p">:</span>
+            <span class="n">output_columns</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;zout&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Always add lambda (wavelength) if not present</span>
+        <span class="k">if</span> <span class="s1">&#39;lambda&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">output_columns</span><span class="p">:</span>
+            <span class="c1"># Insert lambda after zout if zout is first, otherwise at the beginning</span>
+            <span class="k">if</span> <span class="n">output_columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;zout&#39;</span><span class="p">:</span>
+                <span class="n">output_columns</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">output_columns</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
+        
+        <span class="n">output_format</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_columns</span><span class="p">)</span>
+        <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;output_user </span><span class="si">{</span><span class="n">output_format</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Log the final output format for debugging</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output format with ensured zout/lambda: </span><span class="si">{</span><span class="n">output_format</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Default output format if none specified</span>
+        <span class="n">output_directives</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;output_user lambda zout edir edn eup&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add all output directives in the correct order</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">output_directives</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final input content before returning:</span><span class="se">\n</span><span class="si">{</span><span class="n">lines</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Simulation">
+<a class="viewcode-back" href="../../api/index.html#pyradtran.core.Simulation">[docs]</a>
+<span class="k">class</span> <span class="nc">Simulation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents and executes a single LibRadtran (uvspec) simulation instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Simulation runner with configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config: The loaded SimulationConfig object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="c1"># Initialize RadiosondeFinder if base path is set in config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radiosonde_finder</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">radiosonde_base</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_source</span> <span class="o">==</span> <span class="s1">&#39;radiosonde&#39;</span><span class="p">:</span>
+             <span class="k">try</span><span class="p">:</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">radiosonde_finder</span> <span class="o">=</span> <span class="n">RadiosondeFinder</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">radiosonde_base</span><span class="p">)</span>
+             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                  <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize RadiosondeFinder: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                  <span class="c1"># Continue without it, Atmosphere interface will handle fallback</span>
+
+    <span class="k">def</span> <span class="nf">_generate_input_file</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">override_albedo</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_albedo</span>
+        <span class="n">override_surface_temperature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_surface_temperature</span>
+        <span class="n">override_altitude_km</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_altitude</span>
+        <span class="n">era5_atmosphere_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added ERA5 atmosphere file</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the uvspec input file for a specific run.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple containing (input_file_path, radiosonde_path_used).</span>
+<span class="sd">            Returns (None, None) if input generation fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[_generate_input_file] Called for dt=</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">, lat=</span><span class="si">{</span><span class="n">latitude</span><span class="si">}</span><span class="s2">, lon=</span><span class="si">{</span><span class="n">longitude</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Find closest radiosonde if configured and finder is available</span>
+        <span class="n">radiosonde_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_source</span> <span class="o">==</span> <span class="s1">&#39;radiosonde&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">radiosonde_finder</span><span class="p">:</span>
+            <span class="n">radiosonde_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radiosonde_finder</span><span class="o">.</span><span class="n">find_closest</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">radiosonde_path</span><span class="p">:</span>
+                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time </span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2"> -&gt; Closest Sonde: </span><span class="si">{</span><span class="n">radiosonde_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time </span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2"> -&gt; No sonde found for this timestamp.&quot;</span><span class="p">)</span>
+
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">input_content</span> <span class="o">=</span> <span class="n">generate_input_content</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
+                <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span>
+                <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span>
+                <span class="n">radiosonde_path</span><span class="o">=</span><span class="n">radiosonde_path</span><span class="p">,</span>
+                <span class="n">override_albedo</span><span class="o">=</span><span class="n">override_albedo</span><span class="p">,</span> <span class="c1"># Pass override_albedo</span>
+                <span class="n">override_surface_temperature</span><span class="o">=</span><span class="n">override_surface_temperature</span><span class="p">,</span> <span class="c1"># Pass override_surface_temperature</span>
+                <span class="n">override_altitude_km</span><span class="o">=</span><span class="n">override_altitude_km</span><span class="p">,</span> <span class="c1"># Pass override_altitude</span>
+                <span class="n">era5_atmosphere_file</span><span class="o">=</span><span class="n">era5_atmosphere_file</span><span class="p">,</span> <span class="c1"># Pass ERA5 atmosphere file</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to generate input content for </span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2"> @ (</span><span class="si">{</span><span class="n">latitude</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">longitude</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create a temporary file in the working directory</span>
+            <span class="c1"># Ensure working_dir exists</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[_generate_input_file] Working directory for temp file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Suffix helps identify files if cleanup fails</span>
+            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span>
+                <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span>
+                <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="c1"># We manage deletion</span>
+                <span class="nb">dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span><span class="p">,</span>
+                <span class="n">prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;uvspec_</span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">,</span>
+                <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.inp&quot;</span>
+            <span class="p">)</span> <span class="k">as</span> <span class="n">tmp_inp</span><span class="p">:</span>
+                <span class="n">tmp_inp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">input_content</span><span class="p">)</span>
+                <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmp_inp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated input file: </span><span class="si">{</span><span class="n">input_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># This log is good for all modes</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Input Content (</span><span class="si">{</span><span class="n">input_file_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">) ---</span><span class="se">\n</span><span class="si">{</span><span class="n">input_content</span><span class="si">}</span><span class="se">\n</span><span class="s2">--- End Input ---&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">input_file_path</span><span class="p">,</span> <span class="n">radiosonde_path</span>
+
+        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error writing temporary input file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error creating input file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="Simulation.run">
+<a class="viewcode-back" href="../../api/index.html#pyradtran.core.Simulation.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">dt</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">override_albedo</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_albedo</span>
+        <span class="n">override_surface_temperature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_surface_temperature</span>
+        <span class="n">override_altitude_km</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added override_altitude</span>
+        <span class="n">era5_atmosphere_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># Added ERA5 atmosphere file</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates input, runs one uvspec instance, and returns the output file path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dt: Timestamp for the simulation.</span>
+<span class="sd">            latitude: Latitude for the simulation.</span>
+<span class="sd">            longitude: Longitude for the simulation.</span>
+<span class="sd">            override_albedo: Optional albedo value to override config. # Added</span>
+<span class="sd">            override_surface_temperature: Optional surface temperature (K) to override config. # Added</span>
+<span class="sd">            override_altitude_km: Optional observation altitude (km) to override config. # Added</span>
+<span class="sd">            era5_atmosphere_file: Optional path to custom ERA5 atmosphere file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path to the generated output file, or None if the simulation failed</span>
+<span class="sd">            at any stage (input generation, execution, timeout).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># Initialize to None</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Called for dt=</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">, lat=</span><span class="si">{</span><span class="n">latitude</span><span class="si">}</span><span class="s2">, lon=</span><span class="si">{</span><span class="n">longitude</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Config cleanup_temp_files: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Config debug_mode: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># 1. Generate Input File</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[run] Step 1: Generating input file...&quot;</span><span class="p">)</span>
+            <span class="n">input_file</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_input_file</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">override_albedo</span><span class="o">=</span><span class="n">override_albedo</span><span class="p">,</span> <span class="n">override_surface_temperature</span><span class="o">=</span><span class="n">override_surface_temperature</span><span class="p">,</span> <span class="n">override_altitude_km</span><span class="o">=</span><span class="n">override_altitude_km</span><span class="p">,</span> <span class="n">era5_atmosphere_file</span><span class="o">=</span><span class="n">era5_atmosphere_file</span><span class="p">)</span> <span class="c1"># Pass parameters</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">input_file</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;[run] Input file generation failed. Aborting run.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Error already logged</span>
+
+            <span class="c1"># Define output file path based on input file name</span>
+            <span class="n">output_file</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.out&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Input file: </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2">, Proposed output file: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># 2. Run uvspec</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[run] Step 2: Running uvspec...&quot;</span><span class="p">)</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="p">)]</span>
+            <span class="c1"># Capture stderr if in debug mode, otherwise discard</span>
+            <span class="n">stderr_pipe</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span> <span class="k">else</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span>
+            <span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">timeout_seconds</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running uvspec: </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span><span class="si">}</span><span class="s2"> &lt; </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="n">output_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># Good for all modes</span>
+
+            <span class="c1"># Ensure working_dir exists for uvspec execution</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Executing uvspec in CWD: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile_handle</span><span class="p">:</span>
+                <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span>
+                    <span class="n">stdin</span><span class="o">=</span><span class="n">infile</span><span class="p">,</span>
+                    <span class="n">stdout</span><span class="o">=</span><span class="n">outfile_handle</span><span class="p">,</span> <span class="c1"># Write directly to the output file</span>
+                    <span class="n">stderr</span><span class="o">=</span><span class="n">stderr_pipe</span><span class="p">,</span>
+                    <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span><span class="p">,</span> 
+                    <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span>
+                <span class="p">)</span>
+                <span class="n">stdout_data</span><span class="p">,</span> <span class="n">stderr_data</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+
+                <span class="c1"># 3. Check Results</span>
+                <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;uvspec failed for </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">. Return code: </span><span class="si">{</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">stderr_data</span><span class="p">:</span> <span class="c1"># Will only have data if debug_mode was true for stderr_pipe</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- uvspec stderr ---</span><span class="se">\n</span><span class="si">{</span><span class="n">stderr_data</span><span class="si">}</span><span class="se">\n</span><span class="s2">--- end stderr ---&quot;</span><span class="p">)</span>
+                    <span class="c1"># Keep output file for debugging if cleanup is disabled, otherwise remove failed output</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span> <span class="ow">and</span> <span class="n">output_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] cleanup_temp_files is True, removing failed output: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                         <span class="n">output_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+                    <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Indicate failure</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;uvspec finished successfully for </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span> <span class="c1"># Good for all modes</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span> <span class="ow">and</span> <span class="n">stderr_data</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- uvspec stderr (Success) ---</span><span class="se">\n</span><span class="si">{</span><span class="n">stderr_data</span><span class="si">}</span><span class="se">\n</span><span class="s2">--- end stderr ---&quot;</span><span class="p">)</span>
+                    
+                    <span class="c1"># Ensure output file actually has content if uvspec succeeded</span>
+                    <span class="k">if</span> <span class="n">output_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">output_file</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Output file </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2"> exists and is not empty.&quot;</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">output_file</span> <span class="c1"># Success! Return output path</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] uvspec reported success, but output file </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2"> is missing or empty.&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span> <span class="ow">and</span> <span class="n">output_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] cleanup_temp_files is True, removing (unexpectedly) empty/missing output: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">output_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">None</span>
+
+
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LibRadtran executable not found at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+             <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
+             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;uvspec process timed out after </span><span class="si">{</span><span class="n">timeout</span><span class="si">}</span><span class="s2">s for </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">input_file</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="si">}</span><span class="s2">. Killing process.&quot;</span><span class="p">)</span>
+             <span class="k">if</span> <span class="n">process</span><span class="p">:</span>
+                 <span class="n">process</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+                 <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span> 
+             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span> <span class="ow">and</span> <span class="n">output_file</span> <span class="ow">and</span> <span class="n">output_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                  <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Timeout: cleanup_temp_files is True, removing output file: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                  <span class="n">output_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+             <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An unexpected error occurred running uvspec for </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">input_file</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="c1"># Clean up potentially corrupted output file if it exists and cleanup is on</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span> <span class="ow">and</span> <span class="n">output_file</span> <span class="ow">and</span> <span class="n">output_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Exception: cleanup_temp_files is True, removing output file: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">output_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># 4. Cleanup Input File</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Finally block. Input file: </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">input_file</span> <span class="ow">and</span> <span class="n">input_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">input_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cleaned up input file: </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e_unlink</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not remove temporary input file </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e_unlink</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] cleanup_temp_files is False. Input file </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2"> preserved.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">input_file</span><span class="p">:</span> <span class="c1"># input_file path was set but it does not exist</span>
+                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] Input file </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2"> was defined but does not exist in finally block.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># input_file was None</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[run] Input file was None in finally block (likely failed generation).&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Output file cleanup is handled based on success/failure/config within the try/except blocks for uvspec run</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">output_file</span> <span class="ow">and</span> <span class="n">output_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] End of run. Output file </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2"> exists.&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">output_file</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] End of run. Output file </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2"> was defined but does not exist.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[run] End of run. Output file was not defined (None).&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PyRadtran Developers
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

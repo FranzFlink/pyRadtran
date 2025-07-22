@@ -1,0 +1,19 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+chapters:
+- file: installation
+- file: usage
+- file: notebooks/index
+  sections:
+  - file: notebooks/quickstart
+  - file: notebooks/radiosonde
+  - file: notebooks/thermal
+  - file: notebooks/era5_atmosphere
+  - file: notebooks/albedo_test
+- file: examples/index
+- file: api/index
+- file: contributing
+- file: changelog
