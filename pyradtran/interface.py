@@ -87,7 +87,8 @@ def run_pyradtran_simulation(
         # Run the simulation batch
         results = execute_simulation_batch(
             config=config,
-            input_ds=input_ds
+            input_ds=input_ds,
+            parameter_overrides=parameter_overrides
         )
         
         # Save results
@@ -118,6 +119,7 @@ def execute_simulation_batch(
     surface_temperature_var: Optional[str] = None,
     altitude_var: Optional[str] = None,
     era5_atmosphere: Optional[xr.Dataset] = None,
+    parameter_overrides: Dict[str, Any] = None,
     progress_callback: Optional[Callable[[int, int], None]] = None
 ) -> List[ParsedOutput]:
     """
@@ -236,7 +238,7 @@ def execute_simulation_batch(
             era5_atm_file = era5_atmosphere_files.get(point_id) if point_id else None
             future_to_point[
                 executor.submit(
-                    _run_single_simulation_new_io, runner, t, lat, lon, alb, surf_temp, alt, era5_atm_file
+                    _run_single_simulation_new_io, runner, t, lat, lon, parameter_overrides, alb, surf_temp, alt, era5_atm_file
                 )
             ] = (t, lat, lon, alb, surf_temp, alt, point_id)
         
@@ -283,6 +285,7 @@ def _run_single_simulation_new_io(
     time: np.datetime64,
     latitude: float,
     longitude: float,
+    parameter_overrides: Dict[str, Any] = None,
     albedo: Optional[float] = None,
     surface_temperature: Optional[float] = None,
     altitude: Optional[float] = None,
@@ -296,6 +299,7 @@ def _run_single_simulation_new_io(
         time: Timestamp for the simulation
         latitude: Latitude in degrees
         longitude: Longitude in degrees  
+        parameter_overrides: Dictionary of simulation parameters to override
         albedo: Optional surface albedo override
         surface_temperature: Optional surface temperature override
         altitude: Optional altitude override (scalar)
@@ -316,12 +320,13 @@ def _run_single_simulation_new_io(
             override_albedo=albedo,
             override_surface_temperature=surface_temperature,
             override_altitude_km=altitude,
-            era5_atmosphere_file=era5_atmosphere_file
+            era5_atmosphere_file=era5_atmosphere_file,
+            parameter_overrides=parameter_overrides
         )
         
         if output_file and output_file.exists():
-            # Parse using the new IO system - need to pass the config
-            parser = OutputParser(runner.config)
+            # Parse using the new IO system - need to pass the config and parameter overrides
+            parser = OutputParser(runner.config, parameter_overrides)
             parsed_output = parser.parse(output_file)
             return parsed_output
         else:
@@ -477,6 +482,7 @@ class PyRadtranAccessor:
             surface_temperature_var=surface_temperature_var,
             altitude_var=alt_var if altitude_as_data_var else None,
             era5_atmosphere=era5_atmosphere,
+            parameter_overrides=parameter_overrides,
             progress_callback=progress_callback
         )
         

@@ -42,6 +42,7 @@ class ParsedOutput:
     altitudes: Optional[List[float]] = None
     source_file: Optional[Path] = None
     metadata: Dict[str, Any] = None
+    is_brightness_temperature: bool = False  # New field to indicate brightness temperature output
     
     def __post_init__(self):
         """Initialize metadata if not provided."""
@@ -59,8 +60,13 @@ class ParsedOutput:
 class OutputParser:
     """Robust parser for LibRadtran output files."""
     
-    def __init__(self, config: SimulationConfig):
+    def __init__(self, config: SimulationConfig, parameter_overrides: Dict[str, Any] = None):
         self.config = config
+        self.parameter_overrides = parameter_overrides or {}
+        
+        # Check if brightness temperature output is requested
+        self.is_brightness_output = self.parameter_overrides.get('output_quantity') == 'brightness'
+        
         # LibRadtran will always include zout and lambda in the output due to our modifications
         self.original_columns = config.simulation_defaults.output_columns or []
         
@@ -75,9 +81,14 @@ class OutputParser:
         if 'lambda' not in self.output_columns:
             self.output_columns.append('lambda')
         
-        # Add the user-specified columns, skipping zout and lambda if they're already included
+                # Add the user-specified columns, but filter out certain columns for brightness output
         for col in self.original_columns:
             if col not in ['zout', 'lambda'] and col not in self.output_columns:
+                # For brightness output, LibRadtran doesn't include albedo column
+                # but it does include brightness temperature versions of radiation variables
+                if self.is_brightness_output and col == 'albedo':
+                    logger.debug(f"Skipping albedo column for brightness temperature output")
+                    continue
                 self.output_columns.append(col)
         
         self.output_altitudes = config.simulation_defaults.output_altitudes_km or [0.0]
@@ -86,6 +97,7 @@ class OutputParser:
         
         logger.debug(f"Initialized parser with columns: {self.output_columns}")
         logger.debug(f"Original user columns: {self.original_columns}")
+        logger.debug(f"Brightness output mode: {self.is_brightness_output}")
     
     def parse(self, output_file: Path) -> ParsedOutput:
         """Parse a LibRadtran output file."""
@@ -105,19 +117,23 @@ class OutputParser:
         try:
             if output_type == OutputType.INTEGRATED_SINGLE_ALTITUDE:
                 data = self._parse_integrated_single_altitude(data_lines)
-                return ParsedOutput(output_type, data, source_file=output_file)
+                return ParsedOutput(output_type, data, source_file=output_file, 
+                                  is_brightness_temperature=self.is_brightness_output)
                 
             elif output_type == OutputType.INTEGRATED_MULTI_ALTITUDE:
                 data = self._parse_integrated_multi_altitude(data_lines)
-                return ParsedOutput(output_type, data, altitudes=self.output_altitudes, source_file=output_file)
+                return ParsedOutput(output_type, data, altitudes=self.output_altitudes, source_file=output_file,
+                                  is_brightness_temperature=self.is_brightness_output)
                 
             elif output_type == OutputType.SPECTRAL_SINGLE_ALTITUDE:
                 data, wavelengths = self._parse_spectral_single_altitude(data_lines)
-                return ParsedOutput(output_type, data, wavelengths=wavelengths, source_file=output_file)
+                return ParsedOutput(output_type, data, wavelengths=wavelengths, source_file=output_file,
+                                  is_brightness_temperature=self.is_brightness_output)
                 
             elif output_type == OutputType.SPECTRAL_MULTI_ALTITUDE:
                 data, wavelengths = self._parse_spectral_multi_altitude(data_lines)
-                return ParsedOutput(output_type, data, wavelengths=wavelengths, altitudes=self.output_altitudes, source_file=output_file)
+                return ParsedOutput(output_type, data, wavelengths=wavelengths, altitudes=self.output_altitudes, 
+                                  source_file=output_file, is_brightness_temperature=self.is_brightness_output)
                 
         except Exception as e:
             raise OutputParsingError(f"Failed to parse {output_type.value} output: {e}")
@@ -416,7 +432,8 @@ class OutputToXarray:
             'created': datetime.now().isoformat(),
             'source': 'PyRadtran',
             'output_type': parsed_output.output_type.value,
-            'source_file': str(parsed_output.source_file) if parsed_output.source_file else None
+            'source_file': str(parsed_output.source_file) if parsed_output.source_file else None,
+            'is_brightness_temperature': int(parsed_output.is_brightness_temperature)
         })
         
         return output_ds
@@ -487,7 +504,8 @@ class OutputToXarray:
             'created': datetime.now().isoformat(),
             'source': 'PyRadtran',
             'output_type': output_type.value,
-            'num_simulations': len(parsed_outputs)
+            'num_simulations': len(parsed_outputs),
+            'is_brightness_temperature': int(parsed_outputs[0].is_brightness_temperature) if parsed_outputs else 0
         })
         
         return output_ds
@@ -500,11 +518,18 @@ class OutputToXarray:
         for var_name, value in parsed.data.items():
             # Replicate single value across all time steps
             data_array = np.full(time_len, value)
+            
+            # Add variable-specific attributes
+            attrs = {'units': OutputToXarray._get_units(var_name, parsed.is_brightness_temperature)}
+            if parsed.is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+                attrs['long_name'] = f'{var_name} brightness temperature'
+                attrs['description'] = 'Brightness temperature equivalent of radiance'
+            
             ds[var_name] = xr.DataArray(
                 data_array,
                 dims=(time_var,),
                 coords={time_var: ds[time_var]},
-                attrs={'units': OutputToXarray._get_units(var_name)}
+                attrs=attrs
             )
         
         return ds
@@ -526,11 +551,17 @@ class OutputToXarray:
                 if altitude in alt_dict:
                     data_array[:, alt_idx] = alt_dict[altitude]
             
+            # Add variable-specific attributes
+            attrs = {'units': OutputToXarray._get_units(var_name, parsed.is_brightness_temperature)}
+            if parsed.is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+                attrs['long_name'] = f'{var_name} brightness temperature'
+                attrs['description'] = 'Brightness temperature equivalent of radiance'
+            
             ds[var_name] = xr.DataArray(
                 data_array,
                 dims=(time_var, 'altitude'),
                 coords={time_var: ds[time_var], 'altitude': ds['altitude']},
-                attrs={'units': OutputToXarray._get_units(var_name)}
+                attrs=attrs
             )
         
         return ds
@@ -552,11 +583,17 @@ class OutputToXarray:
                 if wavelength in wl_dict:
                     data_array[:, wl_idx] = wl_dict[wavelength]
             
+            # Add variable-specific attributes
+            attrs = {'units': OutputToXarray._get_units(var_name, parsed.is_brightness_temperature)}
+            if parsed.is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+                attrs['long_name'] = f'{var_name} brightness temperature'
+                attrs['description'] = 'Brightness temperature equivalent of spectral radiance'
+            
             ds[var_name] = xr.DataArray(
                 data_array,
                 dims=(time_var, 'wavelength'),
                 coords={time_var: ds[time_var], 'wavelength': ds['wavelength']},
-                attrs={'units': OutputToXarray._get_units(var_name)}
+                attrs=attrs
             )
         
         return ds
@@ -583,6 +620,12 @@ class OutputToXarray:
                         if wavelength in wl_dict:
                             data_array[:, alt_idx, wl_idx] = wl_dict[wavelength]
             
+            # Add variable-specific attributes
+            attrs = {'units': OutputToXarray._get_units(var_name, parsed.is_brightness_temperature)}
+            if parsed.is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+                attrs['long_name'] = f'{var_name} brightness temperature'
+                attrs['description'] = 'Brightness temperature equivalent of spectral radiance'
+            
             ds[var_name] = xr.DataArray(
                 data_array,
                 dims=(time_var, 'altitude', 'wavelength'),
@@ -591,7 +634,7 @@ class OutputToXarray:
                     'altitude': ds['altitude'],
                     'wavelength': ds['wavelength']
                 },
-                attrs={'units': OutputToXarray._get_units(var_name)}
+                attrs=attrs
             )
         
         return ds
@@ -603,6 +646,7 @@ class OutputToXarray:
         
         # Get all variable names from first output
         var_names = list(parsed_outputs[0].data.keys())
+        is_brightness_temperature = parsed_outputs[0].is_brightness_temperature
         
         for var_name in var_names:
             # Create array to hold values for all time steps
@@ -613,16 +657,22 @@ class OutputToXarray:
                 if i < len(data_array) and var_name in parsed.data:
                     data_array[i] = parsed.data[var_name]
             
+            # Add variable-specific attributes
+            attrs = {'units': OutputToXarray._get_units(var_name, is_brightness_temperature)}
+            if is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+                attrs['long_name'] = f'{var_name} brightness temperature'
+                attrs['description'] = 'Brightness temperature equivalent of radiance'
+            
             ds[var_name] = xr.DataArray(
                 data_array,
                 dims=(time_var,),
                 coords={time_var: ds[time_var]},
-                attrs={'units': OutputToXarray._get_units(var_name)}
+                attrs=attrs
             )
         
         return ds
     
-    @staticmethod  
+    @staticmethod
     def _combine_spectral_single_altitude(ds: xr.Dataset, parsed_outputs: List[ParsedOutput], time_var: str) -> xr.Dataset:
         """Combine spectral single altitude data from multiple simulations."""
         time_len = len(ds[time_var])
@@ -630,6 +680,7 @@ class OutputToXarray:
         
         # Get all variable names from first output
         var_names = list(parsed_outputs[0].data.keys())
+        is_brightness_temperature = parsed_outputs[0].is_brightness_temperature
         
         for var_name in var_names:
             # Create 2D array [time, wavelength]
@@ -643,11 +694,17 @@ class OutputToXarray:
                         if wavelength in wl_dict:
                             data_array[i, wl_idx] = wl_dict[wavelength]
             
+            # Add variable-specific attributes
+            attrs = {'units': OutputToXarray._get_units(var_name, is_brightness_temperature)}
+            if is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+                attrs['long_name'] = f'{var_name} brightness temperature'
+                attrs['description'] = 'Brightness temperature equivalent of spectral radiance'
+            
             ds[var_name] = xr.DataArray(
                 data_array,
                 dims=(time_var, 'wavelength'),
                 coords={time_var: ds[time_var], 'wavelength': ds['wavelength']},
-                attrs={'units': OutputToXarray._get_units(var_name)}
+                attrs=attrs
             )
         
         return ds
@@ -660,6 +717,7 @@ class OutputToXarray:
         
         # Get all variable names from first output  
         var_names = list(parsed_outputs[0].data.keys())
+        is_brightness_temperature = parsed_outputs[0].is_brightness_temperature
         
         for var_name in var_names:
             # Create 2D array [time, altitude]
@@ -673,11 +731,17 @@ class OutputToXarray:
                         if altitude in alt_dict:
                             data_array[i, alt_idx] = alt_dict[altitude]
             
+            # Add variable-specific attributes
+            attrs = {'units': OutputToXarray._get_units(var_name, is_brightness_temperature)}
+            if is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+                attrs['long_name'] = f'{var_name} brightness temperature'
+                attrs['description'] = 'Brightness temperature equivalent of radiance'
+            
             ds[var_name] = xr.DataArray(
                 data_array,
                 dims=(time_var, 'altitude'),
                 coords={time_var: ds[time_var], 'altitude': ds['altitude']},
-                attrs={'units': OutputToXarray._get_units(var_name)}
+                attrs=attrs
             )
         
         return ds
@@ -691,6 +755,7 @@ class OutputToXarray:
         
         # Get all variable names from first output
         var_names = list(parsed_outputs[0].data.keys())
+        is_brightness_temperature = parsed_outputs[0].is_brightness_temperature
         
         for var_name in var_names:
             # Create 3D array [time, altitude, wavelength]
@@ -707,6 +772,12 @@ class OutputToXarray:
                                 if wavelength in wl_dict:
                                     data_array[i, alt_idx, wl_idx] = wl_dict[wavelength]
             
+            # Add variable-specific attributes
+            attrs = {'units': OutputToXarray._get_units(var_name, is_brightness_temperature)}
+            if is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+                attrs['long_name'] = f'{var_name} brightness temperature'
+                attrs['description'] = 'Brightness temperature equivalent of spectral radiance'
+            
             ds[var_name] = xr.DataArray(
                 data_array,
                 dims=(time_var, 'altitude', 'wavelength'),
@@ -715,14 +786,19 @@ class OutputToXarray:
                     'altitude': ds['altitude'],
                     'wavelength': ds['wavelength']
                 },
-                attrs={'units': OutputToXarray._get_units(var_name)}
+                attrs=attrs
             )
         
         return ds
     
     @staticmethod
-    def _get_units(var_name: str) -> str:
+    @staticmethod
+    def _get_units(var_name: str, is_brightness_temperature: bool = False) -> str:
         """Get standard units for common variables."""
+        if is_brightness_temperature and var_name in ['eglo', 'edir', 'eup', 'edn', 'enet', 'uu']:
+            # For brightness temperature output, radiation variables are in Kelvin
+            return 'K'
+            
         units_map = {
             'lambda': 'nm',
             'eglo': 'W m⁻² nm⁻¹',
@@ -730,6 +806,7 @@ class OutputToXarray:
             'eup': 'W m⁻² nm⁻¹',
             'edn': 'W m⁻² nm⁻¹',
             'enet': 'W m⁻² nm⁻¹',
+            'uu': 'W m⁻² nm⁻¹ sr⁻¹',
             'sza': 'degrees',
             'albedo': 'dimensionless',
             'zout': 'km'
@@ -774,8 +851,13 @@ class InputGenerator:
                     for molecule, params in mol_modify.items():
                         lines.append(f"mol_modify {molecule} {params['value']} {params['unit']}")
             
-            # Solar spectrum
-            lines.append(f"source solar {self.config.paths.solar_spectrum} per_nm")
+            # Source specification - check config for source type
+            source_type = getattr(sim_defaults, 'source', 'solar')
+            if source_type == 'thermal':
+                lines.append("source thermal")
+            else:
+                # Default to solar with spectrum file
+                lines.append(f"source solar {self.config.paths.solar_spectrum} per_nm")
             
             # Time and location
             lines.append(f"time {dt.year} {dt.month} {dt.day} {dt.hour} {dt.minute} {dt.second}")
@@ -786,11 +868,11 @@ class InputGenerator:
             lon_dir = "E" if longitude >= 0 else "W" 
             lines.append(f"longitude {lon_dir} {abs(longitude)}")
             
-            # Surface properties
-            if hasattr(sim_defaults, 'albedo_value') and sim_defaults.albedo_value is not None:
+            # Surface properties - only add if not being overridden
+            if 'albedo' not in overrides and hasattr(sim_defaults, 'albedo_value') and sim_defaults.albedo_value is not None:
                 lines.append(f"albedo {sim_defaults.albedo_value}")
             
-            if hasattr(sim_defaults, 'surface_temperature_k') and sim_defaults.surface_temperature_k is not None:
+            if 'sur_temperature' not in overrides and hasattr(sim_defaults, 'surface_temperature_k') and sim_defaults.surface_temperature_k is not None:
                 lines.append(f"sur_temperature {sim_defaults.surface_temperature_k}")
             
             # Wavelength range
@@ -807,14 +889,18 @@ class InputGenerator:
             if getattr(sim_defaults, 'integrate_wavelength', False):
                 lines.append("output_process integrate")
             
-            # Output columns (must be last)
+            # Apply output_quantity before output_user if specified
+            if 'output_quantity' in overrides and overrides['output_quantity'] is not None:
+                lines.append(f"output_quantity {overrides['output_quantity']}")
+            
+            # Output columns (must come after output_quantity)
             if sim_defaults.output_columns:
                 output_str = " ".join(sim_defaults.output_columns)
                 lines.append(f"output_user {output_str}")
             
-            # Apply any overrides
+            # Apply other overrides (excluding output_quantity which was already handled)
             for key, value in overrides.items():
-                if value is not None:
+                if key != 'output_quantity' and value is not None:
                     lines.append(f"{key} {value}")
             
             return "\n".join(lines)
@@ -834,9 +920,10 @@ def generate_uvspec_input_content(config: SimulationConfig, dt: datetime,
 
 
 def parse_uvspec_output(output_file: Path, config: SimulationConfig, 
-                        input_file: Optional[Path] = None) -> Dict[str, Any]:
+                        input_file: Optional[Path] = None, 
+                        parameter_overrides: Dict[str, Any] = None) -> Dict[str, Any]:
     """Legacy wrapper for output parsing."""
-    parser = OutputParser(config)
+    parser = OutputParser(config, parameter_overrides)
     result = parser.parse(output_file)
     
     # Convert to legacy format for backward compatibility

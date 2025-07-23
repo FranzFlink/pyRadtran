@@ -9,6 +9,7 @@ from typing import Optional, Tuple, Dict, Any
 
 from .config import SimulationConfig
 from .utils import RadiosondeFinder # Import the finder
+from .io import InputGenerator # Import the new InputGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -410,6 +411,7 @@ class Simulation:
         override_surface_temperature: Optional[float] = None, # Added override_surface_temperature
         override_altitude_km: Optional[float] = None, # Added override_altitude
         era5_atmosphere_file: Optional[Path] = None, # Added ERA5 atmosphere file
+        parameter_overrides: Optional[Dict[str, Any]] = None, # Added parameter overrides
         ) -> Tuple[Optional[Path], Optional[Path]]:
         """
         Generates the uvspec input file for a specific run.
@@ -432,16 +434,28 @@ class Simulation:
 
 
         try:
-            input_content = generate_input_content(
-                config=self.config,
+            # Use the new InputGenerator that supports parameter overrides
+            generator = InputGenerator(self.config)
+            
+            # Build the overrides dictionary
+            overrides = {}
+            if override_albedo is not None:
+                overrides['albedo'] = override_albedo
+            if override_surface_temperature is not None:
+                overrides['sur_temperature'] = override_surface_temperature
+            if override_altitude_km is not None:
+                overrides['altitude'] = override_altitude_km
+                
+            # Add parameter overrides
+            if parameter_overrides:
+                overrides.update(parameter_overrides)
+            
+            input_content = generator.generate(
                 dt=dt,
                 latitude=latitude,
                 longitude=longitude,
                 radiosonde_path=radiosonde_path,
-                override_albedo=override_albedo, # Pass override_albedo
-                override_surface_temperature=override_surface_temperature, # Pass override_surface_temperature
-                override_altitude_km=override_altitude_km, # Pass override_altitude
-                era5_atmosphere_file=era5_atmosphere_file, # Pass ERA5 atmosphere file
+                **overrides
             )
         except Exception as e:
              logger.error(f"Failed to generate input content for {dt} @ ({latitude},{longitude}): {e}")
@@ -492,6 +506,7 @@ class Simulation:
         override_surface_temperature: Optional[float] = None, # Added override_surface_temperature
         override_altitude_km: Optional[float] = None, # Added override_altitude
         era5_atmosphere_file: Optional[Path] = None, # Added ERA5 atmosphere file
+        parameter_overrides: Optional[Dict[str, Any]] = None, # Added parameter overrides
         ) -> Optional[Path]:
         """
         Generates input, runs one uvspec instance, and returns the output file path.
@@ -522,7 +537,14 @@ class Simulation:
             # 1. Generate Input File
             if self.config.execution.debug_mode:
                 logger.debug("[run] Step 1: Generating input file...")
-            input_file, _ = self._generate_input_file(dt, latitude, longitude, override_albedo=override_albedo, override_surface_temperature=override_surface_temperature, override_altitude_km=override_altitude_km, era5_atmosphere_file=era5_atmosphere_file) # Pass parameters
+            input_file, _ = self._generate_input_file(
+                dt, latitude, longitude, 
+                override_albedo=override_albedo, 
+                override_surface_temperature=override_surface_temperature, 
+                override_altitude_km=override_altitude_km, 
+                era5_atmosphere_file=era5_atmosphere_file,
+                parameter_overrides=parameter_overrides
+            )
             if not input_file:
                 logger.error("[run] Input file generation failed. Aborting run.")
                 return None # Error already logged
