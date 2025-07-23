@@ -3,10 +3,12 @@
 
 .. automodule:: pyradtran.exceptions
 
-   
-   .. rubric:: Exceptions
+.. autosummary::
+   :toctree:
+   :recursive:
 
-   .. autosummary::
+   
+   
    
       ConfigurationError
       InputGenerationError
@@ -15,4 +17,3 @@
       RadiosondeError
       UvspecExecutionError
       ValidationError
-   

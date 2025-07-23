@@ -16,7 +16,7 @@ If you're new to PyRadtran, start with the quickstart notebook, which covers the
 For more advanced applications, explore the atmospheric radiation examples using real measurement data from scientific campaigns.
 
 ```{note}
-All notebooks can be launched interactively using the 🚀 rocket icon at the top of each page, or downloaded as `.ipynb` files for local execution.
+All notebooks are still very much under development.
 ```
 
 ## Notebook Requirements

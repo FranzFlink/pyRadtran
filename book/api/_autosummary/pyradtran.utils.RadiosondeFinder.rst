@@ -1,23 +1,21 @@
-﻿pyradtran.utils.RadiosondeFinder
+pyradtran.utils.RadiosondeFinder
 ================================
 
 .. currentmodule:: pyradtran.utils
 
 .. autoclass:: RadiosondeFinder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
 
-   
    .. automethod:: __init__
 
-   
-   .. rubric:: Methods
-
    .. autosummary::
-   
-      ~RadiosondeFinder.__init__
-      ~RadiosondeFinder.find_closest
-   
-   
+      :toctree:
+      :recursive:
 
-   
-   
-   
+      
+         ~RadiosondeFinder.__init__
+         ~RadiosondeFinder.find_closest
+      

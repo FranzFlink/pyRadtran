@@ -3,16 +3,12 @@
 
 .. automodule:: pyradtran.config
 
-   
-   .. rubric:: Functions
+.. autosummary::
+   :toctree:
+   :recursive:
 
-   .. autosummary::
    
       load_config
-   
-   .. rubric:: Classes
-
-   .. autosummary::
    
       AerosolParameters
       BRDFCamParameters

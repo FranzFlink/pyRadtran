@@ -43,20 +43,28 @@ ds_sim = ds.pyradtran.run_uvspec(
 PyRadtran uses YAML configuration files to define simulation parameters:
 
 ```yaml
-simulation:
-  solar_zenith_angle: 45.0
-  wavelength:
+simulation_defaults:
+  wavelength_nm:
     start: 400
-    end: 3200
-    resolution: 10
+    end: 770
+  viewing geometry: nadir
+  rte_solver: disort
+  mol_abs_param: lowtran per_nm
   
 paths:
-  libradtran_path: /path/to/libradtran
-  data_files_path: /path/to/data
+  atmosphere_profile: /opt/libradtran/2.0.4/share/libRadtran/data/atmmod/afglsw.dat
+  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
+  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
+  output_dir: work
+  radiosonde_base: null
+  solar_spectrum: /opt/libradtran/2.0.4/share/libRadtran/data/solar_flux/NewGuey2003.dat
+  working_dir: work
   
 execution:
-  solver: disort
-  streams: 8
+  cleanup_temp_files: false
+  debug_mode: false
+  max_workers: 1 # Number of parallel workers
+  timeout_seconds: 60
 ```
 
 ## Working with Results

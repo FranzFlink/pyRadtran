@@ -1,4 +1,4 @@
-﻿pyradtran.io.parse\_uvspec\_output
+pyradtran.io.parse\_uvspec\_output
 ==================================
 
 .. currentmodule:: pyradtran.io

@@ -1,17 +1,18 @@
 # API Reference
 
-This section provides detailed documentation for all PyRadtran modules and functions.
+This is the auto-generated API reference for the `pyradtran` package.
 
 ```{eval-rst}
+.. currentmodule:: pyradtran
+
 .. autosummary::
    :toctree: _autosummary
    :recursive:
 
-   pyradtran.core
-   pyradtran.interface
-   pyradtran.config
-   pyradtran.io
-   pyradtran.utils
-   pyradtran.helpers
-   pyradtran.exceptions
-```
+   config
+   core
+   exceptions
+   helpers
+   interface
+   io
+   utils

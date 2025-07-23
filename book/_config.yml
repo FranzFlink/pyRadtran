@@ -9,7 +9,7 @@ copyright: "2025"
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: force
+  execute_notebooks: off
   timeout: 300  # Increase timeout to 5 minutes for longer simulations
   allow_errors: true  # Allow notebooks with errors to still build
   stderr_output: show  # Show stderr output for debugging
@@ -53,7 +53,8 @@ sphinx:
       navigation_with_keys: false
     html_js_files:
     - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js
-
+    templates_path:
+    - _templates  # Path to custom templates for Sphinx
 # MyST extensions
 parse:
   myst_enable_extensions:

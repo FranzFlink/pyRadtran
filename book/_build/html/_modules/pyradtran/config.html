@@ -174,15 +174,228 @@
         <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Interactive Notebooks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart: Spectral Solar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (1)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/cloud.html">Advanced: Add clouds to the simulation</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.html">pyradtran.helpers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.AerosolParameters.html">pyradtran.config.AerosolParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.AerosolParameters.__init__.html">pyradtran.config.AerosolParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.AerosolParameters.aerosol_angstrom_parameters.html">pyradtran.config.AerosolParameters.aerosol_angstrom_parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.AerosolParameters.aerosol_file.html">pyradtran.config.AerosolParameters.aerosol_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.AerosolParameters.aerosol_optical_properties.html">pyradtran.config.AerosolParameters.aerosol_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.AerosolParameters.aerosol_type.html">pyradtran.config.AerosolParameters.aerosol_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.AerosolParameters.aerosol_visibility_km.html">pyradtran.config.AerosolParameters.aerosol_visibility_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.AerosolParameters.enabled.html">pyradtran.config.AerosolParameters.enabled</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.html">pyradtran.config.BRDFCamParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.__init__.html">pyradtran.config.BRDFCamParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.enabled.html">pyradtran.config.BRDFCamParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.pcl.html">pyradtran.config.BRDFCamParameters.pcl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.sal.html">pyradtran.config.BRDFCamParameters.sal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.solar_wind.html">pyradtran.config.BRDFCamParameters.solar_wind</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.u10.html">pyradtran.config.BRDFCamParameters.u10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.uphi.html">pyradtran.config.BRDFCamParameters.uphi</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.html">pyradtran.config.BRDFRpvParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.__init__.html">pyradtran.config.BRDFRpvParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.enabled.html">pyradtran.config.BRDFRpvParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.k.html">pyradtran.config.BRDFRpvParameters.k</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.rho0.html">pyradtran.config.BRDFRpvParameters.rho0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.rpv_file.html">pyradtran.config.BRDFRpvParameters.rpv_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.rpv_library.html">pyradtran.config.BRDFRpvParameters.rpv_library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.rpv_type.html">pyradtran.config.BRDFRpvParameters.rpv_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.scale.html">pyradtran.config.BRDFRpvParameters.scale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.sigma.html">pyradtran.config.BRDFRpvParameters.sigma</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.t1.html">pyradtran.config.BRDFRpvParameters.t1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.t2.html">pyradtran.config.BRDFRpvParameters.t2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.theta.html">pyradtran.config.BRDFRpvParameters.theta</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_file.html">pyradtran.config.CloudParameters.cloud_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_optical_properties.html">pyradtran.config.CloudParameters.cloud_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_overlap.html">pyradtran.config.CloudParameters.cloud_overlap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.layer_heights_km.html">pyradtran.config.CloudParameters.layer_heights_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.layer_water_content.html">pyradtran.config.CloudParameters.layer_water_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.layer_effective_radius_um.html">pyradtran.config.CloudParameters.layer_effective_radius_um</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.__init__.html">pyradtran.config.ExecutionConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.cleanup_temp_files.html">pyradtran.config.ExecutionConfig.cleanup_temp_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.debug_mode.html">pyradtran.config.ExecutionConfig.debug_mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.max_workers.html">pyradtran.config.ExecutionConfig.max_workers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.timeout_seconds.html">pyradtran.config.ExecutionConfig.timeout_seconds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.__init__.html">pyradtran.config.OutputConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.filename_prefix.html">pyradtran.config.OutputConfig.filename_prefix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.filename_suffix.html">pyradtran.config.OutputConfig.filename_suffix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.netcdf_encoding.html">pyradtran.config.OutputConfig.netcdf_encoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.variable_encoding.html">pyradtran.config.OutputConfig.variable_encoding</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.__init__.html">pyradtran.config.PathsConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.output_dir.html">pyradtran.config.PathsConfig.output_dir</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.radiosonde_base.html">pyradtran.config.PathsConfig.radiosonde_base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.working_dir.html">pyradtran.config.PathsConfig.working_dir</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.libradtran_bin.html">pyradtran.config.PathsConfig.libradtran_bin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.libradtran_data.html">pyradtran.config.PathsConfig.libradtran_data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.atmosphere_profile.html">pyradtran.config.PathsConfig.atmosphere_profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.solar_spectrum.html">pyradtran.config.PathsConfig.solar_spectrum</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.__init__.html">pyradtran.config.SimulationConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.from_yaml.html">pyradtran.config.SimulationConfig.from_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.paths.html">pyradtran.config.SimulationConfig.paths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.simulation_defaults.html">pyradtran.config.SimulationConfig.simulation_defaults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.execution.html">pyradtran.config.SimulationConfig.execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.output.html">pyradtran.config.SimulationConfig.output</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.__init__.html">pyradtran.config.SimulationDefaults.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.to_dict.html">pyradtran.config.SimulationDefaults.to_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.aerosol_type.html">pyradtran.config.SimulationDefaults.aerosol_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.albedo_file.html">pyradtran.config.SimulationDefaults.albedo_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.albedo_library.html">pyradtran.config.SimulationDefaults.albedo_library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.albedo_type.html">pyradtran.config.SimulationDefaults.albedo_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.albedo_value.html">pyradtran.config.SimulationDefaults.albedo_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.brdf_rpv_type.html">pyradtran.config.SimulationDefaults.brdf_rpv_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.brdf_type.html">pyradtran.config.SimulationDefaults.brdf_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.correlated_k.html">pyradtran.config.SimulationDefaults.correlated_k</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.h2o_mm.html">pyradtran.config.SimulationDefaults.h2o_mm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.h2o_source.html">pyradtran.config.SimulationDefaults.h2o_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.integrate_wavelength.html">pyradtran.config.SimulationDefaults.integrate_wavelength</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.mol_abs_param.html">pyradtran.config.SimulationDefaults.mol_abs_param</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.mol_modify.html">pyradtran.config.SimulationDefaults.mol_modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.mol_tau_file.html">pyradtran.config.SimulationDefaults.mol_tau_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.ozone_du.html">pyradtran.config.SimulationDefaults.ozone_du</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.phi.html">pyradtran.config.SimulationDefaults.phi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.rte_solver.html">pyradtran.config.SimulationDefaults.rte_solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.source.html">pyradtran.config.SimulationDefaults.source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.surface_temperature_k.html">pyradtran.config.SimulationDefaults.surface_temperature_k</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.transmittance_source.html">pyradtran.config.SimulationDefaults.transmittance_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.umu.html">pyradtran.config.SimulationDefaults.umu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.viewing_geometry.html">pyradtran.config.SimulationDefaults.viewing_geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.wavelength_nm.html">pyradtran.config.SimulationDefaults.wavelength_nm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.output_columns.html">pyradtran.config.SimulationDefaults.output_columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.output_altitudes_km.html">pyradtran.config.SimulationDefaults.output_altitudes_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.clouds.html">pyradtran.config.SimulationDefaults.clouds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.aerosols.html">pyradtran.config.SimulationDefaults.aerosols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.brdf_cam.html">pyradtran.config.SimulationDefaults.brdf_cam</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.brdf_rpv.html">pyradtran.config.SimulationDefaults.brdf_rpv</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.generate_input_content.html">pyradtran.core.generate_input_content</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.__init__.html">pyradtran.core.Simulation.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.run.html">pyradtran.core.Simulation.run</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.html">pyradtran.helpers</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.add_cloud_layer.html">pyradtran.helpers.add_cloud_layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.configure_aerosol.html">pyradtran.helpers.configure_aerosol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.configure_cloud.html">pyradtran.helpers.configure_cloud</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.configure_common_scenario.html">pyradtran.helpers.configure_common_scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.configure_output_altitudes.html">pyradtran.helpers.configure_output_altitudes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.configure_spectral_range.html">pyradtran.helpers.configure_spectral_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.helpers.configure_surface.html">pyradtran.helpers.configure_surface</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.__init__.html">pyradtran.interface.PyRadtranAccessor.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.run_uvspec.html">pyradtran.interface.PyRadtranAccessor.run_uvspec</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.generate_uvspec_input_content.html">pyradtran.io.generate_uvspec_input_content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.load_simulation_input_data.html">pyradtran.io.load_simulation_input_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.parse_uvspec_output.html">pyradtran.io.parse_uvspec_output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.save_results_to_netcdf.html">pyradtran.io.save_results_to_netcdf</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputGenerator.html">pyradtran.io.InputGenerator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputGenerator.__init__.html">pyradtran.io.InputGenerator.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputGenerator.generate.html">pyradtran.io.InputGenerator.generate</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.__init__.html">pyradtran.io.OutputParser.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.parse.html">pyradtran.io.OutputParser.parse</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.__init__.html">pyradtran.io.OutputToXarray.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.convert.html">pyradtran.io.OutputToXarray.convert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.convert_batch.html">pyradtran.io.OutputToXarray.convert_batch</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE.html">pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE.html">pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE.html">pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE.html">pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.__init__.html">pyradtran.io.ParsedOutput.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.to_xarray.html">pyradtran.io.ParsedOutput.to_xarray</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.altitudes.html">pyradtran.io.ParsedOutput.altitudes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.is_brightness_temperature.html">pyradtran.io.ParsedOutput.is_brightness_temperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.metadata.html">pyradtran.io.ParsedOutput.metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.source_file.html">pyradtran.io.ParsedOutput.source_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.wavelengths.html">pyradtran.io.ParsedOutput.wavelengths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.output_type.html">pyradtran.io.ParsedOutput.output_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.data.html">pyradtran.io.ParsedOutput.data</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.__init__.html">pyradtran.utils.RadiosondeFinder.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.find_closest.html">pyradtran.utils.RadiosondeFinder.find_closest</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
@@ -303,7 +516,7 @@ document.write(`
 <span class="c1"># --- Define Dataclasses for structure and validation ---</span>
 
 <div class="viewcode-block" id="PathsConfig">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.PathsConfig">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PathsConfig</span><span class="p">:</span>
     <span class="n">libradtran_bin</span><span class="p">:</span> <span class="n">Path</span>
@@ -332,7 +545,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="CloudParameters">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.CloudParameters">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">CloudParameters</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -383,7 +596,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="BRDFCamParameters">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.BRDFCamParameters">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.BRDFCamParameters.html#pyradtran.config.BRDFCamParameters">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">BRDFCamParameters</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -403,7 +616,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="BRDFRpvParameters">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.BRDFRpvParameters">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.BRDFRpvParameters.html#pyradtran.config.BRDFRpvParameters">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">BRDFRpvParameters</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -427,7 +640,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="AerosolParameters">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.AerosolParameters">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.AerosolParameters.html#pyradtran.config.AerosolParameters">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">AerosolParameters</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -455,7 +668,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="SimulationDefaults">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.SimulationDefaults">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">SimulationDefaults</span><span class="p">:</span>
     <span class="n">rte_solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;twostr&quot;</span>
@@ -517,7 +730,7 @@ document.write(`
                     <span class="bp">self</span><span class="o">.</span><span class="n">brdf_cam</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="SimulationDefaults.to_dict">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.SimulationDefaults.to_dict">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.to_dict.html#pyradtran.config.SimulationDefaults.to_dict">[docs]</a>
     <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the SimulationDefaults object to a dictionary.</span>
 <span class="sd">        </span>
@@ -555,7 +768,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="ExecutionConfig">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.ExecutionConfig">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">ExecutionConfig</span><span class="p">:</span>
     <span class="n">max_workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
@@ -565,7 +778,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="OutputConfig">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.OutputConfig">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">OutputConfig</span><span class="p">:</span>
     <span class="n">filename_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;libradpy_sim&quot;</span>
@@ -576,7 +789,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="SimulationConfig">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.SimulationConfig">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">SimulationConfig</span><span class="p">:</span>
     <span class="n">paths</span><span class="p">:</span> <span class="n">PathsConfig</span>
@@ -585,7 +798,7 @@ document.write(`
     <span class="n">output</span><span class="p">:</span> <span class="n">OutputConfig</span>
 
 <div class="viewcode-block" id="SimulationConfig.from_yaml">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.SimulationConfig.from_yaml">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.SimulationConfig.from_yaml.html#pyradtran.config.SimulationConfig.from_yaml">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;SimulationConfig&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads configuration from a YAML file.&quot;&quot;&quot;</span>
@@ -657,7 +870,7 @@ document.write(`
 <span class="n">_DEFAULT_CONFIG_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;config&quot;</span> <span class="o">/</span> <span class="s2">&quot;default_simulation.yaml&quot;</span>
 
 <div class="viewcode-block" id="load_config">
-<a class="viewcode-back" href="../../api/index.html#pyradtran.config.load_config">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.load_config.html#pyradtran.config.load_config">[docs]</a>
 <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimulationConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads simulation config, using default if path is not provided.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">config_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

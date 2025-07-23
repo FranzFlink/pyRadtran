@@ -3,17 +3,13 @@
 
 .. automodule:: pyradtran.interface
 
-   
-   .. rubric:: Functions
+.. autosummary::
+   :toctree:
+   :recursive:
 
-   .. autosummary::
    
       execute_simulation_batch
       run_pyradtran_simulation
-   
-   .. rubric:: Classes
-
-   .. autosummary::
    
       PyRadtranAccessor
    

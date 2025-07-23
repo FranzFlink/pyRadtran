@@ -1,0 +1,823 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyradtran.config.BRDFRpvParameters &#8212; PyRadtran</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/_autosummary/pyradtran.config.BRDFRpvParameters';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pyradtran.config.BRDFRpvParameters.__init__" href="pyradtran.config.BRDFRpvParameters.__init__.html" />
+    <link rel="prev" title="pyradtran.config.BRDFCamParameters.uphi" href="pyradtran.config.BRDFCamParameters.uphi.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="PyRadtran - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="PyRadtran - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Interactive Notebooks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart: Spectral Solar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (1)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/cloud.html">Advanced: Add clouds to the simulation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="pyradtran.config.html">pyradtran.config</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.AerosolParameters.html">pyradtran.config.AerosolParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.AerosolParameters.__init__.html">pyradtran.config.AerosolParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.AerosolParameters.aerosol_angstrom_parameters.html">pyradtran.config.AerosolParameters.aerosol_angstrom_parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.AerosolParameters.aerosol_file.html">pyradtran.config.AerosolParameters.aerosol_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.AerosolParameters.aerosol_optical_properties.html">pyradtran.config.AerosolParameters.aerosol_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.AerosolParameters.aerosol_type.html">pyradtran.config.AerosolParameters.aerosol_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.AerosolParameters.aerosol_visibility_km.html">pyradtran.config.AerosolParameters.aerosol_visibility_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.AerosolParameters.enabled.html">pyradtran.config.AerosolParameters.enabled</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.BRDFCamParameters.html">pyradtran.config.BRDFCamParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFCamParameters.__init__.html">pyradtran.config.BRDFCamParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFCamParameters.enabled.html">pyradtran.config.BRDFCamParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFCamParameters.pcl.html">pyradtran.config.BRDFCamParameters.pcl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFCamParameters.sal.html">pyradtran.config.BRDFCamParameters.sal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFCamParameters.solar_wind.html">pyradtran.config.BRDFCamParameters.solar_wind</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFCamParameters.u10.html">pyradtran.config.BRDFCamParameters.u10</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFCamParameters.uphi.html">pyradtran.config.BRDFCamParameters.uphi</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 current active has-children"><a class="current reference internal" href="#">pyradtran.config.BRDFRpvParameters</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.__init__.html">pyradtran.config.BRDFRpvParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.enabled.html">pyradtran.config.BRDFRpvParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.k.html">pyradtran.config.BRDFRpvParameters.k</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.rho0.html">pyradtran.config.BRDFRpvParameters.rho0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.rpv_file.html">pyradtran.config.BRDFRpvParameters.rpv_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.rpv_library.html">pyradtran.config.BRDFRpvParameters.rpv_library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.rpv_type.html">pyradtran.config.BRDFRpvParameters.rpv_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.scale.html">pyradtran.config.BRDFRpvParameters.scale</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.sigma.html">pyradtran.config.BRDFRpvParameters.sigma</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.t1.html">pyradtran.config.BRDFRpvParameters.t1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.t2.html">pyradtran.config.BRDFRpvParameters.t2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.theta.html">pyradtran.config.BRDFRpvParameters.theta</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_file.html">pyradtran.config.CloudParameters.cloud_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_optical_properties.html">pyradtran.config.CloudParameters.cloud_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_overlap.html">pyradtran.config.CloudParameters.cloud_overlap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_heights_km.html">pyradtran.config.CloudParameters.layer_heights_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_water_content.html">pyradtran.config.CloudParameters.layer_water_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_effective_radius_um.html">pyradtran.config.CloudParameters.layer_effective_radius_um</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.__init__.html">pyradtran.config.ExecutionConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.cleanup_temp_files.html">pyradtran.config.ExecutionConfig.cleanup_temp_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.debug_mode.html">pyradtran.config.ExecutionConfig.debug_mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.max_workers.html">pyradtran.config.ExecutionConfig.max_workers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.timeout_seconds.html">pyradtran.config.ExecutionConfig.timeout_seconds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.__init__.html">pyradtran.config.OutputConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.filename_prefix.html">pyradtran.config.OutputConfig.filename_prefix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.filename_suffix.html">pyradtran.config.OutputConfig.filename_suffix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.netcdf_encoding.html">pyradtran.config.OutputConfig.netcdf_encoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.variable_encoding.html">pyradtran.config.OutputConfig.variable_encoding</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.__init__.html">pyradtran.config.PathsConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.output_dir.html">pyradtran.config.PathsConfig.output_dir</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.radiosonde_base.html">pyradtran.config.PathsConfig.radiosonde_base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.working_dir.html">pyradtran.config.PathsConfig.working_dir</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.libradtran_bin.html">pyradtran.config.PathsConfig.libradtran_bin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.libradtran_data.html">pyradtran.config.PathsConfig.libradtran_data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.atmosphere_profile.html">pyradtran.config.PathsConfig.atmosphere_profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.solar_spectrum.html">pyradtran.config.PathsConfig.solar_spectrum</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.__init__.html">pyradtran.config.SimulationConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.from_yaml.html">pyradtran.config.SimulationConfig.from_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.paths.html">pyradtran.config.SimulationConfig.paths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.simulation_defaults.html">pyradtran.config.SimulationConfig.simulation_defaults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.execution.html">pyradtran.config.SimulationConfig.execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.output.html">pyradtran.config.SimulationConfig.output</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.__init__.html">pyradtran.config.SimulationDefaults.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.to_dict.html">pyradtran.config.SimulationDefaults.to_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.aerosol_type.html">pyradtran.config.SimulationDefaults.aerosol_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.albedo_file.html">pyradtran.config.SimulationDefaults.albedo_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.albedo_library.html">pyradtran.config.SimulationDefaults.albedo_library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.albedo_type.html">pyradtran.config.SimulationDefaults.albedo_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.albedo_value.html">pyradtran.config.SimulationDefaults.albedo_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.brdf_rpv_type.html">pyradtran.config.SimulationDefaults.brdf_rpv_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.brdf_type.html">pyradtran.config.SimulationDefaults.brdf_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.correlated_k.html">pyradtran.config.SimulationDefaults.correlated_k</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.h2o_mm.html">pyradtran.config.SimulationDefaults.h2o_mm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.h2o_source.html">pyradtran.config.SimulationDefaults.h2o_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.integrate_wavelength.html">pyradtran.config.SimulationDefaults.integrate_wavelength</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.mol_abs_param.html">pyradtran.config.SimulationDefaults.mol_abs_param</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.mol_modify.html">pyradtran.config.SimulationDefaults.mol_modify</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.mol_tau_file.html">pyradtran.config.SimulationDefaults.mol_tau_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.ozone_du.html">pyradtran.config.SimulationDefaults.ozone_du</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.phi.html">pyradtran.config.SimulationDefaults.phi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.rte_solver.html">pyradtran.config.SimulationDefaults.rte_solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.source.html">pyradtran.config.SimulationDefaults.source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.surface_temperature_k.html">pyradtran.config.SimulationDefaults.surface_temperature_k</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.transmittance_source.html">pyradtran.config.SimulationDefaults.transmittance_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.umu.html">pyradtran.config.SimulationDefaults.umu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.viewing_geometry.html">pyradtran.config.SimulationDefaults.viewing_geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.wavelength_nm.html">pyradtran.config.SimulationDefaults.wavelength_nm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.output_columns.html">pyradtran.config.SimulationDefaults.output_columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.output_altitudes_km.html">pyradtran.config.SimulationDefaults.output_altitudes_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.clouds.html">pyradtran.config.SimulationDefaults.clouds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.aerosols.html">pyradtran.config.SimulationDefaults.aerosols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.brdf_cam.html">pyradtran.config.SimulationDefaults.brdf_cam</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.brdf_rpv.html">pyradtran.config.SimulationDefaults.brdf_rpv</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.core.generate_input_content.html">pyradtran.core.generate_input_content</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.core.Simulation.html">pyradtran.core.Simulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.core.Simulation.__init__.html">pyradtran.core.Simulation.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.core.Simulation.run.html">pyradtran.core.Simulation.run</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.helpers.html">pyradtran.helpers</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.helpers.add_cloud_layer.html">pyradtran.helpers.add_cloud_layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.helpers.configure_aerosol.html">pyradtran.helpers.configure_aerosol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.helpers.configure_cloud.html">pyradtran.helpers.configure_cloud</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.helpers.configure_common_scenario.html">pyradtran.helpers.configure_common_scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.helpers.configure_output_altitudes.html">pyradtran.helpers.configure_output_altitudes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.helpers.configure_spectral_range.html">pyradtran.helpers.configure_spectral_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.helpers.configure_surface.html">pyradtran.helpers.configure_surface</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.__init__.html">pyradtran.interface.PyRadtranAccessor.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.run_uvspec.html">pyradtran.interface.PyRadtranAccessor.run_uvspec</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.generate_uvspec_input_content.html">pyradtran.io.generate_uvspec_input_content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.load_simulation_input_data.html">pyradtran.io.load_simulation_input_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.parse_uvspec_output.html">pyradtran.io.parse_uvspec_output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.save_results_to_netcdf.html">pyradtran.io.save_results_to_netcdf</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.InputGenerator.html">pyradtran.io.InputGenerator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.InputGenerator.__init__.html">pyradtran.io.InputGenerator.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.InputGenerator.generate.html">pyradtran.io.InputGenerator.generate</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputParser.__init__.html">pyradtran.io.OutputParser.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputParser.parse.html">pyradtran.io.OutputParser.parse</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputToXarray.__init__.html">pyradtran.io.OutputToXarray.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputToXarray.convert.html">pyradtran.io.OutputToXarray.convert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputToXarray.convert_batch.html">pyradtran.io.OutputToXarray.convert_batch</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.OutputType.html">pyradtran.io.OutputType</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE.html">pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE.html">pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE.html">pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE.html">pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.__init__.html">pyradtran.io.ParsedOutput.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.to_xarray.html">pyradtran.io.ParsedOutput.to_xarray</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.altitudes.html">pyradtran.io.ParsedOutput.altitudes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.is_brightness_temperature.html">pyradtran.io.ParsedOutput.is_brightness_temperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.metadata.html">pyradtran.io.ParsedOutput.metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.source_file.html">pyradtran.io.ParsedOutput.source_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.wavelengths.html">pyradtran.io.ParsedOutput.wavelengths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.output_type.html">pyradtran.io.ParsedOutput.output_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.data.html">pyradtran.io.ParsedOutput.data</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.__init__.html">pyradtran.utils.RadiosondeFinder.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.find_closest.html">pyradtran.utils.RadiosondeFinder.find_closest</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/api/_autosummary/pyradtran.config.BRDFRpvParameters.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>pyradtran.config.BRDFRpvParameters</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.__init__"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.enabled"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.enabled</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.k"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.k</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.rho0"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.rho0</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.rpv_file"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.rpv_file</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.rpv_library"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.rpv_library</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.rpv_type"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.rpv_type</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.scale"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.scale</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.sigma"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.sigma</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.t1"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.t1</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.t2"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.t2</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.theta"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.theta</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyradtran-config-brdfrpvparameters">
+<h1>pyradtran.config.BRDFRpvParameters<a class="headerlink" href="#pyradtran-config-brdfrpvparameters" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyradtran.config.</span></span><span class="sig-name descname"><span class="pre">BRDFRpvParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpv_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpv_library</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpv_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyradtran/config.html#BRDFRpvParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for Rahman, Pinty, and Verstraete BRDF properties.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpv_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpv_library</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpv_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.__init__.html#pyradtran.config.BRDFRpvParameters.__init__" title="pyradtran.config.BRDFRpvParameters.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([enabled, k, rho0, theta, sigma, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.enabled.html#pyradtran.config.BRDFRpvParameters.enabled" title="pyradtran.config.BRDFRpvParameters.enabled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enabled</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.k.html#pyradtran.config.BRDFRpvParameters.k" title="pyradtran.config.BRDFRpvParameters.k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">k</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.rho0.html#pyradtran.config.BRDFRpvParameters.rho0" title="pyradtran.config.BRDFRpvParameters.rho0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rho0</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.rpv_file.html#pyradtran.config.BRDFRpvParameters.rpv_file" title="pyradtran.config.BRDFRpvParameters.rpv_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpv_file</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.rpv_library.html#pyradtran.config.BRDFRpvParameters.rpv_library" title="pyradtran.config.BRDFRpvParameters.rpv_library"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpv_library</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.rpv_type.html#pyradtran.config.BRDFRpvParameters.rpv_type" title="pyradtran.config.BRDFRpvParameters.rpv_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpv_type</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.scale.html#pyradtran.config.BRDFRpvParameters.scale" title="pyradtran.config.BRDFRpvParameters.scale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.sigma.html#pyradtran.config.BRDFRpvParameters.sigma" title="pyradtran.config.BRDFRpvParameters.sigma"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sigma</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.t1.html#pyradtran.config.BRDFRpvParameters.t1" title="pyradtran.config.BRDFRpvParameters.t1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">t1</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.t2.html#pyradtran.config.BRDFRpvParameters.t2" title="pyradtran.config.BRDFRpvParameters.t2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">t2</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.theta.html#pyradtran.config.BRDFRpvParameters.theta" title="pyradtran.config.BRDFRpvParameters.theta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">theta</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.enabled">
+<span class="sig-name descname"><span class="pre">enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.enabled" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.k">
+<span class="sig-name descname"><span class="pre">k</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.k" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.rho0">
+<span class="sig-name descname"><span class="pre">rho0</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.rho0" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.rpv_file">
+<span class="sig-name descname"><span class="pre">rpv_file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.rpv_file" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.rpv_library">
+<span class="sig-name descname"><span class="pre">rpv_library</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.rpv_library" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.rpv_type">
+<span class="sig-name descname"><span class="pre">rpv_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.rpv_type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.scale" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.sigma">
+<span class="sig-name descname"><span class="pre">sigma</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.sigma" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.t1">
+<span class="sig-name descname"><span class="pre">t1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.t1" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.t2">
+<span class="sig-name descname"><span class="pre">t2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.t2" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyradtran.config.BRDFRpvParameters.theta">
+<span class="sig-name descname"><span class="pre">theta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pyradtran.config.BRDFRpvParameters.theta" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./api/_autosummary"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pyradtran.config.BRDFCamParameters.uphi.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pyradtran.config.BRDFCamParameters.uphi</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pyradtran.config.BRDFRpvParameters.__init__.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pyradtran.config.BRDFRpvParameters.__init__</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.__init__"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.enabled"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.enabled</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.k"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.k</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.rho0"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.rho0</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.rpv_file"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.rpv_file</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.rpv_library"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.rpv_library</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.rpv_type"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.rpv_type</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.scale"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.scale</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.sigma"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.sigma</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.t1"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.t1</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.t2"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.t2</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.BRDFRpvParameters.theta"><code class="docutils literal notranslate"><span class="pre">BRDFRpvParameters.theta</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PyRadtran Developers
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

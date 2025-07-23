@@ -44,3 +44,6 @@ ds_sim = ds.pyradtran.run_uvspec(
     save_to_file=True,
 )
 ```
+
+## Check your input file! 
+

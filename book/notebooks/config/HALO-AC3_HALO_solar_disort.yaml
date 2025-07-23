@@ -58,6 +58,7 @@ simulation_defaults:
   - 0.0
   output_columns:
   - zout
+  - lambda
   - sza
   - edir
   - eglo

@@ -1,23 +1,21 @@
-﻿pyradtran.interface.PyRadtranAccessor
+pyradtran.interface.PyRadtranAccessor
 =====================================
 
 .. currentmodule:: pyradtran.interface
 
 .. autoclass:: PyRadtranAccessor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
 
-   
    .. automethod:: __init__
 
-   
-   .. rubric:: Methods
-
    .. autosummary::
-   
-      ~PyRadtranAccessor.__init__
-      ~PyRadtranAccessor.run_uvspec
-   
-   
+      :toctree:
+      :recursive:
 
-   
-   
-   
+      
+         ~PyRadtranAccessor.__init__
+         ~PyRadtranAccessor.run_uvspec
+      
