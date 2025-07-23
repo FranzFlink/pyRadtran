@@ -1,4 +1,4 @@
-﻿pyradtran.config.load\_config
+pyradtran.config.load\_config
 =============================
 
 .. currentmodule:: pyradtran.config

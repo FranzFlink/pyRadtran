@@ -3,10 +3,11 @@
 
 .. automodule:: pyradtran.utils
 
-   
-   .. rubric:: Classes
+.. autosummary::
+   :toctree:
+   :recursive:
 
-   .. autosummary::
+   
    
       RadiosondeFinder
    

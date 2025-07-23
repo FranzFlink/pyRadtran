@@ -1,4 +1,4 @@
-﻿pyradtran.interface.PyRadtranAccessor.run\_uvspec
+pyradtran.interface.PyRadtranAccessor.run\_uvspec
 =================================================
 
 .. currentmodule:: pyradtran.interface

@@ -3,10 +3,10 @@
 
 .. automodule:: pyradtran.helpers
 
-   
-   .. rubric:: Functions
+.. autosummary::
+   :toctree:
+   :recursive:
 
-   .. autosummary::
    
       add_cloud_layer
       configure_aerosol
@@ -15,4 +15,5 @@
       configure_output_altitudes
       configure_spectral_range
       configure_surface
+   
    
