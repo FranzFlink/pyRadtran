@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -179,14 +179,16 @@
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Quickstart: Spectral Solar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Quickstart: Surface Albedo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (1)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (solar)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (thermal)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cloud.html">Advanced: Add clouds to the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_thermal.html">Advanced: Constructing realistic clouds with pyradtran</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
@@ -227,13 +229,34 @@
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_file.html">pyradtran.config.CloudParameters.cloud_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_optical_properties.html">pyradtran.config.CloudParameters.cloud_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.altitude_resolution_km.html">pyradtran.config.CloudParameters.altitude_resolution_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.auto_generate_files.html">pyradtran.config.CloudParameters.auto_generate_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_inhomogeneity.html">pyradtran.config.CloudParameters.cloud_inhomogeneity</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_overlap.html">pyradtran.config.CloudParameters.cloud_overlap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_source.html">pyradtran.config.CloudParameters.cloud_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_type.html">pyradtran.config.CloudParameters.cloud_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_ice.html">pyradtran.config.CloudParameters.default_r_eff_ice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_water.html">pyradtran.config.CloudParameters.default_r_eff_water</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_dataset.html">pyradtran.config.CloudParameters.era5_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_lat.html">pyradtran.config.CloudParameters.era5_lat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_lon.html">pyradtran.config.CloudParameters.era5_lon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_time.html">pyradtran.config.CloudParameters.era5_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.ic_file.html">pyradtran.config.CloudParameters.ic_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.ic_properties.html">pyradtran.config.CloudParameters.ic_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.ipa_file.html">pyradtran.config.CloudParameters.ipa_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.iwc_threshold.html">pyradtran.config.CloudParameters.iwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.lwc_threshold.html">pyradtran.config.CloudParameters.lwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.output_directory.html">pyradtran.config.CloudParameters.output_directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.use_ipa.html">pyradtran.config.CloudParameters.use_ipa</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.wc_file.html">pyradtran.config.CloudParameters.wc_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.wc_properties.html">pyradtran.config.CloudParameters.wc_properties</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_heights_km.html">pyradtran.config.CloudParameters.layer_heights_km</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_water_content.html">pyradtran.config.CloudParameters.layer_water_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_ice_content.html">pyradtran.config.CloudParameters.layer_ice_content</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_effective_radius_um.html">pyradtran.config.CloudParameters.layer_effective_radius_um</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_cloud_fraction.html">pyradtran.config.CloudParameters.layer_cloud_fraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_cloud_variables.html">pyradtran.config.CloudParameters.era5_cloud_variables</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -611,10 +634,6 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2025-07-22 21:29:52,309 - pyradtran.config - INFO - Loading configuration from: ../config/spectral_config.yaml
-2025-07-22 21:29:52,358 - pyradtran.config - INFO - Configuration loaded successfully.
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulation complete with NEW IO system!
 Dataset variables: [&#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
 Dataset coordinates: [&#39;time&#39;, &#39;latitude&#39;, &#39;longitude&#39;, &#39;wavelength&#39;, &#39;altitude&#39;]
@@ -652,14 +671,14 @@ Dataset shape: FrozenMappingWarningOnValuesAccess({&#39;time&#39;: 10, &#39;wave
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:19: SyntaxWarning: invalid escape sequence &#39;\m&#39;
 &lt;&gt;:19: SyntaxWarning: invalid escape sequence &#39;\m&#39;
-/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_3108659/2336648239.py:19: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_1057359/2336648239.py:19: SyntaxWarning: invalid escape sequence &#39;\m&#39;
   ax.set_zlabel(&#39;$F_\mathrm{dir}^\downarrow$ ($\mathrm{W \cdot m^{-2}}$)&#39;)
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0, &#39;$F_\\mathrm{dir}^\\downarrow$ ($\\mathrm{W \\cdot m^{-2}}$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/4a7f80c455f5164daa9d48ecf5e122aeb585649a338f40c5723029ea9b6aebf9.png" src="../_images/4a7f80c455f5164daa9d48ecf5e122aeb585649a338f40c5723029ea9b6aebf9.png" />
+<img alt="../_images/e036f8908f664bc76b3e206665ecc0e107e9bbe3ef00e94e253e1cae4cc952de.png" src="../_images/e036f8908f664bc76b3e206665ecc0e107e9bbe3ef00e94e253e1cae4cc952de.png" />
 </div>
 </div>
 </section>
@@ -693,11 +712,11 @@ Dataset shape: FrozenMappingWarningOnValuesAccess({&#39;time&#39;: 10, &#39;wave
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:17: SyntaxWarning: invalid escape sequence &#39;\m&#39;
 &lt;&gt;:17: SyntaxWarning: invalid escape sequence &#39;\m&#39;
-/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_3108659/4243175334.py:17: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_1057359/4243175334.py:17: SyntaxWarning: invalid escape sequence &#39;\m&#39;
   ax.set_zlabel(&#39;$F_\mathrm{dir}^\downarrow$ ($\mathrm{W m^{-2}}$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/09a6c79a3a375cfb720d695d860ea98917ca0945a16916043d7b4aedcfcf2f7d.png" src="../_images/09a6c79a3a375cfb720d695d860ea98917ca0945a16916043d7b4aedcfcf2f7d.png" />
+<img alt="../_images/96e4430fb13e7e75443047d93fcb4aa4cf6d3c01276de1b443afeb840deba523.png" src="../_images/96e4430fb13e7e75443047d93fcb4aa4cf6d3c01276de1b443afeb840deba523.png" />
 </div>
 </div>
 </section>
@@ -725,14 +744,14 @@ Dataset shape: FrozenMappingWarningOnValuesAccess({&#39;time&#39;: 10, &#39;wave
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;&gt;:8: SyntaxWarning: invalid escape sequence &#39;\m&#39;
 &lt;&gt;:8: SyntaxWarning: invalid escape sequence &#39;\m&#39;
-/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_3108659/1716632304.py:8: SyntaxWarning: invalid escape sequence &#39;\m&#39;
+/projekt_agmwend/home_rad/Joshua/tmp/ipykernel_1057359/1716632304.py:8: SyntaxWarning: invalid escape sequence &#39;\m&#39;
   ax.set_ylabel(&#39;$F_\mathrm{dir}^\downarrow$ ($\mathrm{W m^{-2}}$)&#39;)
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f8be629d4c0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f1cb16f7ef0&gt;
 </pre></div>
 </div>
-<img alt="../_images/1932fe9044b9a90bc5a34376ff2df6b05d9a9c63da31d2d1ff5e19683a585331.png" src="../_images/1932fe9044b9a90bc5a34376ff2df6b05d9a9c63da31d2d1ff5e19683a585331.png" />
+<img alt="../_images/89d1eede90e24545726bd465a59df26e13e742f2374a51f0839e8f87256d25bf.png" src="../_images/89d1eede90e24545726bd465a59df26e13e742f2374a51f0839e8f87256d25bf.png" />
 </div>
 </div>
 </section>
