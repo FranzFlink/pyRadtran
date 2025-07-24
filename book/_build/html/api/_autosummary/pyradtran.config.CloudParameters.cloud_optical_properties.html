@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -61,8 +61,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="pyradtran.config.CloudParameters.cloud_overlap" href="pyradtran.config.CloudParameters.cloud_overlap.html" />
-    <link rel="prev" title="pyradtran.config.CloudParameters.cloud_file" href="pyradtran.config.CloudParameters.cloud_file.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -125,6 +123,8 @@
       
       
       
+        
+      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -172,23 +172,25 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <ul class="current nav bd-sidenav">
+        <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Interactive Notebooks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart: Spectral Solar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (1)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (solar)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (thermal)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/cloud.html">Advanced: Add clouds to the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Constructing realistic clouds with pyradtran</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="pyradtran.config.html">pyradtran.config</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.AerosolParameters.html">pyradtran.config.AerosolParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyradtran.config.AerosolParameters.__init__.html">pyradtran.config.AerosolParameters.__init__</a></li>
@@ -225,15 +227,36 @@
 <li class="toctree-l4"><a class="reference internal" href="pyradtran.config.BRDFRpvParameters.theta.html">pyradtran.config.BRDFRpvParameters.theta</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 current active has-children"><a class="reference internal" href="pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_file.html">pyradtran.config.CloudParameters.cloud_file</a></li>
-<li class="toctree-l4 current active"><a class="current reference internal" href="#">pyradtran.config.CloudParameters.cloud_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.altitude_resolution_km.html">pyradtran.config.CloudParameters.altitude_resolution_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.auto_generate_files.html">pyradtran.config.CloudParameters.auto_generate_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_inhomogeneity.html">pyradtran.config.CloudParameters.cloud_inhomogeneity</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_overlap.html">pyradtran.config.CloudParameters.cloud_overlap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_source.html">pyradtran.config.CloudParameters.cloud_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_type.html">pyradtran.config.CloudParameters.cloud_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.default_r_eff_ice.html">pyradtran.config.CloudParameters.default_r_eff_ice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.default_r_eff_water.html">pyradtran.config.CloudParameters.default_r_eff_water</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_dataset.html">pyradtran.config.CloudParameters.era5_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_lat.html">pyradtran.config.CloudParameters.era5_lat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_lon.html">pyradtran.config.CloudParameters.era5_lon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_time.html">pyradtran.config.CloudParameters.era5_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.ic_file.html">pyradtran.config.CloudParameters.ic_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.ic_properties.html">pyradtran.config.CloudParameters.ic_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.ipa_file.html">pyradtran.config.CloudParameters.ipa_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.iwc_threshold.html">pyradtran.config.CloudParameters.iwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.lwc_threshold.html">pyradtran.config.CloudParameters.lwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.output_directory.html">pyradtran.config.CloudParameters.output_directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.use_ipa.html">pyradtran.config.CloudParameters.use_ipa</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.wc_file.html">pyradtran.config.CloudParameters.wc_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.wc_properties.html">pyradtran.config.CloudParameters.wc_properties</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_heights_km.html">pyradtran.config.CloudParameters.layer_heights_km</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_water_content.html">pyradtran.config.CloudParameters.layer_water_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_ice_content.html">pyradtran.config.CloudParameters.layer_ice_content</a></li>
 <li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_effective_radius_um.html">pyradtran.config.CloudParameters.layer_effective_radius_um</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_cloud_fraction.html">pyradtran.config.CloudParameters.layer_cloud_fraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_cloud_variables.html">pyradtran.config.CloudParameters.era5_cloud_variables</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -526,9 +549,7 @@ document.write(`
   </button>
 `);
 </script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</button>
+
 </div></div>
       
     </div>
@@ -544,14 +565,6 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.CloudParameters.cloud_optical_properties"><code class="docutils literal notranslate"><span class="pre">CloudParameters.cloud_optical_properties</span></code></a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -563,11 +576,6 @@ document.write(`
                   
   <section id="pyradtran-config-cloudparameters-cloud-optical-properties">
 <h1>pyradtran.config.CloudParameters.cloud_optical_properties<a class="headerlink" href="#pyradtran-config-cloudparameters-cloud-optical-properties" title="Link to this heading">#</a></h1>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyradtran.config.CloudParameters.cloud_optical_properties">
-<span class="sig-prename descclassname"><span class="pre">CloudParameters.</span></span><span class="sig-name descname"><span class="pre">cloud_optical_properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mie'</span></em><a class="headerlink" href="#pyradtran.config.CloudParameters.cloud_optical_properties" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
 </section>
 
     <script type="text/x-thebe-config">
@@ -600,45 +608,12 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="pyradtran.config.CloudParameters.cloud_file.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pyradtran.config.CloudParameters.cloud_file</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="pyradtran.config.CloudParameters.cloud_overlap.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pyradtran.config.CloudParameters.cloud_overlap</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.config.CloudParameters.cloud_optical_properties"><code class="docutils literal notranslate"><span class="pre">CloudParameters.cloud_optical_properties</span></code></a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>

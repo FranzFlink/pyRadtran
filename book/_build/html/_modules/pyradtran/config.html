@@ -31,7 +31,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -178,14 +178,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart: Spectral Solar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (1)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (solar)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (thermal)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/cloud.html">Advanced: Add clouds to the simulation</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
@@ -226,13 +227,34 @@
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_file.html">pyradtran.config.CloudParameters.cloud_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_optical_properties.html">pyradtran.config.CloudParameters.cloud_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.altitude_resolution_km.html">pyradtran.config.CloudParameters.altitude_resolution_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.auto_generate_files.html">pyradtran.config.CloudParameters.auto_generate_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_inhomogeneity.html">pyradtran.config.CloudParameters.cloud_inhomogeneity</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_overlap.html">pyradtran.config.CloudParameters.cloud_overlap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_source.html">pyradtran.config.CloudParameters.cloud_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.cloud_type.html">pyradtran.config.CloudParameters.cloud_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_ice.html">pyradtran.config.CloudParameters.default_r_eff_ice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_water.html">pyradtran.config.CloudParameters.default_r_eff_water</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.era5_dataset.html">pyradtran.config.CloudParameters.era5_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.era5_lat.html">pyradtran.config.CloudParameters.era5_lat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.era5_lon.html">pyradtran.config.CloudParameters.era5_lon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.era5_time.html">pyradtran.config.CloudParameters.era5_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.ic_file.html">pyradtran.config.CloudParameters.ic_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.ic_properties.html">pyradtran.config.CloudParameters.ic_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.ipa_file.html">pyradtran.config.CloudParameters.ipa_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.iwc_threshold.html">pyradtran.config.CloudParameters.iwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.lwc_threshold.html">pyradtran.config.CloudParameters.lwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.output_directory.html">pyradtran.config.CloudParameters.output_directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.use_ipa.html">pyradtran.config.CloudParameters.use_ipa</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.wc_file.html">pyradtran.config.CloudParameters.wc_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.wc_properties.html">pyradtran.config.CloudParameters.wc_properties</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.layer_heights_km.html">pyradtran.config.CloudParameters.layer_heights_km</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.layer_water_content.html">pyradtran.config.CloudParameters.layer_water_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.layer_ice_content.html">pyradtran.config.CloudParameters.layer_ice_content</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.layer_effective_radius_um.html">pyradtran.config.CloudParameters.layer_effective_radius_um</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.layer_cloud_fraction.html">pyradtran.config.CloudParameters.layer_cloud_fraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.era5_cloud_variables.html">pyradtran.config.CloudParameters.era5_cloud_variables</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -552,47 +574,119 @@ document.write(`
 <span class="sd">    Configuration for cloud properties in uvspec simulations.</span>
 <span class="sd">    </span>
 <span class="sd">    This class defines parameters for including clouds in libradtran simulations.</span>
-<span class="sd">    Multiple cloud layers can be defined with different properties.</span>
+<span class="sd">    Supports multiple cloud types and data sources including ERA5 datasets.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     
-    <span class="c1"># Cloud layer properties (lists for multiple layers)</span>
-    <span class="c1"># Each element corresponds to one cloud layer</span>
-    <span class="n">layer_heights_km</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># [(bottom1, top1), (bottom2, top2), ...]</span>
-    <span class="n">layer_water_content</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># [lwc1, lwc2, ...]</span>
-    <span class="n">layer_effective_radius_um</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># [r_eff1, r_eff2, ...]</span>
+    <span class="c1"># === Cloud type and source ===</span>
+    <span class="n">cloud_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wc&quot;</span>  <span class="c1"># &#39;wc&#39; (water), &#39;ic&#39; (ice), &#39;mixed&#39;</span>
+    <span class="n">cloud_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;parametric&quot;</span>  <span class="c1"># &#39;parametric&#39;, &#39;file&#39;, &#39;era5&#39;, &#39;dataset&#39;</span>
     
-    <span class="c1"># Cloud properties file (alternative to specifying layers)</span>
-    <span class="n">cloud_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># === Parametric cloud properties (lists for multiple layers) ===</span>
+    <span class="n">layer_heights_km</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># [(bottom1, top1), ...]</span>
+    <span class="n">layer_water_content</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># [lwc1, lwc2, ...] in g/m³</span>
+    <span class="n">layer_ice_content</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># [iwc1, iwc2, ...] in g/m³</span>
+    <span class="n">layer_effective_radius_um</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># [r_eff1, r_eff2, ...] in μm</span>
+    <span class="n">layer_cloud_fraction</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># [cf1, cf2, ...] 0-1</span>
     
-    <span class="c1"># Cloud optical properties - for more advanced cases</span>
-    <span class="n">cloud_optical_properties</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mie&quot;</span>  <span class="c1"># &#39;mie&#39;, &#39;hu&#39;, &#39;echam4&#39;, etc.</span>
+    <span class="c1"># === Cloud file options ===</span>
+    <span class="n">wc_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Water cloud file path</span>
+    <span class="n">ic_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Ice cloud file path</span>
+    <span class="n">wc_properties</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># &#39;mie&#39;, &#39;hu&#39;, etc.</span>
+    <span class="n">ic_properties</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># &#39;yang&#39;, &#39;hey&#39;, &#39;baum&#39;, etc.</span>
+    
+    <span class="c1"># === ERA5/Dataset cloud generation ===</span>
+    <span class="n">era5_dataset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># xarray Dataset (not serializable in YAML)</span>
+    <span class="n">era5_cloud_variables</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;lwc&#39;</span><span class="p">:</span> <span class="s1">&#39;clwc&#39;</span><span class="p">,</span>  <span class="c1"># Cloud liquid water content</span>
+        <span class="s1">&#39;iwc&#39;</span><span class="p">:</span> <span class="s1">&#39;ciwc&#39;</span><span class="p">,</span>  <span class="c1"># Cloud ice water content</span>
+        <span class="s1">&#39;cc&#39;</span><span class="p">:</span> <span class="s1">&#39;cc&#39;</span><span class="p">,</span>     <span class="c1"># Cloud cover/fraction</span>
+        <span class="s1">&#39;temp&#39;</span><span class="p">:</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span>    <span class="c1"># Temperature</span>
+        <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="s1">&#39;z&#39;</span>        <span class="c1"># Geopotential height</span>
+    <span class="p">})</span>
+    <span class="n">era5_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ISO format datetime string</span>
+    <span class="n">era5_lat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">era5_lon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="c1"># === Cloud generation parameters ===</span>
+    <span class="n">lwc_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># Minimum LWC threshold (g/m³)</span>
+    <span class="n">iwc_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># Minimum IWC threshold (g/m³)</span>
+    <span class="n">default_r_eff_water</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span>  <span class="c1"># Default water droplet radius (μm)</span>
+    <span class="n">default_r_eff_ice</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span>  <span class="c1"># Default ice crystal radius (μm)</span>
+    <span class="n">altitude_resolution_km</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Vertical resolution for generated files</span>
+    
+    <span class="c1"># === Advanced cloud options ===</span>
     <span class="n">cloud_overlap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;max-random&quot;</span>  <span class="c1"># &#39;max-random&#39;, &#39;maximum&#39;, &#39;random&#39;</span>
+    <span class="n">cloud_inhomogeneity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Cloud inhomogeneity parameter</span>
+    
+    <span class="c1"># === 3D cloud options (IPA) ===</span>
+    <span class="n">use_ipa</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Use Independent Pixel Approximation</span>
+    <span class="n">ipa_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># 3D cloud IPA file</span>
+    
+    <span class="c1"># === Auto-generation options ===</span>
+    <span class="n">auto_generate_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Automatically generate cloud files from ERA5</span>
+    <span class="n">output_directory</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Where to save generated cloud files</span>
     
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Validate cloud configuration</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_file</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cloud file specified but not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cloud_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_source</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
+                <span class="c1"># Validate file sources</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wc&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">wc_file</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">wc_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Water cloud file not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wc_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ic&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_file</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ice cloud file not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ic_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ipa</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipa_file</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipa_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;IPA cloud file not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ipa_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_source</span> <span class="o">==</span> <span class="s2">&quot;parametric&quot;</span><span class="p">:</span>
                 <span class="c1"># Check consistency of layer properties</span>
                 <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_heights_km</span><span class="p">),</span>
                     <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_water_content</span><span class="p">),</span>
-                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_effective_radius_um</span><span class="p">)</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_ice_content</span><span class="p">),</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_effective_radius_um</span><span class="p">),</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_cloud_fraction</span><span class="p">)</span>
                 <span class="p">]</span>
                 
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">lengths</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">non_zero_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lengths</span> <span class="k">if</span> <span class="n">l</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">non_zero_lengths</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;Inconsistent cloud layer definitions: &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;heights=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_heights_km</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;water_content=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_water_content</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;effective_radius=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_effective_radius_um</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-                        <span class="p">)</span></div>
+                <span class="c1"># Remove zero lengths for consistency check</span>
+                <span class="n">non_zero_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lengths</span> <span class="k">if</span> <span class="n">l</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">non_zero_lengths</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Inconsistent cloud layer definitions: &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;heights=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_heights_km</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;lwc=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_water_content</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;iwc=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_ice_content</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;r_eff=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_effective_radius_um</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;cf=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_cloud_fraction</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+            
+            <span class="c1"># Validate cloud type</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wc&quot;</span><span class="p">,</span> <span class="s2">&quot;ic&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid cloud_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cloud_type</span><span class="si">}</span><span class="s2">. Use &#39;wc&#39;, &#39;ic&#39;, or &#39;mixed&#39;&quot;</span><span class="p">)</span>
+                
+            <span class="c1"># Validate cloud source</span>
+            <span class="n">valid_sources</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;parametric&quot;</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;era5&quot;</span><span class="p">,</span> <span class="s2">&quot;dataset&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_sources</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid cloud_source: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cloud_source</span><span class="si">}</span><span class="s2">. Use one of </span><span class="si">{</span><span class="n">valid_sources</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+            <span class="c1"># Set up output directory if auto-generation is enabled</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_generate_files</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./cloud_files&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto-generation enabled, using default output directory: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+        <span class="c1"># Validate thresholds</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lwc_threshold</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">iwc_threshold</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cloud content thresholds must be non-negative&quot;</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_r_eff_water</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_r_eff_ice</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Default effective radii must be positive&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BRDFCamParameters">
@@ -772,7 +866,7 @@ document.write(`
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">ExecutionConfig</span><span class="p">:</span>
     <span class="n">max_workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">cleanup_temp_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">cleanup_temp_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Keep input files for debugging and development</span>
     <span class="n">debug_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">timeout_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span></div>
 
@@ -875,14 +969,14 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads simulation config, using default if path is not provided.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">config_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">_DEFAULT_CONFIG_PATH</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No config path provided, using default: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No config path provided, using default: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading configuration from: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading configuration from: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">SimulationConfig</span><span class="o">.</span><span class="n">from_yaml</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Configuration loaded successfully.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Configuration loaded successfully.&quot;</span><span class="p">)</span>
         <span class="c1"># Set logging level based on config after loading</span>
         <span class="n">log_level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">log_level</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">)</span>

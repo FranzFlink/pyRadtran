@@ -1,0 +1,90 @@
+# Configuration for cloud simulations with ERA5 cloud data
+# This example shows how to use ERA5 datasets to generate cloud files automatically
+
+paths:
+  # Core libRadtran paths
+  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
+  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
+  
+  # Data paths
+  atmosphere_profile: /opt/libradtran/2.0.4/share/libRadtran/data/atmmod/afglus.dat
+  solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
+  working_dir: ./work
+
+simulation_defaults:
+  # Basic simulation setup
+  rte_solver: disort
+  mol_abs_param: reptran
+  source: solar
+  
+  # Wavelength settings
+  wavelength_nm: [400, 3200]  # Visible to near-infrared
+  integrate_wavelength: false
+  
+  # Surface properties
+  albedo_type: constant
+  albedo_value: 0.3
+  
+  # Output settings
+  output_altitudes_km: [0.0, 1.0, 5.0, 10.0]
+  output_columns: ["lambda", "zout", "edir", "edn", "eup", "eglo"]
+  
+  # Molecular modifications
+  mol_modify:
+    O3:
+      value: 300
+      unit: DU
+  
+  # === ENHANCED CLOUD CONFIGURATION ===
+  clouds:
+    enabled: true
+    
+    # Cloud source: 'era5' to generate from ERA5 dataset
+    cloud_source: era5
+    cloud_type: wc  # 'wc' (water), 'ic' (ice), 'mixed'
+    
+    # ERA5 dataset configuration
+    # Note: era5_dataset must be provided programmatically (xarray Dataset object)
+    era5_cloud_variables:
+      lwc: clwc     # Cloud liquid water content variable name
+      iwc: ciwc     # Cloud ice water content variable name  
+      cc: cc        # Cloud cover/fraction variable name
+      temp: t       # Temperature variable name
+      z: z          # Geopotential height variable name (important for accurate altitudes!)
+    
+    # ERA5 extraction parameters (optional - will use simulation time/location if not set)
+    era5_time: null      # ISO datetime string, e.g., "2020-04-01T12:00:00Z"
+    era5_lat: null       # Latitude (will use simulation lat if null)
+    era5_lon: null       # Longitude (will use simulation lon if null)
+    
+    # Cloud generation thresholds and parameters
+    lwc_threshold: 1.0e-6      # Minimum LWC to consider as cloud (g/m³)
+    iwc_threshold: 1.0e-6      # Minimum IWC to consider as cloud (g/m³)
+    default_r_eff_water: 10.0  # Default water droplet effective radius (μm)
+    default_r_eff_ice: 30.0    # Default ice crystal effective radius (μm)
+    altitude_resolution_km: 0.2  # Vertical resolution for generated cloud files
+    
+    # Cloud optical properties
+    wc_properties: mie  # Water cloud optical properties ('mie', 'hu', etc.)
+    ic_properties: yang # Ice cloud optical properties ('yang', 'hey', 'baum', etc.)
+    
+    # File generation options
+    auto_generate_files: true
+    output_directory: ./cloud_files  # Where to save generated cloud files
+    
+    # Advanced cloud options
+    cloud_overlap: max-random  # Cloud overlap assumption
+    use_ipa: false            # Use Independent Pixel Approximation (3D clouds)
+
+execution:
+  max_workers: 4
+  cleanup_temp_files: true
+  debug_mode: false
+  timeout_seconds: 300
+
+output:
+  filename_prefix: "cloud_era5_sim"
+  filename_suffix: "_results.nc"
+  netcdf_encoding:
+    zlib: true
+    complevel: 5

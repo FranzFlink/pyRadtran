@@ -13,7 +13,7 @@ paths:
   libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
   libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
   output_dir: work
-  radiosonde_base: .
+  radiosonde_base: /projekt_agmwend/data/HALO-AC3/01_soundings/RS_for_libradtran/Dropsondes_HALO/
   solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
   working_dir: work
 simulation_defaults:
@@ -58,6 +58,7 @@ simulation_defaults:
   - 0.0
   output_columns:
   - zout
+  - lambda
   - sza
   - edir
   - eglo

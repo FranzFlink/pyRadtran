@@ -31,7 +31,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -178,14 +178,16 @@
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/quickstart.html">Quickstart: Spectral Solar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (1)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (solar)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (thermal)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/cloud.html">Advanced: Add clouds to the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/radiosonde_thermal.html">Advanced: Constructing realistic clouds with pyradtran</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
@@ -226,13 +228,34 @@
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_file.html">pyradtran.config.CloudParameters.cloud_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_optical_properties.html">pyradtran.config.CloudParameters.cloud_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.altitude_resolution_km.html">pyradtran.config.CloudParameters.altitude_resolution_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.auto_generate_files.html">pyradtran.config.CloudParameters.auto_generate_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_inhomogeneity.html">pyradtran.config.CloudParameters.cloud_inhomogeneity</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_overlap.html">pyradtran.config.CloudParameters.cloud_overlap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_source.html">pyradtran.config.CloudParameters.cloud_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_type.html">pyradtran.config.CloudParameters.cloud_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_ice.html">pyradtran.config.CloudParameters.default_r_eff_ice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_water.html">pyradtran.config.CloudParameters.default_r_eff_water</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_dataset.html">pyradtran.config.CloudParameters.era5_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_lat.html">pyradtran.config.CloudParameters.era5_lat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_lon.html">pyradtran.config.CloudParameters.era5_lon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_time.html">pyradtran.config.CloudParameters.era5_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.ic_file.html">pyradtran.config.CloudParameters.ic_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.ic_properties.html">pyradtran.config.CloudParameters.ic_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.ipa_file.html">pyradtran.config.CloudParameters.ipa_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.iwc_threshold.html">pyradtran.config.CloudParameters.iwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.lwc_threshold.html">pyradtran.config.CloudParameters.lwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.output_directory.html">pyradtran.config.CloudParameters.output_directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.use_ipa.html">pyradtran.config.CloudParameters.use_ipa</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.wc_file.html">pyradtran.config.CloudParameters.wc_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.wc_properties.html">pyradtran.config.CloudParameters.wc_properties</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_heights_km.html">pyradtran.config.CloudParameters.layer_heights_km</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_water_content.html">pyradtran.config.CloudParameters.layer_water_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_ice_content.html">pyradtran.config.CloudParameters.layer_ice_content</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_effective_radius_um.html">pyradtran.config.CloudParameters.layer_effective_radius_um</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_cloud_fraction.html">pyradtran.config.CloudParameters.layer_cloud_fraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_cloud_variables.html">pyradtran.config.CloudParameters.era5_cloud_variables</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>

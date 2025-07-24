@@ -31,7 +31,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -178,14 +178,16 @@
 <li class="toctree-l2"><a class="reference internal" href="notebooks/quickstart.html">Quickstart: Spectral Solar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (1)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/era5_atmosphere.html">Advanced: Adjust simulation to ERA5 Atmospheric Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/radiosonde.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (solar)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Comparison with HALO-(AC)³ aircraft measurements (thermal)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/cloud.html">Advanced: Add clouds to the simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/radiosonde_thermal.html">Advanced: Constructing realistic clouds with pyradtran</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
@@ -226,13 +228,34 @@
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.cloud_file.html">pyradtran.config.CloudParameters.cloud_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.cloud_optical_properties.html">pyradtran.config.CloudParameters.cloud_optical_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.altitude_resolution_km.html">pyradtran.config.CloudParameters.altitude_resolution_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.auto_generate_files.html">pyradtran.config.CloudParameters.auto_generate_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.cloud_inhomogeneity.html">pyradtran.config.CloudParameters.cloud_inhomogeneity</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.cloud_overlap.html">pyradtran.config.CloudParameters.cloud_overlap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.cloud_source.html">pyradtran.config.CloudParameters.cloud_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.cloud_type.html">pyradtran.config.CloudParameters.cloud_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_ice.html">pyradtran.config.CloudParameters.default_r_eff_ice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_water.html">pyradtran.config.CloudParameters.default_r_eff_water</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.era5_dataset.html">pyradtran.config.CloudParameters.era5_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.era5_lat.html">pyradtran.config.CloudParameters.era5_lat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.era5_lon.html">pyradtran.config.CloudParameters.era5_lon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.era5_time.html">pyradtran.config.CloudParameters.era5_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.ic_file.html">pyradtran.config.CloudParameters.ic_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.ic_properties.html">pyradtran.config.CloudParameters.ic_properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.ipa_file.html">pyradtran.config.CloudParameters.ipa_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.iwc_threshold.html">pyradtran.config.CloudParameters.iwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.lwc_threshold.html">pyradtran.config.CloudParameters.lwc_threshold</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.output_directory.html">pyradtran.config.CloudParameters.output_directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.use_ipa.html">pyradtran.config.CloudParameters.use_ipa</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.wc_file.html">pyradtran.config.CloudParameters.wc_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.wc_properties.html">pyradtran.config.CloudParameters.wc_properties</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.layer_heights_km.html">pyradtran.config.CloudParameters.layer_heights_km</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.layer_water_content.html">pyradtran.config.CloudParameters.layer_water_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.layer_ice_content.html">pyradtran.config.CloudParameters.layer_ice_content</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.layer_effective_radius_um.html">pyradtran.config.CloudParameters.layer_effective_radius_um</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.layer_cloud_fraction.html">pyradtran.config.CloudParameters.layer_cloud_fraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.era5_cloud_variables.html">pyradtran.config.CloudParameters.era5_cloud_variables</a></li>
 </ul>
 </details></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -591,10 +614,10 @@ document.write(`
       </ul></li>
       <li><a href="api/_autosummary/pyradtran.config.AerosolParameters.aerosol_visibility_km.html#pyradtran.config.AerosolParameters.aerosol_visibility_km">aerosol_visibility_km (pyradtran.config.AerosolParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.AerosolParameters.html#pyradtran.config.AerosolParameters.aerosol_visibility_km">[1]</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/_autosummary/pyradtran.config.AerosolParameters.html#pyradtran.config.AerosolParameters">AerosolParameters (class in pyradtran.config)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.aerosols.html#pyradtran.config.SimulationDefaults.aerosols">aerosols (pyradtran.config.SimulationDefaults attribute)</a>, <a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.aerosols">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.albedo_file.html#pyradtran.config.SimulationDefaults.albedo_file">albedo_file (pyradtran.config.SimulationDefaults attribute)</a>, <a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.albedo_file">[1]</a>
@@ -605,9 +628,13 @@ document.write(`
 </li>
       <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.albedo_value.html#pyradtran.config.SimulationDefaults.albedo_value">albedo_value (pyradtran.config.SimulationDefaults attribute)</a>, <a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.albedo_value">[1]</a>
 </li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.altitude_resolution_km.html#pyradtran.config.CloudParameters.altitude_resolution_km">altitude_resolution_km (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.altitude_resolution_km">[1]</a>
+</li>
       <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.altitudes.html#pyradtran.io.ParsedOutput.altitudes">altitudes (pyradtran.io.ParsedOutput attribute)</a>, <a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.altitudes">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.PathsConfig.atmosphere_profile.html#pyradtran.config.PathsConfig.atmosphere_profile">atmosphere_profile (pyradtran.config.PathsConfig attribute)</a>, <a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.atmosphere_profile">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.auto_generate_files.html#pyradtran.config.CloudParameters.auto_generate_files">auto_generate_files (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.auto_generate_files">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -637,11 +664,13 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.cleanup_temp_files.html#pyradtran.config.ExecutionConfig.cleanup_temp_files">cleanup_temp_files (pyradtran.config.ExecutionConfig attribute)</a>, <a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.cleanup_temp_files">[1]</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.cloud_file.html#pyradtran.config.CloudParameters.cloud_file">cloud_file (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_file">[1]</a>
-</li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.cloud_optical_properties.html#pyradtran.config.CloudParameters.cloud_optical_properties">cloud_optical_properties (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_optical_properties">[1]</a>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.cloud_inhomogeneity.html#pyradtran.config.CloudParameters.cloud_inhomogeneity">cloud_inhomogeneity (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_inhomogeneity">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.CloudParameters.cloud_overlap.html#pyradtran.config.CloudParameters.cloud_overlap">cloud_overlap (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_overlap">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.cloud_source.html#pyradtran.config.CloudParameters.cloud_source">cloud_source (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_source">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.cloud_type.html#pyradtran.config.CloudParameters.cloud_type">cloud_type (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_type">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters">CloudParameters (class in pyradtran.config)</a>
 </li>
@@ -649,10 +678,10 @@ document.write(`
 </li>
       <li><a href="api/_autosummary/pyradtran.exceptions.ConfigurationError.html#pyradtran.exceptions.ConfigurationError">ConfigurationError</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.helpers.configure_aerosol.html#pyradtran.helpers.configure_aerosol">configure_aerosol() (in module pyradtran.helpers)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/_autosummary/pyradtran.helpers.configure_aerosol.html#pyradtran.helpers.configure_aerosol">configure_aerosol() (in module pyradtran.helpers)</a>
+</li>
       <li><a href="api/_autosummary/pyradtran.helpers.configure_cloud.html#pyradtran.helpers.configure_cloud">configure_cloud() (in module pyradtran.helpers)</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.helpers.configure_common_scenario.html#pyradtran.helpers.configure_common_scenario">configure_common_scenario() (in module pyradtran.helpers)</a>
@@ -677,9 +706,13 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.data.html#pyradtran.io.ParsedOutput.data">data (pyradtran.io.ParsedOutput attribute)</a>, <a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.data">[1]</a>
 </li>
+      <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.debug_mode.html#pyradtran.config.ExecutionConfig.debug_mode">debug_mode (pyradtran.config.ExecutionConfig attribute)</a>, <a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.debug_mode">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.debug_mode.html#pyradtran.config.ExecutionConfig.debug_mode">debug_mode (pyradtran.config.ExecutionConfig attribute)</a>, <a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.debug_mode">[1]</a>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_ice.html#pyradtran.config.CloudParameters.default_r_eff_ice">default_r_eff_ice (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.default_r_eff_ice">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.default_r_eff_water.html#pyradtran.config.CloudParameters.default_r_eff_water">default_r_eff_water (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.default_r_eff_water">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -697,8 +730,18 @@ document.write(`
         <li><a href="api/_autosummary/pyradtran.config.CloudParameters.enabled.html#pyradtran.config.CloudParameters.enabled">(pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.enabled">[1]</a>
 </li>
       </ul></li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.era5_cloud_variables.html#pyradtran.config.CloudParameters.era5_cloud_variables">era5_cloud_variables (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_cloud_variables">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.era5_dataset.html#pyradtran.config.CloudParameters.era5_dataset">era5_dataset (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_dataset">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.era5_lat.html#pyradtran.config.CloudParameters.era5_lat">era5_lat (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_lat">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.era5_lon.html#pyradtran.config.CloudParameters.era5_lon">era5_lon (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_lon">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.era5_time.html#pyradtran.config.CloudParameters.era5_time">era5_time (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_time">[1]</a>
+</li>
       <li><a href="api/_autosummary/pyradtran.interface.execute_simulation_batch.html#pyradtran.interface.execute_simulation_batch">execute_simulation_batch() (in module pyradtran.interface)</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.execution.html#pyradtran.config.SimulationConfig.execution">execution (pyradtran.config.SimulationConfig attribute)</a>, <a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.execution">[1]</a>
@@ -753,6 +796,10 @@ document.write(`
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.ic_file">ic_file (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.ic_file.html#pyradtran.config.CloudParameters.ic_file">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.ic_properties">ic_properties (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.ic_properties.html#pyradtran.config.CloudParameters.ic_properties">[1]</a>
+</li>
       <li><a href="api/_autosummary/pyradtran.exceptions.InputGenerationError.html#pyradtran.exceptions.InputGenerationError">InputGenerationError</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.io.InputGenerator.html#pyradtran.io.InputGenerator">InputGenerator (class in pyradtran.io)</a>
@@ -772,7 +819,11 @@ document.write(`
         <li><a href="api/_autosummary/io.html#module-io">module</a>
 </li>
       </ul></li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.ipa_file">ipa_file (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.ipa_file.html#pyradtran.config.CloudParameters.ipa_file">[1]</a>
+</li>
       <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.is_brightness_temperature">is_brightness_temperature (pyradtran.io.ParsedOutput attribute)</a>, <a href="api/_autosummary/pyradtran.io.ParsedOutput.is_brightness_temperature.html#pyradtran.io.ParsedOutput.is_brightness_temperature">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.iwc_threshold">iwc_threshold (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.iwc_threshold.html#pyradtran.config.CloudParameters.iwc_threshold">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -788,9 +839,13 @@ document.write(`
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_cloud_fraction">layer_cloud_fraction (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.layer_cloud_fraction.html#pyradtran.config.CloudParameters.layer_cloud_fraction">[1]</a>
+</li>
       <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_effective_radius_um">layer_effective_radius_um (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.layer_effective_radius_um.html#pyradtran.config.CloudParameters.layer_effective_radius_um">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_heights_km">layer_heights_km (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.layer_heights_km.html#pyradtran.config.CloudParameters.layer_heights_km">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_ice_content">layer_ice_content (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.layer_ice_content.html#pyradtran.config.CloudParameters.layer_ice_content">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_water_content">layer_water_content (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.layer_water_content.html#pyradtran.config.CloudParameters.layer_water_content">[1]</a>
 </li>
@@ -803,6 +858,8 @@ document.write(`
       <li><a href="api/_autosummary/pyradtran.config.load_config.html#pyradtran.config.load_config">load_config() (in module pyradtran.config)</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.io.load_simulation_input_data.html#pyradtran.io.load_simulation_input_data">load_simulation_input_data() (in module pyradtran.io)</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.lwc_threshold">lwc_threshold (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.lwc_threshold.html#pyradtran.config.CloudParameters.lwc_threshold">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -864,6 +921,8 @@ document.write(`
       <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.output_columns">output_columns (pyradtran.config.SimulationDefaults attribute)</a>, <a href="api/_autosummary/pyradtran.config.SimulationDefaults.output_columns.html#pyradtran.config.SimulationDefaults.output_columns">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.output_dir">output_dir (pyradtran.config.PathsConfig attribute)</a>, <a href="api/_autosummary/pyradtran.config.PathsConfig.output_dir.html#pyradtran.config.PathsConfig.output_dir">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.output_directory">output_directory (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.output_directory.html#pyradtran.config.CloudParameters.output_directory">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.output_type">output_type (pyradtran.io.ParsedOutput attribute)</a>, <a href="api/_autosummary/pyradtran.io.ParsedOutput.output_type.html#pyradtran.io.ParsedOutput.output_type">[1]</a>
 </li>
@@ -1060,6 +1119,8 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/_autosummary/pyradtran.config.BRDFCamParameters.html#pyradtran.config.BRDFCamParameters.uphi">uphi (pyradtran.config.BRDFCamParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.BRDFCamParameters.uphi.html#pyradtran.config.BRDFCamParameters.uphi">[1]</a>
 </li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.use_ipa">use_ipa (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.use_ipa.html#pyradtran.config.CloudParameters.use_ipa">[1]</a>
+</li>
       <li><a href="api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html#pyradtran.exceptions.UvspecExecutionError">UvspecExecutionError</a>
 </li>
   </ul></td>
@@ -1084,9 +1145,13 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.wavelength_nm">wavelength_nm (pyradtran.config.SimulationDefaults attribute)</a>, <a href="api/_autosummary/pyradtran.config.SimulationDefaults.wavelength_nm.html#pyradtran.config.SimulationDefaults.wavelength_nm">[1]</a>
 </li>
+      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.wavelengths">wavelengths (pyradtran.io.ParsedOutput attribute)</a>, <a href="api/_autosummary/pyradtran.io.ParsedOutput.wavelengths.html#pyradtran.io.ParsedOutput.wavelengths">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.wavelengths">wavelengths (pyradtran.io.ParsedOutput attribute)</a>, <a href="api/_autosummary/pyradtran.io.ParsedOutput.wavelengths.html#pyradtran.io.ParsedOutput.wavelengths">[1]</a>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.wc_file">wc_file (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.wc_file.html#pyradtran.config.CloudParameters.wc_file">[1]</a>
+</li>
+      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.wc_properties">wc_properties (pyradtran.config.CloudParameters attribute)</a>, <a href="api/_autosummary/pyradtran.config.CloudParameters.wc_properties.html#pyradtran.config.CloudParameters.wc_properties">[1]</a>
 </li>
       <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.working_dir">working_dir (pyradtran.config.PathsConfig attribute)</a>, <a href="api/_autosummary/pyradtran.config.PathsConfig.working_dir.html#pyradtran.config.PathsConfig.working_dir">[1]</a>
 </li>

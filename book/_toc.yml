@@ -11,13 +11,15 @@ chapters:
   - file: notebooks/quickstart
   - file: notebooks/albedo_test
   - file: notebooks/thermal
-  - file: notebooks/era5_atmosphere
   - file: notebooks/thermal_imager
+  - file: notebooks/era5_atmosphere
   - file: notebooks/radiosonde
   - file: notebooks/halo-ac3_bbr_all_aircraft
   - file: notebooks/cloud
+  - file: notebooks/radiosonde_thermal
 
 - file: examples/index
+- file: notebooks/config/index
 - file: api/index
 - file: contributing
 - file: changelog
