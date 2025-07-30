@@ -44,7 +44,7 @@ simulation_defaults:
 
 execution:
   max_workers: 8 # Sensible default, adjust based on system
-  cleanup_temp_files: true
+  cleanup_temp_files: false  # Keep input files for debugging and development
   debug_mode: false
   timeout_seconds: 300 # Timeout for a single uvspec run
 

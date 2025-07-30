@@ -68,33 +68,6 @@ Configuration for using radiosonde atmospheric profiles in simulations.
 :caption: Radiosonde-based atmospheric profile configuration
 ```
 
----
-
-### Field Campaign Configurations
-
-#### HALO-AC3 Solar
-**File:** `HALO-AC3_HALO_solar.yaml`
-
-Configuration for solar radiative transfer simulations during the HALO-AC3 Arctic field campaign.
-
-```{literalinclude} HALO-AC3_HALO_solar.yaml
-:language: yaml
-:caption: HALO-AC3 solar simulation configuration
-```
-
----
-
-#### HALO-AC3 Solar with DISORT
-**File:** `HALO-AC3_HALO_solar_disort.yaml`
-
-Advanced configuration using the DISORT radiative transfer solver for HALO-AC3 campaign simulations.
-
-```{literalinclude} HALO-AC3_HALO_solar_disort.yaml
-:language: yaml
-:caption: HALO-AC3 solar simulation with DISORT
-```
-
----
 
 ### Spectral Configurations
 
@@ -172,53 +145,7 @@ Configuration for using existing libRadtran cloud files, including support for m
 
 ---
 
-### Atmospheric Transmission Studies
 
-#### Transmittance Configuration
-**File:** `transmittance.yaml`
-
-Configuration optimized for atmospheric transmittance calculations.
-
-```{literalinclude} transmittance.yaml
-:language: yaml
-:caption: Atmospheric transmittance configuration
-```
-
----
-
-### Test Configurations
-
-The following configurations are used for testing different simulation modes:
-
-#### Integrated Simulations
-- **Single Altitude:** `test_integrated_single_altitude.yaml`
-- **Multi Altitude:** `test_integrated_multi_altitude.yaml`
-
-#### Spectral Simulations
-- **Single Altitude:** `test_spectral_single_altitude.yaml`
-- **Multi Altitude:** `test_spectral_multi_altitude.yaml`
-
-```{literalinclude} test_integrated_single_altitude.yaml
-:language: yaml
-:caption: Test configuration - Integrated single altitude
-```
-
-```{literalinclude} test_integrated_multi_altitude.yaml
-:language: yaml
-:caption: Test configuration - Integrated multi altitude
-```
-
-```{literalinclude} test_spectral_single_altitude.yaml
-:language: yaml
-:caption: Test configuration - Spectral single altitude
-```
-
-```{literalinclude} test_spectral_multi_altitude.yaml
-:language: yaml
-:caption: Test configuration - Spectral multi altitude
-```
-
----
 
 ## How to Use These Configurations
 

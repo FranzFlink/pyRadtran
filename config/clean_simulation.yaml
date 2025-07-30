@@ -1,0 +1,53 @@
+execution:
+  cleanup_temp_files: false
+  debug_mode: false
+  max_workers: 4
+  timeout_seconds: 300
+output:
+  filename_prefix: pyradtran_sim
+  filename_suffix: _results.nc
+  netcdf_encoding:
+    complevel: 5
+    zlib: true
+paths:
+  atmosphere_profile: /path/to/libradtran/data/atmmod/afglus.dat
+  libradtran_bin: /path/to/libradtran/bin/uvspec
+  libradtran_data: /path/to/libradtran/data
+  output_dir: ./pyradtran_output
+  radiosonde_base: /path/to/radiosonde/data
+  solar_spectrum: /path/to/libradtran/data/solar_flux/kurudz_1.0nm.dat
+  working_dir: ./pyradtran_work
+simulation_defaults:
+  albedo_value: 0.85
+  clouds:
+    cloud_fraction: 1.0
+    cloud_source: parametric
+    cloud_type: wc
+    effective_radius_um: 10.0
+    enabled: false
+    ic_file: null
+    ice_content_g_m3: 0.0
+    layer_bottom_km: 1.0
+    layer_top_km: 2.0
+    water_content_g_m3: 0.1
+    wc_file: null
+  h2o_mm: 2.0
+  h2o_source: fixed
+  integrate_wavelength: false
+  mol_abs_param: lowtran per_nm
+  output_altitudes_km:
+  - 0.0
+  output_columns:
+  - sza
+  - eglo
+  - eup
+  - albedo
+  ozone_du: 300.0
+  rte_solver: twostr
+  source: solar
+  surface_temperature_k: 273.15
+  sza: null
+  viewing_geometry: nadir
+  wavelength_nm:
+  - 400
+  - 3600

@@ -42,47 +42,119 @@ class CloudParameters:
     Configuration for cloud properties in uvspec simulations.
     
     This class defines parameters for including clouds in libradtran simulations.
-    Multiple cloud layers can be defined with different properties.
+    Supports multiple cloud types and data sources including ERA5 datasets.
     """
     
     enabled: bool = False
     
-    # Cloud layer properties (lists for multiple layers)
-    # Each element corresponds to one cloud layer
-    layer_heights_km: List[Tuple[float, float]] = field(default_factory=list)  # [(bottom1, top1), (bottom2, top2), ...]
-    layer_water_content: List[float] = field(default_factory=list)  # [lwc1, lwc2, ...]
-    layer_effective_radius_um: List[float] = field(default_factory=list)  # [r_eff1, r_eff2, ...]
+    # === Cloud type and source ===
+    cloud_type: str = "wc"  # 'wc' (water), 'ic' (ice), 'mixed'
+    cloud_source: str = "parametric"  # 'parametric', 'file', 'era5', 'dataset'
     
-    # Cloud properties file (alternative to specifying layers)
-    cloud_file: Optional[Path] = None
+    # === Parametric cloud properties (lists for multiple layers) ===
+    layer_heights_km: List[Tuple[float, float]] = field(default_factory=list)  # [(bottom1, top1), ...]
+    layer_water_content: List[float] = field(default_factory=list)  # [lwc1, lwc2, ...] in g/m³
+    layer_ice_content: List[float] = field(default_factory=list)  # [iwc1, iwc2, ...] in g/m³
+    layer_effective_radius_um: List[float] = field(default_factory=list)  # [r_eff1, r_eff2, ...] in μm
+    layer_cloud_fraction: List[float] = field(default_factory=list)  # [cf1, cf2, ...] 0-1
     
-    # Cloud optical properties - for more advanced cases
-    cloud_optical_properties: str = "mie"  # 'mie', 'hu', 'echam4', etc.
+    # === Cloud file options ===
+    wc_file: Optional[Path] = None  # Water cloud file path
+    ic_file: Optional[Path] = None  # Ice cloud file path
+    wc_properties: Optional[str] = None  # 'mie', 'hu', etc.
+    ic_properties: Optional[str] = None  # 'yang', 'hey', 'baum', etc.
+    
+    # === ERA5/Dataset cloud generation ===
+    era5_dataset: Optional[Any] = None  # xarray Dataset (not serializable in YAML)
+    era5_cloud_variables: Dict[str, str] = field(default_factory=lambda: {
+        'lwc': 'clwc',  # Cloud liquid water content
+        'iwc': 'ciwc',  # Cloud ice water content
+        'cc': 'cc',     # Cloud cover/fraction
+        'temp': 't',    # Temperature
+        'z': 'z'        # Geopotential height
+    })
+    era5_time: Optional[str] = None  # ISO format datetime string
+    era5_lat: Optional[float] = None
+    era5_lon: Optional[float] = None
+    
+    # === Cloud generation parameters ===
+    lwc_threshold: float = 1e-6  # Minimum LWC threshold (g/m³)
+    iwc_threshold: float = 1e-6  # Minimum IWC threshold (g/m³)
+    default_r_eff_water: float = 10.0  # Default water droplet radius (μm)
+    default_r_eff_ice: float = 30.0  # Default ice crystal radius (μm)
+    altitude_resolution_km: float = 0.1  # Vertical resolution for generated files
+    
+    # === Advanced cloud options ===
     cloud_overlap: str = "max-random"  # 'max-random', 'maximum', 'random'
+    cloud_inhomogeneity: Optional[float] = None  # Cloud inhomogeneity parameter
+    
+    # === 3D cloud options (IPA) ===
+    use_ipa: bool = False  # Use Independent Pixel Approximation
+    ipa_file: Optional[Path] = None  # 3D cloud IPA file
+    
+    # === Auto-generation options ===
+    auto_generate_files: bool = False  # Automatically generate cloud files from ERA5
+    output_directory: Optional[Path] = None  # Where to save generated cloud files
     
     def __post_init__(self):
         # Validate cloud configuration
         if self.enabled:
-            if self.cloud_file:
-                if not self.cloud_file.is_file():
-                    logger.warning(f"Cloud file specified but not found: {self.cloud_file}")
-            else:
+            if self.cloud_source == "file":
+                # Validate file sources
+                if self.cloud_type in ["wc", "mixed"] and self.wc_file:
+                    if not self.wc_file.exists():
+                        logger.warning(f"Water cloud file not found: {self.wc_file}")
+                        
+                if self.cloud_type in ["ic", "mixed"] and self.ic_file:
+                    if not self.ic_file.exists():
+                        logger.warning(f"Ice cloud file not found: {self.ic_file}")
+                        
+                if self.use_ipa and self.ipa_file:
+                    if not self.ipa_file.exists():
+                        logger.warning(f"IPA cloud file not found: {self.ipa_file}")
+                        
+            elif self.cloud_source == "parametric":
                 # Check consistency of layer properties
                 lengths = [
                     len(self.layer_heights_km),
                     len(self.layer_water_content),
-                    len(self.layer_effective_radius_um)
+                    len(self.layer_ice_content),
+                    len(self.layer_effective_radius_um),
+                    len(self.layer_cloud_fraction)
                 ]
                 
-                if len(set(lengths)) > 1:
-                    non_zero_lengths = [l for l in lengths if l > 0]
-                    if len(set(non_zero_lengths)) > 1:
-                        raise ValueError(
-                            f"Inconsistent cloud layer definitions: "
-                            f"heights={len(self.layer_heights_km)}, "
-                            f"water_content={len(self.layer_water_content)}, "
-                            f"effective_radius={len(self.layer_effective_radius_um)}"
-                        )
+                # Remove zero lengths for consistency check
+                non_zero_lengths = [l for l in lengths if l > 0]
+                if len(set(non_zero_lengths)) > 1:
+                    raise ValueError(
+                        f"Inconsistent cloud layer definitions: "
+                        f"heights={len(self.layer_heights_km)}, "
+                        f"lwc={len(self.layer_water_content)}, "
+                        f"iwc={len(self.layer_ice_content)}, "
+                        f"r_eff={len(self.layer_effective_radius_um)}, "
+                        f"cf={len(self.layer_cloud_fraction)}"
+                    )
+            
+            # Validate cloud type
+            if self.cloud_type not in ["wc", "ic", "mixed"]:
+                raise ValueError(f"Invalid cloud_type: {self.cloud_type}. Use 'wc', 'ic', or 'mixed'")
+                
+            # Validate cloud source
+            valid_sources = ["parametric", "file", "era5", "dataset"]
+            if self.cloud_source not in valid_sources:
+                raise ValueError(f"Invalid cloud_source: {self.cloud_source}. Use one of {valid_sources}")
+                
+            # Set up output directory if auto-generation is enabled
+            if self.auto_generate_files and not self.output_directory:
+                self.output_directory = Path("./cloud_files")
+                logger.info(f"Auto-generation enabled, using default output directory: {self.output_directory}")
+                
+        # Validate thresholds
+        if self.lwc_threshold < 0 or self.iwc_threshold < 0:
+            raise ValueError("Cloud content thresholds must be non-negative")
+            
+        if self.default_r_eff_water <= 0 or self.default_r_eff_ice <= 0:
+            raise ValueError("Default effective radii must be positive")
 
 @dataclass
 class BRDFCamParameters:
@@ -244,7 +316,7 @@ class SimulationDefaults:
 @dataclass
 class ExecutionConfig:
     max_workers: Optional[int] = min(8, os.cpu_count() or 1)
-    cleanup_temp_files: bool = True
+    cleanup_temp_files: bool = False  # Keep input files for debugging and development
     debug_mode: bool = False
     timeout_seconds: int = 300
 
@@ -335,14 +407,14 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
     """Loads simulation config, using default if path is not provided."""
     if config_path is None:
         config_path = _DEFAULT_CONFIG_PATH
-        logger.info(f"No config path provided, using default: {config_path}")
+        logger.debug(f"No config path provided, using default: {config_path}")
     else:
         config_path = Path(config_path)
-        logger.info(f"Loading configuration from: {config_path}")
+        logger.debug(f"Loading configuration from: {config_path}")
 
     try:
         config = SimulationConfig.from_yaml(config_path)
-        logger.info("Configuration loaded successfully.")
+        logger.debug("Configuration loaded successfully.")
         # Set logging level based on config after loading
         log_level = logging.DEBUG if config.execution.debug_mode else logging.INFO
         logging.basicConfig(level=log_level, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")

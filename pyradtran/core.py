@@ -131,73 +131,177 @@ def generate_input_content(
                 lines.append(f"aerosol_visibility {config.simulation_defaults.aerosols.aerosol_visibility_km}")
             
     # --- Cloud settings ---
-    if hasattr(config.simulation_defaults, 'clouds'):
-        # Check if clouds enabled (could be dictionary or dataclass)
-        clouds_enabled = False
-        if isinstance(config.simulation_defaults.clouds, dict):
-            clouds_enabled = config.simulation_defaults.clouds.get('enabled', False)
-        elif hasattr(config.simulation_defaults.clouds, 'enabled'):
-            clouds_enabled = config.simulation_defaults.clouds.enabled
+    if hasattr(config.simulation_defaults, 'clouds') and config.simulation_defaults.clouds.enabled:
+        from .clouds import CloudGenerator, CloudFileWriter, generate_cloud_file_from_era5
         
-        if clouds_enabled:
-            cloud_type = 'wc'  # Default to water clouds
-            if isinstance(config.simulation_defaults.clouds, dict):
-                cloud_type = config.simulation_defaults.clouds.get('cloud_type', 'wc')
-            elif hasattr(config.simulation_defaults.clouds, 'cloud_type'):
-                cloud_type = config.simulation_defaults.clouds.cloud_type
+        clouds = config.simulation_defaults.clouds
+        cloud_source = getattr(clouds, 'cloud_source', 'parametric')
+        cloud_type = getattr(clouds, 'cloud_type', 'wc')
+        
+        # Handle different cloud sources
+        if cloud_source == 'era5' and clouds.era5_dataset is not None:
+            # Generate cloud file from ERA5 dataset
+            logger.debug("Generating cloud file from ERA5 dataset")
             
-            # Water or ice clouds
-            if cloud_type == 'wc':  # Water clouds
-                wc_file = None
-                if isinstance(config.simulation_defaults.clouds, dict):
-                    wc_file = config.simulation_defaults.clouds.get('wc_file')
-                elif hasattr(config.simulation_defaults.clouds, 'wc_file'):
-                    wc_file = config.simulation_defaults.clouds.wc_file
-                
-                if wc_file:
-                    lines.append(f"wc_file {wc_file}")
-                else:
-                    # Use parametric water cloud
-                    wc_props = {}
-                    if isinstance(config.simulation_defaults.clouds, dict):
-                        wc_props = config.simulation_defaults.clouds.get('wc_properties', {})
-                    elif hasattr(config.simulation_defaults.clouds, 'wc_properties'):
-                        wc_props = config.simulation_defaults.clouds.wc_properties
-                    
-                    thick = wc_props.get('thickness', 1.0)
-                    lwc = wc_props.get('lwc', 0.1)
-                    r_eff = wc_props.get('r_eff', 10.0)
-                    z_base = wc_props.get('z_base', 2.0)
-                    
-                    lines.append(f"wc_set_tau {wc_props.get('tau', 5.0)}")
-                    lines.append(f"wc_properties {thick} {lwc} {r_eff}")
-                    lines.append(f"wc_layer {z_base} {z_base + thick}")
+            # Determine output path
+            if clouds.output_directory:
+                clouds.output_directory.mkdir(parents=True, exist_ok=True)
+                if cloud_type == 'wc':
+                    cloud_file_path = clouds.output_directory / f"wc_era5_{dt.strftime('%Y%m%d_%H%M')}.dat"
+                elif cloud_type == 'ic':
+                    cloud_file_path = clouds.output_directory / f"ic_era5_{dt.strftime('%Y%m%d_%H%M')}.dat"
+                else:  # mixed
+                    cloud_file_path = clouds.output_directory / f"wc_era5_{dt.strftime('%Y%m%d_%H%M')}.dat"
+            else:
+                # Use working directory
+                if cloud_type == 'wc':
+                    cloud_file_path = config.paths.working_dir / f"wc_era5_{dt.strftime('%Y%m%d_%H%M')}.dat"
+                elif cloud_type == 'ic':
+                    cloud_file_path = config.paths.working_dir / f"ic_era5_{dt.strftime('%Y%m%d_%H%M')}.dat"
+                else:  # mixed
+                    cloud_file_path = config.paths.working_dir / f"wc_era5_{dt.strftime('%Y%m%d_%H%M')}.dat"
             
-            elif cloud_type == 'ic':  # Ice clouds
-                ic_file = None
-                if isinstance(config.simulation_defaults.clouds, dict):
-                    ic_file = config.simulation_defaults.clouds.get('ic_file')
-                elif hasattr(config.simulation_defaults.clouds, 'ic_file'):
-                    ic_file = config.simulation_defaults.clouds.ic_file
+            # Parse ERA5 time if provided
+            era5_time = None
+            if clouds.era5_time:
+                from datetime import datetime
+                era5_time = datetime.fromisoformat(clouds.era5_time.replace('Z', '+00:00'))
+            
+            # Generate cloud file
+            try:
+                generated_file = generate_cloud_file_from_era5(
+                    era5_dataset=clouds.era5_dataset,
+                    output_path=cloud_file_path,
+                    cloud_type=cloud_type,
+                    time=era5_time,
+                    lat=clouds.era5_lat or latitude,
+                    lon=clouds.era5_lon or longitude,
+                    cloud_variables=clouds.era5_cloud_variables,
+                    lwc_threshold=clouds.lwc_threshold,
+                    iwc_threshold=clouds.iwc_threshold,
+                    default_r_eff_water=clouds.default_r_eff_water,
+                    default_r_eff_ice=clouds.default_r_eff_ice,
+                    altitude_resolution_km=clouds.altitude_resolution_km
+                )
                 
-                if ic_file:
-                    lines.append(f"ic_file {ic_file}")
+                # Add the generated file to uvspec input
+                if cloud_type == 'wc':
+                    lines.append(f"wc_file {generated_file}")
+                    if clouds.wc_properties:
+                        lines.append(f"wc_properties {clouds.wc_properties}")
+                elif cloud_type == 'ic':
+                    lines.append(f"ic_file {generated_file}")
+                    if clouds.ic_properties:
+                        lines.append(f"ic_properties {clouds.ic_properties}")
+                elif cloud_type == 'mixed':
+                    # For mixed clouds, generate both files
+                    lines.append(f"wc_file {generated_file}")
+                    ic_file_path = cloud_file_path.with_name(cloud_file_path.stem.replace('wc_', 'ic_') + cloud_file_path.suffix)
+                    ic_generated_file = generate_cloud_file_from_era5(
+                        era5_dataset=clouds.era5_dataset,
+                        output_path=ic_file_path,
+                        cloud_type='ic',
+                        time=era5_time,
+                        lat=clouds.era5_lat or latitude,
+                        lon=clouds.era5_lon or longitude,
+                        cloud_variables=clouds.era5_cloud_variables,
+                        lwc_threshold=clouds.lwc_threshold,
+                        iwc_threshold=clouds.iwc_threshold,
+                        default_r_eff_water=clouds.default_r_eff_water,
+                        default_r_eff_ice=clouds.default_r_eff_ice,
+                        altitude_resolution_km=clouds.altitude_resolution_km
+                    )
+                    lines.append(f"ic_file {ic_generated_file}")
+                    if clouds.wc_properties:
+                        lines.append(f"wc_properties {clouds.wc_properties}")
+                    if clouds.ic_properties:
+                        lines.append(f"ic_properties {clouds.ic_properties}")
+                
+                logger.debug(f"Generated and added cloud file: {generated_file}")
+                
+            except Exception as e:
+                logger.error(f"Failed to generate cloud file from ERA5: {e}")
+                # Fall back to parametric clouds if available
+                if clouds.layer_heights_km:
+                    logger.warning("Falling back to parametric cloud definition")
+                    cloud_source = 'parametric'
                 else:
-                    # Use parametric ice cloud
-                    ic_props = {}
-                    if isinstance(config.simulation_defaults.clouds, dict):
-                        ic_props = config.simulation_defaults.clouds.get('ic_properties', {})
-                    elif hasattr(config.simulation_defaults.clouds, 'ic_properties'):
-                        ic_props = config.simulation_defaults.clouds.ic_properties
+                    logger.error("No fallback cloud definition available")
+        
+        elif cloud_source == 'file':
+            # Use existing cloud files
+            if clouds.use_ipa and clouds.ipa_file:
+                # 3D clouds with Independent Pixel Approximation
+                if cloud_type in ['wc', 'mixed']:
+                    lines.append(f"wc_ipa {clouds.ipa_file}")
+                if cloud_type in ['ic', 'mixed']:
+                    lines.append(f"ic_ipa {clouds.ipa_file}")
+            else:
+                # Standard 1D cloud files
+                if cloud_type in ['wc', 'mixed'] and clouds.wc_file:
+                    lines.append(f"wc_file {clouds.wc_file}")
+                    if clouds.wc_properties:
+                        lines.append(f"wc_properties {clouds.wc_properties}")
+                        
+                if cloud_type in ['ic', 'mixed'] and clouds.ic_file:
+                    lines.append(f"ic_file {clouds.ic_file}")
+                    if clouds.ic_properties:
+                        lines.append(f"ic_properties {clouds.ic_properties}")
+        
+        elif cloud_source == 'parametric':
+            # Use parametric cloud definition
+            if clouds.layer_heights_km:
+                # Create temporary cloud file(s) from layer parameters
+                cloud_layers = []
+                from .clouds import CloudLayer
+                
+                n_layers = len(clouds.layer_heights_km)
+                lwc_values = clouds.layer_water_content if clouds.layer_water_content else [0.1] * n_layers
+                iwc_values = clouds.layer_ice_content if clouds.layer_ice_content else [0.0] * n_layers
+                r_eff_values = clouds.layer_effective_radius_um if clouds.layer_effective_radius_um else [clouds.default_r_eff_water] * n_layers
+                cf_values = clouds.layer_cloud_fraction if clouds.layer_cloud_fraction else [1.0] * n_layers
+                
+                for i, (z_bottom, z_top) in enumerate(clouds.layer_heights_km):
+                    layer = CloudLayer(
+                        z_bottom_km=z_bottom,
+                        z_top_km=z_top,
+                        lwc_g_m3=lwc_values[i] if i < len(lwc_values) else lwc_values[-1],
+                        iwc_g_m3=iwc_values[i] if i < len(iwc_values) else iwc_values[-1],
+                        r_eff_um=r_eff_values[i] if i < len(r_eff_values) else r_eff_values[-1],
+                        cloud_fraction=cf_values[i] if i < len(cf_values) else cf_values[-1]
+                    )
+                    cloud_layers.append(layer)
+                
+                # Generate temporary cloud files
+                if cloud_type in ['wc', 'mixed'] and any(layer.lwc_g_m3 > 0 for layer in cloud_layers):
+                    wc_temp_file = config.paths.working_dir / f"wc_temp_{dt.strftime('%Y%m%d_%H%M%S')}.dat"
+                    CloudFileWriter.write_water_cloud_file(
+                        cloud_layers, 
+                        wc_temp_file,
+                        altitude_resolution_km=clouds.altitude_resolution_km
+                    )
+                    lines.append(f"wc_file {wc_temp_file}")
+                    if clouds.wc_properties:
+                        lines.append(f"wc_properties {clouds.wc_properties}")
                     
-                    thick = ic_props.get('thickness', 1.0)
-                    iwc = ic_props.get('iwc', 0.01)
-                    r_eff = ic_props.get('r_eff', 30.0)
-                    z_base = ic_props.get('z_base', 9.0)
-                    
-                    lines.append(f"ic_set_tau {ic_props.get('tau', 1.0)}")
-                    lines.append(f"ic_properties {thick} {iwc} {r_eff}")
-                    lines.append(f"ic_layer {z_base} {z_base + thick}")
+                if cloud_type in ['ic', 'mixed'] and any(layer.iwc_g_m3 > 0 for layer in cloud_layers):
+                    ic_temp_file = config.paths.working_dir / f"ic_temp_{dt.strftime('%Y%m%d_%H%M%S')}.dat"
+                    CloudFileWriter.write_ice_cloud_file(
+                        cloud_layers, 
+                        ic_temp_file,
+                        altitude_resolution_km=clouds.altitude_resolution_km
+                    )
+                    lines.append(f"ic_file {ic_temp_file}")
+                    if clouds.ic_properties:
+                        lines.append(f"ic_properties {clouds.ic_properties}")
+        
+        # Add cloud overlap method if specified
+        if hasattr(clouds, 'cloud_overlap') and clouds.cloud_overlap != 'max-random':
+            lines.append(f"cloud_overlap {clouds.cloud_overlap}")
+            
+        # Add cloud inhomogeneity if specified
+        if hasattr(clouds, 'cloud_inhomogeneity') and clouds.cloud_inhomogeneity is not None:
+            lines.append(f"cloud_fraction_file {clouds.cloud_inhomogeneity}")
     
     # --- Solar and Geometry settings ---
     # Handle source type (solar or thermal)

@@ -17,6 +17,7 @@ logging.getLogger(__name__).addHandler(logging.NullHandler())
 # Make key components easily accessible
 from .config import load_config, SimulationConfig, PathsConfig, SimulationDefaults
 from .core import Simulation
+from .clouds import CloudGenerator, CloudFileWriter, CloudLayer, generate_cloud_file_from_era5
 from .io import (
     OutputParser,
     OutputToXarray,
