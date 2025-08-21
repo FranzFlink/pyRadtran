@@ -12,6 +12,7 @@ This module combines the best features from both interface.py and interface_old.
 import logging
 import xarray as xr
 import numpy as np
+import pandas as pd
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Dict, List, Optional, Union, Any, Tuple
@@ -162,11 +163,12 @@ def execute_simulation_batch(
         
         for i, (t, lat, lon) in enumerate(zip(times, latitudes, longitudes)):
             try:
-                point_id = f"t{i:05d}_lat{lat:.3f}_lon{lon:.3f}"
+                dt = pd.to_datetime(t).to_pydatetime()
+                point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
                 atm_file = atm_dir / f"era5_atm_{point_id}.dat"
                 
                 era5_generator.create_era5_atmosphere_file(
-                    era5_atmosphere, lat, lon, t, atm_file
+                    era5_atmosphere, lat, lon, dt, atm_file
                 )
                 era5_atmosphere_files[point_id] = atm_file
                 logger.debug(f"Created ERA5 atmosphere file for {point_id}: {atm_file}")
@@ -181,10 +183,12 @@ def execute_simulation_batch(
         surf_temp = surface_temperatures[i] if surface_temperatures is not None else None
         alt = altitudes[i] if altitudes is not None else None
         
-        point_id = f"t{i:05d}_lat{lat:.3f}_lon{lon:.3f}"
+        # Convert time to proper datetime object
+        dt = pd.to_datetime(t).to_pydatetime()
+        point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
         era5_atm_file = era5_atmosphere_files.get(point_id) if era5_atmosphere_files else None
         
-        points.append((t, lat, lon, alb, surf_temp, alt, era5_atm_file, point_id))
+        points.append((dt, lat, lon, alb, surf_temp, alt, era5_atm_file, point_id))
     
     # Run simulations in parallel
     results = []
@@ -248,11 +252,16 @@ def _run_single_simulation_unified(
         sim = Simulation(config)
         
         # Convert datetime to datetime object if needed
-        if isinstance(time, (np.datetime64, str)):
+        if isinstance(time, datetime):
+            dt = time
+        elif isinstance(time, (np.datetime64, str)):
             if isinstance(time, np.datetime64):
-                dt = time.astype(datetime)
+                dt = pd.to_datetime(time).to_pydatetime()
             else:
                 dt = datetime.fromisoformat(time)
+        elif isinstance(time, (int, np.integer)):
+            # Handle timestamp integers (e.g., from pd.date_range)
+            dt = pd.to_datetime(time).to_pydatetime()
         else:
             dt = time
         

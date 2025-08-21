@@ -155,7 +155,10 @@ class Simulation:
         
         # Solar/thermal source
         if self.config.simulation_defaults.source == 'solar':
-            lines.append(f"source solar {self.config.paths.solar_spectrum}")
+            if self.config.simulation_defaults.integrate_wavelength:
+                lines.append(f"source solar {self.config.paths.solar_spectrum} per_nm")
+            else:
+                lines.append(f"source solar {self.config.paths.solar_spectrum}")
             
             # Solar geometry
             if self.config.simulation_defaults.sza is not None:
@@ -182,7 +185,7 @@ class Simulation:
         lines.append(f"wavelength {wl_min} {wl_max}")
         
         if self.config.simulation_defaults.integrate_wavelength:
-            lines.append("integrate_wavelength")
+            lines.append("output_process integrate")
         
         # Surface properties
         albedo = override_albedo or self.config.simulation_defaults.albedo_value

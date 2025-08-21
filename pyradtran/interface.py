@@ -22,10 +22,17 @@ For migration guide, see REFACTORING_SUMMARY.md
 import logging
 import xarray as xr
 import numpy as np
+import pandas as pd
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Dict, List, Optional, Union, Any, Tuple
 from datetime import datetime
+
+try:
+    from tqdm import tqdm
+    HAS_TQDM = True
+except ImportError:
+    HAS_TQDM = False
 
 from .config import SimulationConfig, load_config
 from .exceptions import PyRadtranError
@@ -172,11 +179,12 @@ def execute_simulation_batch(
         
         for i, (t, lat, lon) in enumerate(zip(times, latitudes, longitudes)):
             try:
-                point_id = f"t{i:05d}_lat{lat:.3f}_lon{lon:.3f}"
+                dt = pd.to_datetime(t).to_pydatetime()
+                point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
                 atm_file = atm_dir / f"era5_atm_{point_id}.dat"
                 
                 era5_generator.create_era5_atmosphere_file(
-                    era5_atmosphere, lat, lon, t, atm_file
+                    era5_atmosphere, lat, lon, dt, atm_file
                 )
                 era5_atmosphere_files[point_id] = atm_file
                 logger.debug(f"Created ERA5 atmosphere file for {point_id}: {atm_file}")
@@ -191,14 +199,22 @@ def execute_simulation_batch(
         surf_temp = surface_temperatures[i] if surface_temperatures is not None else None
         alt = altitudes[i] if altitudes is not None else None
         
-        point_id = f"t{i:05d}_lat{lat:.3f}_lon{lon:.3f}"
+        # Convert time to proper datetime object
+        dt = pd.to_datetime(t).to_pydatetime()
+        point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
         era5_atm_file = era5_atmosphere_files.get(point_id) if era5_atmosphere_files else None
         
-        points.append((t, lat, lon, alb, surf_temp, alt, era5_atm_file, point_id))
+        points.append((dt, lat, lon, alb, surf_temp, alt, era5_atm_file, point_id))
     
     # Run simulations in parallel
     results = []
     total_points = len(points)
+    
+    # Initialize progress bar
+    if HAS_TQDM:
+        pbar = tqdm(total=total_points, desc="Running simulations", unit="sim")
+    else:
+        pbar = None
     
     with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
         # Submit all simulations
@@ -219,14 +235,24 @@ def execute_simulation_batch(
                 if result:
                     results.append(result)
                     logger.debug(f"Simulation {point_idx + 1}/{total_points} completed successfully")
+                    if pbar:
+                        pbar.set_postfix({"Success": len(results), "Total": total_points})
                 else:
                     logger.warning(f"Simulation {point_idx + 1}/{total_points} produced no output")
             except Exception as e:
                 logger.error(f"Simulation {point_idx + 1}/{total_points} failed: {str(e)}")
             
+            # Update progress bar
+            if pbar:
+                pbar.update(1)
+            
             # Progress callback
             if progress_callback:
                 progress_callback(len(results), total_points)
+    
+    # Close progress bar
+    if pbar:
+        pbar.close()
     
     if not results:
         raise PyRadtranError("All simulations failed - no valid results produced")
@@ -258,11 +284,16 @@ def _run_single_simulation_unified(
         sim = Simulation(config)
         
         # Convert datetime to datetime object if needed
-        if isinstance(time, (np.datetime64, str)):
+        if isinstance(time, datetime):
+            dt = time
+        elif isinstance(time, (np.datetime64, str)):
             if isinstance(time, np.datetime64):
-                dt = time.astype(datetime)
+                dt = pd.to_datetime(time).to_pydatetime()
             else:
                 dt = datetime.fromisoformat(time)
+        elif isinstance(time, (int, np.integer)):
+            # Handle timestamp integers (e.g., from pd.date_range)
+            dt = pd.to_datetime(time).to_pydatetime()
         else:
             dt = time
         
@@ -309,12 +340,17 @@ def _apply_parameter_overrides(config: SimulationConfig, parameter_overrides: Di
     for key, value in parameter_overrides.items():
         parts = key.split('.')
         if len(parts) == 2:
+            # Config parameter override (e.g., "simulation_defaults.albedo_value")
             section, param = parts
             if hasattr(config, section) and hasattr(getattr(config, section), param):
                 setattr(getattr(config, section), param, value)
                 logger.info(f"Overriding config: {section}.{param} = {value}")
+            else:
+                logger.warning(f"Unknown config parameter: {section}.{param}")
         else:
-            logger.warning(f"Invalid parameter override format: {key}")
+            # LibRadtran command override (e.g., "wc_file 1D")
+            # These are passed directly to the core simulation
+            logger.debug(f"LibRadtran parameter override: {key} {value}")
 
 
 @xr.register_dataset_accessor("pyradtran")

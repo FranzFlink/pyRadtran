@@ -83,4 +83,12 @@ class RadiosondeFinder:
         else:
             return self._sonde_data[pos][1]
 
+    def find_radiosonde_file(self, dt: datetime, latitude: float, longitude: float) -> Optional[Path]:
+        """
+        Finds the radiosonde file closest to the given datetime.
+        Note: latitude and longitude are currently not used for spatial matching,
+        only temporal matching is performed.
+        """
+        return self.find_closest(dt)
+
 # Add other general utility functions here if needed

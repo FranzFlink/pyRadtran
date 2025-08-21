@@ -172,12 +172,31 @@ class ERA5AtmosphereGenerator:
                     raise ValueError(f"Required coordinate '{coord}' not found in ERA5 dataset")
 
             # Select the data for the nearest point and specified time
-            profile_data = era5_ds.sel(
-                latitude=latitude, 
-                longitude=longitude, 
-                valid_time=time,
-                method='nearest'
-            )
+            # Check if data is already spatially selected (latitude/longitude are scalars)
+            if 'latitude' in era5_ds.dims or 'longitude' in era5_ds.dims:
+                # Data still has spatial dimensions, do normal selection
+                profile_data = era5_ds.sel(
+                    latitude=latitude, 
+                    longitude=longitude, 
+                    valid_time=time,
+                    method='nearest'
+                )
+            else:
+                # Data is already spatially selected, just select time
+                if 'valid_time' in era5_ds.dims:
+                    # valid_time is still a dimension
+                    profile_data = era5_ds.sel(valid_time=time, method='nearest')
+                elif 'time' in era5_ds.dims:
+                    # time is a dimension, try to select by matching time values
+                    # Convert the target time to the same format as the dataset
+                    target_time = pd.to_datetime(time)
+                    # Find the closest time in the dataset
+                    time_diffs = abs(pd.to_datetime(era5_ds.time.values) - target_time)
+                    closest_idx = time_diffs.argmin()
+                    profile_data = era5_ds.isel(time=closest_idx)
+                else:
+                    # Data is already fully selected
+                    profile_data = era5_ds
 
             # Extract variables and perform unit conversions
             altitude_km = (profile_data['z'] / G_STD) / 1000.0
@@ -233,8 +252,9 @@ class ERA5AtmosphereGenerator:
                 f.write("# ERA5 atmosphere profile\n")
                 f.write("# z(km)  p(hPa)  T(K)  air(cm-3)  o3(cm-3)  o2(cm-3)  h2o(cm-3)  co2(cm-3)  no2(cm-3)\n")
                 
-                # Sort by pressure (high to low) which corresponds to altitude (low to high)
-                sorted_indices = np.argsort(pressure_hpa.values)[::-1]
+                # Sort by altitude (high to low) for LibRadtran (TOA to surface)
+                # This means sorting by pressure (low to high) since high altitude = low pressure
+                sorted_indices = np.argsort(pressure_hpa.values)
                 
                 for idx in sorted_indices:
                     f.write(f"{altitude_km.values[idx]:.3f}  ")
@@ -422,14 +442,65 @@ class OutputToXarray:
         if not parsed_outputs:
             raise ValueError("No parsed outputs provided")
         
-        # Use the first output as template
-        result_ds = OutputToXarray.convert(parsed_outputs[0], input_ds, time_var, lat_var, lon_var)
+        # Get dimensions from input dataset
+        times = input_ds[time_var].values
+        latitudes = input_ds[lat_var].values  
+        longitudes = input_ds[lon_var].values
         
-        # If multiple outputs, combine them appropriately
-        if len(parsed_outputs) > 1:
-            # This would need more sophisticated logic for combining outputs
-            logger.warning("Batch conversion with multiple outputs not fully implemented")
+        # Get altitude information from the first output
+        first_output = parsed_outputs[0]
+        altitudes = first_output.altitudes if first_output.altitudes else [0]
+        wavelengths = first_output.wavelengths if first_output.wavelengths else [None]
         
+        # Create coordinate arrays
+        coords = {
+            time_var: times,
+            lat_var: latitudes,
+            lon_var: longitudes,
+            'altitude': altitudes
+        }
+        
+        # Add wavelength if spectral data
+        if wavelengths[0] is not None:
+            coords['wavelength'] = wavelengths
+            
+        # Initialize data variables dictionary
+        data_vars = {}
+        
+        # Get variable names from first output
+        var_names = list(first_output.data.keys())
+        
+        # For each variable, collect data from all outputs
+        for var_name in var_names:
+            # Determine dimensions based on data shape
+            if wavelengths[0] is not None:
+                dims = [time_var, 'wavelength', 'altitude']
+                shape = (len(times), len(wavelengths), len(altitudes))
+            else:
+                dims = [time_var, 'altitude']  
+                shape = (len(times), len(altitudes))
+            
+            # Initialize array with NaN
+            combined_data = np.full(shape, np.nan)
+            
+            # Fill with data from each output
+            for i, output in enumerate(parsed_outputs):
+                if var_name in output.data:
+                    data = np.array(output.data[var_name])
+                    if wavelengths[0] is not None:
+                        combined_data[i, :, :] = data.reshape(len(wavelengths), len(altitudes))
+                    else:
+                        combined_data[i, :] = data.reshape(len(altitudes))
+            
+            data_vars[var_name] = (dims, combined_data)
+        
+        # Create the dataset
+        result_ds = xr.Dataset(data_vars, coords=coords)
+        
+        # Add attributes from first output
+        if hasattr(first_output, 'metadata'):
+            result_ds.attrs.update(first_output.metadata)
+            
         return result_ds
 
 
@@ -462,15 +533,80 @@ class NetCDFSaver:
             if simulation_params:
                 ds.attrs['simulation_parameters'] = str(simulation_params)
             
+            # Add configuration parameters as attributes
+            NetCDFSaver._add_config_to_attrs(ds, config)
+            
+            # Filter out None values from attributes as they can't be serialized to NetCDF
+            filtered_attrs = {k: v for k, v in ds.attrs.items() if v is not None}
+            ds.attrs.clear()
+            ds.attrs.update(filtered_attrs)
+            
             # Save to file
             output_path.parent.mkdir(parents=True, exist_ok=True)
-            ds.to_netcdf(output_path, **config.output.netcdf_encoding)
+            encoding = config.output.netcdf_encoding if config.output.netcdf_encoding else {}
+            ds.to_netcdf(output_path, **encoding)
             
             logger.info(f"Results saved to {output_path}")
             return output_path
             
         except Exception as e:
             raise OutputParsingError(f"Failed to save results to {output_path}: {str(e)}")
+    
+    @staticmethod
+    def _serialize_for_netcdf(value):
+        """Convert values to NetCDF-compatible types."""
+        if isinstance(value, bool):
+            return int(value)  # Convert boolean to integer (0 or 1)
+        elif isinstance(value, (list, tuple)):
+            return str(value)  # Convert lists/tuples to string representation
+        elif isinstance(value, (int, float, str)):
+            return value  # These are already NetCDF compatible
+        elif value is None:
+            return "None"  # Convert None to string
+        else:
+            return str(value)  # Convert everything else to string
+    
+    @staticmethod
+    def _add_config_to_attrs(ds: xr.Dataset, config: SimulationConfig) -> None:
+        """Add configuration parameters as NetCDF attributes."""
+        # Add simulation defaults with None checks
+        ds.attrs['config_source'] = str(config.simulation_defaults.source) if config.simulation_defaults.source is not None else 'None'
+        ds.attrs['config_rte_solver'] = str(config.simulation_defaults.rte_solver) if config.simulation_defaults.rte_solver is not None else 'None'
+        ds.attrs['config_mol_abs_param'] = str(config.simulation_defaults.mol_abs_param) if config.simulation_defaults.mol_abs_param is not None else 'None'
+        
+        # Handle numeric parameters that might be None
+        if config.simulation_defaults.albedo_value is not None:
+            ds.attrs['config_albedo_value'] = float(config.simulation_defaults.albedo_value)
+        if config.simulation_defaults.ozone_du is not None:
+            ds.attrs['config_ozone_du'] = float(config.simulation_defaults.ozone_du)
+        if config.simulation_defaults.h2o_mm is not None:
+            ds.attrs['config_h2o_mm'] = float(config.simulation_defaults.h2o_mm)
+        if config.simulation_defaults.surface_temperature_k is not None:
+            ds.attrs['config_surface_temperature_k'] = float(config.simulation_defaults.surface_temperature_k)
+            
+        ds.attrs['config_viewing_geometry'] = str(config.simulation_defaults.viewing_geometry) if config.simulation_defaults.viewing_geometry is not None else 'None'
+        
+        # Add wavelength range
+        if hasattr(config.simulation_defaults, 'wavelength_nm') and config.simulation_defaults.wavelength_nm:
+            wl_min, wl_max = config.simulation_defaults.wavelength_nm
+            ds.attrs['config_wavelength_min_nm'] = float(wl_min)
+            ds.attrs['config_wavelength_max_nm'] = float(wl_max)
+        
+        # Add integration setting using the helper function
+        if hasattr(config.simulation_defaults, 'integrate_wavelength'):
+            ds.attrs['config_integrate_wavelength'] = NetCDFSaver._serialize_for_netcdf(config.simulation_defaults.integrate_wavelength)
+        
+        # Add output altitudes
+        if hasattr(config.simulation_defaults, 'output_altitudes_km') and config.simulation_defaults.output_altitudes_km:
+            ds.attrs['config_output_altitudes_km'] = NetCDFSaver._serialize_for_netcdf(config.simulation_defaults.output_altitudes_km)
+        
+        # Add path information
+        ds.attrs['config_libradtran_bin'] = str(config.paths.libradtran_bin)
+        ds.attrs['config_libradtran_data'] = str(config.paths.libradtran_data)
+        
+        # Add execution settings
+        ds.attrs['config_max_workers'] = int(config.execution.max_workers)
+        ds.attrs['config_timeout_seconds'] = int(config.execution.timeout_seconds)
 
 
 # Expose main classes and functions
