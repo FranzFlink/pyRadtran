@@ -13,7 +13,7 @@ import logging
 import numpy as np
 import pandas as pd
 import xarray as xr
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Union, Any
 from enum import Enum
@@ -244,6 +244,144 @@ class ERA5AtmosphereGenerator:
             raise InputGenerationError(f"Failed to create ERA5 atmosphere file: {str(e)}")
 
 
+class RadiosondeAtmosphereGenerator:
+    """Generate atmosphere files from the nearest radiosonde sounding."""
+
+    @staticmethod
+    def get_station_list(
+        url: str = "https://www.ncei.noaa.gov/pub/data/igra/igra2-station-list.txt",
+    ) -> Optional[pd.DataFrame]:
+        """Download and parse the IGRA station list."""
+        try:
+            col_specs = [
+                (0, 11), (12, 20), (21, 30), (31, 37), (38, 40),
+                (41, 71), (72, 76), (77, 81), (82, 88)
+            ]
+            names = [
+                'id', 'latitude', 'longitude', 'elevation', 'state',
+                'name', 'first_year', 'last_year', 'num_obs'
+            ]
+            return pd.read_fwf(url, colspecs=col_specs, names=names)
+        except Exception as e:
+            logger.error(f"Error downloading or parsing station list: {e}")
+            return None
+
+    @staticmethod
+    def find_closest_active_stations(
+        stations_df: pd.DataFrame, lat: float, lon: float, n: int = 5
+    ) -> pd.DataFrame:
+        """Find the N closest active radiosonde stations."""
+        current_year = datetime.utcnow().year
+        active_stations = stations_df[stations_df['last_year'] >= current_year - 1].copy()
+
+        lat_rad = np.radians(lat)
+        lon_rad = np.radians(lon)
+        stations_lat_rad = np.radians(active_stations['latitude'])
+        stations_lon_rad = np.radians(active_stations['longitude'])
+
+        dlon = stations_lon_rad - lon_rad
+        dlat = stations_lat_rad - lat_rad
+        a = (
+            np.sin(dlat / 2) ** 2
+            + np.cos(lat_rad) * np.cos(stations_lat_rad) * np.sin(dlon / 2) ** 2
+        )
+        c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+        distance = 6371 * c
+
+        active_stations['distance_km'] = distance
+        return active_stations.sort_values(by='distance_km').head(n)
+
+    @staticmethod
+    def get_closest_sounding(
+        target_dt: datetime, lat: float, lon: float
+    ) -> tuple[Optional[pd.DataFrame], Optional[pd.DataFrame]]:
+        """Retrieve the closest available radiosonde sounding."""
+        stations = RadiosondeAtmosphereGenerator.get_station_list()
+        if stations is None:
+            return None, None
+
+        closest = RadiosondeAtmosphereGenerator.find_closest_active_stations(
+            stations, lat, lon, n=5
+        )
+        if closest.empty:
+            return None, None
+
+        base_date = datetime(target_dt.year, target_dt.month, target_dt.day)
+        potential_times = [
+            target_dt,
+            base_date + timedelta(hours=12),
+            base_date,
+            base_date - timedelta(hours=12),
+            base_date - timedelta(hours=24),
+        ]
+        potential_times = sorted(
+            list(set(potential_times)),
+            key=lambda x: abs((x - target_dt).total_seconds()),
+        )
+
+        try:
+            from siphon.simplewebservice.igra2 import IGRAUpperAir
+        except Exception:
+            IGRAUpperAir = None
+
+        for _, station in closest.iterrows():
+            station_id = station['id']
+            for time_to_check in potential_times:
+                try:
+                    if IGRAUpperAir is None:
+                        raise InputGenerationError(
+                            "siphon is required for radiosonde retrieval"
+                        )
+                    df, header = IGRAUpperAir.request_data(time_to_check, station_id)
+                    if df is not None and not df.empty:
+                        return df, header
+                except Exception:
+                    continue
+
+        return None, None
+
+    @staticmethod
+    def create_radiosonde_atmosphere_file(
+        time: datetime,
+        latitude: float,
+        longitude: float,
+        output_filepath: Union[str, Path],
+    ) -> Path:
+        """Create a libRadtran atmosphere file from radiosonde data."""
+        sounding_df, _ = RadiosondeAtmosphereGenerator.get_closest_sounding(
+            time, latitude, longitude
+        )
+        if sounding_df is None or sounding_df.empty:
+            raise InputGenerationError("No radiosonde data found for requested parameters")
+
+        df = sounding_df.dropna(subset=['pressure', 'temperature', 'dewpoint', 'height'])
+        if df.empty:
+            raise InputGenerationError("No valid levels in radiosonde data")
+
+        e = 6.112 * np.exp(17.67 * df['dewpoint'] / (df['dewpoint'] + 243.5))
+        e_s = 6.112 * np.exp(17.67 * df['temperature'] / (df['temperature'] + 243.5))
+        rh = (e / e_s) * 100  # Relative Humidity in %
+        w = 0.622 * e / (df['pressure'] - e)  # kg/kg
+        temp_k = df['temperature'] + 273.15
+        height_km = df['height'] / 1000.0
+        pressure_hpa = df['pressure']
+
+        sorted_idx = np.argsort(pressure_hpa.values)
+
+        output_path = Path(output_filepath)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, 'w') as f:
+            f.write("# Radiosonde atmosphere profile\n")
+            f.write("# z(km)  p(hPa)  T(K)  h2o(g/kg)\n")
+            for idx in sorted_idx:
+                f.write(
+                    f"{pressure_hpa.values[idx]:.2f}  "
+                    f"{temp_k.values[idx]:.2f}  {rh.values[idx]:.3f}\n"
+                )
+
+        logger.info(f"Created radiosonde atmosphere file: {output_path}")
+        return output_path
+
 class OutputParser:
     """Robust parser for LibRadtran output files."""
     
@@ -465,6 +603,6 @@ class NetCDFSaver:
 
 # Expose main classes and functions
 __all__ = [
-    'OutputType', 'ParsedOutput', 'InputDataLoader', 'ERA5AtmosphereGenerator',
+    'OutputType', 'ParsedOutput', 'InputDataLoader', 'ERA5AtmosphereGenerator', 'RadiosondeAtmosphereGenerator'
     'OutputParser', 'OutputToXarray', 'NetCDFSaver'
 ]

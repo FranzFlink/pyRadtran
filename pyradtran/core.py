@@ -226,8 +226,10 @@ class Simulation:
         # Apply parameter overrides
         if parameter_overrides:
             for key, value in parameter_overrides.items():
-                if key not in ['albedo', 'surface_temperature', 'altitude']:  # Already handled above
-                    lines.append(f"{key} {value}")
+            # Remove any existing lines that start with the key followed by a space
+                lines = [line for line in lines if not line.startswith(f"{key} ")]
+                # Append the override line
+                lines.append(f"{key} {value}")
         
         # Add quiet mode to reduce output
         lines.append("quiet")
