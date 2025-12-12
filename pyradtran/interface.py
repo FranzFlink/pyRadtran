@@ -131,16 +131,16 @@ def execute_simulation_batch(
     era5_atmosphere: Optional[xr.Dataset] = None,
     parameter_overrides: Dict[str, Any] = None,
     progress_callback: Optional[callable] = None
-) -> List[ParsedOutput]:
+) -> List[Optional[ParsedOutput]]:
     """
-    Execute a batch of simulations in parallel.
+    Execute a batch of simulations in parallel covering all points in input_ds.
     
     Args:
         config: Simulation configuration
-        input_ds: Input dataset with time, lat, lon coordinates
-        time_var: Name of time dimension/coordinate
-        lat_var: Name of latitude dimension/coordinate  
-        lon_var: Name of longitude dimension/coordinate
+        input_ds: Input dataset (can have arbitrary dimensions)
+        time_var: Name of time dimension/coordinate/variable
+        lat_var: Name of latitude dimension/coordinate/variable
+        lon_var: Name of longitude dimension/coordinate/variable
         albedo_var: Optional name of albedo data_var
         surface_temperature_var: Optional name of surface temperature data_var
         altitude_var: Optional name of altitude data_var
@@ -149,24 +149,39 @@ def execute_simulation_batch(
         progress_callback: Optional callback function(current, total) for progress updates
         
     Returns:
-        List of ParsedOutput objects
+        List of ParsedOutput objects (or None for failed points), matching the flattened input order.
         
     Raises:
         PyRadtranError: If all simulations fail
     """
-    # Initialize simulation runner
-    runner = Simulation(config)
+    # Ensure input_ds is a Dataset
+    if isinstance(input_ds, xr.DataArray):
+        input_ds = input_ds.to_dataset()
+
+    # Get non-empty dimensions for stacking
+    dims = list(input_ds.sizes.keys())
     
-    # Extract coordinates
-    times = input_ds[time_var].values
-    latitudes = input_ds[lat_var].values
-    longitudes = input_ds[lon_var].values
-    
-    # Extract optional data variables
-    albedos = input_ds[albedo_var].values if albedo_var and albedo_var in input_ds else None
-    surface_temperatures = input_ds[surface_temperature_var].values if surface_temperature_var and surface_temperature_var in input_ds else None
-    altitudes = input_ds[altitude_var].values if altitude_var and altitude_var in input_ds else None
-    
+    # Flatten the dataset to iterate linearly over all combinations
+    sample_dim = 'sample_batch_dim'
+    if dims:
+        stacked_ds = input_ds.stack({sample_dim: dims})
+    else:
+        # Handle scalar dataset (single point)
+        stacked_ds = input_ds.expand_dims(sample_dim)
+        
+    num_points = stacked_ds.sizes[sample_dim]
+    logger.info(f"Preparing {num_points} simulations from input dataset with dims {dims}")
+
+    # Helper to safely extract scalar values from 0-d xarray objects
+    def get_val(ds, var):
+        if var and var in ds:
+            val = ds[var].values
+            # Unwrap numpy scalars
+            if hasattr(val, 'item'):
+                return val.item()
+            return val
+        return None
+
     # Handle ERA5 atmosphere files if provided
     era5_atmosphere_files = {}
     if era5_atmosphere is not None:
@@ -177,87 +192,111 @@ def execute_simulation_batch(
         
         era5_generator = ERA5AtmosphereGenerator()
         
-        for i, (t, lat, lon) in enumerate(zip(times, latitudes, longitudes)):
+        # We need to iterate over all points to generate ERA5 files
+        # Note: Optimization possible by finding unique (time, lat, lon) tuples
+        for i in range(num_points):
+            point_ds = stacked_ds.isel({sample_dim: i})
+            t = get_val(point_ds, time_var)
+            lat = get_val(point_ds, lat_var)
+            lon = get_val(point_ds, lon_var)
+            
             try:
                 dt = pd.to_datetime(t).to_pydatetime()
                 point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
-                atm_file = atm_dir / f"era5_atm_{point_id}.dat"
                 
-                era5_generator.create_era5_atmosphere_file(
-                    era5_atmosphere, lat, lon, dt, atm_file
-                )
-                era5_atmosphere_files[point_id] = atm_file
-                logger.debug(f"Created ERA5 atmosphere file for {point_id}: {atm_file}")
+                # Check if we already generated it
+                if point_id not in era5_atmosphere_files:
+                    atm_file = atm_dir / f"era5_atm_{point_id}.dat"
+                    if not atm_file.exists():
+                        era5_generator.create_era5_atmosphere_file(
+                            era5_atmosphere, lat, lon, dt, atm_file
+                        )
+                    era5_atmosphere_files[point_id] = atm_file
+                    logger.debug(f"Created/Found ERA5 atmosphere file for {point_id}: {atm_file}")
+                    
             except Exception as e:
-                logger.error(f"Failed to create ERA5 atmosphere file for point {i}: {e}")
-                era5_atmosphere_files[point_id] = None
+                logger.warning(f"Failed to create ERA5 atmosphere file for point {i}: {e}")
+                # We'll continue, and the simulation might fail later or use default
     
     # Prepare simulation points
     points = []
-    for i, (t, lat, lon) in enumerate(zip(times, latitudes, longitudes)):
-        alb = albedos[i] if albedos is not None else None
-        surf_temp = surface_temperatures[i] if surface_temperatures is not None else None
-        alt = altitudes[i] if altitudes is not None else None
+    for i in range(num_points):
+        point_ds = stacked_ds.isel({sample_dim: i})
+        
+        t = get_val(point_ds, time_var)
+        lat = get_val(point_ds, lat_var)
+        lon = get_val(point_ds, lon_var)
+        
+        alb = get_val(point_ds, albedo_var)
+        surf_temp = get_val(point_ds, surface_temperature_var)
+        alt = get_val(point_ds, altitude_var)
         
         # Convert time to proper datetime object
         dt = pd.to_datetime(t).to_pydatetime()
-        point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
-        era5_atm_file = era5_atmosphere_files.get(point_id) if era5_atmosphere_files else None
+        
+        # Determine Point ID - use index to ensure uniqueness for iteration, but also keep physical ID
+        point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}_{i}"
+        
+        # ERA5 file lookup uses physical ID components
+        era5_key = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
+        era5_atm_file = era5_atmosphere_files.get(era5_key) if era5_atmosphere_files else None
         
         points.append((dt, lat, lon, alb, surf_temp, alt, era5_atm_file, point_id))
     
     # Run simulations in parallel
-    results = []
-    total_points = len(points)
+    results = [None] * num_points # Pre-allocate results list to preserve order
     
     # Initialize progress bar
     if HAS_TQDM:
-        pbar = tqdm(total=total_points, desc="Running simulations", unit="sim")
+        pbar = tqdm(total=num_points, desc="Running simulations", unit="sim")
     else:
         pbar = None
     
     with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
         # Submit all simulations
-        future_to_point = {}
+        future_to_idx = {}
         for i, point in enumerate(points):
             future = executor.submit(
                 _run_single_simulation_unified,
                 config, point, parameter_overrides
             )
-            future_to_point[future] = (i, point)
+            future_to_idx[future] = i
         
-        # Collect results
-        for future in as_completed(future_to_point):
-            point_idx, point_data = future_to_point[future]
+        # Collect results as they complete
+        success_count = 0
+        for future in as_completed(future_to_idx):
+            idx = future_to_idx[future]
             
             try:
                 result = future.result()
+                results[idx] = result # Store in correct position
+                
                 if result:
-                    results.append(result)
-                    logger.debug(f"Simulation {point_idx + 1}/{total_points} completed successfully")
-                    if pbar:
-                        pbar.set_postfix({"Success": len(results), "Total": total_points})
+                    success_count += 1
+                    logger.debug(f"Simulation {idx + 1}/{num_points} completed successfully")
                 else:
-                    logger.warning(f"Simulation {point_idx + 1}/{total_points} produced no output")
+                    logger.warning(f"Simulation {idx + 1}/{num_points} produced no output")
+                    
             except Exception as e:
-                logger.error(f"Simulation {point_idx + 1}/{total_points} failed: {str(e)}")
+                logger.error(f"Simulation {idx + 1}/{num_points} failed with error: {str(e)}")
             
             # Update progress bar
             if pbar:
                 pbar.update(1)
+                pbar.set_postfix({"Success": success_count, "Total": num_points})
             
             # Progress callback
             if progress_callback:
-                progress_callback(len(results), total_points)
+                progress_callback(success_count, num_points)
     
     # Close progress bar
     if pbar:
         pbar.close()
     
-    if not results:
+    if success_count == 0:
         raise PyRadtranError("All simulations failed - no valid results produced")
     
-    logger.info(f"Batch execution completed: {len(results)}/{total_points} simulations successful")
+    logger.info(f"Batch execution completed: {success_count}/{num_points} simulations successful")
     return results
 
 
@@ -369,6 +408,7 @@ class PyRadtranAccessor:
     def run(
         self,
         config_path: Optional[Union[str, Path]] = None,
+        config: Optional[SimulationConfig] = None,
         parameter_overrides: Dict[str, Any] = None,
         time_var: str = 'time',
         lat_var: str = 'latitude',
@@ -386,6 +426,7 @@ class PyRadtranAccessor:
         
         Args:
             config_path: Path to YAML configuration file (uses default if None)
+            config: Direct SimulationConfig object (overrides config_path)
             parameter_overrides: Dictionary of simulation parameters to override
             time_var: Name of time dimension/coordinate in the dataset
             lat_var: Name of latitude dimension/coordinate in the dataset
@@ -406,7 +447,10 @@ class PyRadtranAccessor:
             PyRadtranError: If simulation fails
         """
         # Load configuration
-        self._config = load_config(config_path)
+        if config:
+            self._config = config
+        else:
+            self._config = load_config(config_path)
         
         # Apply parameter overrides if provided
         if parameter_overrides:
@@ -426,7 +470,7 @@ class PyRadtranAccessor:
             if len(dataset_altitudes) > 0:
                 logger.info(f"Altitude found as coordinate - using {len(dataset_altitudes)} levels for zout: {dataset_altitudes}")
                 self._config.simulation_defaults.output_altitudes_km = [float(alt) for alt in dataset_altitudes]
-        elif alt_var in self._obj.data_vars:
+        if alt_var in self._obj.data_vars:
             # Altitude is a data variable - treat as scalar per time step
             altitude_as_data_var = True
             logger.info(f"Altitude found as data variable - will be treated as scalar altitude for each time step")
@@ -440,11 +484,18 @@ class PyRadtranAccessor:
         elif output_path:
             output_path = Path(output_path)
             output_path.parent.mkdir(exist_ok=True, parents=True)
+            
+        # Determine dataset to pass to execution batch
+        # If altitude was used as config coordinate, we should NOT iterate over it in the batch execution
+        if alt_var in self._obj.dims and not altitude_as_data_var:
+             ds_to_execute = self._obj.drop_dims(alt_var)
+        else:
+             ds_to_execute = self._obj
         
         # Run the simulation batch
         parsed_outputs = execute_simulation_batch(
             config=self._config,
-            input_ds=self._obj,
+            input_ds=ds_to_execute,
             time_var=time_var,
             lat_var=lat_var,
             lon_var=lon_var,
@@ -459,7 +510,7 @@ class PyRadtranAccessor:
         # Convert to xarray Dataset
         if return_dataset and parsed_outputs:
             converter = OutputToXarray()
-            result_ds = converter.convert_batch(parsed_outputs, self._obj, time_var, lat_var, lon_var)
+            result_ds = converter.convert_batch(parsed_outputs, ds_to_execute, time_var, lat_var, lon_var)
             
             # Add metadata
             result_ds.attrs['generated_by'] = 'pyradtran'
@@ -483,7 +534,7 @@ class PyRadtranAccessor:
         elif save_to_file and parsed_outputs and output_path:
             # Just save to file without returning dataset
             converter = OutputToXarray()
-            result_ds = converter.convert_batch(parsed_outputs, self._obj, time_var, lat_var, lon_var)
+            result_ds = converter.convert_batch(parsed_outputs, ds_to_execute, time_var, lat_var, lon_var)
             
             saver = NetCDFSaver()
             return saver.save_results_to_netcdf(
@@ -519,8 +570,8 @@ class PyRadtranAccessor:
         
         # Validate ERA5 atmosphere dataset if provided
         if era5_atmosphere is not None:
-            required_era5_vars = ['z', 't', 'o3', 'q']
-            required_era5_coords = ['pressure_level', 'latitude', 'longitude', 'valid_time']
+            required_era5_vars = ['z', 't', 'q']
+            required_era5_coords = ['pressure_level', 'valid_time']
             
             for var in required_era5_vars:
                 if var not in era5_atmosphere.variables:

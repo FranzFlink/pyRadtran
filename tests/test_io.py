@@ -12,25 +12,38 @@ from pathlib import Path
 from datetime import datetime, timedelta
 
 from pyradtran.io import (
-    load_simulation_input_data,
-    generate_uvspec_input_content,
-    parse_uvspec_output,
-    save_results_to_netcdf
+    InputDataLoader,
+    OutputParser,
+    NetCDFSaver
 )
-from pyradtran.config import SimulationConfig, PathsConfig, SimulationDefaults, ExecutionConfig, OutputConfig, CloudParameters, AerosolParameters
+from pyradtran.core import Simulation
+from pyradtran.config import SimulationConfig, PathsConfig, SimulationDefaults, ExecutionConfig, OutputConfig, CloudParameters
 
 # Fixture for a minimal simulation config
 @pytest.fixture
-def minimal_config():
+def minimal_config(tmp_path):
     """Create a minimal simulation config for testing"""
+    # Create dummy files
+    bin_path = tmp_path / "uvspec"
+    bin_path.touch()
+    
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    
+    atm_path = tmp_path / "atmosphere.dat"
+    atm_path.touch()
+    
+    solar_path = tmp_path / "solar.dat"
+    solar_path.touch()
+    
     return SimulationConfig(
         paths=PathsConfig(
-            libradtran_bin=Path('/path/to/uvspec'),
-            libradtran_data=Path('/path/to/data'),
-            atmosphere_profile=Path('/path/to/atmosphere.dat'),
-            solar_spectrum=Path('/path/to/solar.dat'),
-            output_dir=Path('/path/to/output'),
-            working_dir=Path('/path/to/working')
+            libradtran_bin=bin_path,
+            libradtran_data=data_dir,
+            atmosphere_profile=atm_path,
+            solar_spectrum=solar_path,
+            output_dir=tmp_path / "output",
+            working_dir=tmp_path / "working"
         ),
         simulation_defaults=SimulationDefaults(
             rte_solver='disort',
@@ -38,7 +51,6 @@ def minimal_config():
             output_columns=['sza', 'eglo', 'eup', 'albedo'],
             output_altitudes_km=[0.0, 1.0],
             clouds=CloudParameters(enabled=False),
-            aerosols=AerosolParameters(enabled=False)
         ),
         execution=ExecutionConfig(max_workers=2),
         output=OutputConfig(filename_prefix='test')
@@ -96,7 +108,8 @@ def temp_nc_input():
 # Tests for data loading
 def test_load_simulation_input_data_csv(temp_csv_input):
     """Test loading simulation input data from CSV"""
-    ds = load_simulation_input_data(temp_csv_input)
+    loader = InputDataLoader()
+    ds = loader.load_simulation_input_data(temp_csv_input)
     
     assert isinstance(ds, xr.Dataset)
     assert 'time' in ds
@@ -107,7 +120,8 @@ def test_load_simulation_input_data_csv(temp_csv_input):
 
 def test_load_simulation_input_data_nc(temp_nc_input):
     """Test loading simulation input data from NetCDF"""
-    ds = load_simulation_input_data(temp_nc_input)
+    loader = InputDataLoader()
+    ds = loader.load_simulation_input_data(temp_nc_input)
     
     assert isinstance(ds, xr.Dataset)
     assert 'time' in ds
@@ -123,9 +137,11 @@ def test_generate_uvspec_input_content(minimal_config):
     lat = 60.0
     lon = 10.0
     
-    # Generate input content
-    content = generate_uvspec_input_content(
-        config=minimal_config,
+    # Initialize simulation
+    sim = Simulation(minimal_config)
+    
+    # Generate input content - accessing private method for testing purpose
+    content = sim._generate_input_content(
         dt=dt,
         latitude=lat,
         longitude=lon
@@ -135,11 +151,10 @@ def test_generate_uvspec_input_content(minimal_config):
     assert isinstance(content, str)
     assert "data_files_path" in content
     assert "atmosphere_file" in content
-    assert "time 2023 5 1" in content
-    assert "disort" in content  # Check RTE solver
+    assert "rte_solver disort" in content
     assert "wavelength 400 700" in content
     assert "output_user sza eglo eup albedo" in content
-    assert "zout 0.0 1.0" in content
+    assert "zout 0.0000 1.0000" in content
 
 # Test with clouds enabled
 def test_generate_uvspec_input_with_clouds(minimal_config):
@@ -147,54 +162,26 @@ def test_generate_uvspec_input_with_clouds(minimal_config):
     # Modify the config to include clouds
     minimal_config.simulation_defaults.clouds = CloudParameters(
         enabled=True,
-        cloud_optical_properties="mie",
-        cloud_overlap="max-random",
-        layer_heights_km=[(1.0, 2.0)],
-        layer_water_content=[0.1],
-        layer_effective_radius_um=[10.0]
+        cloud_type="wc",
+        cloud_source="parametric",
+        layer_bottom_km=1.0,
+        layer_top_km=2.0,
+        water_content_g_m3=0.1,
+        effective_radius_um=10.0
     )
     
     dt = datetime(2023, 5, 1, 12, 0, 0)
     lat = 60.0
     lon = 10.0
     
+    sim = Simulation(minimal_config)
+    
     # Generate input content
-    content = generate_uvspec_input_content(
-        config=minimal_config,
+    content = sim._generate_input_content(
         dt=dt,
         latitude=lat,
         longitude=lon
     )
     
     # Verify cloud content
-    assert "cloud_optical_properties mie" in content
-    assert "cloud_overlap max-random" in content
-    assert "wc_file 1 0.1 10.0 1.0 2.0" in content
-
-# Test with aerosols enabled
-def test_generate_uvspec_input_with_aerosols(minimal_config):
-    """Test generating uvspec input content with aerosols"""
-    # Modify the config to include aerosols
-    minimal_config.simulation_defaults.aerosols = AerosolParameters(
-        enabled=True,
-        aerosol_type="rural",
-        aerosol_visibility_km=23.0,
-        aerosol_optical_properties="default"
-    )
-    
-    dt = datetime(2023, 5, 1, 12, 0, 0)
-    lat = 60.0
-    lon = 10.0
-    
-    # Generate input content
-    content = generate_uvspec_input_content(
-        config=minimal_config,
-        dt=dt,
-        latitude=lat,
-        longitude=lon
-    )
-    
-    # Verify aerosol content
-    assert "aerosol_optical_properties default" in content
-    assert "aerosol_default rural" in content
-    assert "aerosol_visibility 23.0" in content
+    assert "wc_layer 1.0 2.0 0.1 10.0" in content

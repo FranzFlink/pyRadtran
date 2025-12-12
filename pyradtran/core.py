@@ -140,28 +140,37 @@ class Simulation:
         
         # Data files path
         lines.append(f"data_files_path {self.config.paths.libradtran_data}")
-        
+        lines.append(f"atmosphere_file {self.config.paths.atmosphere_profile}")
+
         # Atmosphere settings
         if era5_atmosphere_file is not None:
             # Use custom ERA5 atmosphere file
             era5_abs_path = Path(era5_atmosphere_file).resolve()
-            lines.append(f"atmosphere_file {era5_abs_path}")
-            logger.debug(f"Using ERA5 atmosphere file: {era5_abs_path}")
-        else:
-            # Use default atmosphere profile
-            lines.append(f"atmosphere_file {self.config.paths.atmosphere_profile}")
-        
+            # Maybe just read the first line to determine H2O format? The file should be in libradtran radiosonde format and looks like this:
+            # # ERA5 atmosphere profile in libradtran radiosonde style
+            # # p(hPa)  T(K)  h2o(cm-3) 
+            # 50.00  214.95  2.868e-06
+            with open(era5_abs_path, 'r') as f:
+                second_line = f.readlines()[1].strip()
+                if 'kg kg**-1' in second_line:
+                    h2o_unit = 'MMR'
+                elif '%' in second_line:
+                    h2o_unit = 'RH'
+
+            lines.append(f"radiosonde {era5_abs_path} H2O {h2o_unit}")
+            logger.debug(f"Using ERA5 atmosphere file as radiosonde: {era5_abs_path}")
+
         # Radiosonde data
-        if radiosonde_path and self.config.simulation_defaults.h2o_source == 'radiosonde':
+        elif radiosonde_path and self.config.simulation_defaults.h2o_source == 'radiosonde':
             lines.append(f"radiosonde {radiosonde_path} H2O RH")
         
         # Molecular modifications
-        if self.config.simulation_defaults.ozone_du is not None:
-            lines.append(f"mol_modify O3 {self.config.simulation_defaults.ozone_du} DU")
+        # if self.config.simulation_defaults.ozone_du is not None:
+        #     lines.append(f"mol_modify O3 {self.config.simulation_defaults.ozone_du} DU")
         
-        if (self.config.simulation_defaults.h2o_mm is not None and 
-            self.config.simulation_defaults.h2o_source == 'fixed'):
-            lines.append(f"mol_modify H2O {self.config.simulation_defaults.h2o_mm} MM")
+        # if (self.config.simulation_defaults.h2o_mm is not None and 
+        #     self.config.simulation_defaults.h2o_source == 'fixed'):
+        #     lines.append(f"mol_modify H2O {self.config.simulation_defaults.h2o_mm} MM")
         
         # Solar/thermal source
         if self.config.simulation_defaults.source == 'solar':
@@ -198,8 +207,9 @@ class Simulation:
             lines.append("output_process integrate")
         
         # Surface properties
-        albedo = override_albedo or self.config.simulation_defaults.albedo_value
-        lines.append(f"albedo {albedo}")
+        if override_albedo is not None:
+            albedo = override_albedo #or self.config.simulation_defaults.albedo_value
+            lines.append(f"albedo {albedo}")
         
         # Output settings
         output_columns = " ".join(self.config.simulation_defaults.output_columns)
@@ -212,7 +222,7 @@ class Simulation:
         else:
             # Use configured altitudes
 
-            alt_str = " ".join(f"{alt:.1f}" for alt in self.config.simulation_defaults.output_altitudes_km)
+            alt_str = " ".join(f"{alt:.4f}" for alt in self.config.simulation_defaults.output_altitudes_km)
             lines.append(f"zout {alt_str}")
 
         # Viewing geometry

@@ -22,7 +22,7 @@ from pyradtran.config import (
     load_config
 )
 from pyradtran.core import Simulation
-from pyradtran.io import parse_uvspec_output
+from pyradtran.io import OutputParser
 from pyradtran.interface import run_pyradtran_simulation
 
 # --- Test Configuration ---
@@ -58,9 +58,9 @@ def integration_config():
             rte_solver='disort',
             mol_abs_param='reptran medium',
             wavelength_nm=[400, 700],  # Visible range
+            integrate_wavelength=True,
             output_columns=['sza', 'eglo', 'eup', 'albedo'],
             output_altitudes_km=[0.0],
-            albedo_type='const',
             albedo_value=0.3,
         ),
     )
@@ -104,43 +104,60 @@ def test_simple_simulation_run(integration_config):
     # Create a simulation instance
     sim = Simulation(integration_config)
     
-    # Generate input content
+    # Generate input content parameters
     dt = datetime(2025, 5, 5, 12, 0, 0)  # Noon on May 5, 2025
     lat = 75.0  # Arctic
     lon = 0.0   # Prime meridian
     
-    # Run the simulation
+    # Use internal method to generate input and run
+    # Simulation.run_simulation is the main entry point now
     try:
-        output_file = sim.run(
-            datetime=dt,
+        # We need to construct a proper input file path or let run_simulation do it
+        # run_simulation(dt, lat, lon, ...)
+        output_file = sim.run_simulation(
+            dt=dt,
             latitude=lat,
-            longitude=lon,
-            radiosonde_path=None  # No radiosonde for this simple test
+            longitude=lon
         )
         
         # Verify output file exists
         assert output_file.exists(), f"Output file {output_file} does not exist"
+        assert output_file.stat().st_size > 0, "Output file is empty"
         
-        # Parse the output
-        parsed_output = parse_uvspec_output(output_file, integration_config)
+        # Parse the output using OutputParser
+        parser = OutputParser(integration_config)
+        parsed_output = parser.parse_output_file(output_file)
         
         # Verify output contains expected columns
         for column in integration_config.simulation_defaults.output_columns:
-            assert column in parsed_output, f"Column {column} missing from output"
+            assert column in parsed_output.data, f"Column {column} missing from output"
         
         # Verify SZA is reasonable (not NaN)
-        assert not np.isnan(parsed_output['sza'][0]), "SZA is NaN"
+        assert not np.isnan(parsed_output.data['sza'][0]), "SZA is NaN"
         
         # Verify irradiance is reasonable (positive value)
-        assert parsed_output['eglo'][0] > 0, "Global irradiance should be positive"
+        assert parsed_output.data['eglo'][0] > 0, "Global irradiance should be positive"
         
     finally:
-        # Clean up temporary files
-        sim._cleanup_temp_files()
+        # Clean up temporary files if needed
+        pass
 
 @pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
-def test_xarray_integration(integration_config, test_dataset):
+def test_xarray_integration(integration_config):
     """Test xarray integration with PyRadtran"""
+    
+    # Create dataset
+    time = pd.to_datetime(['2025-05-05 12:00:00'])
+    lat = np.array([75.0])
+    lon = np.array([0.0])
+    
+    ds = xr.Dataset(
+        coords={
+            'time': time,
+            'latitude': ('time', lat),
+            'longitude': ('time', lon)
+        }
+    )
     
     # Get a temporary output path
     with tempfile.NamedTemporaryFile(suffix='.nc', delete=False) as tmp:
@@ -151,10 +168,11 @@ def test_xarray_integration(integration_config, test_dataset):
         import pyradtran  # Import to register accessor
         
         # Run with the accessor
-        result = test_dataset.pyradtran.run_uvspec(
+        result = ds.pyradtran.run(
             config=integration_config,  # Pass config directly
             output_path=output_path,
-            return_dataset=True
+            return_dataset=True,
+            save_to_file=True
         )
         
         # Verify result is an xarray Dataset
@@ -180,10 +198,10 @@ def test_xarray_integration(integration_config, test_dataset):
 def test_disort_vs_twostr_comparison(integration_config):
     """Test comparing disort and twostr radiative transfer solvers"""
     
-    # Create dataset with single point
+    # Create dataset
     time = pd.to_datetime(['2025-05-05 12:00:00'])
-    lat = np.array([75.0])  # Arctic
-    lon = np.array([0.0])   # Prime meridian
+    lat = np.array([75.0])
+    lon = np.array([0.0])
     
     ds = xr.Dataset(
         coords={
@@ -194,18 +212,19 @@ def test_disort_vs_twostr_comparison(integration_config):
     )
     
     # Run with disort (already set in config)
-    disort_result = ds.pyradtran.run_uvspec(
+    disort_result = ds.pyradtran.run(
         config=integration_config,
         return_dataset=True,
         save_to_file=False
     )
     
     # Update config to use twostr
-    twostr_config = integration_config
+    import copy
+    twostr_config = copy.deepcopy(integration_config)
     twostr_config.simulation_defaults.rte_solver = 'twostr'
     
     # Run with twostr
-    twostr_result = ds.pyradtran.run_uvspec(
+    twostr_result = ds.pyradtran.run(
         config=twostr_config,
         return_dataset=True,
         save_to_file=False

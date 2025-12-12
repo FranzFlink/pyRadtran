@@ -1,17 +1,9 @@
-# pyradtran/config.py - UNIFIED VERSION
+# pyradtran/config.py
 """
-Configuration system for pyradtran - REFACTORED VERSION.
+Cleaned up configuration system for pyradtran.
 
-This file has been refactored to include only parameters that are actually used.
-Original version backed up as config.py.backup.
-
-Key changes:
-- Removed 75+ unused parameters
-- Simplified cloud configuration
-- Cleaner validation
-- Only essential parameters remain
-
-For migration guide, see REFACTORING_SUMMARY.md
+This module provides a simplified configuration system with only the parameters
+that are actually used by the code, removing unused and redundant options.
 """
 
 import yaml
@@ -320,8 +312,8 @@ def create_example_config(output_path: Union[str, Path]):
             'output_altitudes_km': [0.0],
             'albedo_value': 0.85,
             'surface_temperature_k': 273.15,
-            'ozone_du': None,
-            'h2o_mm': None,
+            'ozone_du': 300.0,
+            'h2o_mm': 2.0,
             'h2o_source': 'fixed',
             'viewing_geometry': 'nadir',
             'sza': None,

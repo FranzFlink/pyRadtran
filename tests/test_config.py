@@ -15,15 +15,14 @@ from pyradtran.config import (
     OutputConfig,
     SimulationConfig,
     load_config,
-    CloudParameters,
-    AerosolParameters
+    CloudParameters
 )
 
 # Test fixture for creating a temporary config file
 @pytest.fixture
 def temp_config_file():
     """Creates a temporary config file for testing"""
-    with tempfile.NamedTemporaryFile(suffix='.yaml', delete=False) as tmp:
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as tmp:
         # Write a minimal valid config
         config = {
             'paths': {
@@ -57,35 +56,19 @@ def test_cloud_parameters_validation():
     # Valid configuration
     cp = CloudParameters(
         enabled=True,
-        layer_heights_km=[(1.0, 2.0)],
-        layer_water_content=[0.1],
-        layer_effective_radius_um=[10.0]
+        layer_bottom_km=1.0,
+        layer_top_km=2.0,
+        water_content_g_m3=0.1,
+        effective_radius_um=10.0
     )
     
     # Should not raise errors
     assert cp.enabled is True
-    assert len(cp.layer_heights_km) == 1
+    assert cp.layer_bottom_km == 1.0
     
-    # Test inconsistent layers
-    with pytest.raises(ValueError):
-        CloudParameters(
-            enabled=True,
-            layer_heights_km=[(1.0, 2.0), (3.0, 4.0)],
-            layer_water_content=[0.1],  # Only one value
-            layer_effective_radius_um=[10.0, 15.0]
-        )
-
-def test_aerosol_parameters():
-    """Test aerosol parameters"""
-    ap = AerosolParameters(
-        enabled=True,
-        aerosol_type="rural",
-        aerosol_visibility_km=23.0
-    )
-    
-    assert ap.enabled is True
-    assert ap.aerosol_type == "rural"
-    assert ap.aerosol_visibility_km == 23.0
+    # Test valid defaults
+    cp_default = CloudParameters()
+    assert cp_default.enabled is False
 
 def test_simulation_defaults_validation():
     """Test validation for simulation defaults"""

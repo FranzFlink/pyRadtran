@@ -1,26 +1,22 @@
 execution:
   cleanup_temp_files: false
   debug_mode: false
-  max_workers: 32
-  timeout_seconds: 3600
+  max_workers: 16
+  timeout_seconds: 60
 output:
   filename_prefix: xarray_example
   filename_suffix: .nc
-  netcdf_encoding: null
-  variable_encoding: {}
 paths:
   atmosphere_profile: /projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat
   libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
   libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
   output_dir: work
-  radiosonde_base: /projekt_agmwend/data/HALO-AC3/01_soundings/RS_for_libradtran/Dropsondes_HALO/
+  radiosonde_base: null
   solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
   working_dir: work
 simulation_defaults:
   integrate_wavelength: true
   mol_abs_param: reptran medium
-  output_altitudes_km:
-  - 0.0
   output_columns:
   - zout
   - lambda
@@ -31,14 +27,10 @@ simulation_defaults:
   - eup
   - enet
   - albedo
-  ozone_du: null
-  h2o_mm: null
   phi: null
-  rte_solver: disort  
-  surface_temperature_k: 253.15
+  rte_solver: twostr
   transmittance_source: default
-  umu: null
   viewing_geometry: nadir
   wavelength_nm:
   - 290
-  - 4500
+  - 3600

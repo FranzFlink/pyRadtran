@@ -20,7 +20,7 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 
-from pyradtran.io import OutputParser, OutputType
+from pyradtran.io import OutputParser, OutputType, OutputToXarray
 from pyradtran.config import SimulationConfig, PathsConfig, SimulationDefaults, ExecutionConfig, OutputConfig
 from pyradtran.exceptions import OutputParsingError
 
@@ -291,7 +291,8 @@ class TestLibRadtranOutputParsing:
             result = parser.parse(output_file)
             
             # Convert to xarray Dataset
-            ds = result.to_xarray(test_dataset)
+            # Convert to xarray Dataset
+            ds = OutputToXarray.convert(result, test_dataset)
             
             # Verify structure
             assert isinstance(ds, xr.Dataset)
@@ -328,7 +329,8 @@ class TestLibRadtranOutputParsing:
             result = parser.parse(output_file)
             
             # Convert to xarray Dataset
-            ds = result.to_xarray(test_dataset)
+            # Convert to xarray Dataset
+            ds = OutputToXarray.convert(result, test_dataset)
             
             # Verify structure
             assert isinstance(ds, xr.Dataset)

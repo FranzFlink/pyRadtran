@@ -29,7 +29,7 @@ from typing import Dict, List, Optional, Union, Any
 from enum import Enum
 from dataclasses import dataclass
 
-from .config_clean import SimulationConfig
+from .config import SimulationConfig
 from .exceptions import InputGenerationError, OutputParsingError
 
 logger = logging.getLogger(__name__)
@@ -124,6 +124,7 @@ class ERA5AtmosphereGenerator:
     @staticmethod
     def create_era5_atmosphere_file(
         era5_ds: xr.Dataset, 
+        #h2o_unit: str,
         latitude: float, 
         longitude: float, 
         time: Union[str, datetime, np.datetime64],
@@ -134,8 +135,9 @@ class ERA5AtmosphereGenerator:
 
         Args:
             era5_ds: The input xarray.Dataset containing atmospheric data.
-                Must include 'z', 't', 'o3', 'q' and coordinates 
+                Must include 'z', 't', 'q' and coordinates. Expected units are km
                 'pressure_level', 'latitude', 'longitude', 'valid_time'.
+            h2o_unit: The unit for water vapor in the output file. Options are 'MMR' (mass mixing ratio; ERA5 standard) or 'RH' (relative humidtiy; CARRA standard).
             latitude: The target latitude.
             longitude: The target longitude.
             time: The target time (str, datetime, or np.datetime64)
@@ -153,20 +155,20 @@ class ERA5AtmosphereGenerator:
             G_STD = 9.80665      # Standard gravity (m/s^2)
             K_B = 1.380649e-23   # Boltzmann constant (J/K)
             M_AIR = 0.0289647    # Molar mass of dry air (kg/mol)
-            M_O3 = 0.0479982     # Molar mass of Ozone (O3) (kg/mol)
+            # M_O3 = 0.0479982     # Molar mass of Ozone (O3) (kg/mol)
             M_H2O = 0.01801528   # Molar mass of Water (H2O) (kg/mol)
-            M_CO2 = 0.04401      # Molar mass of Carbon Dioxide (CO2) (kg/mol)
-            M_NO2 = 0.0460055    # Molar mass of Nitrogen Dioxide (NO2) (kg/mol)
-            O2_MIXING_RATIO = 0.2095 # Volumetric mixing ratio of O2 in dry air
+            # M_CO2 = 0.04401      # Molar mass of Carbon Dioxide (CO2) (kg/mol)
+            # M_NO2 = 0.0460055    # Molar mass of Nitrogen Dioxide (NO2) (kg/mol)
+            # O2_MIXING_RATIO = 0.2095 # Volumetric mixing ratio of O2 in dry air
 
             # Validate required variables
             required_vars = ['z', 't', 'q']
-            required_coords = ['pressure_level', 'latitude', 'longitude', 'valid_time']
+            required_coords = ['pressure_level', 'valid_time']
             
             for var in required_vars:
                 if var not in era5_ds.variables:
                     raise ValueError(f"Required variable '{var}' not found in ERA5 dataset")
-            
+            output_filepath
             for coord in required_coords:
                 if coord not in era5_ds.coords:
                     raise ValueError(f"Required coordinate '{coord}' not found in ERA5 dataset")
@@ -198,11 +200,22 @@ class ERA5AtmosphereGenerator:
                     # Data is already fully selected
                     profile_data = era5_ds
 
+            # check the unit of the q variable:
+            h2o_unit = profile_data.q.units
+            p_unit = profile_data.pressure_level.units
+
+
             # Extract variables and perform unit conversions
-            altitude_km = (profile_data['z'] / G_STD) / 1000.0
-            pressure_hpa = profile_data['pressure_level']
+            altitude_km = profile_data['z']
+
+            if p_unit == 'Pa':
+                pressure_pa = profile_data['pressure_level']
+            if p_unit == 'hPa':
+                pressure_pa = profile_data['pressure_level'] * 100  # Convert hPa to Pa
+
+            pressure_hpa = pressure_pa / 100
             temperature_k = profile_data['t']
-            pressure_pa = pressure_hpa * 100
+            h2o = profile_data['q']
 
             # Air number density: calculated from ideal gas law p = NkT
             air_number_density_m3 = pressure_pa / (K_B * temperature_k)
@@ -212,62 +225,30 @@ class ERA5AtmosphereGenerator:
             def mmr_to_nd(mmr, m_gas):
                 return mmr * (M_AIR / m_gas) * air_number_density_cm3
 
-            # Calculate number densities for each trace gas
-            h2o_nd = mmr_to_nd(profile_data['q'], M_H2O)
-            
-            # Handle ozone - could be mass mixing ratio or column density
-            if 'o3' in profile_data:
-                o3_data = profile_data['o3']
-                # Assume it's mass mixing ratio if values are small
-                if o3_data.max() < 1e-3:  # Less than 0.1% mixing ratio
-                    o3_nd = mmr_to_nd(o3_data, M_O3)
-                else:
-                    # Assume it's already in some other unit, convert appropriately
-                    o3_nd = o3_data * 1e6  # Convert to molecules/cm^3
-            else:
-                # Use standard ozone profile
-                o3_nd = xr.zeros_like(h2o_nd) + 1e12  # Default value
-
-            # Handle optional trace gases
-            if 'co2' in profile_data:
-                co2_nd = mmr_to_nd(profile_data['co2'], M_CO2)
-            else:
-                # Standard CO2 mixing ratio (~410 ppm)
-                co2_nd = 410e-6 * air_number_density_cm3
-
-            if 'no2' in profile_data:
-                no2_nd = mmr_to_nd(profile_data['no2'], M_NO2)
-            else:
-                # Very small NO2 concentration
-                no2_nd = xr.zeros_like(h2o_nd) + 1e8
-
-            # Oxygen number density
-            o2_nd = O2_MIXING_RATIO * air_number_density_cm3
-
             # Create the atmosphere file content
             output_path = Path(output_filepath)
             output_path.parent.mkdir(parents=True, exist_ok=True)
             
             with open(output_path, 'w') as f:
-                f.write("# ERA5 atmosphere profile\n")
-                f.write("# z(km)  p(hPa)  T(K)  air(cm-3)  o3(cm-3)  o2(cm-3)  h2o(cm-3)  co2(cm-3)  no2(cm-3)\n")
+                f.write("# ERA5 atmosphere profile in libradtran radiosonde style\n")
+                f.write(f"# p(hPa)  T(K)  h2o({h2o_unit}) \n")
                 
                 # Sort by altitude (high to low) for LibRadtran (TOA to surface)
                 # This means sorting by pressure (low to high) since high altitude = low pressure
                 sorted_indices = np.argsort(pressure_hpa.values)
                 
                 for idx in sorted_indices:
-                    f.write(f"{altitude_km.values[idx]:.3f}  ")
+                    #f.write(f"{altitude_km.values[idx]:.3f}  ")
                     f.write(f"{pressure_hpa.values[idx]:.2f}  ")
                     f.write(f"{temperature_k.values[idx]:.2f}  ")
-                    f.write(f"{air_number_density_cm3.values[idx]:.3e}  ")
-                    f.write(f"{o3_nd.values[idx]:.3e}  ")
-                    f.write(f"{o2_nd.values[idx]:.3e}  ")
-                    f.write(f"{h2o_nd.values[idx]:.3e}  ")
-                    f.write(f"{co2_nd.values[idx]:.3e}  ")
-                    f.write(f"{no2_nd.values[idx]:.3e}\n")
+                    # f.write(f"{air_number_density_cm3.values[idx]:.3e}  ")
+                    # f.write(f"{o3_nd.values[idx]:.3e}  ")
+                    # f.write(f"{o2_nd.values[idx]:.3e}  ")
+                    f.write(f"{h2o.values[idx]:.3e}\n")
+                    # f.write(f"{co2_nd.values[idx]:.3e}  ")
+                    # f.write(f"{no2_nd.values[idx]:.3e}\n")
             
-            logger.info(f"Created ERA5 atmosphere file: {output_path}")
+            logger.info(f"Created ERA5 atmosphere file: {output_path} with H2O unit {h2o_unit}")
             return output_path
             
         except Exception as e:
@@ -431,23 +412,14 @@ class OutputParser:
         # Build the actual output columns that LibRadtran will produce
         self.output_columns = []
         
-        # Always add zout first (altitude)
-        if 'zout' not in self.output_columns:
-            self.output_columns.append('zout')
-        
-        # Always add lambda second (wavelength)  
-        if 'lambda' not in self.output_columns:
-            self.output_columns.append('lambda')
-        
-        # Add the user-specified columns
+        # Use the user-specified columns directly since we use 'output_user'
         original_columns = config.simulation_defaults.output_columns or []
         for col in original_columns:
-            if col not in ['zout', 'lambda'] and col not in self.output_columns:
-                # For brightness output, LibRadtran doesn't include albedo column
-                if self.is_brightness_output and col == 'albedo':
-                    logger.debug(f"Skipping albedo column for brightness temperature output")
-                    continue
-                self.output_columns.append(col)
+            # For brightness output, LibRadtran doesn't include albedo column
+            if self.is_brightness_output and col == 'albedo':
+                logger.debug(f"Skipping albedo column for brightness temperature output")
+                continue
+            self.output_columns.append(col)
         
         self.output_altitudes = config.simulation_defaults.output_altitudes_km or [0.0]
         self.wavelength_range = config.simulation_defaults.wavelength_nm
@@ -579,71 +551,112 @@ class OutputToXarray:
         return ds
     
     @staticmethod
-    def convert_batch(parsed_outputs: List[ParsedOutput], input_ds: xr.Dataset,
+    def convert_batch(parsed_outputs: List[Optional[ParsedOutput]], input_ds: xr.Dataset,
                      time_var: str = 'time', lat_var: str = 'latitude', 
                      lon_var: str = 'longitude') -> xr.Dataset:
-        """Convert multiple ParsedOutput objects to a single xarray Dataset."""
+        """
+        Convert multiple ParsedOutput objects to a single xarray Dataset.
+        Handles arbitrary input dimensions by matching flattened outputs to stacked input.
+        """
         if not parsed_outputs:
             raise ValueError("No parsed outputs provided")
         
-        # Get dimensions from input dataset
-        times = input_ds[time_var].values
-        latitudes = input_ds[lat_var].values  
-        longitudes = input_ds[lon_var].values
+        # Ensure input_ds is a Dataset
+        if isinstance(input_ds, xr.DataArray):
+            input_ds = input_ds.to_dataset()        
+
+        # Stack input dataset exactly as done in execute_simulation_batch
+        dims = list(input_ds.sizes.keys())
+        sample_dim = 'sample_batch_dim'
         
-        # Get altitude information from the first output
-        first_output = parsed_outputs[0]
-        altitudes = first_output.altitudes if first_output.altitudes else [0]
-        wavelengths = first_output.wavelengths if first_output.wavelengths else [None]
-        
-        # Create coordinate arrays
-        coords = {
-            time_var: times,
-            lat_var: latitudes,
-            lon_var: longitudes,
-            'altitude': altitudes
-        }
-        
-        # Add wavelength if spectral data
-        if wavelengths[0] is not None:
-            coords['wavelength'] = wavelengths
+        if dims:
+            stacked_ds = input_ds.stack({sample_dim: dims})
+        else:
+            stacked_ds = input_ds.expand_dims(sample_dim)
             
-        # Initialize data variables dictionary
+        num_points = stacked_ds.sizes[sample_dim]
+        
+        if len(parsed_outputs) != num_points:
+            # If mismatch, log warning but try to proceed if safe?
+            # Actually, this means data corruption or misalignment.
+            logger.warning(f"Number of outputs ({len(parsed_outputs)}) does not match input points ({num_points}). Dimensions might be wrong.")
+            
+        # Get structure from the first valid output
+        first_valid_idx = next((i for i, x in enumerate(parsed_outputs) if x is not None), -1)
+        if first_valid_idx == -1:
+             raise ValueError("All simulations failed, cannot determine output structure")
+             
+        template_output = parsed_outputs[first_valid_idx]
+        var_names = list(template_output.data.keys())
+        altitudes = template_output.altitudes if template_output.altitudes else [0]
+        wavelengths = template_output.wavelengths if template_output.wavelengths else [None]
+        
+        # Define extra dimensions for the output variables
+        extra_dims = []
+        extra_shape = []
+        
+        if wavelengths[0] is not None:
+            extra_dims.append('wavelength')
+            extra_shape.append(len(wavelengths))
+            
+        extra_dims.append('altitude')
+        extra_shape.append(len(altitudes))
+        
+        # Dimensions for the stacked array: [sample_dim, wavelength, altitude]
+        stacked_shape = [num_points] + extra_shape
+        
+        # Create data dictionaries
         data_vars = {}
         
-        # Get variable names from first output
-        var_names = list(first_output.data.keys())
-        
-        # For each variable, collect data from all outputs
         for var_name in var_names:
-            # Determine dimensions based on data shape
-            if wavelengths[0] is not None:
-                dims = [time_var, 'wavelength', 'altitude']
-                shape = (len(times), len(wavelengths), len(altitudes))
-            else:
-                dims = [time_var, 'altitude']  
-                shape = (len(times), len(altitudes))
+            # Initialize with NaN
+            data_arr = np.full(stacked_shape, np.nan)
             
-            # Initialize array with NaN
-            combined_data = np.full(shape, np.nan)
-            
-            # Fill with data from each output
+            # Fill with data
             for i, output in enumerate(parsed_outputs):
-                if var_name in output.data:
-                    data = np.array(output.data[var_name])
-                    if wavelengths[0] is not None:
-                        combined_data[i, :, :] = data.reshape(len(wavelengths), len(altitudes))
-                    else:
-                        combined_data[i, :] = data.reshape(len(altitudes))
+                if output and var_name in output.data:
+                    val = np.array(output.data[var_name])
+                    try:
+                        # Reshape val to match extra_shape (e.g. [wl, alt])
+                        val_reshaped = val.reshape(extra_shape)
+                        data_arr[i, ...] = val_reshaped
+                    except ValueError:
+                        logger.warning(f"Shape mismatch for {var_name} at index {i}: got {val.shape}, expected {extra_shape}")
             
-            data_vars[var_name] = (dims, combined_data)
+            # Create temporary DataArray
+            da = xr.DataArray(
+                data_arr,
+                coords={sample_dim: stacked_ds[sample_dim]},
+                dims=[sample_dim] + extra_dims
+            )
+            
+            # Unstack to restore original dimensions
+            if dims:
+                unstacked_da = da.unstack(sample_dim)
+            else:
+                 # If original was scalar, just drop the sample dim
+                unstacked_da = da.isel({sample_dim: 0}, drop=True)
+                
+            data_vars[var_name] = unstacked_da
+
+        # Add coordinates for extra dimensions
+        coords = {}
+        # Copy original coords (relying on unstack restoration, but good to be explicit for extras)
+        # Note: unstack already restores coordinates associated with stacked dims
         
-        # Create the dataset
+        # Add extra new coords
+        if wavelengths[0] is not None:
+             coords['wavelength'] = wavelengths
+        coords['altitude'] = altitudes
+        
+        # Create final dataset
+        # We start with a dataset containing our variables. 
+        # The coordinates from input_ds should be preserved by unstacking.
         result_ds = xr.Dataset(data_vars, coords=coords)
         
-        # Add attributes from first output
-        if hasattr(first_output, 'metadata'):
-            result_ds.attrs.update(first_output.metadata)
+        # Add attributes
+        if hasattr(template_output, 'metadata'):
+            result_ds.attrs.update(template_output.metadata)
             
         return result_ds
 
@@ -687,8 +700,15 @@ class NetCDFSaver:
             
             # Save to file
             output_path.parent.mkdir(parents=True, exist_ok=True)
-            encoding = config.output.netcdf_encoding if config.output.netcdf_encoding else {}
-            ds.to_netcdf(output_path, **encoding)
+            
+            # Prepare encoding for variables
+            netcdf_settings = config.output.netcdf_encoding if config.output.netcdf_encoding else {}
+            encoding = {}
+            if netcdf_settings:
+                for var_name in ds.data_vars:
+                    encoding[var_name] = netcdf_settings
+            
+            ds.to_netcdf(output_path, encoding=encoding)
             
             logger.info(f"Results saved to {output_path}")
             return output_path
@@ -719,8 +739,8 @@ class NetCDFSaver:
         ds.attrs['config_mol_abs_param'] = str(config.simulation_defaults.mol_abs_param) if config.simulation_defaults.mol_abs_param is not None else 'None'
         
         # Handle numeric parameters that might be None
-        if config.simulation_defaults.albedo_value is not None:
-            ds.attrs['config_albedo_value'] = float(config.simulation_defaults.albedo_value)
+        # if config.simulation_defaults.albedo_value is not None:
+        #     ds.attrs['config_albedo_value'] = float(config.simulation_defaults.albedo_value)
         if config.simulation_defaults.ozone_du is not None:
             ds.attrs['config_ozone_du'] = float(config.simulation_defaults.ozone_du)
         if config.simulation_defaults.h2o_mm is not None:
