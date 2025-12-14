@@ -1,0 +1,31 @@
+execution:
+  cleanup_temp_files: false
+  debug_mode: false
+  max_workers: 30
+  timeout_seconds: 3600
+output:
+  filename_prefix: arctic_cloud_experiment_thermal
+  filename_suffix: .nc
+  netcdf_encoding: null
+  variable_encoding: {}
+paths:
+  working_dir: work
+simulation_defaults:
+  integrate_wavelength: true
+  mol_abs_param: reptran coarse
+  output_columns:
+  - zout
+  - lambda
+  - sza
+  - edir
+  - eglo
+  - edn
+  - eup
+  - enet
+  - albedo
+  - heat
+  rte_solver: disort  
+  wavelength_nm:
+  - 3000
+  - 100000
+  source: thermal

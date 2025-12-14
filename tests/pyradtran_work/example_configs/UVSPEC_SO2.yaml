@@ -1,0 +1,14 @@
+simulation_defaults:
+  mol_abs_param: crs
+  albedo_value: 0.3
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/examples/AFGLT50.DAT
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/kurudz_0.1nm.dat
+  mol_file: SO2 /opt/libRadtran-2.0.6/data/atmmod/afglus_no2.dat
+  umu: -1
+  wavelength_grid_file: /opt/libRadtran-2.0.6/examples/UVSPEC_SO2_TRANS
+  wavelength: 290 320
+  output_user: wavelength edir edn eup uu
+  quiet: ''

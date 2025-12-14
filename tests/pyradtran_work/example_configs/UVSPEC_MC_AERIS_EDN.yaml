@@ -1,0 +1,21 @@
+simulation_defaults:
+  rte_solver: mystic
+  mol_abs_param: kato2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/examples/AFGLMS50.DAT
+  source: solar atlas_plus_modtran
+  sza: 30.0
+  phi0: 180.0
+  aerosol_default: ''
+  output_process: sum
+  zout: sur
+  output_user: edn
+  mc_vroom: 'on'
+  mc_photons: 100000.0
+  mc_backward: ''
+  mc_backward_output: edn
+  aerosol_modify: tau550 set 1
+  mc_aerosol_is: /opt/libRadtran-2.0.6/examples/AERIS_SCALE_TAU.DAT
+  quiet: ''

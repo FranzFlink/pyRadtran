@@ -1,0 +1,20 @@
+simulation_defaults:
+  rte_solver: montecarlo
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/examples/AFGLUS_BOXAIRMASS.DAT
+  source: solar atlas_plus_modtran
+  sza: 20.0
+  mc_photons: 1000000
+  mc_vroom: 'off'
+  mc_spherical: 1D
+  mc_boxairmass: 1D
+  zout: 0
+  umu: -0.1
+  phi: 0
+  wavelength: 577
+  aerosol_default: ''
+  aerosol_modify: gg set 0.68
+  quiet: ''

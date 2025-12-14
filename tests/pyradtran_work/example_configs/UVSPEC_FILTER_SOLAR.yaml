@@ -1,0 +1,14 @@
+simulation_defaults:
+  rte_solver: disort
+  albedo_value: 0.0
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  data_files_path: /opt/libRadtran-2.0.6/data/
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/kurudz_0.1nm.dat per_nm
+  filter_function_file: /opt/libRadtran-2.0.6/data/filter/msg/msg1_seviri_ch006
+  wavelength: 485 785
+  output_process: integrate
+  zout: TOA
+  umu: 0.5 1.0
+  quiet: ''

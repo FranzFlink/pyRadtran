@@ -21,8 +21,8 @@ class PathsConfig:
     """Essential paths for LibRadtran execution."""
     libradtran_bin: Path  # Path to uvspec executable
     libradtran_data: Path  # Path to LibRadtran data directory
-    atmosphere_profile: Path  # Default atmosphere profile file
-    solar_spectrum: Path  # Solar spectrum file
+    atmosphere_profile: Optional[Path] = None  # Default atmosphere profile file
+    solar_spectrum: Optional[Path] = None  # Solar spectrum file
     radiosonde_base: Optional[Path] = None  # Optional radiosonde directory
     output_dir: Path = Path("./pyradtran_output")
     working_dir: Path = Path("./pyradtran_work")
@@ -33,6 +33,13 @@ class PathsConfig:
             raise FileNotFoundError(f"LibRadtran executable not found: {self.libradtran_bin}")
         if not self.libradtran_data.is_dir():
             raise FileNotFoundError(f"LibRadtran data directory not found: {self.libradtran_data}")
+
+        # Infer default paths if not provided
+        if self.atmosphere_profile is None:
+            self.atmosphere_profile = self.libradtran_data / "atmmod" / "afglus.dat"
+        if self.solar_spectrum is None:
+            self.solar_spectrum = self.libradtran_data / "solar_flux" / "kurudz_1.0nm.dat"
+
         if not self.atmosphere_profile.is_file():
             logger.warning(f"Default atmosphere profile not found: {self.atmosphere_profile}")
         if not self.solar_spectrum.is_file():
@@ -96,7 +103,7 @@ class SimulationDefaults:
     output_altitudes_km: List[float] = field(default_factory=lambda: [0.0])
     
     # Surface properties
-    albedo_value: float = 0.85  # Surface albedo (0-1)
+    albedo_value: Optional[float] = None  # Surface albedo (0-1). If None, uvspec default is used.
     surface_temperature_k: Optional[float] = None  # Surface temperature in Kelvin
     
     # Atmospheric composition (commonly used)
@@ -111,15 +118,17 @@ class SimulationDefaults:
     viewing_geometry: str = "nadir"  # 'nadir' or 'custom'
     sza: Optional[float] = None  # Solar zenith angle (degrees) - if None, calculated from time/location
     
+    # Generic overrides for parameters not covered by strict schema
+    parameter_overrides: Dict[str, Any] = field(default_factory=dict)
+    
     def __post_init__(self):
         """Validate configuration parameters."""
-        if len(self.wavelength_nm) != 2:
+        if self.wavelength_nm and len(self.wavelength_nm) != 2:
             raise ValueError("wavelength_nm must contain [min, max]")
-        if not self.output_altitudes_km:
-            raise ValueError("output_altitudes_km cannot be empty")
+        # output_altitudes_km can be empty (defaults to uvspec implicit behavior)
         if self.source not in ["solar", "thermal"]:
             raise ValueError(f"source must be 'solar' or 'thermal', got '{self.source}'")
-        if not (0 <= self.albedo_value <= 1):
+        if self.albedo_value is not None and not (0 <= self.albedo_value <= 1):
             raise ValueError(f"albedo_value must be between 0 and 1, got {self.albedo_value}")
         
         # Sort and deduplicate altitude levels
@@ -185,7 +194,7 @@ class SimulationConfig:
             if is_dataclass(field_type) and isinstance(value, dict):
                 init_args[name] = cls._dict_to_dataclass(value, field_type)
             elif field_type is Path:
-                init_args[name] = Path(value) if value is not None else None
+                init_args[name] = Path(value).expanduser() if value is not None else None
             else:
                 try:
                     init_args[name] = field_type(value) if value is not None else None
@@ -266,17 +275,61 @@ class SimulationConfig:
 _DEFAULT_CONFIG_PATH = Path(__file__).parent.parent / "config" / "clean_simulation.yaml"
 
 
+
+def _recursive_update(base: Dict, update: Dict) -> Dict:
+    """Recursively update a dictionary."""
+    for key, value in update.items():
+        if isinstance(value, dict) and key in base and isinstance(base[key], dict):
+            _recursive_update(base[key], value)
+        else:
+            base[key] = value
+    return base
+
+
 def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationConfig:
     """Load simulation configuration."""
-    if config_path is None:
-        config_path = _DEFAULT_CONFIG_PATH
-        logger.debug(f"No config path provided, using default: {config_path}")
-    else:
-        config_path = Path(config_path)
-        logger.debug(f"Loading configuration from: {config_path}")
-
+    
+    # 1. Start with the default configuration as the base
+    # This ensures we have all required fields (like simulation_defaults)
     try:
-        config = SimulationConfig.from_yaml(config_path)
+        with open(_DEFAULT_CONFIG_PATH, 'r') as f:
+            final_config_dict = yaml.safe_load(f) or {}
+    except Exception as e:
+        logger.error(f"Failed to load default configuration from {_DEFAULT_CONFIG_PATH}: {e}")
+        # Fallback to empty dict ? No, this will likely fail later. 
+        # But let's proceed to try master.
+        final_config_dict = {}
+
+    # 2. Update with master configuration (User preferences)
+    # This overrides defaults (e.g. paths) with user-specific settings
+    master_config_path = Path.home() / ".pyradtran" / "config.yaml"
+    if master_config_path.is_file():
+        logger.debug(f"Loading master configuration from: {master_config_path}")
+        try:
+            with open(master_config_path, 'r') as f:
+                master_config = yaml.safe_load(f) or {}
+            _recursive_update(final_config_dict, master_config)
+        except Exception as e:
+            logger.warning(f"Failed to load master configuration: {e}")
+
+    # 3. Update with specific configuration if provided
+    # This overrides everything else for this specific run
+    if config_path is not None:
+        config_path = Path(config_path)
+        logger.debug(f"Loading specific configuration from: {config_path}")
+        try:
+            with open(config_path, 'r') as f:
+                specific_config = yaml.safe_load(f) or {}
+            _recursive_update(final_config_dict, specific_config)
+        except Exception as e:
+            logger.error(f"Failed to load specific configuration from {config_path}: {e}")
+            raise
+        
+    try:
+        
+        # Now convert to dataclass
+        config = SimulationConfig._dict_to_dataclass(final_config_dict, SimulationConfig)
+        
         logger.debug("Configuration loaded successfully.")
         
         # Set logging level based on config

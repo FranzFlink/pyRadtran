@@ -27,6 +27,7 @@ from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Dict, List, Optional, Union, Any, Tuple
 from datetime import datetime
+import copy # Added by user instruction
 
 try:
     from tqdm import tqdm
@@ -127,10 +128,18 @@ def execute_simulation_batch(
     lon_var: str = 'longitude',
     albedo_var: Optional[str] = None,
     surface_temperature_var: Optional[str] = None,
+    surface_type_var: Optional[str] = None,
     altitude_var: Optional[str] = None,
     era5_atmosphere: Optional[xr.Dataset] = None,
     parameter_overrides: Dict[str, Any] = None,
-    progress_callback: Optional[callable] = None
+    progress_callback: Optional[callable] = None,
+    # Cloud automation arguments
+    cloud_wc_var: Optional[str] = None,
+    cloud_ic_var: Optional[str] = None,
+    cloud_reff_var: Optional[str] = None,  # For liquid (or shared)
+    cloud_ic_reff_var: Optional[str] = None, # For ice (optional)
+    cloud_top_var: Optional[str] = None,
+    cloud_bottom_var: Optional[str] = None
 ) -> List[Optional[ParsedOutput]]:
     """
     Execute a batch of simulations in parallel covering all points in input_ds.
@@ -143,10 +152,17 @@ def execute_simulation_batch(
         lon_var: Name of longitude dimension/coordinate/variable
         albedo_var: Optional name of albedo data_var
         surface_temperature_var: Optional name of surface temperature data_var
+        surface_type_var: Optional name of IGBP surface type data_var (1-20)
         altitude_var: Optional name of altitude data_var
         era5_atmosphere: Optional ERA5 dataset for custom atmosphere profiles
         parameter_overrides: Dictionary of simulation parameters to override
         progress_callback: Optional callback function(current, total) for progress updates
+        cloud_wc_var: Optional variable name for Liquid Water Content
+        cloud_ic_var: Optional variable name for Ice Water Content
+        cloud_reff_var: Optional variable name for Liquid Effective Radius (or shared)
+        cloud_ic_reff_var: Optional variable name for Ice Effective Radius
+        cloud_top_var: Optional variable name for Cloud Top Height (km)
+        cloud_bottom_var: Optional variable name for Cloud Base Height (km)
         
     Returns:
         List of ParsedOutput objects (or None for failed points), matching the flattened input order.
@@ -157,6 +173,18 @@ def execute_simulation_batch(
     # Ensure input_ds is a Dataset
     if isinstance(input_ds, xr.DataArray):
         input_ds = input_ds.to_dataset()
+
+    # Validate cloud variables if enabled
+    if cloud_wc_var or cloud_ic_var:
+        if not (cloud_top_var and cloud_bottom_var):
+             logger.error("Cloud generation enabled but cloud_top_var or cloud_bottom_var missing.")
+             raise ValueError("Must provide cloud_top_var and cloud_bottom_var when generating clouds.")
+        
+        required_vars = [v for v in [cloud_wc_var, cloud_ic_var, cloud_reff_var, cloud_ic_reff_var, cloud_top_var, cloud_bottom_var] if v]
+        missing = [v for v in required_vars if v not in input_ds]
+        if missing:
+             logger.error(f"Missing cloud variables in dataset: {missing}")
+             raise ValueError(f"Missing cloud variables in dataset: {missing}")
 
     # Get non-empty dimensions for stacking
     dims = list(input_ds.sizes.keys())
@@ -178,7 +206,7 @@ def execute_simulation_batch(
             val = ds[var].values
             # Unwrap numpy scalars
             if hasattr(val, 'item'):
-                return val.item()
+                val = val.item()
             return val
         return None
 
@@ -229,7 +257,65 @@ def execute_simulation_batch(
         
         alb = get_val(point_ds, albedo_var)
         surf_temp = get_val(point_ds, surface_temperature_var)
+        surf_type = get_val(point_ds, surface_type_var)
         alt = get_val(point_ds, altitude_var)
+        
+        # Cloud automation extraction
+        point_overrides = parameter_overrides.copy() if parameter_overrides else {}
+
+        # Improve Variational Logic:
+        # Check if any parameter override is a reference to a dataset variable
+        # This allows varying parameters like 'sza', 'albedo', 'mol_abs_param' etc. 
+        # by mapping them to dataset dimensions/variables.
+        if parameter_overrides:
+            for key, val in parameter_overrides.items():
+                if isinstance(val, str) and val in point_ds:
+                     # It's a reference to a variable!
+                     variable_val = get_val(point_ds, val)
+                     if variable_val is not None:
+                         point_overrides[key] = variable_val
+                         # logger.debug(f"Resolved override for '{key}': '{val}' -> {variable_val}")
+
+        try:
+            if cloud_wc_var or cloud_ic_var:
+                cth = get_val(point_ds, cloud_top_var)
+                cbh = get_val(point_ds, cloud_bottom_var)
+                
+                # Check validity
+                if cth is not None and cbh is not None and not np.isnan(cth) and not np.isnan(cbh):
+                    # Sort Z descending (uvspec requirement)
+                    z_layer = [max(cth, cbh), min(cth, cbh)]
+                    
+                    # Liquid Cloud
+                    if cloud_wc_var:
+                        lwc = get_val(point_ds, cloud_wc_var)
+                        reff = get_val(point_ds, cloud_reff_var) if cloud_reff_var else 10.0 # Default 10um
+                        if lwc is not None and not np.isnan(lwc):
+                             # Use reff if valid, else default
+                             r_val = reff if (reff is not None and not np.isnan(reff)) else 10.0
+                             point_overrides['wc_file'] = {
+                                 'z': z_layer,
+                                 'lwc': [float(lwc), float(lwc)],
+                                 'reff': [float(r_val), float(r_val)]
+                             }
+                    
+                    # Ice Cloud
+                    if cloud_ic_var:
+                        iwc = get_val(point_ds, cloud_ic_var)
+                        # Use ic_reff if provided, else shared reff, else default
+                        r_key = cloud_ic_reff_var if cloud_ic_reff_var else cloud_reff_var
+                        reff_ice = get_val(point_ds, r_key) if r_key else 20.0 # Default 20um for ice
+                        if iwc is not None and not np.isnan(iwc):
+                             r_val = reff_ice if (reff_ice is not None and not np.isnan(reff_ice)) else 20.0
+                             point_overrides['ic_file'] = {
+                                 'z': z_layer,
+                                 'iwc': [float(iwc), float(iwc)],
+                                 'reff': [float(r_val), float(r_val)]
+                             }
+                else:
+                    pass # Skip cloud if geometry invalid (clear sky fallback?)
+        except Exception as e:
+            logger.warning(f"Failed to generate cloud parameters for point {i}: {e}")
         
         # Convert time to proper datetime object
         dt = pd.to_datetime(t).to_pydatetime()
@@ -241,7 +327,8 @@ def execute_simulation_batch(
         era5_key = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
         era5_atm_file = era5_atmosphere_files.get(era5_key) if era5_atmosphere_files else None
         
-        points.append((dt, lat, lon, alb, surf_temp, alt, era5_atm_file, point_id))
+        # Note: We append point_overrides now
+        points.append((dt, lat, lon, alb, surf_temp, surf_type, alt, era5_atm_file, point_id, point_overrides))
     
     # Run simulations in parallel
     results = [None] * num_points # Pre-allocate results list to preserve order
@@ -255,10 +342,41 @@ def execute_simulation_batch(
     with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
         # Submit all simulations
         future_to_idx = {}
-        for i, point in enumerate(points):
+        for i, point_data in enumerate(points):
+            # Unpack the new 10-element tuple (added surf_type)
+            (dt, lat, lon, alb, surf_temp, surf_type, alt, era5_atm_file, point_id, p_overrides) = point_data
+            
+            # Helper wrapper needs to handle the tuple, but _run_single_simulation_unified signature expects args
+            # Actually, executor.submit calls the fn with *args.
+            # We need to match _run_single_simulation_unified signature or wrap it.
+            # _run_single_simulation_unified(config, point, parameter_overrides) <-- this was designed for point tuple
+            # Wait, let's check _run_single_simulation_unified implementation first!
+            # It likely unpacks 'point'. If I change 'point' structure errors will occur.
+            
+            # Let's adjust how we submit.
+            # We should probably pass arguments explicitly to submit, 
+            # Or assume _run_... handles a point object.
+            
+            # Let's Modify the submission to pass p_overrides explicitly INSTEAD of the global one.
+            # But point_data needs to be compatible if it's passed as a single arg.
+            # Let's see how _run_single_simulation_unified is implemented.
+            pass
+            
+            # TEMPORARY PLACEHOLDER: I need to verify _run_single_simulation_unified before concluding this edit.
+            # But I am inside ReplaceFileContent...
+            # I will trust that I can modify _run_single_simulation_unified later if needed, 
+            # OR I pass p_overrides as the 3rd argument to _run_single_... which is `parameter_overrides`.
+            
+            # Current call:
+            # _run_single_simulation_unified(config, point, parameter_overrides)
+            # If point is (dt, lat, lon, alb, surf, alt, era5, id), 
+            # and I changed points.append(...) to include override.
+            # I should strip override from point before passing to function, and pass it as 3rd arg.
+            
+            point_tuple = (dt, lat, lon, alb, surf_temp, surf_type, alt, era5_atm_file, point_id)
             future = executor.submit(
                 _run_single_simulation_unified,
-                config, point, parameter_overrides
+                config, point_tuple, p_overrides
             )
             future_to_idx[future] = i
         
@@ -310,14 +428,14 @@ def _run_single_simulation_unified(
     
     Args:
         config: Simulation configuration
-        point_data: Tuple of (time, lat, lon, albedo, surf_temp, altitude, era5_file, point_id)
+        point_data: Tuple of (time, lat, lon, albedo, surf_temp, surf_type, altitude, era5_file, point_id)
         parameter_overrides: Dictionary of simulation parameters to override
         
     Returns:
         ParsedOutput object or None if simulation failed
     """
     try:
-        time, lat, lon, albedo, surf_temp, altitude, era5_file, point_id = point_data
+        time, lat, lon, albedo, surf_temp, surf_type, altitude, era5_file, point_id = point_data
         
         # Initialize simulation
         sim = Simulation(config)
@@ -343,6 +461,7 @@ def _run_single_simulation_unified(
             longitude=lon,
             override_albedo=albedo,
             override_surface_temperature=surf_temp,
+            override_surface_type=surf_type,
             override_altitude_km=altitude,
             era5_atmosphere_file=era5_file,
             parameter_overrides=parameter_overrides
@@ -361,6 +480,7 @@ def _run_single_simulation_unified(
                 'longitude': lon,
                 'albedo': albedo,
                 'surface_temperature': surf_temp,
+                'surface_type': surf_type,
                 'altitude': altitude
             })
             
@@ -415,11 +535,19 @@ class PyRadtranAccessor:
         lon_var: str = 'longitude',
         albedo_var: Optional[str] = None,
         surface_temperature_var: Optional[str] = None,
+        surface_type_var: Optional[str] = None,
         era5_atmosphere: Optional[xr.Dataset] = None,
         return_dataset: bool = True,
         save_to_file: bool = True,
         output_path: Optional[Union[str, Path]] = None,
-        progress_callback: Optional[callable] = None
+        progress_callback: Optional[callable] = None,
+        # Cloud automation arguments
+        cloud_wc_var: Optional[str] = None,
+        cloud_ic_var: Optional[str] = None,
+        cloud_reff_var: Optional[str] = None,  
+        cloud_ic_reff_var: Optional[str] = None, 
+        cloud_top_var: Optional[str] = None,
+        cloud_bottom_var: Optional[str] = None
     ) -> Union[xr.Dataset, Path]:
         """
         Run pyradtran simulations for all points in the dataset.
@@ -433,6 +561,7 @@ class PyRadtranAccessor:
             lon_var: Name of longitude dimension/coordinate in the dataset
             albedo_var: Optional name of albedo data_var in the dataset
             surface_temperature_var: Optional name of surface temperature data_var in the dataset
+            surface_type_var: Optional name of IGBP surface type data_var in the dataset (1-20)
             era5_atmosphere: Optional ERA5 xarray Dataset for custom atmosphere profiles
             return_dataset: If True, return the results as an xarray Dataset
             save_to_file: If True, save results to a NetCDF file
@@ -458,7 +587,7 @@ class PyRadtranAccessor:
         
         # Validate input dataset
         self._validate_input_dataset(time_var, lat_var, lon_var, albedo_var, 
-                                   surface_temperature_var, era5_atmosphere)
+                                   surface_temperature_var, surface_type_var, era5_atmosphere)
         
         # Handle altitude information
         alt_var = 'altitude'
@@ -493,6 +622,7 @@ class PyRadtranAccessor:
              ds_to_execute = self._obj
         
         # Run the simulation batch
+        
         parsed_outputs = execute_simulation_batch(
             config=self._config,
             input_ds=ds_to_execute,
@@ -501,10 +631,18 @@ class PyRadtranAccessor:
             lon_var=lon_var,
             albedo_var=albedo_var,
             surface_temperature_var=surface_temperature_var,
+            surface_type_var=surface_type_var,
             altitude_var=alt_var if altitude_as_data_var else None,
             era5_atmosphere=era5_atmosphere,
             parameter_overrides=parameter_overrides,
-            progress_callback=progress_callback
+            progress_callback=progress_callback,
+            # Forward cloud args
+            cloud_wc_var=cloud_wc_var,
+            cloud_ic_var=cloud_ic_var,
+            cloud_reff_var=cloud_reff_var,
+            cloud_ic_reff_var=cloud_ic_reff_var,
+            cloud_top_var=cloud_top_var,
+            cloud_bottom_var=cloud_bottom_var
         )
         
         # Convert to xarray Dataset
@@ -547,8 +685,105 @@ class PyRadtranAccessor:
         else:
             raise PyRadtranError("No valid simulation results to return or save")
     
+    def inspect_cloud_file(
+        self,
+        selector: Dict[str, Any] = None,
+        parameter_overrides: Dict[str, Any] = None,
+        cloud_wc_var: Optional[str] = None,
+        cloud_ic_var: Optional[str] = None,
+        cloud_reff_var: Optional[str] = None,  
+        cloud_ic_reff_var: Optional[str] = None, 
+        cloud_top_var: Optional[str] = None,
+        cloud_bottom_var: Optional[str] = None
+    ) -> str:
+        """
+        Inspect the generated cloud file content for a specific point.
+        
+        Args:
+            selector: Dictionary for selecting a single point (passed to .sel())
+                     Example: {'time': '2022-01-01 12:00'}
+            parameter_overrides: Optional overrides
+            cloud_wc_var: Name of LWC variable
+            ... (other cloud args) ...
+            
+        Returns:
+            String content of the generated cloud file.
+        """
+        if selector is None:
+             # Default to first point
+             point_ds = self._obj.isel({d: 0 for d in self._obj.dims})
+        else:
+             point_ds = self._obj.sel(selector, method='nearest')
+             
+        # Resolve overrides
+        point_overrides = parameter_overrides.copy() if parameter_overrides else {}
+        if parameter_overrides:
+            for key, val in parameter_overrides.items():
+                if isinstance(val, str) and val in point_ds:
+                     val_scalar = point_ds[val].values
+                     if hasattr(val_scalar, 'item'): val_scalar = val_scalar.item()
+                     # If the variable is still an array (e.g. from sel nearest but dim remains?), squeeze it
+                     if hasattr(val_scalar, 'ndim') and val_scalar.ndim > 0:
+                         val_scalar = val_scalar.item() if val_scalar.size == 1 else val_scalar
+                     point_overrides[key] = val_scalar
+                     
+        # Extract variables helper
+        def get_val(var):
+            if var and var in point_ds:
+                val = point_ds[var].values
+                if hasattr(val, 'item'): val = val.item()
+                if hasattr(val, 'ndim') and val.ndim > 0:
+                     val = val.item() if val.size == 1 else val
+                return val
+            return None
+            
+        # Construct content dict
+        content_dict = None
+        
+        cth = get_val(cloud_top_var)
+        cbh = get_val(cloud_bottom_var)
+        
+        if cth is not None and cbh is not None:
+             z_layer = [max(cth, cbh), min(cth, cbh)]
+             
+             if cloud_wc_var:
+                 lwc = get_val(cloud_wc_var)
+                 reff = get_val(cloud_reff_var) if cloud_reff_var else 10.0
+                 r_val = reff if (reff is not None and not np.isnan(reff)) else 10.0
+                 
+                 content_dict = {
+                     'z': z_layer,
+                     'lwc': [float(lwc), float(lwc)],
+                     'reff': [float(r_val), float(r_val)]
+                 }
+                 
+             elif cloud_ic_var:
+                  iwc = get_val(cloud_ic_var)
+                  r_key = cloud_ic_reff_var if cloud_ic_reff_var else cloud_reff_var
+                  reff = get_val(r_key) if r_key else 20.0
+                  r_val = reff if (reff is not None and not np.isnan(reff)) else 20.0
+                  
+                  content_dict = {
+                      'z': z_layer,
+                      'iwc': [float(iwc), float(iwc)],
+                      'reff': [float(r_val), float(r_val)]
+                  }
+        
+        # Check explicit overrides for dict-based clouds
+        if hasattr(point_overrides, 'get'):
+             if 'wc_file' in point_overrides and isinstance(point_overrides['wc_file'], dict):
+                 content_dict = point_overrides['wc_file']
+             if 'ic_file' in point_overrides and isinstance(point_overrides['ic_file'], dict):
+                 content_dict = point_overrides['ic_file']
+             
+        if content_dict:
+            return Simulation.format_cloud_profile(content_dict)
+        else:
+            return "No valid cloud profile generated for this point."
+
     def _validate_input_dataset(self, time_var: str, lat_var: str, lon_var: str, 
                               albedo_var: Optional[str], surface_temperature_var: Optional[str],
+                              surface_type_var: Optional[str],
                               era5_atmosphere: Optional[xr.Dataset]):
         """Validate input dataset variables and coordinates."""
         # Check required variables
@@ -562,11 +797,14 @@ class PyRadtranAccessor:
             raise PyRadtranError(f"Longitude variable '{lon_var}' not found in dataset")
         
         # Check optional variables
-        if albedo_var and albedo_var not in self._obj.data_vars:
-            raise PyRadtranError(f"Albedo variable '{albedo_var}' not found in dataset data_vars")
+        if albedo_var and albedo_var not in self._obj:
+            raise PyRadtranError(f"Albedo variable '{albedo_var}' not found in dataset")
         
-        if surface_temperature_var and surface_temperature_var not in self._obj.data_vars:
-            raise PyRadtranError(f"Surface temperature variable '{surface_temperature_var}' not found in dataset data_vars")
+        if surface_temperature_var and surface_temperature_var not in self._obj:
+            raise PyRadtranError(f"Surface temperature variable '{surface_temperature_var}' not found in dataset")
+        
+        if surface_type_var and surface_type_var not in self._obj:
+            raise PyRadtranError(f"Surface type variable '{surface_type_var}' not found in dataset")
         
         # Validate ERA5 atmosphere dataset if provided
         if era5_atmosphere is not None:

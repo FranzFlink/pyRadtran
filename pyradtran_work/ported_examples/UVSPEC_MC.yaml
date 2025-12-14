@@ -1,0 +1,34 @@
+paths:
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  atmosphere_profile: /opt/libRadtran-2.0.6/examples/UVSPEC_MC_ATM.DAT
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  output_dir: ./pyradtran_output
+  working_dir: ./pyradtran_work
+simulation_defaults:
+  rte_solver: montecarlo
+  mol_abs_param: null
+  source: solar
+  wavelength_nm:
+  - 310.0
+  - 310.0
+  albedo_value: 0.2
+  output_altitudes_km: []
+  output_columns: []
+  viewing_geometry: custom
+  parameter_overrides:
+    mol_modify: O3 300. DU
+    day_of_year: 170
+    sza: 32.0
+    phi0: 180.0
+    mc_photons: 100000
+    mc_sample_grid: 201 201 1 1
+    mc_elevation_file: /opt/libRadtran-2.0.6/examples/UVSPEC_MC_ELEV.DAT
+    mc_albedo_file: /opt/libRadtran-2.0.6/examples/UVSPEC_MC_ALB.DAT
+    quiet: ''
+  clouds:
+    enabled: true
+    cloud_type: wc
+    cloud_source: file
+    wc_file: 3D /opt/libRadtran-2.0.6/examples/UVSPEC_MC_WC.DAT
+    ic_file: null

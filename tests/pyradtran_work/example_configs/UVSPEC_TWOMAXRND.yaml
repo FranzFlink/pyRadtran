@@ -1,0 +1,14 @@
+simulation_defaults:
+  rte_solver: twomaxrnd
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar
+  sza: 32.0
+  wavelength: 550 560
+  wc_file: 1D /opt/libRadtran-2.0.6/examples/WCCOMPLEX.DAT
+  cloud_fraction_file: /opt/libRadtran-2.0.6/examples/WCCLOUDFRACTION.DAT
+  output_user: wavelength edir edn eup
+  quiet: ''

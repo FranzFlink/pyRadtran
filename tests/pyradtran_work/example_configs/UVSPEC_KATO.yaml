@@ -1,0 +1,12 @@
+simulation_defaults:
+  rte_solver: twostr
+  mol_abs_param: KATO
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/examples/AFGLMS50.DAT
+  sza: 30.0
+  pseudospherical: ''
+  output_process: sum
+  quiet: ''

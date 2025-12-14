@@ -1,0 +1,20 @@
+simulation_defaults:
+  rte_solver: mystic
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  wavelength: 550
+  sza: 40.0
+  phi0: 0
+  umu: 0.766
+  phi: 0
+  mc_photons: 1
+  mc_minphotons: 1
+  mc_escape: 'on'
+  mc_polarisation: ''
+  brdf_cam: u10 7.0
+  no_scattering: mol
+  no_absorption: mol
+  quiet: ''

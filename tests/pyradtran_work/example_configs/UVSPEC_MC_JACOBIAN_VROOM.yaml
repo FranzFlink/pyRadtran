@@ -1,0 +1,23 @@
+simulation_defaults:
+  rte_solver: mystic
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  source: solar kurudz_1.0nm.dat
+  phi0: 0
+  wavelength: 350
+  atmosphere_file: /opt/libRadtran-2.0.6/examples/AFGLUS.10KM
+  mol_tau_file: sca /opt/libRadtran-2.0.6/examples/MC_JACOBIAN_MOLSCA.DAT
+  aerosol_default: ''
+  aerosol_file: tau /opt/libRadtran-2.0.6/examples/MC_JACOBIAN_AERTAU.DAT
+  aerosol_modify: gg set 0.9
+  zout: 0.0
+  sza: 70.0
+  umu: -0.64279
+  phi: 0.0
+  mc_photons: 1000000
+  mc_backward: ''
+  mc_vroom: 'on'
+  mc_jacobian: 1D
+  quiet: ''

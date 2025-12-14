@@ -1,52 +1,44 @@
-# Configuration for cloud simulations using pre-existing cloud files
-# This example shows how to use existing libRadtran cloud files
-
 paths:
-  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
-  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
-  atmosphere_profile: /opt/libradtran/2.0.4/share/libRadtran/data/atmmod/afglus.dat
   solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
   working_dir: ./work
-
 simulation_defaults:
   rte_solver: disort
   mol_abs_param: reptran
   source: solar
-  wavelength_nm: [400, 800]
+  wavelength_nm:
+  - 400
+  - 800
   albedo_type: constant
   albedo_value: 0.15
-  output_altitudes_km: [0.0, 5.0, 10.0]
-  output_columns: ["lambda", "zout", "edir", "edn", "eup", "eglo"]
-  
+  output_altitudes_km:
+  - 0.0
+  - 5.0
+  - 10.0
+  output_columns:
+  - lambda
+  - zout
+  - edir
+  - edn
+  - eup
+  - eglo
   mol_modify:
     O3:
       value: 300
       unit: DU
-  
-  # === FILE-BASED CLOUD CONFIGURATION ===
   clouds:
     enabled: true
     cloud_source: file
-    cloud_type: mixed  # Both water and ice clouds
-    
-    # Cloud file paths
+    cloud_type: mixed
     wc_file: /opt/libradtran/2.0.4/share/libRadtran/examples/WCSIMPLE.DAT
     ic_file: /opt/libradtran/2.0.4/share/libRadtran/examples/IC50_A.DAT
-    
-    # Cloud optical properties
     wc_properties: mie
     ic_properties: yang
-    
-    # Advanced options
     cloud_overlap: max-random
-    use_ipa: false  # Set to true for 3D cloud simulations
-    # ipa_file: /opt/libradtran/2.0.4/share/libRadtran/examples/WCLOUD3D.IPA.DAT
-
+    use_ipa: false
 execution:
   max_workers: 4
   cleanup_temp_files: true
   debug_mode: false
-
 output:
-  filename_prefix: "cloud_file_sim"
-  filename_suffix: "_results.nc"
+  filename_prefix: cloud_file_sim
+  filename_suffix: _results.nc

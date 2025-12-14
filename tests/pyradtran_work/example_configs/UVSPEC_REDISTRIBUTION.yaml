@@ -1,0 +1,26 @@
+simulation_defaults:
+  rte_solver: disort
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/examples/AFGLMS50.DAT
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  mol_modify: O3 300. DU
+  day_of_year: 170
+  sza: 32.0
+  disort_intcor: moments
+  deltam: 'on'
+  number_of_streams: 6
+  wavelength: 544.7 544.7
+  aerosol_vulcan: 1
+  aerosol_haze: 6
+  aerosol_season: 1
+  aerosol_visibility: 20.0
+  aerosol_angstrom: 1.1 0.2
+  wc_file: 1D /opt/libRadtran-2.0.6/examples/WC_REDISTRIBUTION.DAT
+  wc_properties: hu
+  ic_file: 1D /opt/libRadtran-2.0.6/examples/IC_REDISTRIBUTION.DAT
+  ic_properties: /opt/libRadtran-2.0.6/examples/IC.
+  altitude: 0.0
+  quiet: ''
