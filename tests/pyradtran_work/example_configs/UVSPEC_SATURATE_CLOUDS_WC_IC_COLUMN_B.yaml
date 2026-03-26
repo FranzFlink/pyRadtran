@@ -1,0 +1,18 @@
+simulation_defaults:
+  rte_solver: twostr
+  mol_abs_param: LOWTRAN
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/kurudz_1.0nm.dat
+  sza: 30.0
+  pseudospherical: ''
+  wavelength: 580.0 600.0
+  aerosol_default: ''
+  aerosol_visibility: 20
+  wc_file: 1D /opt/libRadtran-2.0.6/examples/WC50_B.DAT
+  ic_file: 1D /opt/libRadtran-2.0.6/examples/IC50_B_R.DAT
+  mol_file: H2O /opt/libRadtran-2.0.6/examples/RH50_B_WC_IC.DAT RH
+  quiet: ''

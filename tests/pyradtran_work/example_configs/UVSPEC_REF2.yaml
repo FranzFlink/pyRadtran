@@ -1,0 +1,15 @@
+simulation_defaults:
+  rte_solver: disort
+  albedo_value: 0.0
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  data_files_path: /opt/libRadtran-2.0.6/data/
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar /opt/libRadtran-2.0.6/examples/UNIT_SUN.DAT
+  mol_modify: O3 300. DU
+  wavelength: 300.0 320.0
+  sza: 0.0
+  deltam: 'on'
+  number_of_streams: 6
+  quiet: ''

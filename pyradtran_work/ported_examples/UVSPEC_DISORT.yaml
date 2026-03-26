@@ -1,0 +1,23 @@
+paths:
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  atmosphere_profile: /opt/libRadtran-2.0.6/examples/ATMOSPHERE_IPA.DAT
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  output_dir: ./pyradtran_output
+  working_dir: ./pyradtran_work
+simulation_defaults:
+  rte_solver: disort
+  mol_abs_param: null
+  source: solar
+  wavelength_nm: []
+  albedo_value: null
+  output_altitudes_km: []
+  output_columns: []
+  viewing_geometry: custom
+  parameter_overrides:
+    include: /opt/libRadtran-2.0.6/examples/UVSPEC_CLEAR.INP
+    disort_intcor: moments
+    aerosol_default: ''
+    aerosol_file: tau /opt/libRadtran-2.0.6/examples/AERO_TAU.DAT
+    aerosol_angstrom: 1.1 0.07
+    quiet: ''

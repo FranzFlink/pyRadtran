@@ -1,0 +1,19 @@
+simulation_defaults:
+  rte_solver: disort
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: US-standard
+  data_files_path: /opt/libRadtran-2.0.6/data/
+  source: solar /opt/libRadtran-2.0.6/examples/UVSPEC_FLUORESCENCE_kurucz_640.0_810.0.dat_vac_0.01_0.01
+  wavelength_grid_file: /opt/libRadtran-2.0.6/examples/UVSPEC_FLUORESCENCE_kurucz_677_810_trans_0.01
+  fluorescence_file: /opt/libRadtran-2.0.6/examples/UVSPEC_FLUORESCENCE.FLU
+  albedo_file: /opt/libRadtran-2.0.6/examples/UVSPEC_FLUORESCENCE.TOC
+  mol_tau_file: abs /opt/libRadtran-2.0.6/examples/UVSPEC_FLUORESCENCE_arts-640-810.nc
+  wavelength: 677 697
+  sza: 30.0
+  number_of_streams: 16
+  umu: 1
+  zout: toa
+  output_user: lambda edir uu
+  quiet: ''

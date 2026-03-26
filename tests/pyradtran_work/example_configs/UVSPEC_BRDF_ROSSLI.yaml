@@ -1,0 +1,19 @@
+simulation_defaults:
+  rte_solver: disort
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  sza: 30.0
+  phi: 0 45 90
+  deltam: 'on'
+  number_of_streams: 32
+  wavelength: 400.0 400.0
+  brdf_rossli: geo 0.0086
+  brdf_rossli_hotspot: ''
+  umu: 0.1 0.2 0.5 1.0
+  no_scattering: mol
+  no_absorption: ''
+  output_quantity: transmittance
+  quiet: ''

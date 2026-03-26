@@ -1,0 +1,8 @@
+simulation_defaults: {}
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  wavelength: 310.0 310.0
+  quiet: ''

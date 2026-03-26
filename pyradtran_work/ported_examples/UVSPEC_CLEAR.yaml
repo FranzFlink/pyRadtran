@@ -1,0 +1,26 @@
+paths:
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  atmosphere_profile: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  output_dir: ./pyradtran_output
+  working_dir: ./pyradtran_work
+simulation_defaults:
+  rte_solver: disort
+  mol_abs_param: null
+  source: solar
+  wavelength_nm:
+  - 299.0
+  - 341.0
+  albedo_value: 0.2
+  output_altitudes_km: []
+  output_columns: []
+  viewing_geometry: custom
+  parameter_overrides:
+    mol_modify: O3 300. DU
+    day_of_year: 170
+    sza: 32.0
+    number_of_streams: 6
+    slit_function_file: /opt/libRadtran-2.0.6/examples/TRI_SLIT.DAT
+    spline: 300 340 1
+    quiet: ''

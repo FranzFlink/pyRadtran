@@ -1,0 +1,21 @@
+simulation_defaults:
+  rte_solver: disort
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  mol_modify: O3 300. DU
+  day_of_year: 170
+  sza: 32.0
+  number_of_streams: 6
+  wavelength: 544.7 544.7
+  wc_file: 1D /opt/libRadtran-2.0.6/examples/WC.DAT
+  wc_properties: hu
+  ic_file: 1D /opt/libRadtran-2.0.6/examples/IC.DAT
+  ic_properties: fu
+  cloud_fraction_file: /opt/libRadtran-2.0.6/examples/CF.DAT
+  cloud_overlap: maxrand
+  output_user: lambda edir edn eup uavgdir uavgdn uavgup tcc
+  quiet: ''

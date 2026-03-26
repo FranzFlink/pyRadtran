@@ -1,0 +1,16 @@
+simulation_defaults:
+  rte_solver: disort
+  mol_abs_param: reptran
+  albedo_value: 0.1
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: midlatitude_winter
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/kurudz_1.0nm.dat
+  wavelength: 549 551
+  aerosol_default: ''
+  aerosol_set_tau_at_wvl: 550 0.2
+  disort_spherical_albedo: ''
+  umu: 0.01 0.5 0.75 0.9 1.0
+  output_user: lambda spher_alb
+  quiet: ''

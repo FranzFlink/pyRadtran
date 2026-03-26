@@ -1,0 +1,16 @@
+simulation_defaults:
+  rte_solver: twostr
+  mol_abs_param: LOWTRAN
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglt.dat
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/kurudz_1.0nm.dat
+  sza: 30.0
+  pseudospherical: ''
+  wavelength: 550.0 1000.0
+  aerosol_default: ''
+  aerosol_visibility: 20
+  radiosonde: /opt/libRadtran-2.0.6/examples/radiosonde_afglt_rh.dat H2O RH
+  quiet: ''

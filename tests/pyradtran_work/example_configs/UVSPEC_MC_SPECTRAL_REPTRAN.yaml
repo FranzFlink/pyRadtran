@@ -1,0 +1,18 @@
+simulation_defaults:
+  rte_solver: mystic
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: midlatitude_summer
+  source: solar
+  wavelength: 700 799
+  sza: 30
+  mc_photons: 100000
+  mc_polarisation: ''
+  mc_spectral_is: 700
+  albedo_file: /opt/libRadtran-2.0.6/data/albedo/gras.dat
+  mc_surface_reflectalways: ''
+  zout: toa
+  umu: 0.5
+  phi: 0
+  quiet: ''

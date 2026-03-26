@@ -1,0 +1,15 @@
+simulation_defaults:
+  rte_solver: twostr
+  mol_abs_param: FU
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/fu
+  albedo_file: /opt/libRadtran-2.0.6/examples/UVSPEC_ALBEDO.DAT
+  pseudospherical: ''
+  sza: 30
+  wavelength: 200.0 4500.0
+  ic_file: 1D /opt/libRadtran-2.0.6/examples/IC.DAT
+  ic_properties: fu
+  quiet: ''

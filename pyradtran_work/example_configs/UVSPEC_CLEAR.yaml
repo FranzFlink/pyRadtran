@@ -1,0 +1,16 @@
+simulation_defaults:
+  rte_solver: disort
+  albedo_value: 0.2
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  mol_modify: O3 300. DU
+  day_of_year: 170
+  sza: 32.0
+  number_of_streams: 6
+  wavelength: 299.0 341.0
+  slit_function_file: /opt/libRadtran-2.0.6/examples/TRI_SLIT.DAT
+  spline: 300 340 1
+  quiet: ''

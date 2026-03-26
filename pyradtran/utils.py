@@ -25,7 +25,7 @@ class RadiosondeFinder:
     def _scan_sondes(self):
         """Scans the base path for valid radiosonde files."""
         if not self.base_path or not self.base_path.is_dir():
-            logger.warning(f"Radiosonde base path does not exist or not provided: {self.base_path}")
+            logger.debug(f"Radiosonde base path does not exist or not provided: {self.base_path}")
             return
 
         logger.info(f"Scanning for radiosondes under: {self.base_path}")

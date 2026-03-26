@@ -1,0 +1,15 @@
+simulation_defaults:
+  rte_solver: disort
+  mol_abs_param: lowtran
+  albedo_value: 0.0
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  data_files_path: /opt/libRadtran-2.0.6/data/
+  source: thermal
+  filter_function_file: /opt/libRadtran-2.0.6/data/filter/msg/msg1_seviri_ch039
+  wavelength: 3040 4800
+  output_process: integrate
+  zout: TOA
+  umu: 0.5 1.0
+  quiet: ''

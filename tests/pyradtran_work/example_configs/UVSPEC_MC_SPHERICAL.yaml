@@ -1,0 +1,19 @@
+simulation_defaults:
+  rte_solver: mystic
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: us-standard
+  source: solar atlas_plus_modtran
+  earth_radius: 6370
+  sza: 92
+  phi0: 0
+  zout: 0
+  umu: -1
+  phi: 0
+  wavelength: 500
+  mc_photons: 1000000
+  mc_spherical: 1D
+  mc_polarisation: ''
+  output_quantity: transmittance
+  quiet: ''

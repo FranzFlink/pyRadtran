@@ -1,0 +1,16 @@
+simulation_defaults:
+  albedo_value: 0.05
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: US-standard
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran_ph
+  mol_modify: O3 300 DU
+  wavelength: 346.15 346.15
+  sza: 45
+  number_of_streams: 4
+  quiet: ''
+  zout: toa
+  wc_file: 1D /opt/libRadtran-2.0.6/examples/UVSPEC_RAMAN_WC.dat
+  wc_modify: gg set 0.7
+  raman: ''

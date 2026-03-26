@@ -1,0 +1,19 @@
+simulation_defaults:
+  rte_solver: montecarlo
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: /opt/libRadtran-2.0.6/examples/UVSPEC_MC_ATM.DAT
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  mol_modify: O3 300. DU
+  day_of_year: 170
+  sza: 58
+  phi0: 180.0
+  mc_photons: 1000000
+  mc_polarisation: ''
+  wavelength: 550.0
+  umu: -0.5
+  phi: 10
+  bpdf_tsang_u10: 5
+  mc_surface_reflectalways: ''
+  quiet: ''

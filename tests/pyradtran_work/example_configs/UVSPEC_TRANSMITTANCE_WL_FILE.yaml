@@ -1,0 +1,11 @@
+simulation_defaults:
+  rte_solver: disort
+execution:
+  cleanup_temp_files: true
+parameter_overrides:
+  atmosphere_file: midlatitude_summer
+  source: solar /opt/libRadtran-2.0.6/data/solar_flux/kurudz_1.0nm.dat
+  wavelength: 1064
+  mol_tau_file: abs /opt/libRadtran-2.0.6/examples/UVSPEC_TRANSMITTANCE_MOL_TAU_FILE_AFGLMS.09000.3wvn.cdf
+  wavelength_grid_file: /opt/libRadtran-2.0.6/examples/UVSPEC_TRANSMITTANCE_WL.DAT
+  quiet: ''

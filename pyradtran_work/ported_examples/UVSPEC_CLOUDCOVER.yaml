@@ -1,0 +1,30 @@
+paths:
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  atmosphere_profile: /opt/libRadtran-2.0.6/examples/ATMOSPHERE_IPA.DAT
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  output_dir: ./pyradtran_output
+  working_dir: ./pyradtran_work
+simulation_defaults:
+  rte_solver: twostr
+  mol_abs_param: Kato
+  source: solar
+  wavelength_nm: []
+  albedo_value: 0.2
+  output_altitudes_km: []
+  output_columns: []
+  viewing_geometry: custom
+  parameter_overrides:
+    mol_modify: O3 300. DU
+    sza: 30.0
+    pseudospherical: ''
+    wavelength_index: 1 32
+    cloudcover: wc 0.4
+    interpret_as_level: wc
+    quiet: ''
+  clouds:
+    enabled: true
+    cloud_type: wc
+    cloud_source: file
+    wc_file: 1D /opt/libRadtran-2.0.6/examples/WC50_A.DAT
+    ic_file: null

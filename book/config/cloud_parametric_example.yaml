@@ -1,59 +1,60 @@
-# Configuration for parametric cloud simulations
-# This example shows how to define clouds using simple layer parameters
-
 paths:
-  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
-  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
-  atmosphere_profile: /opt/libradtran/2.0.4/share/libRadtran/data/atmmod/afglus.dat
   solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
   working_dir: ./work
-
 simulation_defaults:
   rte_solver: disort
   mol_abs_param: reptran
   source: solar
-  wavelength_nm: [500, 600]
+  wavelength_nm:
+  - 500
+  - 600
   albedo_type: constant
   albedo_value: 0.2
-  output_altitudes_km: [0.0, 2.0, 5.0, 10.0]
-  output_columns: ["lambda", "zout", "edir", "edn", "eup"]
-  
+  output_altitudes_km:
+  - 0.0
+  - 2.0
+  - 5.0
+  - 10.0
+  output_columns:
+  - lambda
+  - zout
+  - edir
+  - edn
+  - eup
   mol_modify:
     O3:
       value: 300
       unit: DU
-  
-  # === PARAMETRIC CLOUD CONFIGURATION ===
   clouds:
     enabled: true
     cloud_source: parametric
-    cloud_type: wc  # Water clouds
-    
-    # Define cloud layers: [bottom_km, top_km]
+    cloud_type: wc
     layer_heights_km:
-      - [2.0, 3.0]    # Low cloud layer
-      - [6.0, 8.0]    # Mid-level cloud layer
-    
-    # Layer properties (must match number of layers)
-    layer_water_content: [0.3, 0.1]      # LWC in g/m³
-    layer_ice_content: [0.0, 0.0]        # IWC in g/m³ (zero for water clouds)
-    layer_effective_radius_um: [10.0, 12.0]  # Effective radius in μm
-    layer_cloud_fraction: [1.0, 0.8]     # Cloud fraction (0-1)
-    
-    # Cloud properties
+    - - 2.0
+      - 3.0
+    - - 6.0
+      - 8.0
+    layer_water_content:
+    - 0.3
+    - 0.1
+    layer_ice_content:
+    - 0.0
+    - 0.0
+    layer_effective_radius_um:
+    - 10.0
+    - 12.0
+    layer_cloud_fraction:
+    - 1.0
+    - 0.8
     wc_properties: mie
     altitude_resolution_km: 0.1
-    
-    # Advanced options
     cloud_overlap: max-random
     auto_generate_files: true
     output_directory: ./cloud_files
-
 execution:
   max_workers: 2
   cleanup_temp_files: true
   debug_mode: false
-
 output:
-  filename_prefix: "cloud_parametric_sim"
-  filename_suffix: "_results.nc"
+  filename_prefix: cloud_parametric_sim
+  filename_suffix: _results.nc

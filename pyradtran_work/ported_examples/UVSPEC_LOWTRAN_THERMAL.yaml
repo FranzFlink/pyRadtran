@@ -1,0 +1,21 @@
+paths:
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  atmosphere_profile: /opt/libRadtran-2.0.6/examples/AFGLUS.70KM
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/atlas_plus_modtran
+  output_dir: ./pyradtran_output
+  working_dir: ./pyradtran_work
+simulation_defaults:
+  rte_solver: twostr
+  mol_abs_param: LOWTRAN
+  source: thermal
+  wavelength_nm: []
+  albedo_value: null
+  output_altitudes_km: []
+  output_columns: []
+  viewing_geometry: custom
+  parameter_overrides:
+    pseudospherical: ''
+    wavelength_grid_file: /opt/libRadtran-2.0.6/examples/UVSPEC_LOWTRAN_THERMAL.TRANS
+    output_process: per_nm
+    quiet: ''
