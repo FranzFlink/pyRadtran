@@ -7,19 +7,19 @@ name = "pyradtran"
 version = "0.1.0"
 description = "A flexible Python wrapper for the libradtran radiative transfer model"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = "MIT"
 authors = [
-    {name = "PyRadtran Team", email = "example@example.com"},
+    {name = "Joshua Müller", email = "josh2197@gmail.com"},
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Atmospheric Science",
     "Topic :: Scientific/Engineering :: Physics",
 ]
@@ -49,26 +49,23 @@ docs = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/yourusername/pyradtran"
-"Bug Tracker" = "https://github.com/yourusername/pyradtran/issues"
+"Homepage" = "https://github.com/FranzFlink/pyRadtran"
+"Documentation" = "https://franzflink.github.io/pyRadtran/"
+"Bug Tracker" = "https://github.com/FranzFlink/pyRadtran/issues"
 
 [tool.setuptools]
 packages = ["pyradtran"]
-include-package-data = true
-
-[tool.setuptools.package-data]
-pyradtran = ["config/*.yaml"]
 
 [tool.black]
 line-length = 88
-target-version = ["py38"]
+target-version = ["py39"]
 
 [tool.isort]
 profile = "black"
 line_length = 88
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true

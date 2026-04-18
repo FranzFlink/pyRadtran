@@ -18,4 +18,5 @@ pyradtran.utils.RadiosondeFinder
       
          ~RadiosondeFinder.__init__
          ~RadiosondeFinder.find_closest
+         ~RadiosondeFinder.find_radiosonde_file
       

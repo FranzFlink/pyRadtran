@@ -1,9 +1,9 @@
-pyradtran.io.OutputParser
-=========================
+pyradtran.io.NetCDFSaver
+========================
 
 .. currentmodule:: pyradtran.io
 
-.. autoclass:: OutputParser
+.. autoclass:: NetCDFSaver
    :members:
    :undoc-members:
    :show-inheritance:
@@ -16,6 +16,6 @@ pyradtran.io.OutputParser
       :recursive:
 
       
-         ~OutputParser.__init__
-         ~OutputParser.parse_output_file
+         ~NetCDFSaver.__init__
+         ~NetCDFSaver.save_results_to_netcdf
       

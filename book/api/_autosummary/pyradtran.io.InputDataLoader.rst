@@ -1,9 +1,9 @@
-pyradtran.io.OutputParser
-=========================
+pyradtran.io.InputDataLoader
+============================
 
 .. currentmodule:: pyradtran.io
 
-.. autoclass:: OutputParser
+.. autoclass:: InputDataLoader
    :members:
    :undoc-members:
    :show-inheritance:
@@ -16,6 +16,6 @@ pyradtran.io.OutputParser
       :recursive:
 
       
-         ~OutputParser.__init__
-         ~OutputParser.parse_output_file
+         ~InputDataLoader.__init__
+         ~InputDataLoader.load_simulation_input_data
       

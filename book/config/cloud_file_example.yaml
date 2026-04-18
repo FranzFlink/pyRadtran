@@ -29,8 +29,8 @@ simulation_defaults:
     enabled: true
     cloud_source: file
     cloud_type: mixed
-    wc_file: /opt/libradtran/2.0.4/share/libRadtran/examples/WCSIMPLE.DAT
-    ic_file: /opt/libradtran/2.0.4/share/libRadtran/examples/IC50_A.DAT
+    wc_file: /opt/libradtran/share/libRadtran/examples/WCSIMPLE.DAT
+    ic_file: /opt/libradtran/share/libRadtran/examples/IC50_A.DAT
     wc_properties: mie
     ic_properties: yang
     cloud_overlap: max-random

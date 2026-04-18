@@ -18,10 +18,10 @@ pyradtran.config.PathsConfig
       
          ~PathsConfig.__init__
       
+         ~PathsConfig.atmosphere_profile
          ~PathsConfig.output_dir
          ~PathsConfig.radiosonde_base
+         ~PathsConfig.solar_spectrum
          ~PathsConfig.working_dir
          ~PathsConfig.libradtran_bin
          ~PathsConfig.libradtran_data
-         ~PathsConfig.atmosphere_profile
-         ~PathsConfig.solar_spectrum

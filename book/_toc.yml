@@ -8,15 +8,32 @@ chapters:
 - file: usage
 - file: notebooks/index
   sections:
-  - file: notebooks/quickstart
+  # Quickstart tutorials
   - file: notebooks/albedo_test
   - file: notebooks/thermal
   - file: notebooks/thermal_imager
+  - file: notebooks/solar_spectral
   - file: notebooks/era5_atmosphere
+  # Clouds
+  - file: notebooks/water_cloud
+  - file: notebooks/mixed_phase_cloud
+  - file: notebooks/arctic_cloud_experiment
+  # Radiosondes & atmosphere
+  - file: notebooks/get_radiosonde
+  - file: notebooks/nya_rad
   - file: notebooks/radiosonde
+  # Advanced topics
+  - file: notebooks/thermal_imager_2
+  - file: notebooks/shupe_and_intrieri_plot
   - file: notebooks/halo-ac3_bbr_all_aircraft
-  - file: notebooks/cloud
   - file: notebooks/radiosonde_thermal
+  - file: notebooks/radiosonde_solar_spectral
+  # Data processing & campaigns
+  - file: notebooks/sea_ice_era5
+  - file: notebooks/sea_ice_era5_plotting
+  - file: notebooks/era5_seasonal_sea_ice_profiles
+  - file: notebooks/carra_atmosphere
+  - file: notebooks/stn2024
 
 - file: examples/index
 - file: notebooks/config/index
