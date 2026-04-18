@@ -1,7 +1,7 @@
 paths:
   atmosphere_profile: /projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat
-  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
-  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
+  libradtran_bin: /opt/libradtran/bin/uvspec
+  libradtran_data: /opt/libradtran/share/libRadtran/data
   output_dir: work
   radiosonde_base: null
   solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat

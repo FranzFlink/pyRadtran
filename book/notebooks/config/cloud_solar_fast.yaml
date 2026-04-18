@@ -1,36 +1,19 @@
+# Fast solar broadband simulation with clouds (twostr solver)
+# Paths are loaded from ~/.pyradtran/config.yaml (master config)
+
+simulation_defaults:
+  rte_solver: twostr
+  mol_abs_param: reptran medium
+  source: solar
+  wavelength_nm: [290, 3600]
+  integrate_wavelength: true
+  output_columns: [zout, lambda, sza, edir, eglo, edn, eup, enet, albedo]
+
 execution:
   cleanup_temp_files: false
-  debug_mode: false
   max_workers: 16
   timeout_seconds: 60
+
 output:
-  filename_prefix: xarray_example
+  filename_prefix: cloud_solar_fast
   filename_suffix: .nc
-paths:
-  atmosphere_profile: /projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat
-  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
-  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
-  output_dir: work
-  radiosonde_base: null
-  solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
-  working_dir: work
-simulation_defaults:
-  integrate_wavelength: true
-  mol_abs_param: reptran medium
-  output_columns:
-  - zout
-  - lambda
-  - sza
-  - edir
-  - eglo
-  - edn
-  - eup
-  - enet
-  - albedo
-  phi: null
-  rte_solver: twostr
-  transmittance_source: default
-  viewing_geometry: nadir
-  wavelength_nm:
-  - 290
-  - 3600

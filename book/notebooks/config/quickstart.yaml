@@ -1,7 +1,7 @@
 execution:
   cleanup_temp_files: false
   debug_mode: false
-  max_workers: 4
+  max_workers: 1
   timeout_seconds: 300
 output:
   filename_prefix: pyradtran_sim
@@ -18,7 +18,7 @@ paths:
   solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
   working_dir: pyradtran_work
 simulation_defaults:
-  albedo_value: 0.85
+  albedo_value: 0.15
   clouds:
     cloud_fraction: 1.0
     cloud_source: parametric
@@ -41,22 +41,17 @@ simulation_defaults:
   output_altitudes_km:
   - 0.0
   output_columns:
-  - zout
   - lambda
-  - sza
   - edir
-  - eglo
   - edn
   - eup
-  - enet
-  - albedo
   ozone_du: 300.0
   parameter_overrides: {}
-  rte_solver: disort
+  rte_solver: twostr
   source: solar
   surface_temperature_k: 273.15
   sza: null
   viewing_geometry: nadir
   wavelength_nm:
-  - 400
-  - 700
+  - 350
+  - 2500

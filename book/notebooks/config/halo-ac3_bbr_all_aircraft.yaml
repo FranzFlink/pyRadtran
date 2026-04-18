@@ -1,8 +1,8 @@
 execution:
   cleanup_temp_files: false
   debug_mode: false
-  max_workers: 4
-  timeout_seconds: 300
+  max_workers: 32
+  timeout_seconds: 3600
 output:
   filename_prefix: pyradtran_sim
   filename_suffix: _results.nc
@@ -14,7 +14,7 @@ paths:
   libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
   libradtran_data: /opt/libRadtran-2.0.6/data
   output_dir: pyradtran_output
-  radiosonde_base: /path/to/radiosonde/data
+  radiosonde_base: /home/josh/pyRadtran/book/notebooks/radiosonde
   solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
   working_dir: pyradtran_work
 simulation_defaults:
@@ -34,10 +34,10 @@ simulation_defaults:
     layer_top_km: 2.0
     water_content_g_m3: 0.1
     wc_file: null
-  h2o_mm: 2.0
-  h2o_source: fixed
-  integrate_wavelength: false
-  mol_abs_param: lowtran per_nm
+  h2o_mm: null
+  h2o_source: radiosonde
+  integrate_wavelength: true
+  mol_abs_param: reptran medium
   output_altitudes_km:
   - 0.0
   output_columns:
@@ -50,13 +50,13 @@ simulation_defaults:
   - eup
   - enet
   - albedo
-  ozone_du: 300.0
+  ozone_du: null
   parameter_overrides: {}
   rte_solver: disort
   source: solar
-  surface_temperature_k: 273.15
+  surface_temperature_k: 253.15
   sza: null
   viewing_geometry: nadir
   wavelength_nm:
-  - 400
-  - 700
+  - 290
+  - 4500

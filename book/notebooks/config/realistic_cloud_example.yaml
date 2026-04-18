@@ -1,74 +1,37 @@
-# Simple realistic water cloud example
-# This shows a single water cloud layer similar to libRadtran examples
-
-paths:
-  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
-  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
-  atmosphere_profile: /opt/libradtran/2.0.4/share/libRadtran/data/atmmod/afglus.dat
-  solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
-  working_dir: ./work
+# Realistic water cloud example — mimics libRadtran parametric cloud example
+# Paths are loaded from ~/.pyradtran/config.yaml (master config)
 
 simulation_defaults:
   rte_solver: disort
   mol_abs_param: reptran
   source: solar
   wavelength_nm: [400, 700]
-  albedo_type: constant
+  integrate_wavelength: false
   albedo_value: 0.3
   output_altitudes_km: [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
-  output_columns:
-  - zout
-  - lambda
-  - sza
-  - edir
-  - eglo
-  - edn
-  - eup
-  - enet
-  - albedo
-  
+  output_columns: [zout, lambda, sza, edir, eglo, edn, eup, enet, albedo]
   mol_modify:
     O3:
       value: 300
       unit: DU
-  
-  # === REALISTIC WATER CLOUD ===
-  # This mimics the libRadtran example:
-  #      z     LWC    R_eff
-  #     (km)  (g/m^3) (um)  
-  #     4.000     0    10.0     # The water cloud is located between
-  #     3.000   1.0    10.0     # 2 and 4.0 km. The parameters may 
-  #     2.000   1.0    10.0     # vary with altitude.
-  
   clouds:
     enabled: true
     cloud_source: parametric
-    cloud_type: wc  # Water clouds only
-    
-    # Define a single realistic water cloud layer (2-4 km)
+    cloud_type: wc
     layer_heights_km:
-      - [2.0, 4.0]    # Single water cloud layer between 2-4 km
-    
-    # Layer properties (realistic values)
-    layer_water_content: [1.0]       # 1.0 g/m³ LWC (typical for water clouds)
-    layer_ice_content: [0.0]         # No ice content
-    layer_effective_radius_um: [10.0] # 10 μm effective radius (typical)
-    layer_cloud_fraction: [1.0]      # 100% cloud fraction
-    
-    # Cloud optical properties
+      - [2.0, 4.0]
+    layer_water_content: [1.0]
+    layer_ice_content: [0.0]
+    layer_effective_radius_um: [10.0]
+    layer_cloud_fraction: [1.0]
     wc_properties: mie
     altitude_resolution_km: 0.1
-    
-    # Advanced options
-    cloud_overlap: max-random
-    auto_generate_files: true
-    output_directory: ./cloud_files
 
 execution:
   max_workers: 2
-  cleanup_temp_files: false  # Keep input files for debugging and development
-  debug_mode: true  # Enable debug mode to see what's happening
+  cleanup_temp_files: false
+  debug_mode: true
 
 output:
-  filename_prefix: "realistic_cloud_sim"
-  filename_suffix: "_results.nc"
+  filename_prefix: realistic_cloud_sim
+  filename_suffix: _results.nc
