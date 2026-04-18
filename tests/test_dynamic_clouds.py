@@ -5,6 +5,7 @@ import logging
 import numpy as np
 import pandas as pd
 from datetime import datetime
+import pytest
 
 # Path setup
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -13,6 +14,12 @@ from pyradtran.core import Simulation
 
 logging.basicConfig(level=logging.INFO)
 
+
+@pytest.mark.integration
+@pytest.mark.skipif(
+    not os.path.isfile('/opt/libradtran/bin/uvspec'),
+    reason='LibRadtran not available',
+)
 def test_dynamic_clouds():
     config = load_config()
     # Ensure working dir exists

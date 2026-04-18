@@ -145,9 +145,9 @@ def test_run_single_simulation_unified(mock_parser_class, mock_simulation_class,
     )
     mock_parser.parse_output_file.return_value = mock_parsed_output
     
-    # Test data point
+    # Test data point: (time, lat, lon, albedo, surf_temp, surf_type, altitude, era5_file, point_id)
     dt = datetime(2023, 5, 1, 12, 0)
-    point_data = (dt, 60.0, 10.0, 0.2, 290.0, 1.0, None, "test_point")
+    point_data = (dt, 60.0, 10.0, 0.2, 290.0, 1.0, 0.0, None, "test_point")
     
     # Call function
     result = _run_single_simulation_unified(minimal_config, point_data)

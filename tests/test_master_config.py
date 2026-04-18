@@ -5,7 +5,12 @@ import tempfile
 import shutil
 import os
 from unittest.mock import patch, MagicMock
-from pyradtran.config import PathsConfig, load_config, SimulationConfig, _recursive_update
+from pyradtran.config import (
+    PathsConfig, load_config, SimulationConfig, SimulationDefaults,
+    ExecutionConfig, OutputConfig, _recursive_update, save_master_config,
+    SOLAR_SPECTRA, ATMOSPHERE_PROFILES, _resolve_libradtran_shortname,
+    list_solar_spectra, list_atmosphere_profiles,
+)
 
 @pytest.fixture
 def mock_master_config_path(tmp_path):
@@ -77,7 +82,9 @@ def test_load_config_with_master(tmp_path, mock_master_config_path):
     master_config_content = {
         'paths': {
             'libradtran_bin': str(bin_path),
-            'libradtran_data': str(data_path)
+            'libradtran_data': str(data_path),
+            'atmosphere_profile': str(data_path / "atmmod" / "afglus.dat"),
+            'solar_spectrum': str(data_path / "solar_flux" / "kurudz_1.0nm.dat"),
         },
         'execution': {
             'max_workers': 8
@@ -112,3 +119,261 @@ def test_load_config_with_master(tmp_path, mock_master_config_path):
     # Check overrides
     assert loaded_config.simulation_defaults.rte_solver == 'mystic'
     assert loaded_config.execution.max_workers == 1  # Specific overrides master
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Tests for SimulationConfig.to_dict() and SimulationConfig.to_yaml()
+# ──────────────────────────────────────────────────────────────────────────────
+
+def _make_minimal_config(tmp_path):
+    """Helper: build a valid SimulationConfig with tmp-path stubs."""
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    bin_file = tmp_path / "uvspec"
+    bin_file.touch()
+    (data_dir / "atmmod").mkdir()
+    (data_dir / "atmmod" / "afglus.dat").touch()
+    (data_dir / "solar_flux").mkdir()
+    (data_dir / "solar_flux" / "kurudz_1.0nm.dat").touch()
+
+    paths = PathsConfig(
+        libradtran_bin=bin_file,
+        libradtran_data=data_dir,
+        output_dir=tmp_path / "out",
+        working_dir=tmp_path / "work",
+    )
+    return SimulationConfig(
+        paths=paths,
+        simulation_defaults=SimulationDefaults(),
+        execution=ExecutionConfig(max_workers=2),
+        output=OutputConfig(),
+    )
+
+
+def test_to_dict_returns_string_paths(tmp_path):
+    """to_dict() must convert all Path objects to plain strings."""
+    cfg = _make_minimal_config(tmp_path)
+    d = cfg.to_dict()
+
+    assert isinstance(d["paths"]["libradtran_bin"], str)
+    assert isinstance(d["paths"]["libradtran_data"], str)
+    assert isinstance(d["paths"]["output_dir"], str)
+    assert isinstance(d["paths"]["working_dir"], str)
+
+
+def test_to_dict_simulation_defaults(tmp_path):
+    """to_dict() must preserve simulation_defaults values."""
+    cfg = _make_minimal_config(tmp_path)
+    cfg.simulation_defaults.rte_solver = "disort"
+    cfg.simulation_defaults.wavelength_nm = [300, 900]
+
+    d = cfg.to_dict()
+    assert d["simulation_defaults"]["rte_solver"] == "disort"
+    assert d["simulation_defaults"]["wavelength_nm"] == [300, 900]
+
+
+def test_to_dict_no_era5_dataset_key(tmp_path):
+    """to_dict() must not include the non-serialisable era5_dataset key."""
+    cfg = _make_minimal_config(tmp_path)
+    d = cfg.to_dict()
+    assert "era5_dataset" not in d["simulation_defaults"]["clouds"]
+
+
+def test_to_yaml_creates_file(tmp_path):
+    """to_yaml() must write a YAML file that can be read back."""
+    cfg = _make_minimal_config(tmp_path)
+    out = tmp_path / "subdir" / "sim.yaml"
+
+    result = cfg.to_yaml(out)
+
+    assert result == out
+    assert out.is_file()
+    content = yaml.safe_load(out.read_text())
+    assert "paths" in content
+    assert "simulation_defaults" in content
+
+
+def test_to_yaml_roundtrip(tmp_path):
+    """Config serialised via to_yaml() then loaded via load_config() should
+    reproduce the same key settings."""
+    cfg = _make_minimal_config(tmp_path)
+    cfg.simulation_defaults.rte_solver = "twostr"
+    cfg.simulation_defaults.albedo_value = 0.42
+    cfg.execution.max_workers = 3
+
+    out_yaml = tmp_path / "roundtrip.yaml"
+    cfg.to_yaml(out_yaml)
+
+    loaded = load_config(out_yaml)
+
+    assert loaded.simulation_defaults.rte_solver == "twostr"
+    assert loaded.simulation_defaults.albedo_value == pytest.approx(0.42)
+    assert loaded.execution.max_workers == 3
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Tests for save_master_config()
+# ──────────────────────────────────────────────────────────────────────────────
+
+def test_save_master_config_creates_file(tmp_path):
+    """save_master_config() must write ~/.pyradtran/config.yaml."""
+    with patch("pathlib.Path.home", return_value=tmp_path):
+        result = save_master_config(
+            libradtran_bin="/opt/libradtran/bin/uvspec",
+            libradtran_data="/opt/libradtran/data",
+        )
+
+    expected = tmp_path / ".pyradtran" / "config.yaml"
+    assert result == expected
+    assert expected.is_file()
+
+
+def test_save_master_config_content(tmp_path):
+    """save_master_config() must write correct paths to the YAML."""
+    with patch("pathlib.Path.home", return_value=tmp_path):
+        save_master_config(
+            libradtran_bin="/opt/bin/uvspec",
+            libradtran_data="/opt/data",
+            radiosonde_base="/data/radiosondes",
+            max_workers=4,
+        )
+
+    master = tmp_path / ".pyradtran" / "config.yaml"
+    content = yaml.safe_load(master.read_text())
+
+    assert content["paths"]["libradtran_bin"] == "/opt/bin/uvspec"
+    assert content["paths"]["libradtran_data"] == "/opt/data"
+    assert content["paths"]["radiosonde_base"] == "/data/radiosondes"
+    assert content["execution"]["max_workers"] == 4
+
+
+def test_save_master_config_extra(tmp_path):
+    """save_master_config() extra kwarg must be merged into the file."""
+    with patch("pathlib.Path.home", return_value=tmp_path):
+        save_master_config(
+            libradtran_bin="/opt/bin/uvspec",
+            libradtran_data="/opt/data",
+            extra={"execution": {"debug_mode": True, "timeout_seconds": 120}},
+        )
+
+    master = tmp_path / ".pyradtran" / "config.yaml"
+    content = yaml.safe_load(master.read_text())
+    assert content["execution"]["debug_mode"] is True
+    assert content["execution"]["timeout_seconds"] == 120
+
+
+def test_load_config_no_path_uses_master(tmp_path):
+    """load_config() with no path argument must honour master config values."""
+    # Set up minimal master config
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    bin_file = tmp_path / "uvspec"
+    bin_file.touch()
+    (data_dir / "atmmod").mkdir()
+    atm_file = data_dir / "atmmod" / "afglus.dat"
+    atm_file.touch()
+    (data_dir / "solar_flux").mkdir()
+    solar_file = data_dir / "solar_flux" / "kurudz_1.0nm.dat"
+    solar_file.touch()
+
+    master_content = {
+        "paths": {
+            "libradtran_bin": str(bin_file),
+            "libradtran_data": str(data_dir),
+            "atmosphere_profile": str(atm_file),
+            "solar_spectrum": str(solar_file),
+        },
+        "simulation_defaults": {
+            "rte_solver": "rodents",
+        },
+    }
+    master_dir = tmp_path / ".pyradtran"
+    master_dir.mkdir()
+    (master_dir / "config.yaml").write_text(yaml.dump(master_content))
+
+    with patch("pathlib.Path.home", return_value=tmp_path):
+        cfg = load_config()   # no explicit config_path
+
+    assert cfg.simulation_defaults.rte_solver == "rodents"
+    assert cfg.paths.libradtran_bin == bin_file
+
+
+# ---------------------------------------------------------------------------
+# Short-name resolution tests
+# ---------------------------------------------------------------------------
+
+def test_catalogs_not_empty():
+    """SOLAR_SPECTRA and ATMOSPHERE_PROFILES contain at least the basic entries."""
+    assert "kurudz_1.0nm" in SOLAR_SPECTRA
+    assert "kurudz_0.1nm" in SOLAR_SPECTRA
+    assert "afglus" in ATMOSPHERE_PROFILES
+    assert "afglms" in ATMOSPHERE_PROFILES
+
+
+def test_catalog_entries_are_tuples():
+    """Every catalog entry is a (path_str, description) tuple."""
+    for name, entry in SOLAR_SPECTRA.items():
+        assert isinstance(entry, tuple) and len(entry) == 2, name
+    for name, entry in ATMOSPHERE_PROFILES.items():
+        assert isinstance(entry, tuple) and len(entry) == 2, name
+
+
+def test_resolve_shortname_solar(tmp_path):
+    """Short name resolves to data_root/relative_path."""
+    result = _resolve_libradtran_shortname("kurudz_1.0nm", tmp_path, SOLAR_SPECTRA)
+    assert result == tmp_path / "solar_flux" / "kurudz_1.0nm.dat"
+
+
+def test_resolve_shortname_atmosphere(tmp_path):
+    """Short name resolves to data_root/relative_path."""
+    result = _resolve_libradtran_shortname("afglus", tmp_path, ATMOSPHERE_PROFILES)
+    assert result == tmp_path / "atmmod" / "afglus.dat"
+
+
+def test_resolve_shortname_none():
+    """None input returns None."""
+    result = _resolve_libradtran_shortname(None, Path("/data"), SOLAR_SPECTRA)
+    assert result is None
+
+
+def test_resolve_shortname_absolute_path(tmp_path):
+    """An absolute path passes through unchanged."""
+    p = tmp_path / "custom" / "my_solar.dat"
+    result = _resolve_libradtran_shortname(str(p), Path("/data"), SOLAR_SPECTRA)
+    assert result == p
+
+
+def test_pathsconfig_short_name_solar(tmp_path):
+    """PathsConfig accepts a short solar spectrum name."""
+    bin_file = tmp_path / "uvspec"
+    bin_file.touch()
+    data_dir = tmp_path / "data"
+    (data_dir / "solar_flux").mkdir(parents=True)
+    (data_dir / "atmmod").mkdir(parents=True)
+    solar = data_dir / "solar_flux" / "kurudz_1.0nm.dat"
+    solar.touch()
+    atm = data_dir / "atmmod" / "afglus.dat"
+    atm.touch()
+
+    cfg = PathsConfig(
+        libradtran_bin=bin_file,
+        libradtran_data=data_dir,
+        solar_spectrum="kurudz_1.0nm",   # short name
+        atmosphere_profile="afglus",     # short name
+    )
+    assert cfg.solar_spectrum == solar
+    assert cfg.atmosphere_profile == atm
+
+
+def test_list_solar_spectra_prints(capsys):
+    """list_solar_spectra() produces non-empty output."""
+    list_solar_spectra()
+    captured = capsys.readouterr()
+    assert "kurudz_1.0nm" in captured.out
+
+
+def test_list_atmosphere_profiles_prints(capsys):
+    """list_atmosphere_profiles() produces non-empty output."""
+    list_atmosphere_profiles()
+    captured = capsys.readouterr()
+    assert "afglus" in captured.out

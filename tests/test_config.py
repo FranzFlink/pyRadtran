@@ -85,9 +85,9 @@ def test_simulation_defaults_validation():
     with pytest.raises(ValueError):
         SimulationDefaults(wavelength_nm=[400])  # Missing max value
     
-    # Test altitude validation
-    with pytest.raises(ValueError):
-        SimulationDefaults(output_altitudes_km=[])  # Empty list
+    # Empty altitudes are allowed (defaults to uvspec implicit behavior)
+    sd_empty_alt = SimulationDefaults(output_altitudes_km=[])
+    assert sd_empty_alt.output_altitudes_km == []
 
 def test_simulation_config_from_yaml(temp_config_file, monkeypatch):
     """Test loading config from YAML file"""

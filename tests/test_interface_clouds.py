@@ -1,15 +1,22 @@
+import os
 import xarray as xr
 import pandas as pd
 import numpy as np
-from pyradtran.interface import PyRadtranAccessor # Trigger registration
+import pytest
+from pyradtran.interface import PyRadtranAccessor  # Trigger registration
 from pyradtran.config import SimulationConfig, PathsConfig, SimulationDefaults, CloudParameters
 from pathlib import Path
 import shutil
-import os
 import logging
-logging.basicConfig(level=logging.DEBUG)    
+
+logging.basicConfig(level=logging.DEBUG)
 
 
+@pytest.mark.integration
+@pytest.mark.skipif(
+    not os.path.isfile('/opt/libradtran/bin/uvspec'),
+    reason='LibRadtran not available',
+)
 def test_interface_clouds():
     # Setup Paths
     work_dir = Path("pyradtran_work_test_interface")

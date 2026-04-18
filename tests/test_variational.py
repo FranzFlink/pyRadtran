@@ -1,6 +1,8 @@
+import os
 import xarray as xr
 import pandas as pd
 import numpy as np
+import pytest
 from pyradtran.interface import PyRadtranAccessor
 from pyradtran.config import SimulationConfig, PathsConfig, SimulationDefaults
 from pathlib import Path
@@ -9,6 +11,12 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+
+@pytest.mark.integration
+@pytest.mark.skipif(
+    not os.path.isfile('/opt/libradtran/bin/uvspec'),
+    reason='LibRadtran not available',
+)
 def test_variational_logic():
     work_dir = Path("pyradtran_work_variational")
     if work_dir.exists():
