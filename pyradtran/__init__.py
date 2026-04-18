@@ -1,25 +1,34 @@
-# pyradtran/__init__.py - UNIFIED VERSION
+# pyradtran/__init__.py
 """
-PyRadtran: A unified Python wrapper for libradtran (uvspec) - REFACTORED VERSION.
+pyRadtran — a Python wrapper for libRadtran (``uvspec``).
 
-This package provides a clean, simplified interface to the libradtran radiative
-transfer model with seamless integration into the Python scientific ecosystem.
+The canonical workflow is:
 
-REFACTORING HIGHLIGHTS:
-- ✅ Fixed ERA5 atmosphere support (now works reliably!)
-- ✅ Cleaned configuration (100+ params → 25 essential params)  
-- ✅ Unified IO system (no more duplicate functions)
-- ✅ Single clear interface (no more confusion about which function to use)
-- ✅ Comprehensive testing (every component tested)
+1. Prepare an :class:`xarray.Dataset` with ``time``, ``latitude``,
+   ``longitude`` coordinates.
+2. Call ``ds.pyradtran.run(config_path=...)`` to execute ``uvspec`` in
+   parallel for every point.
+3. Receive an :class:`xarray.Dataset` of radiative-transfer results.
 
-Original version backed up as __init__.py.backup
+Configuration is assembled from three layers (later wins):
 
-For migration guide and full details, see REFACTORING_SUMMARY.md
+* Package defaults (``config/clean_simulation.yaml``).
+* User master config (``~/.pyradtran/config.yaml``).
+* Simulation YAML (passed to :meth:`run`).
+
+Core public API
+---------------
+:class:`PyRadtranAccessor`
+    xarray accessor (``ds.pyradtran``).
+:func:`run_pyradtran_simulation`
+    Standalone file-to-file pipeline.
+:func:`execute_simulation_batch`
+    Low-level parallel batch driver.
+:func:`load_config`
+    Load and merge the three config layers.
 """
 
-__version__ = "0.2.0"  # Incremented for refactored version
-
-__version__ = "0.2.0"
+__version__ = "0.1.0"
 
 import logging
 
@@ -27,7 +36,10 @@ import logging
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 # Import cleaned components
-from .config import load_config, SimulationConfig, PathsConfig, SimulationDefaults, create_example_config
+from .config import (load_config, SimulationConfig, PathsConfig, SimulationDefaults,
+                      create_example_config, save_master_config,
+                      SOLAR_SPECTRA, ATMOSPHERE_PROFILES,
+                      list_solar_spectra, list_atmosphere_profiles)
 from .core import Simulation
 from .io import (
     OutputParser,
@@ -61,18 +73,6 @@ except ImportError:
     logger = logging.getLogger(__name__)
     logger.warning("Cloud functionality not available")
 
-# Import helper functions if available
-try:
-    from .helpers import (
-        configure_surface,
-        configure_cloud,
-        add_cloud_layer,
-        configure_aerosol
-    )
-    _HAS_HELPERS = True
-except ImportError:
-    _HAS_HELPERS = False
-
 # Expose main components
 __all__ = [
     # Core functionality
@@ -87,6 +87,11 @@ __all__ = [
     'PathsConfig', 
     'SimulationDefaults',
     'create_example_config',
+    'save_master_config',
+    'SOLAR_SPECTRA',
+    'ATMOSPHERE_PROFILES',
+    'list_solar_spectra',
+    'list_atmosphere_profiles',
     
     # I/O components
     'OutputParser',
@@ -117,44 +122,38 @@ if _HAS_CLOUDS:
         'generate_cloud_file_from_era5'
     ])
 
-# Add helper components if available
-if _HAS_HELPERS:
-    __all__.extend([
-        'configure_surface',
-        'configure_cloud',
-        'add_cloud_layer',
-        'configure_aerosol'
-    ])
-
 def get_version():
-    """Return the package version."""
+    """Return the package version string."""
     return __version__
 
 def get_info():
-    """Return package information."""
+    """Return a summary dict of package capabilities."""
     return {
         'version': __version__,
         'has_clouds': _HAS_CLOUDS,
-        'has_helpers': _HAS_HELPERS,
-        'description': 'Unified Python wrapper for libradtran (uvspec)'
+        'description': 'Python wrapper for libRadtran (uvspec)'
     }
 
 def quick_start():
-    """Print quick start information."""
+    """Print a short getting-started guide to stdout."""
     print(f"PyRadtran {__version__} - Quick Start")
     print("=" * 40)
-    print("1. Create a configuration file:")
+    print("0. Save machine-specific paths to the master config (one-time setup):")
     print("   import pyradtran")
-    print("   pyradtran.create_example_config('my_config.yaml')")
+    print("   pyradtran.save_master_config(")
+    print("       libradtran_bin='/opt/libradtran/bin/uvspec',")
+    print("       libradtran_data='/opt/libradtran/share/libRadtran/data',")
+    print("   )")
     print()
-    print("2. Load and run simulation:")
-    print("   config = pyradtran.load_config('my_config.yaml')")
-    print("   result = pyradtran.run_pyradtran_simulation('input_data.csv')")
+    print("1. Build a simulation config in Python and save it as YAML:")
+    print("   cfg = pyradtran.load_config()  # starts from master + package defaults")
+    print("   cfg.simulation_defaults.albedo_value = 0.2")
+    print("   cfg.to_yaml('config/my_simulation.yaml')")
     print()
-    print("3. Use with xarray datasets:")
-    print("   result_ds = dataset.pyradtran.run()")
+    print("2. Run a simulation:")
+    print("   result_ds = dataset.pyradtran.run(config_path='config/my_simulation.yaml')")
     print()
-    print("For full documentation, see the examples in the notebooks/ directory.")
+    print("For full documentation, see the notebooks/ directory.")
 
 # Make sure xarray accessor is registered
 try:

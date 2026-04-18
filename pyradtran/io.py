@@ -1,22 +1,26 @@
-# pyradtran/io.py - UNIFIED VERSION
+# pyradtran/io.py
 """
-Unified I/O functionality for pyradtran - REFACTORED VERSION.
+Input / output layer for pyRadtran.
 
-This file combines the best features from both the old io.py and io_old.py:
-- Robust output parsing
-- ERA5 atmosphere file creation (now working properly!)
-- Input data loading capabilities
-- NetCDF saving functionality
+Key components:
 
-Original versions backed up as io.py.backup and io_old.py.backup
+* :class:`OutputParser` — parse raw ``uvspec`` output files into
+  :class:`ParsedOutput` containers.
+* :class:`OutputToXarray` — convert parsed results to
+  :class:`xarray.Dataset`.
+* :class:`InputDataLoader` — load simulation coordinates from CSV or
+  NetCDF.
+* :class:`ERA5AtmosphereGenerator` — create libRadtran-compatible
+  atmosphere files from ERA5 xarray datasets.
+* :class:`RadiosondeAtmosphereGenerator` — fetch and format radiosonde
+  soundings from IGRA.
+* :class:`NetCDFSaver` — persist results to NetCDF with provenance
+  metadata.
 
-Key improvements:
-- ERA5 atmosphere support actually works now
-- Single unified interface
-- Better error handling
-- Comprehensive testing
-
-For migration guide, see REFACTORING_SUMMARY.md
+See Also
+--------
+pyradtran.core.Simulation : Generates input files and calls ``uvspec``.
+pyradtran.interface : High-level batch driver.
 """
 
 import logging
@@ -36,7 +40,11 @@ logger = logging.getLogger(__name__)
 
 
 class OutputType(Enum):
-    """Enumeration of possible LibRadtran output types."""
+    """Enumeration of libRadtran output geometries.
+
+    The four members encode the two binary choices
+    (integrated vs. spectral) × (single vs. multi altitude).
+    """
     INTEGRATED_SINGLE_ALTITUDE = "integrated_single_altitude"
     INTEGRATED_MULTI_ALTITUDE = "integrated_multi_altitude"
     SPECTRAL_SINGLE_ALTITUDE = "spectral_single_altitude"
@@ -45,7 +53,25 @@ class OutputType(Enum):
 
 @dataclass
 class ParsedOutput:
-    """Container for parsed LibRadtran output."""
+    """Container returned by :meth:`OutputParser.parse_output_file`.
+
+    Parameters
+    ----------
+    output_type : OutputType
+        Geometry / dimensionality of the output.
+    data : dict of str to numpy.ndarray
+        Column name → 1-D value array.
+    wavelengths : list of float, optional
+        Unique wavelengths present in spectral output.
+    altitudes : list of float, optional
+        Unique altitude levels present in multi-altitude output.
+    source_file : pathlib.Path, optional
+        The raw ``uvspec`` output file that was parsed.
+    metadata : dict, optional
+        Arbitrary key–value metadata (point ID, coordinates, …).
+    is_brightness_temperature : bool, default ``False``
+        Whether the output represents brightness temperatures.
+    """
     output_type: OutputType
     data: Dict[str, Any]
     wavelengths: Optional[List[float]] = None
@@ -61,21 +87,33 @@ class ParsedOutput:
 
 
 class InputDataLoader:
-    """Load simulation input data from various sources."""
+    """Load simulation input coordinates from CSV or NetCDF files.
+
+    The file must contain ``time``, ``latitude``, and ``longitude``
+    variables (or ``datetime`` as an alias for ``time``).  Additional
+    columns are carried through as data variables.
+    """
     
     @staticmethod
     def load_simulation_input_data(input_file: Union[str, Path]) -> xr.Dataset:
-        """
-        Load simulation input data from a file.
-        
-        Args:
-            input_file: Path to input data file (CSV/NetCDF) with time, lat, lon
-            
-        Returns:
-            xarray Dataset with required coordinates and variables
-            
-        Raises:
-            InputGenerationError: If file loading fails or required variables missing
+        """Read simulation input coordinates and ancillary data.
+
+        Parameters
+        ----------
+        input_file : str or pathlib.Path
+            Path to a ``.csv`` or ``.nc`` file.
+
+        Returns
+        -------
+        xarray.Dataset
+            Dataset guaranteed to contain ``time``, ``latitude``, and
+            ``longitude``.
+
+        Raises
+        ------
+        InputGenerationError
+            If the file is missing, unsupported, or lacks required
+            variables.
         """
         input_file = Path(input_file)
         
@@ -119,7 +157,16 @@ class InputDataLoader:
 
 
 class ERA5AtmosphereGenerator:
-    """Generate ERA5 atmosphere files for LibRadtran."""
+    """Create libRadtran-compatible atmosphere files from ERA5 data.
+
+    The output is a three-column radiosonde-style ASCII file
+    (pressure, temperature, water vapour) sorted from TOA to surface,
+    directly consumable by the ``radiosonde`` keyword in ``uvspec``.
+
+    See Also
+    --------
+    RadiosondeAtmosphereGenerator : Atmosphere from real soundings.
+    """
     
     @staticmethod
     def create_era5_atmosphere_file(
@@ -131,24 +178,32 @@ class ERA5AtmosphereGenerator:
         output_filepath: Union[str, Path],
     ) -> Path:
         """
-        Creates a libRadtran-compatible atmosphere file from an ERA5 xarray.Dataset.
+        Create a radiosonde-style atmosphere file from an ERA5 dataset.
 
-        Args:
-            era5_ds: The input xarray.Dataset containing atmospheric data.
-                Must include 'z', 't', 'q' and coordinates. Expected units are km
-                'pressure_level', 'latitude', 'longitude', 'valid_time'.
-            h2o_unit: The unit for water vapor in the output file. Options are 'MMR' (mass mixing ratio; ERA5 standard) or 'RH' (relative humidtiy; CARRA standard).
-            latitude: The target latitude.
-            longitude: The target longitude.
-            time: The target time (str, datetime, or np.datetime64)
-            output_filepath: The path to the output file that will be created.
-            
-        Returns:
-            Path object of the created atmosphere file
-            
-        Raises:
-            ValueError: If required variables are missing from the dataset
-            InputGenerationError: If file creation fails
+        Parameters
+        ----------
+        era5_ds : xarray.Dataset
+            Must contain variables ``'z'`` (geopotential), ``'t'``
+            (temperature), ``'q'`` (specific humidity) on
+            ``pressure_level`` coordinates.
+        latitude, longitude : float
+            Target location for nearest-neighbour selection.
+        time : str, datetime, or numpy.datetime64
+            Target time step.
+        output_filepath : str or pathlib.Path
+            Destination file.
+
+        Returns
+        -------
+        pathlib.Path
+            *output_filepath* (echoed back for convenience).
+
+        Raises
+        ------
+        ValueError
+            If required variables or coordinates are missing.
+        InputGenerationError
+            If file writing fails.
         """
         try:
             # Physical and chemical constants for conversions
@@ -257,13 +312,31 @@ class ERA5AtmosphereGenerator:
 
 
 class RadiosondeAtmosphereGenerator:
-    """Generate atmosphere files from the nearest radiosonde sounding."""
+    """Fetch and format radiosonde soundings for libRadtran.
+
+    Uses the IGRA2 network (via *siphon*) to find the closest
+    active station and sounding in time, then writes the profile
+    in radiosonde format (pressure, temperature, relative humidity).
+
+    See Also
+    --------
+    ERA5AtmosphereGenerator : Alternative model-based atmosphere.
+    pyradtran.utils.RadiosondeFinder : Local radiosonde file look-up.
+    """
 
     @staticmethod
     def get_station_list(
         url: str = "https://www.ncei.noaa.gov/pub/data/igra/igra2-station-list.txt",
     ) -> Optional[pd.DataFrame]:
-        """Download and parse the IGRA station list."""
+        """Download and parse the IGRA station catalogue.
+
+        Returns
+        -------
+        pandas.DataFrame or None
+            One row per station with columns *id*, *latitude*,
+            *longitude*, *elevation*, *state*, *name*, *first_year*,
+            *last_year*, *num_obs*.  *None* on network error.
+        """
         try:
             col_specs = [
                 (0, 11), (12, 20), (21, 30), (31, 37), (38, 40),
@@ -282,7 +355,22 @@ class RadiosondeAtmosphereGenerator:
     def find_closest_active_stations(
         stations_df: pd.DataFrame, lat: float, lon: float, n: int = 5
     ) -> pd.DataFrame:
-        """Find the N closest active radiosonde stations."""
+        """Return the *n* closest currently-active radiosonde stations.
+
+        Parameters
+        ----------
+        stations_df : pandas.DataFrame
+            Output of :meth:`get_station_list`.
+        lat, lon : float
+            Target location (degrees).
+        n : int, default ``5``
+            Maximum number of stations to return.
+
+        Returns
+        -------
+        pandas.DataFrame
+            Sorted by ``distance_km`` (ascending).
+        """
         current_year = datetime.utcnow().year
         active_stations = stations_df[stations_df['last_year'] >= current_year - 1].copy()
 
@@ -306,17 +394,36 @@ class RadiosondeAtmosphereGenerator:
     @staticmethod
     def get_closest_sounding(
         target_dt: datetime, lat: float, lon: float
-    ) -> tuple[Optional[pd.DataFrame], Optional[pd.DataFrame]]:
-        """Retrieve the closest available radiosonde sounding."""
+    ) -> tuple[Optional[pd.DataFrame], Optional[pd.DataFrame], Optional[str]]:
+        """Retrieve the radiosonde sounding nearest in space and time.
+
+        Requires the **siphon** package for IGRA2 access.
+
+        Parameters
+        ----------
+        target_dt : datetime
+            Target time.
+        lat, lon : float
+            Target location (degrees).
+
+        Returns
+        -------
+        sounding_df : pandas.DataFrame or None
+            Sounding profile.
+        header : pandas.DataFrame or None
+            Sounding header.
+        header_text : str or None
+            Human-readable summary.
+        """
         stations = RadiosondeAtmosphereGenerator.get_station_list()
         if stations is None:
-            return None, None
+            return None, None, None
 
         closest = RadiosondeAtmosphereGenerator.find_closest_active_stations(
             stations, lat, lon, n=5
         )
         if closest.empty:
-            return None, None
+            return None, None, None
 
         base_date = datetime(target_dt.year, target_dt.month, target_dt.day)
         potential_times = [
@@ -336,25 +443,33 @@ class RadiosondeAtmosphereGenerator:
         except Exception:
             IGRAUpperAir = None
 
+        if IGRAUpperAir is None:
+            raise InputGenerationError(
+                "siphon is required for radiosonde retrieval. Install with: pip install siphon"
+            )
+
         for _, station in closest.iterrows():
             station_id = station['id']
             station_name = station['name'].strip()
             station_distance = station['distance_km']
             for time_to_check in potential_times:
                 try:
-                    if IGRAUpperAir is None:
-                        raise InputGenerationError(
-                            "siphon is required for radiosonde retrieval"
-                        )
+                    logger.debug(f"Trying station {station_name} ({station_id}) at {time_to_check}")
                     df, header = IGRAUpperAir.request_data(time_to_check, station_id)
                     header_text  = f"{station_name} at {time_to_check.strftime('%Y-%m-%d %H:%M')} UTC with distance {station_distance:.2f} km"
                     logger.info(f"Found sounding for {station_name} at {time_to_check} UTC with distance {station_distance:.2f} km")
                     if df is not None and not df.empty:
                         return df, header, header_text
-                except Exception:
+                except Exception as e:
+                    logger.debug(f"No data for {station_name} at {time_to_check}: {e}")
                     continue
 
-        return None, None
+        station_names = [row['name'].strip() for _, row in closest.iterrows()]
+        logger.warning(
+            f"No radiosonde data found for any of {len(potential_times)} times "
+            f"across {len(station_names)} stations: {station_names}"
+        )
+        return None, None, None
 
     @staticmethod
     def create_radiosonde_atmosphere_file(
@@ -363,7 +478,26 @@ class RadiosondeAtmosphereGenerator:
         longitude: float,
         output_filepath: Union[str, Path],
     ) -> Path:
-        """Create a libRadtran atmosphere file from radiosonde data."""
+        """Fetch a sounding and write it as a libRadtran atmosphere file.
+
+        Parameters
+        ----------
+        time : datetime
+            Target time.
+        latitude, longitude : float
+            Target location.
+        output_filepath : str or pathlib.Path
+            Destination ``.dat`` file.
+
+        Returns
+        -------
+        pathlib.Path
+
+        Raises
+        ------
+        InputGenerationError
+            If no data can be found or the file cannot be written.
+        """
         sounding_df, _, header_text = RadiosondeAtmosphereGenerator.get_closest_sounding(
             time, latitude, longitude
         )
@@ -400,7 +534,21 @@ class RadiosondeAtmosphereGenerator:
         return output_path
 
 class OutputParser:
-    """Robust parser for LibRadtran output files."""
+    """Parse raw ``uvspec`` output files into :class:`ParsedOutput`.
+
+    The parser uses the column list from
+    :attr:`~pyradtran.config.SimulationDefaults.output_columns` to
+    assign names to the whitespace-delimited columns produced by
+    ``uvspec``.
+
+    Parameters
+    ----------
+    config : SimulationConfig
+        Configuration that was used for the simulation.
+    parameter_overrides : dict, optional
+        Per-point overrides (used to detect brightness-temperature
+        mode).
+    """
     
     def __init__(self, config: SimulationConfig, parameter_overrides: Dict[str, Any] = None):
         self.config = config
@@ -428,7 +576,21 @@ class OutputParser:
         logger.debug(f"Initialized parser with columns: {self.output_columns}")
 
     def parse_output_file(self, output_file: Path) -> ParsedOutput:
-        """Parse a LibRadtran output file."""
+        """Parse a single ``uvspec`` output file.
+
+        Parameters
+        ----------
+        output_file : pathlib.Path
+
+        Returns
+        -------
+        ParsedOutput
+
+        Raises
+        ------
+        OutputParsingError
+            If the file is missing, empty, or cannot be parsed.
+        """
         try:
             if not output_file.exists():
                 raise OutputParsingError(f"Output file not found: {output_file}")
@@ -458,7 +620,7 @@ class OutputParser:
             raise OutputParsingError(f"Failed to parse output file {output_file}: {str(e)}")
     
     def _determine_output_type(self, data: np.ndarray) -> OutputType:
-        """Determine the type of LibRadtran output."""
+        """Infer the :class:`OutputType` from array shape and config."""
         n_rows, n_cols = data.shape
         n_altitudes = len(self.output_altitudes)
         n_wavelengths = 1 if self.is_integrated else len(self.wavelength_range)
@@ -475,7 +637,7 @@ class OutputParser:
                 return OutputType.SPECTRAL_MULTI_ALTITUDE
     
     def _parse_data_by_type(self, data: np.ndarray, output_type: OutputType) -> Dict[str, Any]:
-        """Parse data based on output type."""
+        """Map array columns to named variables."""
         parsed = {}
         
         for i, col_name in enumerate(self.output_columns):
@@ -485,7 +647,7 @@ class OutputParser:
         return parsed
     
     def _extract_wavelengths(self, data: np.ndarray, output_type: OutputType) -> Optional[List[float]]:
-        """Extract wavelength values if present."""
+        """Return unique wavelength values when present, else *None*."""
         if output_type in [OutputType.SPECTRAL_SINGLE_ALTITUDE, OutputType.SPECTRAL_MULTI_ALTITUDE]:
             if 'lambda' in self.output_columns:
                 lambda_idx = self.output_columns.index('lambda')
@@ -494,7 +656,7 @@ class OutputParser:
         return None
     
     def _extract_altitudes(self, data: np.ndarray, output_type: OutputType) -> Optional[List[float]]:
-        """Extract altitude values if present."""
+        """Return unique altitude values when present, else *None*."""
         if output_type in [OutputType.INTEGRATED_MULTI_ALTITUDE, OutputType.SPECTRAL_MULTI_ALTITUDE]:
             if 'zout' in self.output_columns:
                 zout_idx = self.output_columns.index('zout')
@@ -504,13 +666,19 @@ class OutputParser:
 
 
 class OutputToXarray:
-    """Convert parsed output to xarray Dataset."""
+    """Convert :class:`ParsedOutput` objects to :class:`xarray.Dataset`.
+
+    Provides :meth:`convert` for a single output and
+    :meth:`convert_batch` for a list (matching the flattened input
+    order produced by
+    :func:`~pyradtran.interface.execute_simulation_batch`).
+    """
     
     @staticmethod
     def convert(parsed_output: ParsedOutput, input_ds: xr.Dataset, 
                 time_var: str = 'time', lat_var: str = 'latitude', 
                 lon_var: str = 'longitude') -> xr.Dataset:
-        """Convert a single ParsedOutput to xarray Dataset."""
+        """Convert a single :class:`ParsedOutput` to an xarray Dataset."""
         # Create base dataset with coordinates from input
         ds = xr.Dataset()
         
@@ -554,9 +722,23 @@ class OutputToXarray:
     def convert_batch(parsed_outputs: List[Optional[ParsedOutput]], input_ds: xr.Dataset,
                      time_var: str = 'time', lat_var: str = 'latitude', 
                      lon_var: str = 'longitude') -> xr.Dataset:
-        """
-        Convert multiple ParsedOutput objects to a single xarray Dataset.
-        Handles arbitrary input dimensions by matching flattened outputs to stacked input.
+        """Convert a batch of :class:`ParsedOutput` objects to a single Dataset.
+
+        Failed simulations (*None* entries) produce NaN values.
+
+        Parameters
+        ----------
+        parsed_outputs : list of ParsedOutput or None
+            One entry per flattened input point.
+        input_ds : xarray.Dataset
+            Original input dataset (used to reconstruct dimensions).
+        time_var, lat_var, lon_var : str
+            Coordinate names.
+
+        Returns
+        -------
+        xarray.Dataset
+            Result with original input dimensions restored.
         """
         if not parsed_outputs:
             raise ValueError("No parsed outputs provided")
@@ -662,7 +844,7 @@ class OutputToXarray:
 
 
 class NetCDFSaver:
-    """Save results to NetCDF files."""
+    """Persist simulation results as CF-compliant NetCDF files."""
     
     @staticmethod
     def save_results_to_netcdf(
@@ -672,7 +854,26 @@ class NetCDFSaver:
         config: SimulationConfig,
         simulation_params: Dict[str, Any] = None
     ) -> Path:
-        """Save simulation results to NetCDF file."""
+        """Write results to a NetCDF file with provenance attributes.
+
+        Parameters
+        ----------
+        data : dict or xarray.Dataset
+            Simulation results.
+        output_path : pathlib.Path
+            Destination file.
+        input_ds : xarray.Dataset
+            Input dataset (for coordinate reference).
+        config : SimulationConfig
+            Configuration used for the run.
+        simulation_params : dict, optional
+            Extra metadata to embed.
+
+        Returns
+        -------
+        pathlib.Path
+            *output_path*.
+        """
         try:
             if isinstance(data, xr.Dataset):
                 ds = data

@@ -1,6 +1,31 @@
 # pyradtran/clouds.py
 """
-Cloud utilities for pyRadtran - Generate cloud files from xarray datasets
+Cloud utilities for pyRadtran.
+
+This module provides tools to create libRadtran-compatible cloud input
+files from various data sources.  The typical workflow is:
+
+1. Build a list of :class:`CloudLayer` objects — either from simple
+   parameters (:meth:`CloudGenerator.from_simple_parameters`) or from an
+   ERA5 dataset (:meth:`CloudGenerator.from_era5_dataset`).
+2. Write the layers to a ``.dat`` file with :class:`CloudFileWriter`.
+3. Pass the file path to ``ds.pyradtran.run()`` via
+   ``parameter_overrides={'wc_file 1D': 'my_cloud.dat'}``.
+
+Examples
+--------
+Create a simple water cloud and write it to a file:
+
+>>> from pyradtran.clouds import CloudGenerator, CloudFileWriter
+>>> from pathlib import Path
+>>> layers = CloudGenerator.from_simple_parameters(
+...     z_base_km=1.0, z_top_km=2.0, lwc_g_m3=0.3, r_eff_um=10.0, n_layers=5
+... )
+>>> CloudFileWriter.write_water_cloud_file(layers, Path("work/wc.dat"))
+
+See Also
+--------
+pyradtran.config.CloudParameters : Declarative cloud settings in YAML configs.
 """
 
 import logging
@@ -15,7 +40,44 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class CloudLayer:
-    """Represents a single cloud layer with its properties."""
+    """A single cloud layer with vertical extent and microphysical properties.
+
+    ``CloudLayer`` is a validated data container.  It is not written to disk
+    directly — pass a list of layers to :class:`CloudFileWriter` instead.
+
+    Parameters
+    ----------
+    z_bottom_km : float
+        Bottom altitude of the layer in km above sea level.
+    z_top_km : float
+        Top altitude of the layer in km above sea level.  Must be greater
+        than *z_bottom_km*.
+    lwc_g_m3 : float, default ``0.0``
+        Liquid water content in g m⁻³.
+    iwc_g_m3 : float, default ``0.0``
+        Ice water content in g m⁻³.
+    r_eff_um : float, default ``10.0``
+        Effective droplet / crystal radius in µm.
+    cloud_fraction : float, default ``1.0``
+        Cloud fraction (0–1).
+
+    Raises
+    ------
+    ValueError
+        If *z_bottom_km* >= *z_top_km*, water content is negative,
+        effective radius is non-positive, or cloud fraction is outside [0, 1].
+
+    Examples
+    --------
+    >>> layer = CloudLayer(z_bottom_km=1.0, z_top_km=2.0, lwc_g_m3=0.3)
+    >>> layer.r_eff_um
+    10.0
+
+    See Also
+    --------
+    CloudGenerator.from_simple_parameters : Build layers from basic numbers.
+    CloudGenerator.from_era5_dataset : Build layers from ERA5 reanalysis.
+    """
     z_bottom_km: float
     z_top_km: float
     lwc_g_m3: float = 0.0  # Liquid water content
@@ -35,7 +97,18 @@ class CloudLayer:
             raise ValueError("Cloud fraction must be between 0 and 1")
 
 class CloudGenerator:
-    """Generate libRadtran cloud files from various data sources."""
+    """Factory for :class:`CloudLayer` sequences.
+
+    All methods are static — no instantiation needed.  Choose a source
+    method according to your input data:
+
+    * :meth:`from_simple_parameters` — uniform slab from a few numbers.
+    * :meth:`from_era5_dataset` — vertically resolved layers from ERA5.
+
+    See Also
+    --------
+    CloudFileWriter : Persist layers to libRadtran ``.dat`` files.
+    """
     
     @staticmethod
     def from_era5_dataset(
@@ -52,26 +125,67 @@ class CloudGenerator:
         pressure_levels: Optional[str] = None,
         geopotential_var: Optional[str] = None
     ) -> List[CloudLayer]:
-        """
-        Extract cloud layers from ERA5 dataset.
-        
-        Args:
-            ds: xarray Dataset containing cloud data
-            time: Time to extract (if None, uses first time)
-            lat: Latitude to extract (if None, uses spatial mean)
-            lon: Longitude to extract (if None, uses spatial mean)
-            cloud_variables: Dictionary mapping standard names to dataset variable names
-                           e.g., {'lwc': 'clwc', 'iwc': 'ciwc', 'cc': 'cc', 'z': 'z'}
-            altitude_levels_km: Altitude levels in km (if None, computed from geopotential or pressure)
-            lwc_threshold: Minimum LWC to consider as cloud (g/m³)
-            iwc_threshold: Minimum IWC to consider as cloud (g/m³)
-            default_r_eff_water: Default effective radius for water droplets (μm)
-            default_r_eff_ice: Default effective radius for ice crystals (μm)
-            pressure_levels: Name of pressure coordinate (default: auto-detect)
-            geopotential_var: Name of geopotential variable (default: auto-detect from cloud_variables or 'z')
-            
-        Returns:
-            List of CloudLayer objects
+        """Extract cloud layers from an ERA5 :class:`xarray.Dataset`.
+
+        The method selects a single profile (time, lat, lon), converts
+        LWC / IWC from kg kg⁻¹ to g m⁻³, and returns
+        one :class:`CloudLayer` per model level that exceeds the water-
+        content thresholds.
+
+        Parameters
+        ----------
+        ds : xarray.Dataset
+            ERA5 dataset containing, at minimum, cloud water content on
+            pressure levels.
+        time : datetime, optional
+            Time step to select.  Defaults to the first available.
+        lat, lon : float, optional
+            Coordinates for nearest-neighbour selection.  If either is
+            *None* the spatial mean is used.
+        cloud_variables : dict of str, optional
+            Mapping ``{'lwc': 'clwc', 'iwc': 'ciwc', 'cc': 'cc',
+            'temp': 't', 'z': 'z'}`` that connects internal keys to
+            dataset variable names.
+        altitude_levels_km : numpy.ndarray, optional
+            Pre-computed altitude grid.  When *None*, altitudes are
+            derived from geopotential height or the hypsometric equation.
+        lwc_threshold : float, default ``1e-6``
+            Minimum liquid water content (g m⁻³) to retain.
+        iwc_threshold : float, default ``1e-6``
+            Minimum ice water content (g m⁻³) to retain.
+        default_r_eff_water : float, default ``10.0``
+            Effective radius for liquid droplets (µm).
+        default_r_eff_ice : float, default ``30.0``
+            Effective radius for ice crystals (µm).
+        pressure_levels : str, optional
+            Name of the pressure coordinate.  Auto-detected when *None*.
+        geopotential_var : str, optional
+            Name of the geopotential variable.  Auto-detected when *None*.
+
+        Returns
+        -------
+        list of CloudLayer
+            One layer per model level with significant cloud content,
+            sorted from lowest to highest altitude.
+
+        Raises
+        ------
+        ValueError
+            If no pressure coordinate can be found.
+        KeyError
+            If a required cloud variable is missing from *ds*.
+
+        Examples
+        --------
+        >>> import xarray as xr
+        >>> ds = xr.open_dataset("era5_cloud.nc")
+        >>> layers = CloudGenerator.from_era5_dataset(
+        ...     ds, lat=78.0, lon=15.0, default_r_eff_water=8.0
+        ... )
+
+        See Also
+        --------
+        generate_cloud_file_from_era5 : One-step convenience wrapper.
         """
         logger.info("Generating cloud layers from ERA5 dataset")
         
@@ -287,20 +401,50 @@ class CloudGenerator:
         cloud_fraction: float = 1.0,
         n_layers: int = 1
     ) -> List[CloudLayer]:
-        """
-        Create simple cloud layers from basic parameters.
-        
-        Args:
-            z_base_km: Cloud base altitude (km)
-            z_top_km: Cloud top altitude (km)
-            lwc_g_m3: Liquid water content (g/m³)
-            iwc_g_m3: Ice water content (g/m³)
-            r_eff_um: Effective radius (μm)
-            cloud_fraction: Cloud fraction (0-1)
-            n_layers: Number of layers to create
-            
-        Returns:
-            List of CloudLayer objects
+        """Create uniform cloud layers from basic parameters.
+
+        The altitude range *z_base_km* … *z_top_km* is split into
+        *n_layers* sub-layers, each receiving the same microphysical
+        values.
+
+        Parameters
+        ----------
+        z_base_km : float
+            Cloud base altitude (km above sea level).
+        z_top_km : float
+            Cloud top altitude (km above sea level).
+        lwc_g_m3 : float, default ``0.1``
+            Liquid water content (g m⁻³).
+        iwc_g_m3 : float, default ``0.0``
+            Ice water content (g m⁻³).
+        r_eff_um : float, default ``10.0``
+            Effective droplet / crystal radius (µm).
+        cloud_fraction : float, default ``1.0``
+            Cloud fraction (0–1).
+        n_layers : int, default ``1``
+            Number of sub-layers to create.
+
+        Returns
+        -------
+        list of CloudLayer
+            Layers ordered from bottom to top.
+
+        Raises
+        ------
+        ValueError
+            If *n_layers* < 1 or *z_base_km* >= *z_top_km*.
+
+        Examples
+        --------
+        >>> layers = CloudGenerator.from_simple_parameters(
+        ...     z_base_km=1.0, z_top_km=2.0, lwc_g_m3=0.3, n_layers=5
+        ... )
+        >>> len(layers)
+        5
+
+        See Also
+        --------
+        CloudFileWriter.write_water_cloud_file : Write layers to disk.
         """
         if n_layers <= 0:
             raise ValueError("Number of layers must be positive")
@@ -325,7 +469,21 @@ class CloudGenerator:
         return layers
 
 class CloudFileWriter:
-    """Write cloud data to libRadtran-compatible files."""
+    """Persist :class:`CloudLayer` sequences as libRadtran ``.dat`` files.
+
+    Two static methods are provided — one per cloud phase:
+
+    * :meth:`write_water_cloud_file` → ``wc_file 1D``
+    * :meth:`write_ice_cloud_file`   → ``ic_file 1D``
+
+    The output format is a three-column ASCII table
+    (altitude, water-content, effective-radius) understood by
+    libRadtran's ``wc_file`` / ``ic_file`` input options.
+
+    See Also
+    --------
+    CloudGenerator : Build :class:`CloudLayer` lists from data or parameters.
+    """
     
     @staticmethod
     def write_water_cloud_file(
@@ -334,17 +492,39 @@ class CloudFileWriter:
         include_zero_layers: bool = True,
         altitude_resolution_km: float = 0.1
     ) -> Path:
-        """
-        Write water cloud file in libRadtran format.
-        
-        Args:
-            cloud_layers: List of CloudLayer objects
-            output_path: Output file path
-            include_zero_layers: Whether to include layers with zero LWC
-            altitude_resolution_km: Vertical resolution for output
-            
-        Returns:
-            Path to written file
+        """Write a water-cloud ``.dat`` file for libRadtran.
+
+        The file contains three columns — altitude (km), liquid water
+        content (g m⁻³), and effective radius (µm) — on a
+        regular altitude grid.
+
+        Parameters
+        ----------
+        cloud_layers : list of CloudLayer
+            Layers to rasterise.  Only entries with ``lwc_g_m3 > 0``
+            contribute unless *include_zero_layers* is set.
+        output_path : pathlib.Path
+            Destination file.  Parent directories are created
+            automatically.
+        include_zero_layers : bool, default ``True``
+            If *True*, grid points outside any layer are written as
+            zero LWC.  Set to *False* to skip them.
+        altitude_resolution_km : float, default ``0.1``
+            Vertical spacing of the output grid (km).
+
+        Returns
+        -------
+        pathlib.Path
+            *output_path* (echoed back for convenience).
+
+        Examples
+        --------
+        >>> from pathlib import Path
+        >>> layers = CloudGenerator.from_simple_parameters(
+        ...     z_base_km=1.0, z_top_km=2.0, lwc_g_m3=0.3
+        ... )
+        >>> CloudFileWriter.write_water_cloud_file(layers, Path("wc.dat"))
+        PosixPath('wc.dat')
         """
         logger.info(f"Writing water cloud file to {output_path}")
         
@@ -394,17 +574,32 @@ class CloudFileWriter:
         include_zero_layers: bool = True,
         altitude_resolution_km: float = 0.1
     ) -> Path:
-        """
-        Write ice cloud file in libRadtran format.
-        
-        Args:
-            cloud_layers: List of CloudLayer objects
-            output_path: Output file path
-            include_zero_layers: Whether to include layers with zero IWC
-            altitude_resolution_km: Vertical resolution for output
-            
-        Returns:
-            Path to written file
+        """Write an ice-cloud ``.dat`` file for libRadtran.
+
+        Analogous to :meth:`write_water_cloud_file` but uses
+        ``iwc_g_m3`` and defaults to a 30 µm effective radius.
+
+        Parameters
+        ----------
+        cloud_layers : list of CloudLayer
+            Layers to rasterise.  Only entries with ``iwc_g_m3 > 0``
+            contribute unless *include_zero_layers* is set.
+        output_path : pathlib.Path
+            Destination file.
+        include_zero_layers : bool, default ``True``
+            Write zero-IWC grid points when *True*.
+        altitude_resolution_km : float, default ``0.1``
+            Vertical spacing of the output grid (km).
+
+        Returns
+        -------
+        pathlib.Path
+            *output_path*.
+
+        Examples
+        --------
+        >>> CloudFileWriter.write_ice_cloud_file(layers, Path("ic.dat"))
+        PosixPath('ic.dat')
         """
         logger.info(f"Writing ice cloud file to {output_path}")
         
@@ -455,20 +650,46 @@ def generate_cloud_file_from_era5(
     lon: Optional[float] = None,
     **kwargs
 ) -> Path:
-    """
-    Convenience function to generate cloud file from ERA5 dataset.
-    
-    Args:
-        era5_dataset: xarray Dataset with cloud data
-        output_path: Path where to save the cloud file
-        cloud_type: Type of cloud file ('wc' for water, 'ic' for ice)
-        time: Time to extract
-        lat: Latitude to extract  
-        lon: Longitude to extract
-        **kwargs: Additional arguments for CloudGenerator.from_era5_dataset
-        
-    Returns:
-        Path to generated cloud file
+    """One-step cloud-file generation from an ERA5 dataset.
+
+    Combines :meth:`CloudGenerator.from_era5_dataset` and the
+    appropriate :class:`CloudFileWriter` method into a single call.
+
+    Parameters
+    ----------
+    era5_dataset : xarray.Dataset
+        ERA5 dataset with cloud variables on pressure levels.
+    output_path : pathlib.Path
+        Destination ``.dat`` file.
+    cloud_type : {"wc", "ic"}, default ``"wc"``
+        ``"wc"`` for liquid water cloud, ``"ic"`` for ice cloud.
+    time : datetime, optional
+        Time step to select from the dataset.
+    lat, lon : float, optional
+        Coordinates for nearest-neighbour selection.
+    **kwargs
+        Forwarded to :meth:`CloudGenerator.from_era5_dataset`.
+
+    Returns
+    -------
+    pathlib.Path
+        *output_path*.
+
+    Raises
+    ------
+    ValueError
+        If *cloud_type* is not ``"wc"`` or ``"ic"``.
+
+    Examples
+    --------
+    >>> path = generate_cloud_file_from_era5(
+    ...     ds, Path("work/wc.dat"), cloud_type="wc", lat=78.0, lon=15.0
+    ... )
+
+    See Also
+    --------
+    CloudGenerator.from_era5_dataset : Extract layers only (no I/O).
+    CloudFileWriter : Write layers to disk separately.
     """
     # Generate cloud layers from ERA5
     cloud_layers = CloudGenerator.from_era5_dataset(

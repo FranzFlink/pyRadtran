@@ -1,9 +1,34 @@
 # pyradtran/config.py
 """
-Cleaned up configuration system for pyradtran.
+Configuration system for pyRadtran.
 
-This module provides a simplified configuration system with only the parameters
-that are actually used by the code, removing unused and redundant options.
+The configuration is assembled from up to three layers, each overriding
+the previous:
+
+1. **Package defaults** — ``config/clean_simulation.yaml`` shipped with
+   pyRadtran.
+2. **User master config** — ``~/.pyradtran/config.yaml`` (paths to
+   libRadtran, preferred solver, etc.).
+3. **Simulation config** — the YAML file passed to
+   ``ds.pyradtran.run(config_path=...)``.
+
+All settings are represented as :mod:`dataclasses` so they can be
+accessed as typed attributes and validated on construction.
+
+Examples
+--------
+Load the merged configuration and inspect paths:
+
+>>> from pyradtran.config import load_config
+>>> cfg = load_config("config/my_simulation.yaml")
+>>> cfg.paths.libradtran_bin
+PosixPath('/opt/libradtran/2.0.6/bin/uvspec')
+
+See Also
+--------
+pyradtran.core.Simulation : Consumes a :class:`SimulationConfig`.
+pyradtran.interface.PyRadtranAccessor.run : Calls :func:`load_config`
+    internally.
 """
 
 import yaml
@@ -15,10 +40,125 @@ import os
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Catalogs of short names for libRadtran data files
+# ---------------------------------------------------------------------------
+
+#: Short-name → (relative path under ``data/``, description)
+SOLAR_SPECTRA: Dict[str, Tuple[str, str]] = {
+    "kurudz_1.0nm": (
+        "solar_flux/kurudz_1.0nm.dat",
+        "Kurucz (1985) solar spectrum, 1 nm resolution, 250–10000 nm",
+    ),
+    "kurudz_0.1nm": (
+        "solar_flux/kurudz_0.1nm.dat",
+        "Kurucz (1985) solar spectrum, 0.1 nm resolution",
+    ),
+    "NewGuey2003": (
+        "solar_flux/NewGuey2003.dat",
+        "Gueymard (2003) high-resolution solar spectrum",
+    ),
+    "Thekaekara": (
+        "solar_flux/Thekaekara.dat",
+        "Thekaekara (1974) solar spectrum",
+    ),
+}
+
+#: Short-name → (relative path under ``data/``, description)
+ATMOSPHERE_PROFILES: Dict[str, Tuple[str, str]] = {
+    "afglus":  ("atmmod/afglus.dat",  "US Standard Atmosphere 1976"),
+    "afglms":  ("atmmod/afglms.dat",  "Mid-latitude Summer"),
+    "afglmw":  ("atmmod/afglmw.dat",  "Mid-latitude Winter"),
+    "afglt":   ("atmmod/afglt.dat",   "Tropical"),
+    "afglss":  ("atmmod/afglss.dat",  "Sub-arctic Summer"),
+    "afglsw":  ("atmmod/afglsw.dat",  "Sub-arctic Winter"),
+    "mcclams": ("atmmod/mcclams.dat", "McClatchey Mid-latitude Summer (extended)"),
+    "mcclamw": ("atmmod/mcclamw.dat", "McClatchey Mid-latitude Winter (extended)"),
+    # Trace-gas variants of US Standard
+    "afglus_ch4_vmr": ("atmmod/afglus_ch4_vmr.dat", "US Standard – CH4 VMR profile"),
+    "afglus_co_vmr":  ("atmmod/afglus_co_vmr.dat",  "US Standard – CO VMR profile"),
+    "afglus_n2o_vmr": ("atmmod/afglus_n2o_vmr.dat", "US Standard – N2O VMR profile"),
+    "afglus_n2_vmr":  ("atmmod/afglus_n2_vmr.dat",  "US Standard – N2 VMR profile"),
+    "afglus_no2":     ("atmmod/afglus_no2.dat",      "US Standard – NO2 profile"),
+}
+
+
+def _resolve_libradtran_shortname(
+    value: Optional[Union[str, Path]],
+    data_root: Path,
+    catalog: Dict[str, Tuple[str, str]],
+) -> Optional[Path]:
+    """Resolve a short name or path to an absolute :class:`~pathlib.Path`.
+
+    If *value* is a key in *catalog*, the corresponding file inside
+    *data_root* is returned.  Otherwise *value* is interpreted as a literal
+    path (absolute or relative to CWD).
+
+    Parameters
+    ----------
+    value : str or Path, optional
+        Short name (e.g. ``"kurudz_1.0nm"``) or explicit file path.
+    data_root : Path
+        The libRadtran ``data/`` directory used as the base for catalog
+        resolutions.
+    catalog : dict
+        One of :data:`SOLAR_SPECTRA` or :data:`ATMOSPHERE_PROFILES`.
+
+    Returns
+    -------
+    Path or None
+    """
+    if value is None:
+        return None
+    s = str(value)
+    if s in catalog:
+        return data_root / catalog[s][0]
+    return Path(s).expanduser()
+
+
+def list_solar_spectra() -> None:
+    """Print a table of available solar spectrum short names."""
+    print(f"{'Short name':<20}  Description")
+    print("-" * 70)
+    for name, (_, desc) in SOLAR_SPECTRA.items():
+        print(f"  {name:<18}  {desc}")
+
+
+def list_atmosphere_profiles() -> None:
+    """Print a table of available atmosphere profile short names."""
+    print(f"{'Short name':<22}  Description")
+    print("-" * 70)
+    for name, (_, desc) in ATMOSPHERE_PROFILES.items():
+        print(f"  {name:<20}  {desc}")
+
 
 @dataclass
 class PathsConfig:
-    """Essential paths for LibRadtran execution."""
+    """File-system paths required by libRadtran.
+
+    Parameters
+    ----------
+    libradtran_bin : pathlib.Path
+        Absolute path to the ``uvspec`` executable.
+    libradtran_data : pathlib.Path
+        Absolute path to the libRadtran ``data/`` directory.
+    atmosphere_profile : pathlib.Path, optional
+        Default atmosphere profile.  Inferred from *libradtran_data* when
+        *None*.
+    solar_spectrum : pathlib.Path, optional
+        Solar spectrum file.  Inferred from *libradtran_data* when *None*.
+    radiosonde_base : pathlib.Path, optional
+        Root directory for local radiosonde files.
+    output_dir : pathlib.Path, default ``"./pyradtran_output"``
+        Directory for NetCDF result files.
+    working_dir : pathlib.Path, default ``"./pyradtran_work"``
+        Scratch directory for temporary ``uvspec`` input/output files.
+
+    Raises
+    ------
+    FileNotFoundError
+        If *libradtran_bin* or *libradtran_data* do not exist.
+    """
     libradtran_bin: Path  # Path to uvspec executable
     libradtran_data: Path  # Path to LibRadtran data directory
     atmosphere_profile: Optional[Path] = None  # Default atmosphere profile file
@@ -34,7 +174,13 @@ class PathsConfig:
         if not self.libradtran_data.is_dir():
             raise FileNotFoundError(f"LibRadtran data directory not found: {self.libradtran_data}")
 
-        # Infer default paths if not provided
+        # Resolve short names / infer defaults
+        self.atmosphere_profile = _resolve_libradtran_shortname(
+            self.atmosphere_profile, self.libradtran_data, ATMOSPHERE_PROFILES
+        )
+        self.solar_spectrum = _resolve_libradtran_shortname(
+            self.solar_spectrum, self.libradtran_data, SOLAR_SPECTRA
+        )
         if self.atmosphere_profile is None:
             self.atmosphere_profile = self.libradtran_data / "atmmod" / "afglus.dat"
         if self.solar_spectrum is None:
@@ -52,7 +198,45 @@ class PathsConfig:
 
 @dataclass
 class CloudParameters:
-    """Simple cloud configuration - only essential parameters."""
+    """Declarative cloud settings used inside :class:`SimulationDefaults`.
+
+    Three *cloud_source* modes are supported:
+
+    ``"parametric"``
+        A single homogeneous slab defined by *layer_bottom_km*,
+        *layer_top_km*, *water_content_g_m3*, etc.
+    ``"file"``
+        Pre-computed cloud profile(s) on disk (*wc_file*, *ic_file*).
+    ``"era5"``
+        Auto-generated from an ERA5 dataset at run time.
+
+    Parameters
+    ----------
+    enabled : bool, default ``False``
+        Enable cloud handling.
+    cloud_type : {"wc", "ic", "mixed"}, default ``"wc"``
+        Cloud phase.
+    cloud_source : {"parametric", "file", "era5"}, default ``"parametric"``
+        How the cloud profile is supplied.
+    layer_bottom_km, layer_top_km : float
+        Vertical extent of the parametric slab (km).
+    water_content_g_m3, ice_content_g_m3 : float
+        Mass content (g m⁻³).
+    effective_radius_um : float, default ``10.0``
+        Effective droplet / crystal radius (µm).
+    cloud_fraction : float, default ``1.0``
+        Cloud fraction (0–1).
+    wc_file, ic_file : pathlib.Path, optional
+        Paths for file-based clouds.
+    era5_dataset : any, optional
+        Not serialisable in YAML; set at run time.
+    era5_time, era5_lat, era5_lon : str or float, optional
+        Selection parameters for the ERA5 source.
+
+    See Also
+    --------
+    pyradtran.clouds.CloudGenerator : Programmatic cloud-layer creation.
+    """
     enabled: bool = False
     
     # Cloud type and source
@@ -87,7 +271,56 @@ class CloudParameters:
 
 @dataclass
 class SimulationDefaults:
-    """Core simulation parameters - only the ones actually used."""
+    """Core simulation parameters passed to ``uvspec``.
+
+    Values set here act as defaults and can be overridden per-run via
+    *parameter_overrides* or the YAML config cascade.
+
+    Parameters
+    ----------
+    rte_solver : str, default ``"twostr"``
+        Radiative-transfer equation solver (``"twostr"``, ``"disort"``,
+        ``"fdisort1"``, ``"rodents"``, …).
+    mol_abs_param : str, default ``"lowtran per_nm"``
+        Molecular absorption parameterisation.
+    source : {"solar", "thermal"}, default ``"solar"``
+        Radiation source.
+    wavelength_nm : list of float, default ``[400, 3600]``
+        Two-element ``[min, max]`` wavelength range (nm).
+    integrate_wavelength : bool, default ``False``
+        If *True*, ``output_process integrate`` is appended.
+    output_columns : list of str
+        Column names for ``output_user``.
+    output_altitudes_km : list of float
+        Altitude levels for ``zout``.
+    albedo_value : float, optional
+        Surface albedo (0–1).
+    surface_temperature_k : float, optional
+        Surface temperature (K) for thermal simulations.
+    ozone_du : float, optional
+        Total ozone column (DU).
+    h2o_mm : float, optional
+        Precipitable water (mm).
+    h2o_source : {"fixed", "radiosonde"}, default ``"fixed"``
+        Water-vapour source strategy.
+    clouds : CloudParameters
+        Nested cloud settings.
+    viewing_geometry : str, default ``"nadir"``
+        Viewing geometry shortcut.
+    sza : float, optional
+        Solar zenith angle (°).  Calculated from time/location when
+        *None*.
+    parameter_overrides : dict
+        Raw ``key: value`` pairs appended verbatim to the ``uvspec``
+        input file, providing an escape hatch for any libRadtran option
+        not covered by the typed fields above.
+
+    Raises
+    ------
+    ValueError
+        On invalid *wavelength_nm* length, unknown *source*, or
+        out-of-range *albedo_value*.
+    """
     
     # Essential LibRadtran parameters
     rte_solver: str = "twostr"  # RTE solver: 'twostr', 'disort', 'fdisort1', 'rodents', etc.
@@ -137,7 +370,19 @@ class SimulationDefaults:
 
 @dataclass
 class ExecutionConfig:
-    """Execution parameters."""
+    """Run-time execution settings.
+
+    Parameters
+    ----------
+    max_workers : int, optional
+        Maximum parallel ``uvspec`` processes (capped at CPU count).
+    cleanup_temp_files : bool, default ``False``
+        Delete scratch files after each run.
+    debug_mode : bool, default ``False``
+        Enable verbose logging.
+    timeout_seconds : int, default ``300``
+        Per-simulation ``uvspec`` timeout.
+    """
     max_workers: Optional[int] = min(8, os.cpu_count() or 1)
     cleanup_temp_files: bool = False  # Keep temp files for debugging
     debug_mode: bool = False
@@ -146,7 +391,17 @@ class ExecutionConfig:
 
 @dataclass
 class OutputConfig:
-    """Output file configuration."""
+    """NetCDF output-file settings.
+
+    Parameters
+    ----------
+    filename_prefix : str
+        Prefix for auto-generated file names.
+    filename_suffix : str
+        Suffix (including extension) for auto-generated file names.
+    netcdf_encoding : dict
+        Passed to :meth:`xarray.Dataset.to_netcdf` as *encoding*.
+    """
     filename_prefix: str = "pyradtran_sim"
     filename_suffix: str = "_results.nc"
     netcdf_encoding: Dict[str, Any] = field(default_factory=lambda: {"zlib": True, "complevel": 5})
@@ -154,7 +409,22 @@ class OutputConfig:
 
 @dataclass
 class SimulationConfig:
-    """Main configuration class containing all settings."""
+    """Top-level configuration container.
+
+    Composed of four sections that mirror the YAML structure:
+
+    * :class:`PathsConfig` — file-system paths.
+    * :class:`SimulationDefaults` — physics & spectral settings.
+    * :class:`ExecutionConfig` — parallelism & debugging.
+    * :class:`OutputConfig` — NetCDF output.
+
+    Use :meth:`from_yaml` or :func:`load_config` to construct an
+    instance from disk.
+
+    See Also
+    --------
+    load_config : Recommended entry point (merges three layers).
+    """
     paths: PathsConfig
     simulation_defaults: SimulationDefaults
     execution: ExecutionConfig = field(default_factory=ExecutionConfig)
@@ -162,7 +432,22 @@ class SimulationConfig:
 
     @classmethod
     def from_yaml(cls, yaml_path: Union[str, Path]) -> 'SimulationConfig':
-        """Load configuration from a YAML file."""
+        """Load configuration from a single YAML file.
+
+        Parameters
+        ----------
+        yaml_path : str or pathlib.Path
+            Path to the YAML file.
+
+        Returns
+        -------
+        SimulationConfig
+
+        Raises
+        ------
+        FileNotFoundError
+            If *yaml_path* does not exist.
+        """
         yaml_path = Path(yaml_path)
         if not yaml_path.is_file():
             raise FileNotFoundError(f"Configuration file not found: {yaml_path}")
@@ -174,7 +459,7 @@ class SimulationConfig:
 
     @classmethod
     def _dict_to_dataclass(cls, data: Dict[str, Any], dataclass_type: type) -> Any:
-        """Convert dictionary to dataclass recursively."""
+        """Recursively convert a nested dictionary to dataclass instances."""
         field_types = {f.name: f.type for f in fields(dataclass_type)}
         init_args = {}
         
@@ -216,8 +501,77 @@ class SimulationConfig:
             logger.error(f"Arguments provided: {init_args}")
             raise
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialise the full configuration to a plain nested dict.
+
+        All :class:`~pathlib.Path` objects are converted to strings so
+        the result is immediately YAML-serialisable.
+
+        Returns
+        -------
+        dict
+            Nested dictionary mirroring the YAML structure.
+
+        See Also
+        --------
+        to_yaml : Write the result directly to a file.
+        """
+        def _convert(obj):
+            if is_dataclass(obj):
+                return {f.name: _convert(getattr(obj, f.name)) for f in fields(obj)}
+            elif isinstance(obj, Path):
+                return str(obj)
+            elif isinstance(obj, (list, tuple)):
+                return [_convert(v) for v in obj]
+            elif isinstance(obj, dict):
+                return {k: _convert(v) for k, v in obj.items()}
+            else:
+                return obj
+
+        d = _convert(self)
+        # Drop keys that are not YAML-serialisable (e.g. era5_dataset)
+        if 'simulation_defaults' in d and 'clouds' in d['simulation_defaults']:
+            d['simulation_defaults']['clouds'].pop('era5_dataset', None)
+        return d
+
+    def to_yaml(self, path: Union[str, Path]) -> Path:
+        """Write the configuration to a YAML file.
+
+        Parameters
+        ----------
+        path : str or pathlib.Path
+            Destination file.  Parent directories are created
+            automatically.
+
+        Returns
+        -------
+        pathlib.Path
+            The resolved path to the written file.
+
+        Examples
+        --------
+        Build a config dict in Python, load it, then persist it:
+
+        >>> cfg = load_config()
+        >>> cfg.to_yaml("config/my_simulation.yaml")
+        """
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'w') as f:
+            yaml.dump(self.to_dict(), f, default_flow_style=False, indent=2,
+                      sort_keys=True)
+        logger.info(f"Configuration written to {path}")
+        return path
+
     def get_used_parameters(self) -> Dict[str, Any]:
-        """Get a dictionary of all parameters that are actually used."""
+        """Return a flat dictionary of all active parameters.
+
+        Useful for logging or embedding in NetCDF attributes.
+
+        Returns
+        -------
+        dict
+        """
         return {
             'paths': {
                 'libradtran_bin': str(self.paths.libradtran_bin),
@@ -277,7 +631,7 @@ _DEFAULT_CONFIG_PATH = Path(__file__).parent.parent / "config" / "clean_simulati
 
 
 def _recursive_update(base: Dict, update: Dict) -> Dict:
-    """Recursively update a dictionary."""
+    """Recursively merge *update* into *base* (mutates *base*)."""
     for key, value in update.items():
         if isinstance(value, dict) and key in base and isinstance(base[key], dict):
             _recursive_update(base[key], value)
@@ -287,7 +641,32 @@ def _recursive_update(base: Dict, update: Dict) -> Dict:
 
 
 def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationConfig:
-    """Load simulation configuration."""
+    """Load and merge the three-layer configuration.
+
+    Resolution order (later wins):
+
+    1. Package defaults (``config/clean_simulation.yaml``).
+    2. User master config (``~/.pyradtran/config.yaml``).
+    3. *config_path* (the simulation-specific YAML).
+
+    Parameters
+    ----------
+    config_path : str or pathlib.Path, optional
+        Simulation-specific YAML.  When *None*, only layers 1 + 2 are
+        used.
+
+    Returns
+    -------
+    SimulationConfig
+
+    Raises
+    ------
+    FileNotFoundError
+        If *config_path* is given but does not exist.
+    ConfigurationError
+        If the merged dictionary cannot be converted to
+        :class:`SimulationConfig`.
+    """
     
     # 1. Start with the default configuration as the base
     # This ensures we have all required fields (like simulation_defaults)
@@ -343,8 +722,99 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
         raise
 
 
+def save_master_config(
+    libradtran_bin: Union[str, Path],
+    libradtran_data: Union[str, Path],
+    atmosphere_profile: Optional[Union[str, Path]] = None,
+    solar_spectrum: Optional[Union[str, Path]] = None,
+    radiosonde_base: Optional[Union[str, Path]] = None,
+    output_dir: Union[str, Path] = "./pyradtran_output",
+    working_dir: Union[str, Path] = "./pyradtran_work",
+    max_workers: Optional[int] = None,
+    extra: Optional[Dict[str, Any]] = None,
+) -> Path:
+    """Write (or update) the user master config at ``~/.pyradtran/config.yaml``.
+
+    The master config is **layer 2** of the three-layer config cascade.
+    It is ideal for storing machine-specific paths (libRadtran install
+    location, radiosonde archive, …) once so that every individual
+    simulation YAML can stay minimal.
+
+    Parameters
+    ----------
+    libradtran_bin : str or pathlib.Path
+        Absolute path to the ``uvspec`` executable.
+    libradtran_data : str or pathlib.Path
+        Absolute path to the libRadtran ``data/`` directory.
+    atmosphere_profile : str or pathlib.Path, optional
+        Default atmosphere profile.
+    solar_spectrum : str or pathlib.Path, optional
+        Solar-spectrum file.
+    radiosonde_base : str or pathlib.Path, optional
+        Root directory for local radiosonde files.
+    output_dir : str or pathlib.Path, default ``"./pyradtran_output"``
+    working_dir : str or pathlib.Path, default ``"./pyradtran_work"``
+    max_workers : int, optional
+        Maximum parallel ``uvspec`` processes.
+    extra : dict, optional
+        Additional config sections / keys to merge in
+        (e.g. ``{'execution': {'debug_mode': True}}``).
+
+    Returns
+    -------
+    pathlib.Path
+        The path to the master config file.
+
+    Examples
+    --------
+    >>> from pyradtran.config import save_master_config
+    >>> save_master_config(
+    ...     libradtran_bin="/opt/libradtran/bin/uvspec",
+    ...     libradtran_data="/opt/libradtran/share/libRadtran/data",
+    ... )
+    PosixPath('/home/user/.pyradtran/config.yaml')
+    """
+    master_dir = Path.home() / ".pyradtran"
+    master_dir.mkdir(parents=True, exist_ok=True)
+    master_path = master_dir / "config.yaml"
+
+    content: Dict[str, Any] = {
+        "paths": {
+            "libradtran_bin": str(libradtran_bin),
+            "libradtran_data": str(libradtran_data),
+        }
+    }
+    if atmosphere_profile is not None:
+        content["paths"]["atmosphere_profile"] = str(atmosphere_profile)
+    if solar_spectrum is not None:
+        content["paths"]["solar_spectrum"] = str(solar_spectrum)
+    if radiosonde_base is not None:
+        content["paths"]["radiosonde_base"] = str(radiosonde_base)
+    content["paths"]["output_dir"] = str(output_dir)
+    content["paths"]["working_dir"] = str(working_dir)
+
+    if max_workers is not None:
+        content.setdefault("execution", {})["max_workers"] = max_workers
+
+    if extra:
+        _recursive_update(content, extra)
+
+    with open(master_path, "w") as f:
+        yaml.dump(content, f, default_flow_style=False, indent=2, sort_keys=True)
+
+    logger.info(f"Master config saved to {master_path}")
+    print(f"Master config saved to: {master_path}")
+    return master_path
+
+
 def create_example_config(output_path: Union[str, Path]):
-    """Create an example configuration file."""
+    """Write a commented example YAML config to *output_path*.
+
+    Parameters
+    ----------
+    output_path : str or pathlib.Path
+        Destination file.  Parent directories are created automatically.
+    """
     example_config = {
         'paths': {
             'libradtran_bin': '/path/to/libradtran/bin/uvspec',

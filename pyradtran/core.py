@@ -1,23 +1,24 @@
-# pyradtran/core.py - UNIFIED VERSION
+# pyradtran/core.py
 """
-Unified core simulation engine for pyradtran - REFACTORED VERSION.
+Simulation engine for pyRadtran.
 
-This file provides the main Simulation class with:
-- Simplified input file generation (no more confusion about which generator is used!)
-- LibRadtran execution
-- Basic output handling
-- ERA5 atmosphere file support
-- Streamlined cloud support
+This module contains the :class:`Simulation` class, which is the
+low-level workhorse behind every ``uvspec`` invocation.  It is
+responsible for:
 
-Original version backed up as core.py.backup
+* Generating a complete ``uvspec`` input file from a
+  :class:`~pyradtran.config.SimulationConfig` and per-point overrides.
+* Spawning the ``uvspec`` subprocess and capturing its stdout.
+* Cleaning up temporary files.
 
-Key improvements:
-- Single input generation path (no more duplicate functions)
-- Works with cleaned configuration
-- Better error handling
-- Simplified cloud support
+Most users should interact with the higher-level
+:class:`~pyradtran.interface.PyRadtranAccessor` (``ds.pyradtran.run()``)
+rather than calling :class:`Simulation` directly.
 
-For migration guide, see REFACTORING_SUMMARY.md
+See Also
+--------
+pyradtran.interface : High-level batch interface and xarray accessor.
+pyradtran.io.OutputParser : Parse ``uvspec`` output files.
 """
 
 import logging
@@ -36,10 +37,20 @@ logger = logging.getLogger(__name__)
 
 
 class Simulation:
-    """Main simulation class for running LibRadtran simulations."""
+    """Low-level wrapper around a single ``uvspec`` execution.
+
+    Parameters
+    ----------
+    config : SimulationConfig
+        Fully merged configuration object.
+
+    See Also
+    --------
+    pyradtran.interface.execute_simulation_batch : Parallel driver.
+    """
     
     def __init__(self, config: SimulationConfig):
-        """Initialize simulation with configuration."""
+        """Initialise with a merged :class:`SimulationConfig`."""
         self.config = config
         self.radiosonde_finder = RadiosondeFinder(config.paths.radiosonde_base) if config.paths.radiosonde_base else None
     
@@ -56,24 +67,36 @@ class Simulation:
         parameter_overrides: Dict[str, Any] = None
     ) -> Optional[Path]:
         """
-        Run a single LibRadtran simulation.
-        
-        Args:
-            dt: Date and time for the simulation
-            latitude: Location latitude in degrees (-90 to 90)
-            longitude: Location longitude in degrees (-180 to 180)
-            override_albedo: Optional override for surface albedo value
-            override_surface_temperature: Optional override for surface temperature (K)
-            override_altitude_km: Optional override for observation altitude
-            override_surface_type: Optional IGBP surface type (1-20)
-            era5_atmosphere_file: Optional path to custom ERA5 atmosphere file
-            parameter_overrides: Dictionary of additional parameter overrides
-            
-        Returns:
-            Path to output file if successful, None otherwise
-            
-        Raises:
-            UvspecExecutionError: If LibRadtran execution fails
+        Run a single ``uvspec`` simulation.
+
+        Parameters
+        ----------
+        dt : datetime
+            Simulation date/time (UTC).
+        latitude, longitude : float
+            Location in degrees.
+        override_albedo : float, optional
+            Per-point surface albedo (overrides config value).
+        override_surface_temperature : float, optional
+            Per-point surface temperature in K.
+        override_altitude_km : float, optional
+            Per-point observation altitude in km.
+        override_surface_type : int, optional
+            IGBP surface-type code (1–20) for BRDF look-up.
+        era5_atmosphere_file : pathlib.Path, optional
+            Custom ERA5 atmosphere file (radiosonde format).
+        parameter_overrides : dict, optional
+            Extra ``key: value`` pairs appended to the input file.
+
+        Returns
+        -------
+        pathlib.Path or None
+            Path to the ``uvspec`` output file, or *None* on failure.
+
+        Raises
+        ------
+        UvspecExecutionError
+            If the subprocess returns a non-zero exit code.
         """
         temp_cloud_files = []
         try:
@@ -155,7 +178,7 @@ class Simulation:
         era5_atmosphere_file: Optional[Path] = None,
         parameter_overrides: Dict[str, Any] = None
     ) -> str:
-        """Generate LibRadtran input file content."""
+        """Build the full ``uvspec`` input-file content as a string."""
         lines = []
         
         # Basic LibRadtran settings
@@ -291,15 +314,24 @@ class Simulation:
 
     @staticmethod
     def format_cloud_profile(data: Dict[str, Any]) -> str:
-        """
-        Format cloud profile data into LibRadtran input format.
-        
-        Args:
-            data: Dictionary with 'z', 'lwc'/'iwc', and 'reff' keys.
-                  Example: {'z': [1.0, 2.0], 'lwc': [0.1, 0.5], 'reff': [10, 10]}
-        
-        Returns:
-            String content of the cloud file (z lwc reff)
+        """Format a cloud-profile dict as a libRadtran column file.
+
+        Parameters
+        ----------
+        data : dict
+            Must contain ``'z'`` (altitude in km) and either ``'lwc'``
+            or ``'iwc'`` (water content in g m⁻³), plus ``'reff'``
+            (effective radius in µm).
+
+        Returns
+        -------
+        str
+            Multi-line string ready to write to a ``.dat`` file.
+
+        Raises
+        ------
+        ValueError
+            If required keys are missing.
         """
         # Determine columns
         cols = []
@@ -336,9 +368,7 @@ class Simulation:
             raise RuntimeError(f"Failed to format cloud profile: {e}")
 
     def _handle_dynamic_clouds(self, overrides: Dict[str, Any]) -> tuple[Dict[str, Any], list[str]]:
-        """
-        Check for *_profile keys, create temp files, return new overrides handling them.
-        """
+        """Convert dict-valued ``wc_file`` / ``ic_file`` overrides to temp files."""
         new_updates = {}
         cleanup_list = []
         
@@ -374,7 +404,7 @@ class Simulation:
         return new_updates, cleanup_list
     
     def _add_cloud_settings(self, lines: list):
-        """Add cloud settings to input file."""
+        """Append cloud-related lines to the input file."""
         clouds = self.config.simulation_defaults.clouds
         
         if clouds.cloud_source == 'file':
@@ -392,7 +422,7 @@ class Simulation:
                 lines.append(f"ic_layer {clouds.layer_bottom_km} {clouds.layer_top_km} {clouds.ice_content_g_m3} {clouds.effective_radius_um}")
     
     def _calculate_solar_zenith_angle(self, dt: datetime, latitude: float, longitude: float) -> float:
-        """Calculate solar zenith angle for given time and location."""
+        """Approximate solar zenith angle (degrees) from time and location."""
         try:
             import numpy as np
             
@@ -423,7 +453,7 @@ class Simulation:
             return 30.0
     
     def _run_uvspec(self, input_path: Path, output_path: Path) -> bool:
-        """Execute LibRadtran/uvspec."""
+        """Spawn ``uvspec``, piping *input_path* to stdin and writing stdout to *output_path*."""
         try:
             cmd = [str(self.config.paths.libradtran_bin)]
             

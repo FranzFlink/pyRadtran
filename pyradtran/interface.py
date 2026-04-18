@@ -1,22 +1,27 @@
-# pyradtran/interface.py - UNIFIED VERSION
+# pyradtran/interface.py
 """
-Unified high-level interface for pyradtran - REFACTORED VERSION.
+High-level user-facing interface for pyRadtran.
 
-This file combines the best features from both interface.py and interface_old.py:
-- PyRadtranAccessor: xarray accessor registered as ds.pyradtran
-- execute_simulation_batch: Parallel execution of multiple uvspec runs
-- run_pyradtran_simulation: Standalone function for running simulations from a file
-- Full ERA5 atmosphere support (now actually works!)
+This module provides the three main entry points:
 
-Original versions backed up as interface.py.backup and interface_old.py.backup
+* :class:`PyRadtranAccessor` — xarray accessor registered as
+  ``ds.pyradtran``.
+* :func:`execute_simulation_batch` — parallel batch driver.
+* :func:`run_pyradtran_simulation` — standalone simulation from a file.
 
-Key improvements:
-- ERA5 atmosphere support fixed and reliable
-- Single unified interface (no more confusion)
-- Better error handling and validation
-- Comprehensive testing
+Examples
+--------
+Run all time steps in an xarray dataset:
 
-For migration guide, see REFACTORING_SUMMARY.md
+>>> result = ds.pyradtran.run(
+...     config_path="config/my_config.yaml",
+...     parameter_overrides={"albedo": 0.85},
+... )
+
+See Also
+--------
+pyradtran.core.Simulation : Low-level single-run engine.
+pyradtran.config.load_config : Configuration loading.
 """
 
 import logging
@@ -53,21 +58,36 @@ def run_pyradtran_simulation(
     parameter_overrides: Dict[str, Any] = None,
     max_workers: Optional[int] = None
 ) -> Path:
-    """
-    Run a complete pyradtran simulation based on input data from a file.
-    
-    Args:
-        input_file: Path to input data file (CSV/NetCDF) with time, lat, lon
-        output_path: Path for output NetCDF file (auto-generated if None)
-        config_path: Path to YAML configuration file (uses default if None)
-        parameter_overrides: Dictionary of simulation parameters to override
-        max_workers: Number of parallel workers (overrides config)
-        
-    Returns:
-        Path to the output NetCDF file
-        
-    Raises:
-        PyRadtranError: If simulation fails
+    """Run a full simulation pipeline from a CSV/NetCDF input file.
+
+    Loads the input data, runs ``uvspec`` in parallel for every
+    (time, latitude, longitude) point, and saves the results to
+    NetCDF.
+
+    Parameters
+    ----------
+    input_file : str or pathlib.Path
+        Path to a ``.csv`` or ``.nc`` file with ``time``, ``latitude``,
+        ``longitude`` columns.
+    output_path : str or pathlib.Path, optional
+        Destination NetCDF.  Auto-generated from the output config when
+        *None*.
+    config_path : str or pathlib.Path, optional
+        YAML configuration file.  Uses package defaults when *None*.
+    parameter_overrides : dict, optional
+        Extra ``key: value`` pairs for ``uvspec``.
+    max_workers : int, optional
+        Override the ``execution.max_workers`` config value.
+
+    Returns
+    -------
+    pathlib.Path
+        Path to the written NetCDF file.
+
+    Raises
+    ------
+    PyRadtranError
+        If the simulation pipeline fails.
     """
     try:
         # Load configuration
@@ -141,34 +161,52 @@ def execute_simulation_batch(
     cloud_top_var: Optional[str] = None,
     cloud_bottom_var: Optional[str] = None
 ) -> List[Optional[ParsedOutput]]:
-    """
-    Execute a batch of simulations in parallel covering all points in input_ds.
-    
-    Args:
-        config: Simulation configuration
-        input_ds: Input dataset (can have arbitrary dimensions)
-        time_var: Name of time dimension/coordinate/variable
-        lat_var: Name of latitude dimension/coordinate/variable
-        lon_var: Name of longitude dimension/coordinate/variable
-        albedo_var: Optional name of albedo data_var
-        surface_temperature_var: Optional name of surface temperature data_var
-        surface_type_var: Optional name of IGBP surface type data_var (1-20)
-        altitude_var: Optional name of altitude data_var
-        era5_atmosphere: Optional ERA5 dataset for custom atmosphere profiles
-        parameter_overrides: Dictionary of simulation parameters to override
-        progress_callback: Optional callback function(current, total) for progress updates
-        cloud_wc_var: Optional variable name for Liquid Water Content
-        cloud_ic_var: Optional variable name for Ice Water Content
-        cloud_reff_var: Optional variable name for Liquid Effective Radius (or shared)
-        cloud_ic_reff_var: Optional variable name for Ice Effective Radius
-        cloud_top_var: Optional variable name for Cloud Top Height (km)
-        cloud_bottom_var: Optional variable name for Cloud Base Height (km)
-        
-    Returns:
-        List of ParsedOutput objects (or None for failed points), matching the flattened input order.
-        
-    Raises:
-        PyRadtranError: If all simulations fail
+    """Run ``uvspec`` in parallel for every point in *input_ds*.
+
+    The input dataset is flattened (stacked) over all its dimensions so
+    that each combination of coordinates becomes one simulation.  Results
+    are returned in the same flat order, ready for
+    :meth:`~pyradtran.io.OutputToXarray.convert_batch`.
+
+    Parameters
+    ----------
+    config : SimulationConfig
+        Merged configuration.
+    input_ds : xarray.Dataset
+        Input coordinates (arbitrary number of dimensions).
+    time_var, lat_var, lon_var : str
+        Names of core coordinate variables.
+    albedo_var : str, optional
+        Dataset variable to use as per-point albedo.
+    surface_temperature_var : str, optional
+        Per-point surface temperature variable.
+    surface_type_var : str, optional
+        Per-point IGBP surface-type variable (1–20).
+    altitude_var : str, optional
+        Per-point scalar altitude variable.
+    era5_atmosphere : xarray.Dataset, optional
+        ERA5 dataset for atmosphere file generation.
+    parameter_overrides : dict, optional
+        Extra ``key: value`` pairs forwarded to ``uvspec``.
+    progress_callback : callable, optional
+        ``callback(current, total)`` invoked after each simulation.
+    cloud_wc_var, cloud_ic_var : str, optional
+        Dataset variables for liquid / ice water content.
+    cloud_reff_var, cloud_ic_reff_var : str, optional
+        Effective-radius variables.
+    cloud_top_var, cloud_bottom_var : str, optional
+        Cloud-boundary variables (km).  Required when
+        *cloud_wc_var* or *cloud_ic_var* is set.
+
+    Returns
+    -------
+    list of ParsedOutput or None
+        One entry per flattened input point.  *None* for failed runs.
+
+    Raises
+    ------
+    PyRadtranError
+        If **all** simulations fail.
     """
     # Ensure input_ds is a Dataset
     if isinstance(input_ds, xr.DataArray):
@@ -423,17 +461,7 @@ def _run_single_simulation_unified(
     point_data: Tuple,
     parameter_overrides: Dict[str, Any] = None
 ) -> Optional[ParsedOutput]:
-    """
-    Run a single simulation (used by execute_simulation_batch).
-    
-    Args:
-        config: Simulation configuration
-        point_data: Tuple of (time, lat, lon, albedo, surf_temp, surf_type, altitude, era5_file, point_id)
-        parameter_overrides: Dictionary of simulation parameters to override
-        
-    Returns:
-        ParsedOutput object or None if simulation failed
-    """
+    """Execute a single ``uvspec`` run (called by the process pool)."""
     try:
         time, lat, lon, albedo, surf_temp, surf_type, altitude, era5_file, point_id = point_data
         
@@ -495,7 +523,7 @@ def _run_single_simulation_unified(
 
 
 def _apply_parameter_overrides(config: SimulationConfig, parameter_overrides: Dict[str, Any]):
-    """Apply parameter overrides to configuration."""
+    """Apply dotted-path overrides (e.g. ``simulation_defaults.albedo_value``) to *config*."""
     for key, value in parameter_overrides.items():
         parts = key.split('.')
         if len(parts) == 2:
@@ -514,11 +542,22 @@ def _apply_parameter_overrides(config: SimulationConfig, parameter_overrides: Di
 
 @xr.register_dataset_accessor("pyradtran")
 class PyRadtranAccessor:
-    """
-    xarray accessor for pyradtran functionality.
-    
-    This accessor provides a convenient interface for running LibRadtran simulations
-    directly from xarray datasets containing time, latitude, and longitude information.
+    """xarray accessor for running libRadtran simulations.
+
+    Registered as ``ds.pyradtran``.  The primary method is :meth:`run`,
+    which parallelises ``uvspec`` over every point in the dataset.
+
+    Examples
+    --------
+    >>> result = ds.pyradtran.run(
+    ...     config_path="config/my_config.yaml",
+    ...     era5_atmosphere=era5_ds,
+    ...     parameter_overrides={"albedo": 0.85},
+    ... )
+
+    See Also
+    --------
+    execute_simulation_batch : The underlying parallel driver.
     """
     
     def __init__(self, xarray_obj):
@@ -550,30 +589,51 @@ class PyRadtranAccessor:
         cloud_bottom_var: Optional[str] = None
     ) -> Union[xr.Dataset, Path]:
         """
-        Run pyradtran simulations for all points in the dataset.
-        
-        Args:
-            config_path: Path to YAML configuration file (uses default if None)
-            config: Direct SimulationConfig object (overrides config_path)
-            parameter_overrides: Dictionary of simulation parameters to override
-            time_var: Name of time dimension/coordinate in the dataset
-            lat_var: Name of latitude dimension/coordinate in the dataset
-            lon_var: Name of longitude dimension/coordinate in the dataset
-            albedo_var: Optional name of albedo data_var in the dataset
-            surface_temperature_var: Optional name of surface temperature data_var in the dataset
-            surface_type_var: Optional name of IGBP surface type data_var in the dataset (1-20)
-            era5_atmosphere: Optional ERA5 xarray Dataset for custom atmosphere profiles
-            return_dataset: If True, return the results as an xarray Dataset
-            save_to_file: If True, save results to a NetCDF file
-            output_path: Path for output file (auto-generated if None)
-            progress_callback: Optional callback function(current, total) for progress updates
-            
-        Returns:
-            If return_dataset is True, return an xarray Dataset with results
-            If save_to_file is True and return_dataset is False, return the output file path
-            
-        Raises:
-            PyRadtranError: If simulation fails
+        Run ``uvspec`` for every point in the dataset.
+
+        Parameters
+        ----------
+        config_path : str or pathlib.Path, optional
+            YAML configuration file.
+        config : SimulationConfig, optional
+            Pre-built config (overrides *config_path*).
+        parameter_overrides : dict, optional
+            Extra ``key: value`` pairs for ``uvspec``.
+        time_var, lat_var, lon_var : str
+            Coordinate variable names.
+        albedo_var : str, optional
+            Per-point albedo variable.
+        surface_temperature_var : str, optional
+            Per-point surface-temperature variable.
+        surface_type_var : str, optional
+            Per-point IGBP surface-type variable.
+        era5_atmosphere : xarray.Dataset, optional
+            ERA5 dataset for custom atmosphere profiles.
+        return_dataset : bool, default ``True``
+            Return results as an xarray Dataset.
+        save_to_file : bool, default ``True``
+            Write results to NetCDF.
+        output_path : str or pathlib.Path, optional
+            Destination file (auto-generated when *None*).
+        progress_callback : callable, optional
+            ``callback(current, total)``.
+        cloud_wc_var, cloud_ic_var : str, optional
+            LWC / IWC dataset variables.
+        cloud_reff_var, cloud_ic_reff_var : str, optional
+            Effective-radius variables.
+        cloud_top_var, cloud_bottom_var : str, optional
+            Cloud geometry variables (km).
+
+        Returns
+        -------
+        xarray.Dataset or pathlib.Path
+            Results dataset when *return_dataset* is True, otherwise
+            the output file path.
+
+        Raises
+        ------
+        PyRadtranError
+            If no valid results are produced.
         """
         # Load configuration
         if config:
@@ -684,7 +744,11 @@ class PyRadtranAccessor:
             )
         else:
             raise PyRadtranError("No valid simulation results to return or save")
-    
+
+    #: Alias for :meth:`run` — kept for backwards compatibility with older
+    #: notebooks that call ``ds.pyradtran.run_uvspec(...)``.
+    run_uvspec = run
+
     def inspect_cloud_file(
         self,
         selector: Dict[str, Any] = None,
@@ -696,18 +760,22 @@ class PyRadtranAccessor:
         cloud_top_var: Optional[str] = None,
         cloud_bottom_var: Optional[str] = None
     ) -> str:
-        """
-        Inspect the generated cloud file content for a specific point.
-        
-        Args:
-            selector: Dictionary for selecting a single point (passed to .sel())
-                     Example: {'time': '2022-01-01 12:00'}
-            parameter_overrides: Optional overrides
-            cloud_wc_var: Name of LWC variable
-            ... (other cloud args) ...
-            
-        Returns:
-            String content of the generated cloud file.
+        """Preview the cloud-profile file that would be generated.
+
+        Parameters
+        ----------
+        selector : dict, optional
+            Passed to ``Dataset.sel()`` to pick a single point.
+            Defaults to the first element along every dimension.
+        parameter_overrides : dict, optional
+        cloud_wc_var, cloud_ic_var, cloud_reff_var : str, optional
+        cloud_ic_reff_var, cloud_top_var, cloud_bottom_var : str, optional
+
+        Returns
+        -------
+        str
+            Column-formatted cloud profile, or an explanatory message
+            when no cloud can be constructed.
         """
         if selector is None:
              # Default to first point
@@ -785,7 +853,7 @@ class PyRadtranAccessor:
                               albedo_var: Optional[str], surface_temperature_var: Optional[str],
                               surface_type_var: Optional[str],
                               era5_atmosphere: Optional[xr.Dataset]):
-        """Validate input dataset variables and coordinates."""
+        """Validate that expected variables exist in the dataset."""
         # Check required variables
         if time_var not in self._obj.dims and time_var not in self._obj.coords:
             raise PyRadtranError(f"Time variable '{time_var}' not found in dataset")
