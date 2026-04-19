@@ -1,8 +1,20 @@
 # Configuration Gallery
 
-This gallery showcases various simulation configurations available in pyRadtran.
+This gallery showcases the simulation configurations used in the pyRadtran notebooks.
 
 ## Available Configurations
+
+### Quickstart
+
+#### Quickstart Configuration
+**File:** `quickstart.yaml`
+
+```{literalinclude} quickstart.yaml
+:language: yaml
+:caption: Quickstart simulation configuration
+```
+
+---
 
 ### Surface Properties
 
@@ -38,12 +50,22 @@ This gallery showcases various simulation configurations available in pyRadtran.
 
 ---
 
-#### Realistic Cloud Example
-**File:** `realistic_cloud_example.yaml`
+#### Arctic Cloud Experiment — Solar
+**File:** `arctic_cloud_experiment_solar.yaml`
 
-```{literalinclude} realistic_cloud_example.yaml
+```{literalinclude} arctic_cloud_experiment_solar.yaml
 :language: yaml
-:caption: Realistic cloud simulation configuration
+:caption: Arctic cloud experiment solar configuration
+```
+
+---
+
+#### Arctic Cloud Experiment — Thermal
+**File:** `arctic_cloud_experiment_thermal.yaml`
+
+```{literalinclude} arctic_cloud_experiment_thermal.yaml
+:language: yaml
+:caption: Arctic cloud experiment thermal configuration
 ```
 
 ---
@@ -56,6 +78,16 @@ This gallery showcases various simulation configurations available in pyRadtran.
 ```{literalinclude} radiosonde.yaml
 :language: yaml
 :caption: Radiosonde atmospheric profile configuration
+```
+
+---
+
+#### Radiosonde Solar Spectral Configuration
+**File:** `radiosonde_solar_spectral.yaml`
+
+```{literalinclude} radiosonde_solar_spectral.yaml
+:language: yaml
+:caption: Radiosonde solar spectral simulation configuration
 ```
 
 ---
@@ -92,12 +124,12 @@ This gallery showcases various simulation configurations available in pyRadtran.
 
 ---
 
-### Field Campaign
+### Field Campaigns
 
-#### HALO-AC3 BBR Configuration
-**File:** `halo-ac3_bbr_all_aircraft.ipynb.yaml`
+#### HALO-AC3 BBR Aircraft Configuration
+**File:** `halo-ac3_bbr_all_aircraft.yaml`
 
-```{literalinclude} halo-ac3_bbr_all_aircraft.ipynb.yaml
+```{literalinclude} halo-ac3_bbr_all_aircraft.yaml
 :language: yaml
 :caption: HALO-AC3 BBR aircraft simulation configuration
 ```

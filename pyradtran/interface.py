@@ -159,7 +159,8 @@ def execute_simulation_batch(
     cloud_reff_var: Optional[str] = None,  # For liquid (or shared)
     cloud_ic_reff_var: Optional[str] = None, # For ice (optional)
     cloud_top_var: Optional[str] = None,
-    cloud_bottom_var: Optional[str] = None
+    cloud_bottom_var: Optional[str] = None,
+    show_progress: bool = True
 ) -> List[Optional[ParsedOutput]]:
     """Run ``uvspec`` in parallel for every point in *input_ds*.
 
@@ -190,6 +191,9 @@ def execute_simulation_batch(
         Extra ``key: value`` pairs forwarded to ``uvspec``.
     progress_callback : callable, optional
         ``callback(current, total)`` invoked after each simulation.
+    show_progress : bool, default ``True``
+        Show a ``tqdm`` progress bar.  Set to ``False`` to suppress it
+        (e.g. when running inside a rendered Jupyter notebook).
     cloud_wc_var, cloud_ic_var : str, optional
         Dataset variables for liquid / ice water content.
     cloud_reff_var, cloud_ic_reff_var : str, optional
@@ -273,7 +277,14 @@ def execute_simulation_batch(
                 # Check if we already generated it
                 if point_id not in era5_atmosphere_files:
                     atm_file = atm_dir / f"era5_atm_{point_id}.dat"
-                    if not atm_file.exists():
+                    # Regenerate if missing or contains only header lines (empty/broken cache)
+                    needs_creation = not atm_file.exists() or (
+                        atm_file.exists() and not any(
+                            not line.startswith('#') and line.strip()
+                            for line in atm_file.read_text().splitlines()
+                        )
+                    )
+                    if needs_creation:
                         era5_generator.create_era5_atmosphere_file(
                             era5_atmosphere, lat, lon, dt, atm_file
                         )
@@ -372,7 +383,7 @@ def execute_simulation_batch(
     results = [None] * num_points # Pre-allocate results list to preserve order
     
     # Initialize progress bar
-    if HAS_TQDM:
+    if HAS_TQDM and show_progress:
         pbar = tqdm(total=num_points, desc="Running simulations", unit="sim")
     else:
         pbar = None
@@ -586,7 +597,8 @@ class PyRadtranAccessor:
         cloud_reff_var: Optional[str] = None,  
         cloud_ic_reff_var: Optional[str] = None, 
         cloud_top_var: Optional[str] = None,
-        cloud_bottom_var: Optional[str] = None
+        cloud_bottom_var: Optional[str] = None,
+        show_progress: bool = True
     ) -> Union[xr.Dataset, Path]:
         """
         Run ``uvspec`` for every point in the dataset.
@@ -617,6 +629,9 @@ class PyRadtranAccessor:
             Destination file (auto-generated when *None*).
         progress_callback : callable, optional
             ``callback(current, total)``.
+        show_progress : bool, default ``True``
+            Show a ``tqdm`` progress bar.  Pass ``False`` to suppress it
+            (useful when the output will be rendered as HTML).
         cloud_wc_var, cloud_ic_var : str, optional
             LWC / IWC dataset variables.
         cloud_reff_var, cloud_ic_reff_var : str, optional
@@ -702,7 +717,8 @@ class PyRadtranAccessor:
             cloud_reff_var=cloud_reff_var,
             cloud_ic_reff_var=cloud_ic_reff_var,
             cloud_top_var=cloud_top_var,
-            cloud_bottom_var=cloud_bottom_var
+            cloud_bottom_var=cloud_bottom_var,
+            show_progress=show_progress
         )
         
         # Convert to xarray Dataset

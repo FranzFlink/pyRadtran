@@ -33,6 +33,7 @@ ds_sim = ds.pyradtran.run(
 )
 ```
 
+
 ## Configuration System
 
 pyRadtran uses a **three-layer configuration system**:
@@ -73,6 +74,11 @@ ds_sim = ds.pyradtran.run(
     },
 )
 ```
+
+```{tip}
+The [libRadtran manual](https://www.libradtran.org/doc/libRadtran.pdf) will be your best friend when working with pyRadtran! You can set *any* libRadtran parameter via `parameter_overrides` — just make sure to use the correct parameter names as documented in the manual.
+```
+
 
 ## Working with Results
 
