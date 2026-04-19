@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 import pytest
 import xarray as xr
+from helpers import has_libradtran
 
 from pyradtran.config import (
     PathsConfig,
@@ -26,8 +27,6 @@ from pyradtran.config import (
 )
 from pyradtran.core import Simulation
 from pyradtran.io import OutputParser, OutputToXarray, OutputType
-
-from helpers import has_libradtran
 
 
 # Reuse the integration config setup but allow modification
