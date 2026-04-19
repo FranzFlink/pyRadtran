@@ -24,7 +24,6 @@ pyradtran.core.Simulation : Low-level single-run engine.
 pyradtran.config.load_config : Configuration loading.
 """
 
-import copy  # Added by user instruction
 import logging
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime
@@ -790,7 +789,7 @@ class PyRadtranAccessor:
             # Altitude is a data variable - treat as scalar per time step
             altitude_as_data_var = True
             logger.info(
-                f"Altitude found as data variable - will be treated as scalar altitude for each time step"
+                "Altitude found as data variable - will be treated as scalar altitude for each time step"
             )
 
         # Generate output path if saving and not provided

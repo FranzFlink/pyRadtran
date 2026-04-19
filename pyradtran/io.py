@@ -224,11 +224,8 @@ class ERA5AtmosphereGenerator:
         """
         try:
             # Physical and chemical constants for conversions
-            G_STD = 9.80665  # Standard gravity (m/s^2)
             K_B = 1.380649e-23  # Boltzmann constant (J/K)
             M_AIR = 0.0289647  # Molar mass of dry air (kg/mol)
-            # M_O3 = 0.0479982     # Molar mass of Ozone (O3) (kg/mol)
-            M_H2O = 0.01801528  # Molar mass of Water (H2O) (kg/mol)
             # M_CO2 = 0.04401      # Molar mass of Carbon Dioxide (CO2) (kg/mol)
             # M_NO2 = 0.0460055    # Molar mass of Nitrogen Dioxide (NO2) (kg/mol)
             # O2_MIXING_RATIO = 0.2095 # Volumetric mixing ratio of O2 in dry air
@@ -281,8 +278,6 @@ class ERA5AtmosphereGenerator:
             p_unit = profile_data.pressure_level.units
 
             # Extract variables and perform unit conversions
-            altitude_km = profile_data["z"]
-
             if p_unit == "Pa":
                 pressure_pa = profile_data["pressure_level"]
             if p_unit == "hPa":
@@ -560,9 +555,7 @@ class RadiosondeAtmosphereGenerator:
         e = 6.112 * np.exp(17.67 * df["dewpoint"] / (df["dewpoint"] + 243.5))
         e_s = 6.112 * np.exp(17.67 * df["temperature"] / (df["temperature"] + 243.5))
         rh = (e / e_s) * 100  # Relative Humidity in %
-        w = 0.622 * e / (df["pressure"] - e)  # kg/kg
         temp_k = df["temperature"] + 273.15
-        height_km = df["height"] / 1000.0
         pressure_hpa = df["pressure"]
 
         sorted_idx = np.argsort(pressure_hpa.values)
@@ -619,9 +612,7 @@ class OutputParser:
         for col in original_columns:
             # For brightness output, LibRadtran doesn't include albedo column
             if self.is_brightness_output and col == "albedo":
-                logger.debug(
-                    f"Skipping albedo column for brightness temperature output"
-                )
+                logger.debug("Skipping albedo column for brightness temperature output")
                 continue
             self.output_columns.append(col)
 
@@ -683,7 +674,6 @@ class OutputParser:
         """Infer the :class:`OutputType` from array shape and config."""
         n_rows, n_cols = data.shape
         n_altitudes = len(self.output_altitudes)
-        n_wavelengths = 1 if self.is_integrated else len(self.wavelength_range)
 
         if n_altitudes == 1:
             if self.is_integrated:

@@ -30,7 +30,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from .config import SimulationConfig
-from .exceptions import InputGenerationError, UvspecExecutionError
+from .exceptions import UvspecExecutionError
 from .utils import RadiosondeFinder
 
 logger = logging.getLogger(__name__)
@@ -163,7 +163,7 @@ class Simulation:
 
                 return output_path
             else:
-                logger.error(f"Simulation failed or produced no output")
+                logger.error("Simulation failed or produced no output")
                 return None
 
         except Exception as e:
