@@ -1,16 +1,28 @@
-import pytest
-from pathlib import Path
-import yaml
-import tempfile
-import shutil
 import os
-from unittest.mock import patch, MagicMock
+import shutil
+import tempfile
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
+import pytest
+import yaml
+
 from pyradtran.config import (
-    PathsConfig, load_config, SimulationConfig, SimulationDefaults,
-    ExecutionConfig, OutputConfig, _recursive_update, save_master_config,
-    SOLAR_SPECTRA, ATMOSPHERE_PROFILES, _resolve_libradtran_shortname,
-    list_solar_spectra, list_atmosphere_profiles,
+    ATMOSPHERE_PROFILES,
+    SOLAR_SPECTRA,
+    ExecutionConfig,
+    OutputConfig,
+    PathsConfig,
+    SimulationConfig,
+    SimulationDefaults,
+    _recursive_update,
+    _resolve_libradtran_shortname,
+    list_atmosphere_profiles,
+    list_solar_spectra,
+    load_config,
+    save_master_config,
 )
+
 
 @pytest.fixture
 def mock_master_config_path(tmp_path):
@@ -20,14 +32,16 @@ def mock_master_config_path(tmp_path):
     config_file = config_dir / "config.yaml"
     return config_file
 
+
 def test_recursive_update():
     """Test recursive update of dictionaries."""
-    base = {'a': 1, 'b': {'c': 2, 'd': 3}}
-    update = {'b': {'c': 4}, 'e': 5}
-    expected = {'a': 1, 'b': {'c': 4, 'd': 3}, 'e': 5}
-    
+    base = {"a": 1, "b": {"c": 2, "d": 3}}
+    update = {"b": {"c": 4}, "e": 5}
+    expected = {"a": 1, "b": {"c": 4, "d": 3}, "e": 5}
+
     result = _recursive_update(base, update)
     assert result == expected
+
 
 def test_path_inference(tmp_path):
     """Test standard path inference."""
@@ -35,7 +49,7 @@ def test_path_inference(tmp_path):
     data_dir.mkdir()
     bin_file = tmp_path / "uvspec"
     bin_file.touch()
-    
+
     # Create expected default files mocked
     (data_dir / "atmmod").mkdir()
     (data_dir / "atmmod" / "afglus.dat").touch()
@@ -49,13 +63,13 @@ def test_path_inference(tmp_path):
         libradtran_bin=bin_file,
         libradtran_data=data_dir,
         atmosphere_profile=data_dir / "custom.dat",
-        solar_spectrum=data_dir / "custom_solar.dat"
+        solar_spectrum=data_dir / "custom_solar.dat",
     )
     # Mock existence manually for custom files as they are checked in post_init
     # We can just skip actual file check by mocking Path.is_file/is_dir or ensuring they exist
     # Here we won't mock, so we expect errors if they don't exist.
     # PathsConfig checks existence in post_init.
-    
+
     # Case 2: Inference
     config_inferred = PathsConfig(
         libradtran_bin=bin_file,
@@ -63,11 +77,14 @@ def test_path_inference(tmp_path):
         # atmosphere_profile and solar_spectrum omitted
     )
     assert config_inferred.atmosphere_profile == data_dir / "atmmod" / "afglus.dat"
-    assert config_inferred.solar_spectrum == data_dir / "solar_flux" / "kurudz_1.0nm.dat"
+    assert (
+        config_inferred.solar_spectrum == data_dir / "solar_flux" / "kurudz_1.0nm.dat"
+    )
+
 
 def test_load_config_with_master(tmp_path, mock_master_config_path):
     """Test loading config combining master and specific config."""
-    
+
     # Define paths
     bin_path = tmp_path / "uvspec"
     data_path = tmp_path / "data"
@@ -80,30 +97,24 @@ def test_load_config_with_master(tmp_path, mock_master_config_path):
 
     # 1. Create Master Config
     master_config_content = {
-        'paths': {
-            'libradtran_bin': str(bin_path),
-            'libradtran_data': str(data_path),
-            'atmosphere_profile': str(data_path / "atmmod" / "afglus.dat"),
-            'solar_spectrum': str(data_path / "solar_flux" / "kurudz_1.0nm.dat"),
+        "paths": {
+            "libradtran_bin": str(bin_path),
+            "libradtran_data": str(data_path),
+            "atmosphere_profile": str(data_path / "atmmod" / "afglus.dat"),
+            "solar_spectrum": str(data_path / "solar_flux" / "kurudz_1.0nm.dat"),
         },
-        'execution': {
-            'max_workers': 8
-        }
+        "execution": {"max_workers": 8},
     }
-    with open(mock_master_config_path, 'w') as f:
+    with open(mock_master_config_path, "w") as f:
         yaml.dump(master_config_content, f)
 
     # 2. Create Specific Config (Minimal)
     specific_config_content = {
-        'simulation_defaults': {
-            'rte_solver': 'mystic'
-        },
-        'execution': {
-            'max_workers': 1  # Override master
-        }
+        "simulation_defaults": {"rte_solver": "mystic"},
+        "execution": {"max_workers": 1},  # Override master
     }
     specific_config_file = tmp_path / "sim.yaml"
-    with open(specific_config_file, 'w') as f:
+    with open(specific_config_file, "w") as f:
         yaml.dump(specific_config_content, f)
 
     # 3. Patch Path.home to return tmp_path so it finds our mock master config
@@ -115,15 +126,16 @@ def test_load_config_with_master(tmp_path, mock_master_config_path):
     assert loaded_config.paths.libradtran_data == data_path
     # Inferred paths should be set
     assert loaded_config.paths.atmosphere_profile == data_path / "atmmod" / "afglus.dat"
-    
+
     # Check overrides
-    assert loaded_config.simulation_defaults.rte_solver == 'mystic'
+    assert loaded_config.simulation_defaults.rte_solver == "mystic"
     assert loaded_config.execution.max_workers == 1  # Specific overrides master
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Tests for SimulationConfig.to_dict() and SimulationConfig.to_yaml()
 # ──────────────────────────────────────────────────────────────────────────────
+
 
 def _make_minimal_config(tmp_path):
     """Helper: build a valid SimulationConfig with tmp-path stubs."""
@@ -215,6 +227,7 @@ def test_to_yaml_roundtrip(tmp_path):
 # Tests for save_master_config()
 # ──────────────────────────────────────────────────────────────────────────────
 
+
 def test_save_master_config_creates_file(tmp_path):
     """save_master_config() must write ~/.pyradtran/config.yaml."""
     with patch("pathlib.Path.home", return_value=tmp_path):
@@ -292,7 +305,7 @@ def test_load_config_no_path_uses_master(tmp_path):
     (master_dir / "config.yaml").write_text(yaml.dump(master_content))
 
     with patch("pathlib.Path.home", return_value=tmp_path):
-        cfg = load_config()   # no explicit config_path
+        cfg = load_config()  # no explicit config_path
 
     assert cfg.simulation_defaults.rte_solver == "rodents"
     assert cfg.paths.libradtran_bin == bin_file
@@ -301,6 +314,7 @@ def test_load_config_no_path_uses_master(tmp_path):
 # ---------------------------------------------------------------------------
 # Short-name resolution tests
 # ---------------------------------------------------------------------------
+
 
 def test_catalogs_not_empty():
     """SOLAR_SPECTRA and ATMOSPHERE_PROFILES contain at least the basic entries."""
@@ -358,8 +372,8 @@ def test_pathsconfig_short_name_solar(tmp_path):
     cfg = PathsConfig(
         libradtran_bin=bin_file,
         libradtran_data=data_dir,
-        solar_spectrum="kurudz_1.0nm",   # short name
-        atmosphere_profile="afglus",     # short name
+        solar_spectrum="kurudz_1.0nm",  # short name
+        atmosphere_profile="afglus",  # short name
     )
     assert cfg.solar_spectrum == solar
     assert cfg.atmosphere_profile == atm

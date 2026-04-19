@@ -7,34 +7,41 @@ Tests for RadiosondeAtmosphereGenerator:
   - @pytest.mark.slow: real network calls against IGRA2
 """
 
-import pytest
-import numpy as np
-import pandas as pd
 from datetime import datetime
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
+import numpy as np
+import pandas as pd
+import pytest
 
 from pyradtran.io import RadiosondeAtmosphereGenerator
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_station_list() -> pd.DataFrame:
     """Return a tiny DataFrame mirroring the IGRA station catalogue schema."""
-    return pd.DataFrame({
-        "id":         ["GMM00010393", "SPM00008495", "FIM00002836", "NON00001010"],
-        "latitude":   [      53.63,        28.46,        67.37,        78.92],
-        "longitude":  [       9.98,       -16.25,        26.65,        11.93],
-        "elevation":  [       16.0,        83.0,        25.0,        16.0],
-        "state":      [      "",           "",           "",           ""],
-        "name":       ["HAMBURG", "SANTA CRUZ", "JYVASKYLA AP", "BJORNOYA"],
-        "first_year": [    1957,         1941,          1949,          1934],
-        "last_year":  [datetime.utcnow().year, datetime.utcnow().year,
-                       datetime.utcnow().year, datetime.utcnow().year],
-        "num_obs":    [   99999,       99999,         99999,         99999],
-    })
+    return pd.DataFrame(
+        {
+            "id": ["GMM00010393", "SPM00008495", "FIM00002836", "NON00001010"],
+            "latitude": [53.63, 28.46, 67.37, 78.92],
+            "longitude": [9.98, -16.25, 26.65, 11.93],
+            "elevation": [16.0, 83.0, 25.0, 16.0],
+            "state": ["", "", "", ""],
+            "name": ["HAMBURG", "SANTA CRUZ", "JYVASKYLA AP", "BJORNOYA"],
+            "first_year": [1957, 1941, 1949, 1934],
+            "last_year": [
+                datetime.utcnow().year,
+                datetime.utcnow().year,
+                datetime.utcnow().year,
+                datetime.utcnow().year,
+            ],
+            "num_obs": [99999, 99999, 99999, 99999],
+        }
+    )
 
 
 def _make_sounding_df() -> pd.DataFrame:
@@ -43,19 +50,22 @@ def _make_sounding_df() -> pd.DataFrame:
     pressure = np.linspace(1000, 100, n)
     temperature = np.linspace(290, 215, n)
     dewpoint = temperature - 10
-    return pd.DataFrame({
-        "pressure":    pressure,
-        "temperature": temperature,
-        "dewpoint":    dewpoint,
-        "height":      np.linspace(0, 16_000, n),
-        "u_wind":      np.zeros(n),
-        "v_wind":      np.zeros(n),
-    })
+    return pd.DataFrame(
+        {
+            "pressure": pressure,
+            "temperature": temperature,
+            "dewpoint": dewpoint,
+            "height": np.linspace(0, 16_000, n),
+            "u_wind": np.zeros(n),
+            "v_wind": np.zeros(n),
+        }
+    )
 
 
 # ---------------------------------------------------------------------------
 # find_closest_active_stations — pure unit tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.unit
 class TestFindClosestActiveStations:
@@ -102,6 +112,7 @@ class TestFindClosestActiveStations:
 # get_station_list — mocked network
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.unit
 class TestGetStationListMocked:
     def test_returns_dataframe_on_success(self):
@@ -128,6 +139,7 @@ class TestGetStationListMocked:
 # create_radiosonde_atmosphere_file — mocked sounding retrieval
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.unit
 @pytest.mark.io
 class TestCreateRadiosondeAtmosphereFileMocked:
@@ -142,28 +154,34 @@ class TestCreateRadiosondeAtmosphereFileMocked:
     def test_creates_file(self, tmp_path):
         out = tmp_path / "sonde.dat"
         with patch.object(
-            RadiosondeAtmosphereGenerator, "get_closest_sounding",
-            return_value=self._mock_sounding()
+            RadiosondeAtmosphereGenerator,
+            "get_closest_sounding",
+            return_value=self._mock_sounding(),
         ):
             try:
                 RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file(
                     time=datetime(2022, 7, 1, 12),
-                    lat=60.0, lon=10.0,
+                    lat=60.0,
+                    lon=10.0,
                     output_filepath=out,
                 )
             except Exception:
-                pytest.skip("create_radiosonde_atmosphere_file requires siphon internals")
+                pytest.skip(
+                    "create_radiosonde_atmosphere_file requires siphon internals"
+                )
 
     def test_no_crash_when_sounding_returns_none(self, tmp_path):
         out = tmp_path / "sonde.dat"
         with patch.object(
-            RadiosondeAtmosphereGenerator, "get_closest_sounding",
-            return_value=(None, None, None)
+            RadiosondeAtmosphereGenerator,
+            "get_closest_sounding",
+            return_value=(None, None, None),
         ):
             try:
                 RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file(
                     time=datetime(2022, 7, 1, 12),
-                    lat=60.0, lon=10.0,
+                    lat=60.0,
+                    lon=10.0,
                     output_filepath=out,
                 )
             except Exception:
@@ -173,6 +191,7 @@ class TestCreateRadiosondeAtmosphereFileMocked:
 # ---------------------------------------------------------------------------
 # Real network integration — skipped by default
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.slow
 class TestRadiosondeNetworkIntegration:
@@ -195,9 +214,12 @@ class TestRadiosondeNetworkIntegration:
         assert result.iloc[0]["distance_km"] < 500  # should be nearby
 
     def test_get_closest_sounding_real(self):
-        sounding_df, header, header_text = RadiosondeAtmosphereGenerator.get_closest_sounding(
-            target_dt=datetime(2023, 7, 1, 12),
-            lat=51.5, lon=-0.1,   # near London
+        sounding_df, header, header_text = (
+            RadiosondeAtmosphereGenerator.get_closest_sounding(
+                target_dt=datetime(2023, 7, 1, 12),
+                lat=51.5,
+                lon=-0.1,  # near London
+            )
         )
         if sounding_df is None:
             pytest.skip("No sounding returned — likely intermittent IGRA access")

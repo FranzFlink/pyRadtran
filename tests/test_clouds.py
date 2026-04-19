@@ -4,23 +4,24 @@ Tests for pyradtran.clouds — CloudLayer, CloudGenerator, CloudFileWriter,
 and the generate_cloud_file_from_era5 convenience function.
 """
 
-import pytest
-import numpy as np
-import xarray as xr
-import pandas as pd
 from pathlib import Path
 
+import numpy as np
+import pandas as pd
+import pytest
+import xarray as xr
+
 from pyradtran.clouds import (
-    CloudLayer,
-    CloudGenerator,
     CloudFileWriter,
+    CloudGenerator,
+    CloudLayer,
     generate_cloud_file_from_era5,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_era5_ds(n_levels: int = 10) -> xr.Dataset:
     """Return a minimal synthetic ERA5-style dataset on time + pressure levels."""
@@ -32,8 +33,8 @@ def _make_era5_ds(n_levels: int = 10) -> xr.Dataset:
     clwc = np.zeros(n_levels)
     ciwc = np.zeros(n_levels)
     cc = np.zeros(n_levels)
-    clwc[3:6] = 1e-4   # kg/kg liquid
-    ciwc[6:8] = 5e-5   # kg/kg ice
+    clwc[3:6] = 1e-4  # kg/kg liquid
+    ciwc[6:8] = 5e-5  # kg/kg ice
     cc[3:8] = 0.5
 
     # from_era5_dataset calls isel(time=0) then sel(latitude=..., longitude=...)
@@ -44,16 +45,31 @@ def _make_era5_ds(n_levels: int = 10) -> xr.Dataset:
     shape = (1, 1, 1, n_levels)  # time, lat, lon, pressure_level
     return xr.Dataset(
         {
-            "clwc": (["time", "latitude", "longitude", "pressure_level"],
-                     clwc.reshape(1, 1, 1, n_levels), {"units": "kg kg-1"}),
-            "ciwc": (["time", "latitude", "longitude", "pressure_level"],
-                     ciwc.reshape(1, 1, 1, n_levels), {"units": "kg kg-1"}),
-            "cc":   (["time", "latitude", "longitude", "pressure_level"],
-                     cc.reshape(1, 1, 1, n_levels), {"units": "1"}),
-            "t":    (["time", "latitude", "longitude", "pressure_level"],
-                     temperature.reshape(1, 1, 1, n_levels), {"units": "K"}),
-            "z":    (["time", "latitude", "longitude", "pressure_level"],
-                     geopotential.reshape(1, 1, 1, n_levels), {"units": "m2 s-2"}),
+            "clwc": (
+                ["time", "latitude", "longitude", "pressure_level"],
+                clwc.reshape(1, 1, 1, n_levels),
+                {"units": "kg kg-1"},
+            ),
+            "ciwc": (
+                ["time", "latitude", "longitude", "pressure_level"],
+                ciwc.reshape(1, 1, 1, n_levels),
+                {"units": "kg kg-1"},
+            ),
+            "cc": (
+                ["time", "latitude", "longitude", "pressure_level"],
+                cc.reshape(1, 1, 1, n_levels),
+                {"units": "1"},
+            ),
+            "t": (
+                ["time", "latitude", "longitude", "pressure_level"],
+                temperature.reshape(1, 1, 1, n_levels),
+                {"units": "K"},
+            ),
+            "z": (
+                ["time", "latitude", "longitude", "pressure_level"],
+                geopotential.reshape(1, 1, 1, n_levels),
+                {"units": "m2 s-2"},
+            ),
         },
         coords={
             "pressure_level": (["pressure_level"], pressure_hpa, {"units": "hPa"}),
@@ -67,6 +83,7 @@ def _make_era5_ds(n_levels: int = 10) -> xr.Dataset:
 # ---------------------------------------------------------------------------
 # CloudLayer tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.unit
 class TestCloudLayer:
@@ -114,6 +131,7 @@ class TestCloudLayer:
 # CloudGenerator.from_simple_parameters tests
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.unit
 class TestCloudGeneratorSimple:
     def test_returns_list_of_cloud_layers(self):
@@ -125,7 +143,9 @@ class TestCloudGeneratorSimple:
 
     def test_n_layers_respected(self):
         for n in [1, 5, 10]:
-            layers = CloudGenerator.from_simple_parameters(1.0, 2.0, 0.3, 10.0, n_layers=n)
+            layers = CloudGenerator.from_simple_parameters(
+                1.0, 2.0, 0.3, 10.0, n_layers=n
+            )
             assert len(layers) == n
 
     def test_altitude_coverage(self):
@@ -136,7 +156,9 @@ class TestCloudGeneratorSimple:
     def test_no_gaps_between_layers(self):
         layers = CloudGenerator.from_simple_parameters(1.0, 3.0, 0.2, 8.0, n_layers=4)
         for i in range(len(layers) - 1):
-            assert layers[i].z_top_km == pytest.approx(layers[i + 1].z_bottom_km, abs=1e-6)
+            assert layers[i].z_top_km == pytest.approx(
+                layers[i + 1].z_bottom_km, abs=1e-6
+            )
 
     def test_lwc_and_reff_set(self):
         layers = CloudGenerator.from_simple_parameters(
@@ -154,6 +176,7 @@ class TestCloudGeneratorSimple:
 # ---------------------------------------------------------------------------
 # CloudGenerator.from_era5_dataset tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.unit
 class TestCloudGeneratorERA5:
@@ -183,7 +206,9 @@ class TestCloudGeneratorERA5:
 
     def test_custom_reff(self):
         ds = _make_era5_ds()
-        layers = CloudGenerator.from_era5_dataset(ds, lat=78.0, lon=15.0, default_r_eff_water=8.0)
+        layers = CloudGenerator.from_era5_dataset(
+            ds, lat=78.0, lon=15.0, default_r_eff_water=8.0
+        )
         liquid_layers = [l for l in layers if l.lwc_g_m3 > 0]
         if liquid_layers:
             assert liquid_layers[0].r_eff_um == pytest.approx(8.0)
@@ -192,6 +217,7 @@ class TestCloudGeneratorERA5:
 # ---------------------------------------------------------------------------
 # CloudFileWriter tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.unit
 @pytest.mark.io
@@ -209,13 +235,21 @@ class TestCloudFileWriter:
     def test_write_water_cloud_file_has_data_rows(self, tmp_path):
         out = tmp_path / "wc.dat"
         CloudFileWriter.write_water_cloud_file(self._layers, out)
-        data_lines = [l for l in out.read_text().splitlines() if l.strip() and not l.startswith("#")]
+        data_lines = [
+            l
+            for l in out.read_text().splitlines()
+            if l.strip() and not l.startswith("#")
+        ]
         assert len(data_lines) > 0
 
     def test_write_water_cloud_file_three_columns(self, tmp_path):
         out = tmp_path / "wc.dat"
         CloudFileWriter.write_water_cloud_file(self._layers, out)
-        data_lines = [l for l in out.read_text().splitlines() if l.strip() and not l.startswith("#")]
+        data_lines = [
+            l
+            for l in out.read_text().splitlines()
+            if l.strip() and not l.startswith("#")
+        ]
         for line in data_lines:
             cols = line.split()
             assert len(cols) == 3, f"Expected 3 columns, got: {line}"
@@ -236,7 +270,11 @@ class TestCloudFileWriter:
     def test_altitudes_are_numeric(self, tmp_path):
         out = tmp_path / "wc.dat"
         CloudFileWriter.write_water_cloud_file(self._layers, out)
-        data_lines = [l for l in out.read_text().splitlines() if l.strip() and not l.startswith("#")]
+        data_lines = [
+            l
+            for l in out.read_text().splitlines()
+            if l.strip() and not l.startswith("#")
+        ]
         for line in data_lines:
             cols = line.split()
             assert float(cols[0]) > 0  # altitude must be positive
@@ -245,6 +283,7 @@ class TestCloudFileWriter:
 # ---------------------------------------------------------------------------
 # generate_cloud_file_from_era5 tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.unit
 @pytest.mark.io

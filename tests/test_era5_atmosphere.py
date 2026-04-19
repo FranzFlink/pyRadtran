@@ -3,38 +3,37 @@
 Tests for ERA5AtmosphereGenerator.create_era5_atmosphere_file.
 """
 
-import pytest
-import numpy as np
-import xarray as xr
-import pandas as pd
 from pathlib import Path
 
-from pyradtran.io import ERA5AtmosphereGenerator
+import numpy as np
+import pandas as pd
+import pytest
+import xarray as xr
 
+from pyradtran.io import ERA5AtmosphereGenerator
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_era5_profile(n_levels: int = 13) -> xr.Dataset:
     """Return a minimal synthetic ERA5 profile dataset."""
     pressure_hpa = np.linspace(1000, 100, n_levels)
-    geopotential = np.linspace(0, 160_000, n_levels)   # m²/s²
-    temperature = np.linspace(290, 215, n_levels)        # K
-    q = np.linspace(1e-2, 1e-5, n_levels)               # kg/kg
+    geopotential = np.linspace(0, 160_000, n_levels)  # m²/s²
+    temperature = np.linspace(290, 215, n_levels)  # K
+    q = np.linspace(1e-2, 1e-5, n_levels)  # kg/kg
 
     return xr.Dataset(
         {
             "z": (["pressure_level"], geopotential, {"units": "m2 s-2"}),
-            "t": (["pressure_level"], temperature,  {"units": "K"}),
-            "q": (["pressure_level"], q,             {"units": "kg kg-1"}),
+            "t": (["pressure_level"], temperature, {"units": "K"}),
+            "q": (["pressure_level"], q, {"units": "kg kg-1"}),
         },
         coords={
-            "pressure_level": (
-                ["pressure_level"], pressure_hpa, {"units": "hPa"}
-            ),
+            "pressure_level": (["pressure_level"], pressure_hpa, {"units": "hPa"}),
             "valid_time": pd.Timestamp("2022-03-15T12:00"),
-            "latitude":  70.0,
+            "latitude": 70.0,
             "longitude": 25.0,
         },
     )
@@ -44,6 +43,7 @@ def _make_era5_profile(n_levels: int = 13) -> xr.Dataset:
 # Tests
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.unit
 @pytest.mark.io
 class TestERA5AtmosphereGenerator:
@@ -51,8 +51,11 @@ class TestERA5AtmosphereGenerator:
         ds = _make_era5_profile()
         out = tmp_path / "atm.dat"
         result = ERA5AtmosphereGenerator.create_era5_atmosphere_file(
-            ds, latitude=70.0, longitude=25.0,
-            time="2022-03-15T12:00", output_filepath=out
+            ds,
+            latitude=70.0,
+            longitude=25.0,
+            time="2022-03-15T12:00",
+            output_filepath=out,
         )
         assert out.exists()
 
@@ -60,8 +63,11 @@ class TestERA5AtmosphereGenerator:
         ds = _make_era5_profile()
         out = tmp_path / "atm.dat"
         result = ERA5AtmosphereGenerator.create_era5_atmosphere_file(
-            ds, latitude=70.0, longitude=25.0,
-            time="2022-03-15T12:00", output_filepath=out
+            ds,
+            latitude=70.0,
+            longitude=25.0,
+            time="2022-03-15T12:00",
+            output_filepath=out,
         )
         assert Path(result) == out
 
@@ -81,7 +87,8 @@ class TestERA5AtmosphereGenerator:
             ds, 70.0, 25.0, "2022-03-15T12:00", out
         )
         data_lines = [
-            l for l in out.read_text().splitlines()
+            l
+            for l in out.read_text().splitlines()
             if l.strip() and not l.startswith("#")
         ]
         assert len(data_lines) > 0
@@ -93,7 +100,8 @@ class TestERA5AtmosphereGenerator:
             ds, 70.0, 25.0, "2022-03-15T12:00", out
         )
         data_lines = [
-            l for l in out.read_text().splitlines()
+            l
+            for l in out.read_text().splitlines()
             if l.strip() and not l.startswith("#")
         ]
         for line in data_lines:
@@ -107,7 +115,8 @@ class TestERA5AtmosphereGenerator:
             ds, 70.0, 25.0, "2022-03-15T12:00", out
         )
         data_lines = [
-            l for l in out.read_text().splitlines()
+            l
+            for l in out.read_text().splitlines()
             if l.strip() and not l.startswith("#")
         ]
         for line in data_lines:
@@ -121,7 +130,8 @@ class TestERA5AtmosphereGenerator:
             ds, 70.0, 25.0, "2022-03-15T12:00", out
         )
         data_lines = [
-            l for l in out.read_text().splitlines()
+            l
+            for l in out.read_text().splitlines()
             if l.strip() and not l.startswith("#")
         ]
         for line in data_lines:
