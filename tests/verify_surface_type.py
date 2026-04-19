@@ -140,7 +140,7 @@ def test_interface_propagation():
         import xarray as xr
 
         # Create test dataset with surface_type variable
-        times = pd.date_range("2023-06-21", periods=3, freq="1H")
+        times = pd.date_range("2023-06-21", periods=3, freq="1h")
 
         ds = xr.Dataset(
             coords={

@@ -36,7 +36,7 @@ from pyradtran.io import OutputToXarray, OutputType, ParsedOutput
 def test_dataset():
     """Create a test xarray dataset with time, lat, lon coordinates"""
     # Create test data
-    times = pd.date_range("2023-05-01", periods=3, freq="1H")
+    times = pd.date_range("2023-05-01", periods=3, freq="1h")
     lats = np.array([60.0, 60.1, 60.2])
     lons = np.array([10.0, 10.1, 10.2])
 

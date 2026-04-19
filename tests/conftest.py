@@ -17,6 +17,7 @@ from pyradtran.config import (
     PathsConfig,
     SimulationConfig,
     SimulationDefaults,
+    load_config,
 )
 
 

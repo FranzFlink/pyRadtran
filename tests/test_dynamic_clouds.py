@@ -16,11 +16,11 @@ from pyradtran.core import Simulation
 logging.basicConfig(level=logging.INFO)
 
 
+from helpers import has_libradtran
+
+
 @pytest.mark.integration
-@pytest.mark.skipif(
-    not os.path.isfile("/opt/libradtran/bin/uvspec"),
-    reason="LibRadtran not available",
-)
+@pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
 def test_dynamic_clouds():
     config = load_config()
     # Ensure working dir exists

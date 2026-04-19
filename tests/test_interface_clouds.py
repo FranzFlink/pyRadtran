@@ -19,11 +19,11 @@ from pyradtran.interface import PyRadtranAccessor  # Trigger registration
 logging.basicConfig(level=logging.DEBUG)
 
 
+from helpers import has_libradtran
+
+
 @pytest.mark.integration
-@pytest.mark.skipif(
-    not os.path.isfile("/opt/libradtran/bin/uvspec"),
-    reason="LibRadtran not available",
-)
+@pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
 def test_interface_clouds():
     # Setup Paths
     work_dir = Path("pyradtran_work_test_interface")
@@ -68,7 +68,7 @@ def test_interface_clouds():
 
     # Create Dataset
     # Create Dataset - Trajectory style (lat/lon depend on time or share dim)
-    times = pd.date_range("2022-01-01 12:00", periods=2, freq="H")
+    times = pd.date_range("2022-01-01 12:00", periods=2, freq="h")
     ds = xr.Dataset(
         coords={
             "time": times,

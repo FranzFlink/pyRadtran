@@ -90,7 +90,7 @@ def temp_nc_input():
     """Create a temporary NetCDF input file with test data"""
     with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp:
         # Create test data
-        times = pd.date_range("2023-05-01", periods=5, freq="1H")
+        times = pd.date_range("2023-05-01", periods=5, freq="1h")
         lats = np.array([60.0 + 0.1 * i for i in range(5)])
         lons = np.array([10.0 + 0.1 * i for i in range(5)])
         temp = np.array([273.15 + i for i in range(5)])

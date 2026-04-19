@@ -26,24 +26,7 @@ from pyradtran.core import Simulation
 from pyradtran.interface import run_pyradtran_simulation
 from pyradtran.io import OutputParser
 
-# --- Test Configuration ---
-
-# Use the actual paths from the user's environment
-LIBRADTRAN_DATA_PATH = "/opt/libradtran/2.0.4/share/libRadtran/data"
-LIBRADTRAN_EXEC_PATH = "/opt/libradtran/2.0.4/bin/uvspec"
-ATMOSPHERE_FILE = "/projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat"
-SOLAR_SPECTRUM_FILE = (
-    "/projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat"
-)
-RADIOSONDE_BASE_PATH = (
-    "/projekt_agmwend/data/HALO-AC3/01_soundings/RS_for_libradtran/Dropsondes_HALO/"
-)
-
-
-# Skip tests if LibRadtran is not installed
-def has_libradtran():
-    """Check if LibRadtran executable exists"""
-    return os.path.isfile(LIBRADTRAN_EXEC_PATH) and os.path.isdir(LIBRADTRAN_DATA_PATH)
+from helpers import has_libradtran
 
 
 # --- Fixtures ---
@@ -51,27 +34,18 @@ def has_libradtran():
 
 @pytest.fixture
 def integration_config():
-    """Create a config using actual LibRadtran paths for testing"""
-    return SimulationConfig(
-        paths=PathsConfig(
-            libradtran_bin=Path(LIBRADTRAN_EXEC_PATH),
-            libradtran_data=Path(LIBRADTRAN_DATA_PATH),
-            atmosphere_profile=Path(ATMOSPHERE_FILE),
-            solar_spectrum=Path(SOLAR_SPECTRUM_FILE),
-            radiosonde_base=Path(RADIOSONDE_BASE_PATH),
-            output_dir=Path(tempfile.gettempdir()),
-            working_dir=Path(tempfile.gettempdir()),
-        ),
-        simulation_defaults=SimulationDefaults(
-            rte_solver="disort",
-            mol_abs_param="reptran medium",
-            wavelength_nm=[400, 700],  # Visible range
-            integrate_wavelength=True,
-            output_columns=["sza", "eglo", "eup", "albedo"],
-            output_altitudes_km=[0.0],
-            albedo_value=0.3,
-        ),
-    )
+    """Create a config using actual LibRadtran paths from master config."""
+    cfg = load_config()
+    cfg.simulation_defaults.rte_solver = "disort"
+    cfg.simulation_defaults.mol_abs_param = "reptran medium"
+    cfg.simulation_defaults.wavelength_nm = [400, 700]
+    cfg.simulation_defaults.integrate_wavelength = True
+    cfg.simulation_defaults.output_columns = ["sza", "eglo", "eup", "albedo"]
+    cfg.simulation_defaults.output_altitudes_km = [0.0]
+    cfg.simulation_defaults.albedo_value = 0.3
+    cfg.paths.output_dir = Path(tempfile.gettempdir())
+    cfg.paths.working_dir = Path(tempfile.gettempdir())
+    return cfg
 
 
 @pytest.fixture
@@ -99,10 +73,8 @@ def test_simulation_initialization(integration_config):
     sim = Simulation(integration_config)
 
     # Verify paths were set correctly
-    assert str(sim.config.paths.libradtran_bin) == LIBRADTRAN_EXEC_PATH
-    assert str(sim.config.paths.libradtran_data) == LIBRADTRAN_DATA_PATH
-    assert str(sim.config.paths.atmosphere_profile) == ATMOSPHERE_FILE
-    assert str(sim.config.paths.solar_spectrum) == SOLAR_SPECTRUM_FILE
+    assert Path(sim.config.paths.libradtran_bin).is_file()
+    assert Path(sim.config.paths.libradtran_data).is_dir()
 
 
 @pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")

@@ -14,11 +14,11 @@ from pyradtran.interface import PyRadtranAccessor
 logging.basicConfig(level=logging.DEBUG)
 
 
+from helpers import has_libradtran
+
+
 @pytest.mark.integration
-@pytest.mark.skipif(
-    not os.path.isfile("/opt/libradtran/bin/uvspec"),
-    reason="LibRadtran not available",
-)
+@pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
 def test_variational_logic():
     work_dir = Path("pyradtran_work_variational")
     if work_dir.exists():
