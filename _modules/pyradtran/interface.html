@@ -501,27 +501,32 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessPoolExecutor</span><span class="p">,</span> <span class="n">as_completed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessPoolExecutor</span><span class="p">,</span> <span class="n">as_completed</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span> <span class="c1"># Added by user instruction</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
     <span class="n">HAS_TQDM</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">HAS_TQDM</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationConfig</span><span class="p">,</span> <span class="n">load_config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">PyRadtranError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Simulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">PyRadtranError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.io</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">InputDataLoader</span><span class="p">,</span> <span class="n">ERA5AtmosphereGenerator</span><span class="p">,</span> <span class="n">OutputParser</span><span class="p">,</span> 
-    <span class="n">OutputToXarray</span><span class="p">,</span> <span class="n">NetCDFSaver</span><span class="p">,</span> <span class="n">ParsedOutput</span>
+    <span class="n">ERA5AtmosphereGenerator</span><span class="p">,</span>
+    <span class="n">InputDataLoader</span><span class="p">,</span>
+    <span class="n">NetCDFSaver</span><span class="p">,</span>
+    <span class="n">OutputParser</span><span class="p">,</span>
+    <span class="n">OutputToXarray</span><span class="p">,</span>
+    <span class="n">ParsedOutput</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -534,7 +539,7 @@
     <span class="n">output_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">max_workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">max_workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a full simulation pipeline from a CSV/NetCDF input file.</span>
 
@@ -570,49 +575,50 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># Load configuration</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-        
+
         <span class="c1"># Override max_workers if specified</span>
         <span class="k">if</span> <span class="n">max_workers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span> <span class="o">=</span> <span class="n">max_workers</span>
-        
+
         <span class="c1"># Apply parameter overrides if provided</span>
         <span class="k">if</span> <span class="n">parameter_overrides</span><span class="p">:</span>
             <span class="n">_apply_parameter_overrides</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">parameter_overrides</span><span class="p">)</span>
-        
+
         <span class="c1"># Load input data</span>
         <span class="n">loader</span> <span class="o">=</span> <span class="n">InputDataLoader</span><span class="p">()</span>
         <span class="n">input_ds</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load_simulation_input_data</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
-        
+
         <span class="c1"># Generate output path if not provided</span>
         <span class="k">if</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
-            <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}{</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+                <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}{</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
-        
+
         <span class="c1"># Run the simulation batch</span>
         <span class="n">parsed_outputs</span> <span class="o">=</span> <span class="n">execute_simulation_batch</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-            <span class="n">input_ds</span><span class="o">=</span><span class="n">input_ds</span><span class="p">,</span>
-            <span class="n">parameter_overrides</span><span class="o">=</span><span class="n">parameter_overrides</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">input_ds</span><span class="o">=</span><span class="n">input_ds</span><span class="p">,</span> <span class="n">parameter_overrides</span><span class="o">=</span><span class="n">parameter_overrides</span>
         <span class="p">)</span>
-        
+
         <span class="c1"># Convert to xarray and save results</span>
         <span class="k">if</span> <span class="n">parsed_outputs</span><span class="p">:</span>
             <span class="n">converter</span> <span class="o">=</span> <span class="n">OutputToXarray</span><span class="p">()</span>
             <span class="n">result_ds</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_batch</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">,</span> <span class="n">input_ds</span><span class="p">)</span>
-            
+
             <span class="n">saver</span> <span class="o">=</span> <span class="n">NetCDFSaver</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">saver</span><span class="o">.</span><span class="n">save_results_to_netcdf</span><span class="p">(</span>
                 <span class="n">data</span><span class="o">=</span><span class="n">result_ds</span><span class="p">,</span>
                 <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
                 <span class="n">input_ds</span><span class="o">=</span><span class="n">input_ds</span><span class="p">,</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-                <span class="n">simulation_params</span><span class="o">=</span><span class="n">parameter_overrides</span>
+                <span class="n">simulation_params</span><span class="o">=</span><span class="n">parameter_overrides</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="s2">&quot;No valid simulation results produced&quot;</span><span class="p">)</span>
-            
+
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
@@ -624,9 +630,9 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">execute_simulation_batch</span><span class="p">(</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">,</span>
     <span class="n">input_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
-    <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
-    <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span>
-    <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span>
+    <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+    <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span>
+    <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;longitude&quot;</span><span class="p">,</span>
     <span class="n">albedo_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">surface_temperature_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">surface_type_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -638,10 +644,10 @@
     <span class="n">cloud_wc_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">cloud_ic_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">cloud_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># For liquid (or shared)</span>
-    <span class="n">cloud_ic_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># For ice (optional)</span>
+    <span class="n">cloud_ic_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># For ice (optional)</span>
     <span class="n">cloud_top_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">cloud_bottom_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">show_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">show_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ParsedOutput</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Run ``uvspec`` in parallel for every point in *input_ds*.</span>
 
@@ -700,35 +706,52 @@
     <span class="c1"># Validate cloud variables if enabled</span>
     <span class="k">if</span> <span class="n">cloud_wc_var</span> <span class="ow">or</span> <span class="n">cloud_ic_var</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">cloud_top_var</span> <span class="ow">and</span> <span class="n">cloud_bottom_var</span><span class="p">):</span>
-             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cloud generation enabled but cloud_top_var or cloud_bottom_var missing.&quot;</span><span class="p">)</span>
-             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide cloud_top_var and cloud_bottom_var when generating clouds.&quot;</span><span class="p">)</span>
-        
-        <span class="n">required_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="n">cloud_wc_var</span><span class="p">,</span> <span class="n">cloud_ic_var</span><span class="p">,</span> <span class="n">cloud_reff_var</span><span class="p">,</span> <span class="n">cloud_ic_reff_var</span><span class="p">,</span> <span class="n">cloud_top_var</span><span class="p">,</span> <span class="n">cloud_bottom_var</span><span class="p">]</span> <span class="k">if</span> <span class="n">v</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Cloud generation enabled but cloud_top_var or cloud_bottom_var missing.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Must provide cloud_top_var and cloud_bottom_var when generating clouds.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">required_vars</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">v</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="n">cloud_wc_var</span><span class="p">,</span>
+                <span class="n">cloud_ic_var</span><span class="p">,</span>
+                <span class="n">cloud_reff_var</span><span class="p">,</span>
+                <span class="n">cloud_ic_reff_var</span><span class="p">,</span>
+                <span class="n">cloud_top_var</span><span class="p">,</span>
+                <span class="n">cloud_bottom_var</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="n">v</span>
+        <span class="p">]</span>
         <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">required_vars</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">input_ds</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
-             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing cloud variables in dataset: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing cloud variables in dataset: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing cloud variables in dataset: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing cloud variables in dataset: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Get non-empty dimensions for stacking</span>
     <span class="n">dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">input_ds</span><span class="o">.</span><span class="n">sizes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    
+
     <span class="c1"># Flatten the dataset to iterate linearly over all combinations</span>
-    <span class="n">sample_dim</span> <span class="o">=</span> <span class="s1">&#39;sample_batch_dim&#39;</span>
+    <span class="n">sample_dim</span> <span class="o">=</span> <span class="s2">&quot;sample_batch_dim&quot;</span>
     <span class="k">if</span> <span class="n">dims</span><span class="p">:</span>
         <span class="n">stacked_ds</span> <span class="o">=</span> <span class="n">input_ds</span><span class="o">.</span><span class="n">stack</span><span class="p">({</span><span class="n">sample_dim</span><span class="p">:</span> <span class="n">dims</span><span class="p">})</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Handle scalar dataset (single point)</span>
         <span class="n">stacked_ds</span> <span class="o">=</span> <span class="n">input_ds</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">sample_dim</span><span class="p">)</span>
-        
+
     <span class="n">num_points</span> <span class="o">=</span> <span class="n">stacked_ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">sample_dim</span><span class="p">]</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Preparing </span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> simulations from input dataset with dims </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Preparing </span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> simulations from input dataset with dims </span><span class="si">{</span><span class="n">dims</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
 
     <span class="c1"># Helper to safely extract scalar values from 0-d xarray objects</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_val</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">var</span> <span class="ow">and</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
             <span class="c1"># Unwrap numpy scalars</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">):</span>
                 <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">val</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -740,9 +763,9 @@
         <span class="c1"># Create working directory for atmosphere files</span>
         <span class="n">atm_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span> <span class="o">/</span> <span class="s2">&quot;era5_atmospheres&quot;</span>
         <span class="n">atm_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        
+
         <span class="n">era5_generator</span> <span class="o">=</span> <span class="n">ERA5AtmosphereGenerator</span><span class="p">()</span>
-        
+
         <span class="c1"># We need to iterate over all points to generate ERA5 files</span>
         <span class="c1"># Note: Optimization possible by finding unique (time, lat, lon) tuples</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_points</span><span class="p">):</span>
@@ -750,18 +773,19 @@
             <span class="n">t</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">time_var</span><span class="p">)</span>
             <span class="n">lat</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">)</span>
             <span class="n">lon</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">lon_var</span><span class="p">)</span>
-            
+
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">dt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">()</span>
                 <span class="n">point_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">lat</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">lon</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
-                
+
                 <span class="c1"># Check if we already generated it</span>
                 <span class="k">if</span> <span class="n">point_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">era5_atmosphere_files</span><span class="p">:</span>
                     <span class="n">atm_file</span> <span class="o">=</span> <span class="n">atm_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;era5_atm_</span><span class="si">{</span><span class="n">point_id</span><span class="si">}</span><span class="s2">.dat&quot;</span>
                     <span class="c1"># Regenerate if missing or contains only header lines (empty/broken cache)</span>
                     <span class="n">needs_creation</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">atm_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="p">(</span>
-                        <span class="n">atm_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
-                            <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">atm_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+                            <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">atm_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
@@ -770,181 +794,249 @@
                             <span class="n">era5_atmosphere</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">atm_file</span>
                         <span class="p">)</span>
                     <span class="n">era5_atmosphere_files</span><span class="p">[</span><span class="n">point_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">atm_file</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created/Found ERA5 atmosphere file for </span><span class="si">{</span><span class="n">point_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">atm_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                    
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Created/Found ERA5 atmosphere file for </span><span class="si">{</span><span class="n">point_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">atm_file</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to create ERA5 atmosphere file for point </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Failed to create ERA5 atmosphere file for point </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="c1"># We&#39;ll continue, and the simulation might fail later or use default</span>
-    
+
     <span class="c1"># Prepare simulation points</span>
     <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_points</span><span class="p">):</span>
         <span class="n">point_ds</span> <span class="o">=</span> <span class="n">stacked_ds</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="n">sample_dim</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span>
-        
+
         <span class="n">t</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">time_var</span><span class="p">)</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">)</span>
         <span class="n">lon</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">lon_var</span><span class="p">)</span>
-        
+
         <span class="n">alb</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">albedo_var</span><span class="p">)</span>
         <span class="n">surf_temp</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">surface_temperature_var</span><span class="p">)</span>
         <span class="n">surf_type</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">surface_type_var</span><span class="p">)</span>
         <span class="n">alt</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">altitude_var</span><span class="p">)</span>
-        
+
         <span class="c1"># Cloud automation extraction</span>
         <span class="n">point_overrides</span> <span class="o">=</span> <span class="n">parameter_overrides</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">parameter_overrides</span> <span class="k">else</span> <span class="p">{}</span>
 
         <span class="c1"># Improve Variational Logic:</span>
         <span class="c1"># Check if any parameter override is a reference to a dataset variable</span>
-        <span class="c1"># This allows varying parameters like &#39;sza&#39;, &#39;albedo&#39;, &#39;mol_abs_param&#39; etc. </span>
+        <span class="c1"># This allows varying parameters like &#39;sza&#39;, &#39;albedo&#39;, &#39;mol_abs_param&#39; etc.</span>
         <span class="c1"># by mapping them to dataset dimensions/variables.</span>
         <span class="k">if</span> <span class="n">parameter_overrides</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">parameter_overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">point_ds</span><span class="p">:</span>
-                     <span class="c1"># It&#39;s a reference to a variable!</span>
-                     <span class="n">variable_val</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-                     <span class="k">if</span> <span class="n">variable_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                         <span class="n">point_overrides</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">variable_val</span>
-                         <span class="c1"># logger.debug(f&quot;Resolved override for &#39;{key}&#39;: &#39;{val}&#39; -&gt; {variable_val}&quot;)</span>
+                    <span class="c1"># It&#39;s a reference to a variable!</span>
+                    <span class="n">variable_val</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">variable_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">point_overrides</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">variable_val</span>
+                        <span class="c1"># logger.debug(f&quot;Resolved override for &#39;{key}&#39;: &#39;{val}&#39; -&gt; {variable_val}&quot;)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cloud_wc_var</span> <span class="ow">or</span> <span class="n">cloud_ic_var</span><span class="p">:</span>
                 <span class="n">cth</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">cloud_top_var</span><span class="p">)</span>
                 <span class="n">cbh</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">cloud_bottom_var</span><span class="p">)</span>
-                
+
                 <span class="c1"># Check validity</span>
-                <span class="k">if</span> <span class="n">cth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cbh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">cth</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">cbh</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">cth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="n">cbh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">cth</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">cbh</span><span class="p">)</span>
+                <span class="p">):</span>
                     <span class="c1"># Sort Z descending (uvspec requirement)</span>
                     <span class="n">z_layer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">cth</span><span class="p">,</span> <span class="n">cbh</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">cth</span><span class="p">,</span> <span class="n">cbh</span><span class="p">)]</span>
-                    
+
                     <span class="c1"># Liquid Cloud</span>
                     <span class="k">if</span> <span class="n">cloud_wc_var</span><span class="p">:</span>
                         <span class="n">lwc</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">cloud_wc_var</span><span class="p">)</span>
-                        <span class="n">reff</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">cloud_reff_var</span><span class="p">)</span> <span class="k">if</span> <span class="n">cloud_reff_var</span> <span class="k">else</span> <span class="mf">10.0</span> <span class="c1"># Default 10um</span>
+                        <span class="n">reff</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">cloud_reff_var</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">cloud_reff_var</span>
+                            <span class="k">else</span> <span class="mf">10.0</span>
+                        <span class="p">)</span>  <span class="c1"># Default 10um</span>
                         <span class="k">if</span> <span class="n">lwc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">lwc</span><span class="p">):</span>
-                             <span class="c1"># Use reff if valid, else default</span>
-                             <span class="n">r_val</span> <span class="o">=</span> <span class="n">reff</span> <span class="k">if</span> <span class="p">(</span><span class="n">reff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reff</span><span class="p">))</span> <span class="k">else</span> <span class="mf">10.0</span>
-                             <span class="n">point_overrides</span><span class="p">[</span><span class="s1">&#39;wc_file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                                 <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z_layer</span><span class="p">,</span>
-                                 <span class="s1">&#39;lwc&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">lwc</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lwc</span><span class="p">)],</span>
-                                 <span class="s1">&#39;reff&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">)]</span>
-                             <span class="p">}</span>
-                    
+                            <span class="c1"># Use reff if valid, else default</span>
+                            <span class="n">r_val</span> <span class="o">=</span> <span class="p">(</span>
+                                <span class="n">reff</span>
+                                <span class="k">if</span> <span class="p">(</span><span class="n">reff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reff</span><span class="p">))</span>
+                                <span class="k">else</span> <span class="mf">10.0</span>
+                            <span class="p">)</span>
+                            <span class="n">point_overrides</span><span class="p">[</span><span class="s2">&quot;wc_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z_layer</span><span class="p">,</span>
+                                <span class="s2">&quot;lwc&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">lwc</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lwc</span><span class="p">)],</span>
+                                <span class="s2">&quot;reff&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">)],</span>
+                            <span class="p">}</span>
+
                     <span class="c1"># Ice Cloud</span>
                     <span class="k">if</span> <span class="n">cloud_ic_var</span><span class="p">:</span>
                         <span class="n">iwc</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">cloud_ic_var</span><span class="p">)</span>
                         <span class="c1"># Use ic_reff if provided, else shared reff, else default</span>
-                        <span class="n">r_key</span> <span class="o">=</span> <span class="n">cloud_ic_reff_var</span> <span class="k">if</span> <span class="n">cloud_ic_reff_var</span> <span class="k">else</span> <span class="n">cloud_reff_var</span>
-                        <span class="n">reff_ice</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">r_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">r_key</span> <span class="k">else</span> <span class="mf">20.0</span> <span class="c1"># Default 20um for ice</span>
+                        <span class="n">r_key</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">cloud_ic_reff_var</span> <span class="k">if</span> <span class="n">cloud_ic_reff_var</span> <span class="k">else</span> <span class="n">cloud_reff_var</span>
+                        <span class="p">)</span>
+                        <span class="n">reff_ice</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">get_val</span><span class="p">(</span><span class="n">point_ds</span><span class="p">,</span> <span class="n">r_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">r_key</span> <span class="k">else</span> <span class="mf">20.0</span>
+                        <span class="p">)</span>  <span class="c1"># Default 20um for ice</span>
                         <span class="k">if</span> <span class="n">iwc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">iwc</span><span class="p">):</span>
-                             <span class="n">r_val</span> <span class="o">=</span> <span class="n">reff_ice</span> <span class="k">if</span> <span class="p">(</span><span class="n">reff_ice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reff_ice</span><span class="p">))</span> <span class="k">else</span> <span class="mf">20.0</span>
-                             <span class="n">point_overrides</span><span class="p">[</span><span class="s1">&#39;ic_file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                                 <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z_layer</span><span class="p">,</span>
-                                 <span class="s1">&#39;iwc&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">iwc</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">iwc</span><span class="p">)],</span>
-                                 <span class="s1">&#39;reff&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">)]</span>
-                             <span class="p">}</span>
+                            <span class="n">r_val</span> <span class="o">=</span> <span class="p">(</span>
+                                <span class="n">reff_ice</span>
+                                <span class="k">if</span> <span class="p">(</span><span class="n">reff_ice</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reff_ice</span><span class="p">))</span>
+                                <span class="k">else</span> <span class="mf">20.0</span>
+                            <span class="p">)</span>
+                            <span class="n">point_overrides</span><span class="p">[</span><span class="s2">&quot;ic_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z_layer</span><span class="p">,</span>
+                                <span class="s2">&quot;iwc&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">iwc</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">iwc</span><span class="p">)],</span>
+                                <span class="s2">&quot;reff&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">)],</span>
+                            <span class="p">}</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">pass</span> <span class="c1"># Skip cloud if geometry invalid (clear sky fallback?)</span>
+                    <span class="k">pass</span>  <span class="c1"># Skip cloud if geometry invalid (clear sky fallback?)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to generate cloud parameters for point </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        
+
         <span class="c1"># Convert time to proper datetime object</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">()</span>
-        
+
         <span class="c1"># Determine Point ID - use index to ensure uniqueness for iteration, but also keep physical ID</span>
         <span class="n">point_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">lat</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">lon</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
-        
+
         <span class="c1"># ERA5 file lookup uses physical ID components</span>
         <span class="n">era5_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">lat</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">lon</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">era5_atm_file</span> <span class="o">=</span> <span class="n">era5_atmosphere_files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">era5_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">era5_atmosphere_files</span> <span class="k">else</span> <span class="kc">None</span>
-        
+        <span class="n">era5_atm_file</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">era5_atmosphere_files</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">era5_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">era5_atmosphere_files</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
         <span class="c1"># Note: We append point_overrides now</span>
-        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">dt</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">alb</span><span class="p">,</span> <span class="n">surf_temp</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">,</span> <span class="n">alt</span><span class="p">,</span> <span class="n">era5_atm_file</span><span class="p">,</span> <span class="n">point_id</span><span class="p">,</span> <span class="n">point_overrides</span><span class="p">))</span>
-    
+        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">dt</span><span class="p">,</span>
+                <span class="n">lat</span><span class="p">,</span>
+                <span class="n">lon</span><span class="p">,</span>
+                <span class="n">alb</span><span class="p">,</span>
+                <span class="n">surf_temp</span><span class="p">,</span>
+                <span class="n">surf_type</span><span class="p">,</span>
+                <span class="n">alt</span><span class="p">,</span>
+                <span class="n">era5_atm_file</span><span class="p">,</span>
+                <span class="n">point_id</span><span class="p">,</span>
+                <span class="n">point_overrides</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
     <span class="c1"># Run simulations in parallel</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_points</span> <span class="c1"># Pre-allocate results list to preserve order</span>
-    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_points</span>  <span class="c1"># Pre-allocate results list to preserve order</span>
+
     <span class="c1"># Initialize progress bar</span>
     <span class="k">if</span> <span class="n">HAS_TQDM</span> <span class="ow">and</span> <span class="n">show_progress</span><span class="p">:</span>
         <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">num_points</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Running simulations&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;sim&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pbar</span> <span class="o">=</span> <span class="kc">None</span>
-    
+
     <span class="k">with</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
         <span class="c1"># Submit all simulations</span>
         <span class="n">future_to_idx</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">point_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
             <span class="c1"># Unpack the new 10-element tuple (added surf_type)</span>
-            <span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">alb</span><span class="p">,</span> <span class="n">surf_temp</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">,</span> <span class="n">alt</span><span class="p">,</span> <span class="n">era5_atm_file</span><span class="p">,</span> <span class="n">point_id</span><span class="p">,</span> <span class="n">p_overrides</span><span class="p">)</span> <span class="o">=</span> <span class="n">point_data</span>
-            
+            <span class="p">(</span>
+                <span class="n">dt</span><span class="p">,</span>
+                <span class="n">lat</span><span class="p">,</span>
+                <span class="n">lon</span><span class="p">,</span>
+                <span class="n">alb</span><span class="p">,</span>
+                <span class="n">surf_temp</span><span class="p">,</span>
+                <span class="n">surf_type</span><span class="p">,</span>
+                <span class="n">alt</span><span class="p">,</span>
+                <span class="n">era5_atm_file</span><span class="p">,</span>
+                <span class="n">point_id</span><span class="p">,</span>
+                <span class="n">p_overrides</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">point_data</span>
+
             <span class="c1"># Helper wrapper needs to handle the tuple, but _run_single_simulation_unified signature expects args</span>
             <span class="c1"># Actually, executor.submit calls the fn with *args.</span>
             <span class="c1"># We need to match _run_single_simulation_unified signature or wrap it.</span>
             <span class="c1"># _run_single_simulation_unified(config, point, parameter_overrides) &lt;-- this was designed for point tuple</span>
             <span class="c1"># Wait, let&#39;s check _run_single_simulation_unified implementation first!</span>
             <span class="c1"># It likely unpacks &#39;point&#39;. If I change &#39;point&#39; structure errors will occur.</span>
-            
+
             <span class="c1"># Let&#39;s adjust how we submit.</span>
-            <span class="c1"># We should probably pass arguments explicitly to submit, </span>
+            <span class="c1"># We should probably pass arguments explicitly to submit,</span>
             <span class="c1"># Or assume _run_... handles a point object.</span>
-            
+
             <span class="c1"># Let&#39;s Modify the submission to pass p_overrides explicitly INSTEAD of the global one.</span>
             <span class="c1"># But point_data needs to be compatible if it&#39;s passed as a single arg.</span>
             <span class="c1"># Let&#39;s see how _run_single_simulation_unified is implemented.</span>
             <span class="k">pass</span>
-            
+
             <span class="c1"># TEMPORARY PLACEHOLDER: I need to verify _run_single_simulation_unified before concluding this edit.</span>
             <span class="c1"># But I am inside ReplaceFileContent...</span>
-            <span class="c1"># I will trust that I can modify _run_single_simulation_unified later if needed, </span>
+            <span class="c1"># I will trust that I can modify _run_single_simulation_unified later if needed,</span>
             <span class="c1"># OR I pass p_overrides as the 3rd argument to _run_single_... which is `parameter_overrides`.</span>
-            
+
             <span class="c1"># Current call:</span>
             <span class="c1"># _run_single_simulation_unified(config, point, parameter_overrides)</span>
-            <span class="c1"># If point is (dt, lat, lon, alb, surf, alt, era5, id), </span>
+            <span class="c1"># If point is (dt, lat, lon, alb, surf, alt, era5, id),</span>
             <span class="c1"># and I changed points.append(...) to include override.</span>
             <span class="c1"># I should strip override from point before passing to function, and pass it as 3rd arg.</span>
-            
-            <span class="n">point_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">alb</span><span class="p">,</span> <span class="n">surf_temp</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">,</span> <span class="n">alt</span><span class="p">,</span> <span class="n">era5_atm_file</span><span class="p">,</span> <span class="n">point_id</span><span class="p">)</span>
+
+            <span class="n">point_tuple</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">dt</span><span class="p">,</span>
+                <span class="n">lat</span><span class="p">,</span>
+                <span class="n">lon</span><span class="p">,</span>
+                <span class="n">alb</span><span class="p">,</span>
+                <span class="n">surf_temp</span><span class="p">,</span>
+                <span class="n">surf_type</span><span class="p">,</span>
+                <span class="n">alt</span><span class="p">,</span>
+                <span class="n">era5_atm_file</span><span class="p">,</span>
+                <span class="n">point_id</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
-                <span class="n">_run_single_simulation_unified</span><span class="p">,</span>
-                <span class="n">config</span><span class="p">,</span> <span class="n">point_tuple</span><span class="p">,</span> <span class="n">p_overrides</span>
+                <span class="n">_run_single_simulation_unified</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">point_tuple</span><span class="p">,</span> <span class="n">p_overrides</span>
             <span class="p">)</span>
             <span class="n">future_to_idx</span><span class="p">[</span><span class="n">future</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
-        
+
         <span class="c1"># Collect results as they complete</span>
         <span class="n">success_count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">future_to_idx</span><span class="p">):</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="n">future_to_idx</span><span class="p">[</span><span class="n">future</span><span class="p">]</span>
-            
+
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-                <span class="n">results</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span> <span class="c1"># Store in correct position</span>
-                
+                <span class="n">results</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>  <span class="c1"># Store in correct position</span>
+
                 <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
                     <span class="n">success_count</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> completed successfully&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Simulation </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> completed successfully&quot;</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> produced no output&quot;</span><span class="p">)</span>
-                    
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Simulation </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> produced no output&quot;</span>
+                    <span class="p">)</span>
+
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulation </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> failed with error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Simulation </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> failed with error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
             <span class="c1"># Update progress bar</span>
             <span class="k">if</span> <span class="n">pbar</span><span class="p">:</span>
                 <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">({</span><span class="s2">&quot;Success&quot;</span><span class="p">:</span> <span class="n">success_count</span><span class="p">,</span> <span class="s2">&quot;Total&quot;</span><span class="p">:</span> <span class="n">num_points</span><span class="p">})</span>
-            
+
             <span class="c1"># Progress callback</span>
             <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
                 <span class="n">progress_callback</span><span class="p">(</span><span class="n">success_count</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)</span>
-    
+
     <span class="c1"># Close progress bar</span>
     <span class="k">if</span> <span class="n">pbar</span><span class="p">:</span>
         <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    
+
     <span class="k">if</span> <span class="n">success_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="s2">&quot;All simulations failed - no valid results produced&quot;</span><span class="p">)</span>
-    
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Batch execution completed: </span><span class="si">{</span><span class="n">success_count</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> simulations successful&quot;</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Batch execution completed: </span><span class="si">{</span><span class="n">success_count</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2"> simulations successful&quot;</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
 
@@ -952,15 +1044,17 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_run_single_simulation_unified</span><span class="p">(</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">,</span>
     <span class="n">point_data</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">,</span>
-    <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ParsedOutput</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a single ``uvspec`` run (called by the process pool).&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">time</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">albedo</span><span class="p">,</span> <span class="n">surf_temp</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="n">era5_file</span><span class="p">,</span> <span class="n">point_id</span> <span class="o">=</span> <span class="n">point_data</span>
-        
+        <span class="n">time</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">albedo</span><span class="p">,</span> <span class="n">surf_temp</span><span class="p">,</span> <span class="n">surf_type</span><span class="p">,</span> <span class="n">altitude</span><span class="p">,</span> <span class="n">era5_file</span><span class="p">,</span> <span class="n">point_id</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">point_data</span>
+        <span class="p">)</span>
+
         <span class="c1"># Initialize simulation</span>
         <span class="n">sim</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        
+
         <span class="c1"># Convert datetime to datetime object if needed</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">datetime</span><span class="p">):</span>
             <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span>
@@ -974,7 +1068,7 @@
             <span class="n">dt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dt</span> <span class="o">=</span> <span class="n">time</span>
-        
+
         <span class="c1"># Run simulation with parameters</span>
         <span class="n">output_file</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">run_simulation</span><span class="p">(</span>
             <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
@@ -985,40 +1079,46 @@
             <span class="n">override_surface_type</span><span class="o">=</span><span class="n">surf_type</span><span class="p">,</span>
             <span class="n">override_altitude_km</span><span class="o">=</span><span class="n">altitude</span><span class="p">,</span>
             <span class="n">era5_atmosphere_file</span><span class="o">=</span><span class="n">era5_file</span><span class="p">,</span>
-            <span class="n">parameter_overrides</span><span class="o">=</span><span class="n">parameter_overrides</span>
+            <span class="n">parameter_overrides</span><span class="o">=</span><span class="n">parameter_overrides</span><span class="p">,</span>
         <span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">output_file</span> <span class="ow">and</span> <span class="n">output_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="c1"># Parse the output</span>
             <span class="n">parser</span> <span class="o">=</span> <span class="n">OutputParser</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">parameter_overrides</span><span class="p">)</span>
             <span class="n">parsed_output</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_output_file</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
-            
+
             <span class="c1"># Add point metadata</span>
-            <span class="n">parsed_output</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                <span class="s1">&#39;point_id&#39;</span><span class="p">:</span> <span class="n">point_id</span><span class="p">,</span>
-                <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
-                <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="n">lat</span><span class="p">,</span>
-                <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="n">lon</span><span class="p">,</span>
-                <span class="s1">&#39;albedo&#39;</span><span class="p">:</span> <span class="n">albedo</span><span class="p">,</span>
-                <span class="s1">&#39;surface_temperature&#39;</span><span class="p">:</span> <span class="n">surf_temp</span><span class="p">,</span>
-                <span class="s1">&#39;surface_type&#39;</span><span class="p">:</span> <span class="n">surf_type</span><span class="p">,</span>
-                <span class="s1">&#39;altitude&#39;</span><span class="p">:</span> <span class="n">altitude</span>
-            <span class="p">})</span>
-            
+            <span class="n">parsed_output</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;point_id&quot;</span><span class="p">:</span> <span class="n">point_id</span><span class="p">,</span>
+                    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                    <span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="n">lat</span><span class="p">,</span>
+                    <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="n">lon</span><span class="p">,</span>
+                    <span class="s2">&quot;albedo&quot;</span><span class="p">:</span> <span class="n">albedo</span><span class="p">,</span>
+                    <span class="s2">&quot;surface_temperature&quot;</span><span class="p">:</span> <span class="n">surf_temp</span><span class="p">,</span>
+                    <span class="s2">&quot;surface_type&quot;</span><span class="p">:</span> <span class="n">surf_type</span><span class="p">,</span>
+                    <span class="s2">&quot;altitude&quot;</span><span class="p">:</span> <span class="n">altitude</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
             <span class="k">return</span> <span class="n">parsed_output</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No output file produced for point </span><span class="si">{</span><span class="n">point_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
-            
+
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Single simulation failed for point </span><span class="si">{</span><span class="n">point_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">point_data</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;unknown&#39;</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Single simulation failed for point </span><span class="si">{</span><span class="n">point_data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">point_data</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;unknown&#39;</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_apply_parameter_overrides</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">,</span> <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_apply_parameter_overrides</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">,</span> <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply dotted-path overrides (e.g. ``simulation_defaults.albedo_value``) to *config*.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">parameter_overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="c1"># Config parameter override (e.g., &quot;simulation_defaults.albedo_value&quot;)</span>
             <span class="n">section</span><span class="p">,</span> <span class="n">param</span> <span class="o">=</span> <span class="n">parts</span>
@@ -1054,14 +1154,14 @@
 <span class="sd">    --------</span>
 <span class="sd">    execute_simulation_batch : The underlying parallel driver.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="PyRadtranAccessor.__init__">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.__init__.html#pyradtran.interface.PyRadtranAccessor.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xarray_obj</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span> <span class="o">=</span> <span class="n">xarray_obj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-    
+
 <div class="viewcode-block" id="PyRadtranAccessor.run">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.PyRadtranAccessor.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span>
@@ -1069,9 +1169,9 @@
         <span class="n">config_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SimulationConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
-        <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span>
-        <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span>
+        <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span>
+        <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;longitude&quot;</span><span class="p">,</span>
         <span class="n">albedo_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">surface_temperature_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">surface_type_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1083,11 +1183,11 @@
         <span class="c1"># Cloud automation arguments</span>
         <span class="n">cloud_wc_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cloud_ic_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cloud_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  
-        <span class="n">cloud_ic_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+        <span class="n">cloud_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cloud_ic_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cloud_top_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cloud_bottom_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">show_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">show_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">Path</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run ``uvspec`` for every point in the dataset.</span>
@@ -1144,49 +1244,65 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
-        
+
         <span class="c1"># Apply parameter overrides if provided</span>
         <span class="k">if</span> <span class="n">parameter_overrides</span><span class="p">:</span>
             <span class="n">_apply_parameter_overrides</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span> <span class="n">parameter_overrides</span><span class="p">)</span>
-        
+
         <span class="c1"># Validate input dataset</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_input_dataset</span><span class="p">(</span><span class="n">time_var</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">,</span> <span class="n">lon_var</span><span class="p">,</span> <span class="n">albedo_var</span><span class="p">,</span> 
-                                   <span class="n">surface_temperature_var</span><span class="p">,</span> <span class="n">surface_type_var</span><span class="p">,</span> <span class="n">era5_atmosphere</span><span class="p">)</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_input_dataset</span><span class="p">(</span>
+            <span class="n">time_var</span><span class="p">,</span>
+            <span class="n">lat_var</span><span class="p">,</span>
+            <span class="n">lon_var</span><span class="p">,</span>
+            <span class="n">albedo_var</span><span class="p">,</span>
+            <span class="n">surface_temperature_var</span><span class="p">,</span>
+            <span class="n">surface_type_var</span><span class="p">,</span>
+            <span class="n">era5_atmosphere</span><span class="p">,</span>
+        <span class="p">)</span>
+
         <span class="c1"># Handle altitude information</span>
-        <span class="n">alt_var</span> <span class="o">=</span> <span class="s1">&#39;altitude&#39;</span>
+        <span class="n">alt_var</span> <span class="o">=</span> <span class="s2">&quot;altitude&quot;</span>
         <span class="n">altitude_as_data_var</span> <span class="o">=</span> <span class="kc">False</span>
-        
+
         <span class="k">if</span> <span class="n">alt_var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="n">alt_var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
             <span class="c1"># Altitude is a coordinate - use as list of zout levels</span>
             <span class="n">dataset_altitudes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">[</span><span class="n">alt_var</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataset_altitudes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Altitude found as coordinate - using </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset_altitudes</span><span class="p">)</span><span class="si">}</span><span class="s2"> levels for zout: </span><span class="si">{</span><span class="n">dataset_altitudes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">dataset_altitudes</span><span class="p">]</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Altitude found as coordinate - using </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset_altitudes</span><span class="p">)</span><span class="si">}</span><span class="s2"> levels for zout: </span><span class="si">{</span><span class="n">dataset_altitudes</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="nb">float</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">dataset_altitudes</span>
+                <span class="p">]</span>
         <span class="k">if</span> <span class="n">alt_var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
             <span class="c1"># Altitude is a data variable - treat as scalar per time step</span>
             <span class="n">altitude_as_data_var</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Altitude found as data variable - will be treated as scalar altitude for each time step&quot;</span><span class="p">)</span>
-        
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;Altitude found as data variable - will be treated as scalar altitude for each time step&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Generate output path if saving and not provided</span>
         <span class="k">if</span> <span class="n">save_to_file</span> <span class="ow">and</span> <span class="n">output_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
-            <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span>
+                <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
             <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto-generating output path: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">output_path</span><span class="p">:</span>
             <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
             <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            
+
         <span class="c1"># Determine dataset to pass to execution batch</span>
         <span class="c1"># If altitude was used as config coordinate, we should NOT iterate over it in the batch execution</span>
         <span class="k">if</span> <span class="n">alt_var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">altitude_as_data_var</span><span class="p">:</span>
-             <span class="n">ds_to_execute</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">drop_dims</span><span class="p">(</span><span class="n">alt_var</span><span class="p">)</span>
+            <span class="n">ds_to_execute</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">drop_dims</span><span class="p">(</span><span class="n">alt_var</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-             <span class="n">ds_to_execute</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span>
-        
+            <span class="n">ds_to_execute</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span>
+
         <span class="c1"># Run the simulation batch</span>
-        
+
         <span class="n">parsed_outputs</span> <span class="o">=</span> <span class="n">execute_simulation_batch</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
             <span class="n">input_ds</span><span class="o">=</span><span class="n">ds_to_execute</span><span class="p">,</span>
@@ -1207,19 +1323,21 @@
             <span class="n">cloud_ic_reff_var</span><span class="o">=</span><span class="n">cloud_ic_reff_var</span><span class="p">,</span>
             <span class="n">cloud_top_var</span><span class="o">=</span><span class="n">cloud_top_var</span><span class="p">,</span>
             <span class="n">cloud_bottom_var</span><span class="o">=</span><span class="n">cloud_bottom_var</span><span class="p">,</span>
-            <span class="n">show_progress</span><span class="o">=</span><span class="n">show_progress</span>
+            <span class="n">show_progress</span><span class="o">=</span><span class="n">show_progress</span><span class="p">,</span>
         <span class="p">)</span>
-        
+
         <span class="c1"># Convert to xarray Dataset</span>
         <span class="k">if</span> <span class="n">return_dataset</span> <span class="ow">and</span> <span class="n">parsed_outputs</span><span class="p">:</span>
             <span class="n">converter</span> <span class="o">=</span> <span class="n">OutputToXarray</span><span class="p">()</span>
-            <span class="n">result_ds</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_batch</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">,</span> <span class="n">ds_to_execute</span><span class="p">,</span> <span class="n">time_var</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">,</span> <span class="n">lon_var</span><span class="p">)</span>
-            
+            <span class="n">result_ds</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_batch</span><span class="p">(</span>
+                <span class="n">parsed_outputs</span><span class="p">,</span> <span class="n">ds_to_execute</span><span class="p">,</span> <span class="n">time_var</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">,</span> <span class="n">lon_var</span>
+            <span class="p">)</span>
+
             <span class="c1"># Add metadata</span>
-            <span class="n">result_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;generated_by&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pyradtran&#39;</span>
-            <span class="n">result_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;pyradtran_version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;unified_system&#39;</span>
-            <span class="n">result_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;generation_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-            
+            <span class="n">result_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;generated_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;pyradtran&quot;</span>
+            <span class="n">result_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;pyradtran_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;unified_system&quot;</span>
+            <span class="n">result_ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;generation_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
             <span class="c1"># Save to file if requested</span>
             <span class="k">if</span> <span class="n">save_to_file</span> <span class="ow">and</span> <span class="n">output_path</span><span class="p">:</span>
                 <span class="n">saver</span> <span class="o">=</span> <span class="n">NetCDFSaver</span><span class="p">()</span>
@@ -1228,24 +1346,26 @@
                     <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
                     <span class="n">input_ds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">,</span>
                     <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
-                    <span class="n">simulation_params</span><span class="o">=</span><span class="n">parameter_overrides</span>
+                    <span class="n">simulation_params</span><span class="o">=</span><span class="n">parameter_overrides</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results saved to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+
             <span class="k">return</span> <span class="n">result_ds</span>
-        
+
         <span class="k">elif</span> <span class="n">save_to_file</span> <span class="ow">and</span> <span class="n">parsed_outputs</span> <span class="ow">and</span> <span class="n">output_path</span><span class="p">:</span>
             <span class="c1"># Just save to file without returning dataset</span>
             <span class="n">converter</span> <span class="o">=</span> <span class="n">OutputToXarray</span><span class="p">()</span>
-            <span class="n">result_ds</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_batch</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">,</span> <span class="n">ds_to_execute</span><span class="p">,</span> <span class="n">time_var</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">,</span> <span class="n">lon_var</span><span class="p">)</span>
-            
+            <span class="n">result_ds</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_batch</span><span class="p">(</span>
+                <span class="n">parsed_outputs</span><span class="p">,</span> <span class="n">ds_to_execute</span><span class="p">,</span> <span class="n">time_var</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">,</span> <span class="n">lon_var</span>
+            <span class="p">)</span>
+
             <span class="n">saver</span> <span class="o">=</span> <span class="n">NetCDFSaver</span><span class="p">()</span>
             <span class="k">return</span> <span class="n">saver</span><span class="o">.</span><span class="n">save_results_to_netcdf</span><span class="p">(</span>
                 <span class="n">data</span><span class="o">=</span><span class="n">result_ds</span><span class="p">,</span>
                 <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
                 <span class="n">input_ds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">,</span>
                 <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
-                <span class="n">simulation_params</span><span class="o">=</span><span class="n">parameter_overrides</span>
+                <span class="n">simulation_params</span><span class="o">=</span><span class="n">parameter_overrides</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="s2">&quot;No valid simulation results to return or save&quot;</span><span class="p">)</span></div>
@@ -1263,10 +1383,10 @@
         <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cloud_wc_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cloud_ic_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cloud_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  
-        <span class="n">cloud_ic_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+        <span class="n">cloud_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cloud_ic_reff_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cloud_top_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cloud_bottom_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">cloud_bottom_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Preview the cloud-profile file that would be generated.</span>
 
@@ -1286,124 +1406,154 @@
 <span class="sd">            when no cloud can be constructed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">selector</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-             <span class="c1"># Default to first point</span>
-             <span class="n">point_ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="n">d</span><span class="p">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span><span class="p">})</span>
+            <span class="c1"># Default to first point</span>
+            <span class="n">point_ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="n">d</span><span class="p">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
-             <span class="n">point_ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
-             
+            <span class="n">point_ds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+
         <span class="c1"># Resolve overrides</span>
         <span class="n">point_overrides</span> <span class="o">=</span> <span class="n">parameter_overrides</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">parameter_overrides</span> <span class="k">else</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">parameter_overrides</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">parameter_overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">point_ds</span><span class="p">:</span>
-                     <span class="n">val_scalar</span> <span class="o">=</span> <span class="n">point_ds</span><span class="p">[</span><span class="n">val</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val_scalar</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">):</span> <span class="n">val_scalar</span> <span class="o">=</span> <span class="n">val_scalar</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-                     <span class="c1"># If the variable is still an array (e.g. from sel nearest but dim remains?), squeeze it</span>
-                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val_scalar</span><span class="p">,</span> <span class="s1">&#39;ndim&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val_scalar</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                         <span class="n">val_scalar</span> <span class="o">=</span> <span class="n">val_scalar</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">val_scalar</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">val_scalar</span>
-                     <span class="n">point_overrides</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val_scalar</span>
-                     
+                    <span class="n">val_scalar</span> <span class="o">=</span> <span class="n">point_ds</span><span class="p">[</span><span class="n">val</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val_scalar</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">):</span>
+                        <span class="n">val_scalar</span> <span class="o">=</span> <span class="n">val_scalar</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                    <span class="c1"># If the variable is still an array (e.g. from sel nearest but dim remains?), squeeze it</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val_scalar</span><span class="p">,</span> <span class="s2">&quot;ndim&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val_scalar</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">val_scalar</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">val_scalar</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">val_scalar</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">val_scalar</span>
+                        <span class="p">)</span>
+                    <span class="n">point_overrides</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val_scalar</span>
+
         <span class="c1"># Extract variables helper</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">get_val</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">var</span> <span class="ow">and</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">point_ds</span><span class="p">:</span>
                 <span class="n">val</span> <span class="o">=</span> <span class="n">point_ds</span><span class="p">[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s1">&#39;item&#39;</span><span class="p">):</span> <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s1">&#39;ndim&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                     <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">val</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s2">&quot;ndim&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">val</span>
                 <span class="k">return</span> <span class="n">val</span>
             <span class="k">return</span> <span class="kc">None</span>
-            
+
         <span class="c1"># Construct content dict</span>
         <span class="n">content_dict</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
         <span class="n">cth</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">cloud_top_var</span><span class="p">)</span>
         <span class="n">cbh</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">cloud_bottom_var</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">cth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cbh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-             <span class="n">z_layer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">cth</span><span class="p">,</span> <span class="n">cbh</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">cth</span><span class="p">,</span> <span class="n">cbh</span><span class="p">)]</span>
-             
-             <span class="k">if</span> <span class="n">cloud_wc_var</span><span class="p">:</span>
-                 <span class="n">lwc</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">cloud_wc_var</span><span class="p">)</span>
-                 <span class="n">reff</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">cloud_reff_var</span><span class="p">)</span> <span class="k">if</span> <span class="n">cloud_reff_var</span> <span class="k">else</span> <span class="mf">10.0</span>
-                 <span class="n">r_val</span> <span class="o">=</span> <span class="n">reff</span> <span class="k">if</span> <span class="p">(</span><span class="n">reff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reff</span><span class="p">))</span> <span class="k">else</span> <span class="mf">10.0</span>
-                 
-                 <span class="n">content_dict</span> <span class="o">=</span> <span class="p">{</span>
-                     <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z_layer</span><span class="p">,</span>
-                     <span class="s1">&#39;lwc&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">lwc</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lwc</span><span class="p">)],</span>
-                     <span class="s1">&#39;reff&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">)]</span>
-                 <span class="p">}</span>
-                 
-             <span class="k">elif</span> <span class="n">cloud_ic_var</span><span class="p">:</span>
-                  <span class="n">iwc</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">cloud_ic_var</span><span class="p">)</span>
-                  <span class="n">r_key</span> <span class="o">=</span> <span class="n">cloud_ic_reff_var</span> <span class="k">if</span> <span class="n">cloud_ic_reff_var</span> <span class="k">else</span> <span class="n">cloud_reff_var</span>
-                  <span class="n">reff</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">r_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">r_key</span> <span class="k">else</span> <span class="mf">20.0</span>
-                  <span class="n">r_val</span> <span class="o">=</span> <span class="n">reff</span> <span class="k">if</span> <span class="p">(</span><span class="n">reff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reff</span><span class="p">))</span> <span class="k">else</span> <span class="mf">20.0</span>
-                  
-                  <span class="n">content_dict</span> <span class="o">=</span> <span class="p">{</span>
-                      <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z_layer</span><span class="p">,</span>
-                      <span class="s1">&#39;iwc&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">iwc</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">iwc</span><span class="p">)],</span>
-                      <span class="s1">&#39;reff&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">)]</span>
-                  <span class="p">}</span>
-        
+            <span class="n">z_layer</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">cth</span><span class="p">,</span> <span class="n">cbh</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">cth</span><span class="p">,</span> <span class="n">cbh</span><span class="p">)]</span>
+
+            <span class="k">if</span> <span class="n">cloud_wc_var</span><span class="p">:</span>
+                <span class="n">lwc</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">cloud_wc_var</span><span class="p">)</span>
+                <span class="n">reff</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">cloud_reff_var</span><span class="p">)</span> <span class="k">if</span> <span class="n">cloud_reff_var</span> <span class="k">else</span> <span class="mf">10.0</span>
+                <span class="n">r_val</span> <span class="o">=</span> <span class="n">reff</span> <span class="k">if</span> <span class="p">(</span><span class="n">reff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reff</span><span class="p">))</span> <span class="k">else</span> <span class="mf">10.0</span>
+
+                <span class="n">content_dict</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z_layer</span><span class="p">,</span>
+                    <span class="s2">&quot;lwc&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">lwc</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">lwc</span><span class="p">)],</span>
+                    <span class="s2">&quot;reff&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">)],</span>
+                <span class="p">}</span>
+
+            <span class="k">elif</span> <span class="n">cloud_ic_var</span><span class="p">:</span>
+                <span class="n">iwc</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">cloud_ic_var</span><span class="p">)</span>
+                <span class="n">r_key</span> <span class="o">=</span> <span class="n">cloud_ic_reff_var</span> <span class="k">if</span> <span class="n">cloud_ic_reff_var</span> <span class="k">else</span> <span class="n">cloud_reff_var</span>
+                <span class="n">reff</span> <span class="o">=</span> <span class="n">get_val</span><span class="p">(</span><span class="n">r_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">r_key</span> <span class="k">else</span> <span class="mf">20.0</span>
+                <span class="n">r_val</span> <span class="o">=</span> <span class="n">reff</span> <span class="k">if</span> <span class="p">(</span><span class="n">reff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">reff</span><span class="p">))</span> <span class="k">else</span> <span class="mf">20.0</span>
+
+                <span class="n">content_dict</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z_layer</span><span class="p">,</span>
+                    <span class="s2">&quot;iwc&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">iwc</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">iwc</span><span class="p">)],</span>
+                    <span class="s2">&quot;reff&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r_val</span><span class="p">)],</span>
+                <span class="p">}</span>
+
         <span class="c1"># Check explicit overrides for dict-based clouds</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">point_overrides</span><span class="p">,</span> <span class="s1">&#39;get&#39;</span><span class="p">):</span>
-             <span class="k">if</span> <span class="s1">&#39;wc_file&#39;</span> <span class="ow">in</span> <span class="n">point_overrides</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">point_overrides</span><span class="p">[</span><span class="s1">&#39;wc_file&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
-                 <span class="n">content_dict</span> <span class="o">=</span> <span class="n">point_overrides</span><span class="p">[</span><span class="s1">&#39;wc_file&#39;</span><span class="p">]</span>
-             <span class="k">if</span> <span class="s1">&#39;ic_file&#39;</span> <span class="ow">in</span> <span class="n">point_overrides</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">point_overrides</span><span class="p">[</span><span class="s1">&#39;ic_file&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
-                 <span class="n">content_dict</span> <span class="o">=</span> <span class="n">point_overrides</span><span class="p">[</span><span class="s1">&#39;ic_file&#39;</span><span class="p">]</span>
-             
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">point_overrides</span><span class="p">,</span> <span class="s2">&quot;get&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;wc_file&quot;</span> <span class="ow">in</span> <span class="n">point_overrides</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">point_overrides</span><span class="p">[</span><span class="s2">&quot;wc_file&quot;</span><span class="p">],</span> <span class="nb">dict</span>
+            <span class="p">):</span>
+                <span class="n">content_dict</span> <span class="o">=</span> <span class="n">point_overrides</span><span class="p">[</span><span class="s2">&quot;wc_file&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;ic_file&quot;</span> <span class="ow">in</span> <span class="n">point_overrides</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">point_overrides</span><span class="p">[</span><span class="s2">&quot;ic_file&quot;</span><span class="p">],</span> <span class="nb">dict</span>
+            <span class="p">):</span>
+                <span class="n">content_dict</span> <span class="o">=</span> <span class="n">point_overrides</span><span class="p">[</span><span class="s2">&quot;ic_file&quot;</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="n">content_dict</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Simulation</span><span class="o">.</span><span class="n">format_cloud_profile</span><span class="p">(</span><span class="n">content_dict</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;No valid cloud profile generated for this point.&quot;</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_input_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
-                              <span class="n">albedo_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">surface_temperature_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                              <span class="n">surface_type_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                              <span class="n">era5_atmosphere</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_input_dataset</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">albedo_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">surface_temperature_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">surface_type_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">era5_atmosphere</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">],</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that expected variables exist in the dataset.&quot;&quot;&quot;</span>
         <span class="c1"># Check required variables</span>
         <span class="k">if</span> <span class="n">time_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span> <span class="ow">and</span> <span class="n">time_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time variable &#39;</span><span class="si">{</span><span class="n">time_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset&quot;</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">lat_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span> <span class="ow">and</span> <span class="n">lat_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">coords</span> <span class="ow">and</span> <span class="n">lat_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">lat_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span>
+            <span class="ow">and</span> <span class="n">lat_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">coords</span>
+            <span class="ow">and</span> <span class="n">lat_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">data_vars</span>
+        <span class="p">):</span>
             <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Latitude variable &#39;</span><span class="si">{</span><span class="n">lat_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset&quot;</span><span class="p">)</span>
-            
-        <span class="k">if</span> <span class="n">lon_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span> <span class="ow">and</span> <span class="n">lon_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">coords</span> <span class="ow">and</span> <span class="n">lon_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">lon_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">dims</span>
+            <span class="ow">and</span> <span class="n">lon_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">coords</span>
+            <span class="ow">and</span> <span class="n">lon_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="o">.</span><span class="n">data_vars</span>
+        <span class="p">):</span>
             <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Longitude variable &#39;</span><span class="si">{</span><span class="n">lon_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset&quot;</span><span class="p">)</span>
-        
+
         <span class="c1"># Check optional variables</span>
         <span class="k">if</span> <span class="n">albedo_var</span> <span class="ow">and</span> <span class="n">albedo_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Albedo variable &#39;</span><span class="si">{</span><span class="n">albedo_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset&quot;</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">surface_temperature_var</span> <span class="ow">and</span> <span class="n">surface_temperature_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Surface temperature variable &#39;</span><span class="si">{</span><span class="n">surface_temperature_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset&quot;</span><span class="p">)</span>
-        
+            <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Surface temperature variable &#39;</span><span class="si">{</span><span class="n">surface_temperature_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset&quot;</span>
+            <span class="p">)</span>
+
         <span class="k">if</span> <span class="n">surface_type_var</span> <span class="ow">and</span> <span class="n">surface_type_var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Surface type variable &#39;</span><span class="si">{</span><span class="n">surface_type_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset&quot;</span><span class="p">)</span>
-        
+            <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Surface type variable &#39;</span><span class="si">{</span><span class="n">surface_type_var</span><span class="si">}</span><span class="s2">&#39; not found in dataset&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Validate ERA5 atmosphere dataset if provided</span>
         <span class="k">if</span> <span class="n">era5_atmosphere</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">required_era5_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">]</span>
-            <span class="n">required_era5_coords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pressure_level&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_time&#39;</span><span class="p">]</span>
-            
+            <span class="n">required_era5_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;q&quot;</span><span class="p">]</span>
+            <span class="n">required_era5_coords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pressure_level&quot;</span><span class="p">,</span> <span class="s2">&quot;valid_time&quot;</span><span class="p">]</span>
+
             <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">required_era5_vars</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">era5_atmosphere</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required variable &#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">&#39; not found in ERA5 atmosphere dataset&quot;</span><span class="p">)</span>
-            
+                    <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Required variable &#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">&#39; not found in ERA5 atmosphere dataset&quot;</span>
+                    <span class="p">)</span>
+
             <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">required_era5_coords</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">coord</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">era5_atmosphere</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required coordinate &#39;</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">&#39; not found in ERA5 atmosphere dataset&quot;</span><span class="p">)</span>
-                    
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERA5 atmosphere dataset validated with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">era5_atmosphere</span><span class="o">.</span><span class="n">pressure_level</span><span class="p">)</span><span class="si">}</span><span class="s2"> pressure levels&quot;</span><span class="p">)</span></div>
+                    <span class="k">raise</span> <span class="n">PyRadtranError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Required coordinate &#39;</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">&#39; not found in ERA5 atmosphere dataset&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;ERA5 atmosphere dataset validated with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">era5_atmosphere</span><span class="o">.</span><span class="n">pressure_level</span><span class="p">)</span><span class="si">}</span><span class="s2"> pressure levels&quot;</span>
+            <span class="p">)</span></div>
 
 
 
 <span class="c1"># Expose main functions</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;run_pyradtran_simulation&#39;</span><span class="p">,</span> <span class="s1">&#39;execute_simulation_batch&#39;</span><span class="p">,</span> <span class="s1">&#39;PyRadtranAccessor&#39;</span>
-<span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;run_pyradtran_simulation&quot;</span><span class="p">,</span> <span class="s2">&quot;execute_simulation_batch&quot;</span><span class="p">,</span> <span class="s2">&quot;PyRadtranAccessor&quot;</span><span class="p">]</span>
 </pre></div>
 
                 </article>

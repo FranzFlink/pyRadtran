@@ -170,7 +170,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
@@ -181,7 +181,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Processing: Visualizing Sea Ice ERA5 Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
@@ -507,12 +507,13 @@
 <span class="sd">    internally.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">is_dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">is_dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -542,20 +543,20 @@
 
 <span class="c1">#: Short-name → (relative path under ``data/``, description)</span>
 <span class="n">ATMOSPHERE_PROFILES</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;afglus&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="s2">&quot;atmmod/afglus.dat&quot;</span><span class="p">,</span>  <span class="s2">&quot;US Standard Atmosphere 1976&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;afglms&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="s2">&quot;atmmod/afglms.dat&quot;</span><span class="p">,</span>  <span class="s2">&quot;Mid-latitude Summer&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;afglmw&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="s2">&quot;atmmod/afglmw.dat&quot;</span><span class="p">,</span>  <span class="s2">&quot;Mid-latitude Winter&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;afglt&quot;</span><span class="p">:</span>   <span class="p">(</span><span class="s2">&quot;atmmod/afglt.dat&quot;</span><span class="p">,</span>   <span class="s2">&quot;Tropical&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;afglss&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="s2">&quot;atmmod/afglss.dat&quot;</span><span class="p">,</span>  <span class="s2">&quot;Sub-arctic Summer&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;afglsw&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="s2">&quot;atmmod/afglsw.dat&quot;</span><span class="p">,</span>  <span class="s2">&quot;Sub-arctic Winter&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglus&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglus.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;US Standard Atmosphere 1976&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglms&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglms.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;Mid-latitude Summer&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglmw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglmw.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;Mid-latitude Winter&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglt&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglt.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;Tropical&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglss&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglss.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;Sub-arctic Summer&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglsw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglsw.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;Sub-arctic Winter&quot;</span><span class="p">),</span>
     <span class="s2">&quot;mcclams&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/mcclams.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;McClatchey Mid-latitude Summer (extended)&quot;</span><span class="p">),</span>
     <span class="s2">&quot;mcclamw&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/mcclamw.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;McClatchey Mid-latitude Winter (extended)&quot;</span><span class="p">),</span>
     <span class="c1"># Trace-gas variants of US Standard</span>
     <span class="s2">&quot;afglus_ch4_vmr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglus_ch4_vmr.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;US Standard – CH4 VMR profile&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;afglus_co_vmr&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="s2">&quot;atmmod/afglus_co_vmr.dat&quot;</span><span class="p">,</span>  <span class="s2">&quot;US Standard – CO VMR profile&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglus_co_vmr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglus_co_vmr.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;US Standard – CO VMR profile&quot;</span><span class="p">),</span>
     <span class="s2">&quot;afglus_n2o_vmr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglus_n2o_vmr.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;US Standard – N2O VMR profile&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;afglus_n2_vmr&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="s2">&quot;atmmod/afglus_n2_vmr.dat&quot;</span><span class="p">,</span>  <span class="s2">&quot;US Standard – N2 VMR profile&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;afglus_no2&quot;</span><span class="p">:</span>     <span class="p">(</span><span class="s2">&quot;atmmod/afglus_no2.dat&quot;</span><span class="p">,</span>      <span class="s2">&quot;US Standard – NO2 profile&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglus_n2_vmr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglus_n2_vmr.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;US Standard – N2 VMR profile&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;afglus_no2&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;atmmod/afglus_no2.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;US Standard – NO2 profile&quot;</span><span class="p">),</span>
 <span class="p">}</span>
 
 
@@ -643,6 +644,7 @@
 <span class="sd">    FileNotFoundError</span>
 <span class="sd">        If *libradtran_bin* or *libradtran_data* do not exist.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">libradtran_bin</span><span class="p">:</span> <span class="n">Path</span>  <span class="c1"># Path to uvspec executable</span>
     <span class="n">libradtran_data</span><span class="p">:</span> <span class="n">Path</span>  <span class="c1"># Path to LibRadtran data directory</span>
     <span class="n">atmosphere_profile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Default atmosphere profile file</span>
@@ -654,9 +656,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Validate essential paths</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LibRadtran executable not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LibRadtran executable not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">libradtran_data</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LibRadtran data directory not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">libradtran_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LibRadtran data directory not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">libradtran_data</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
         <span class="c1"># Resolve short names / infer defaults</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_profile</span> <span class="o">=</span> <span class="n">_resolve_libradtran_shortname</span><span class="p">(</span>
@@ -668,13 +674,19 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">libradtran_data</span> <span class="o">/</span> <span class="s2">&quot;atmmod&quot;</span> <span class="o">/</span> <span class="s2">&quot;afglus.dat&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solar_spectrum</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">solar_spectrum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">libradtran_data</span> <span class="o">/</span> <span class="s2">&quot;solar_flux&quot;</span> <span class="o">/</span> <span class="s2">&quot;kurudz_1.0nm.dat&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solar_spectrum</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">libradtran_data</span> <span class="o">/</span> <span class="s2">&quot;solar_flux&quot;</span> <span class="o">/</span> <span class="s2">&quot;kurudz_1.0nm.dat&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_profile</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default atmosphere profile not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_profile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Default atmosphere profile not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">atmosphere_profile</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Solar spectrum file not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Solar spectrum file not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Create output/working directories</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">working_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
@@ -724,12 +736,13 @@
 <span class="sd">    --------</span>
 <span class="sd">    pyradtran.clouds.CloudGenerator : Programmatic cloud-layer creation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    
+
     <span class="c1"># Cloud type and source</span>
     <span class="n">cloud_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wc&quot;</span>  <span class="c1"># &#39;wc&#39; (water), &#39;ic&#39; (ice), &#39;mixed&#39;</span>
     <span class="n">cloud_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;parametric&quot;</span>  <span class="c1"># &#39;parametric&#39;, &#39;file&#39;, &#39;era5&#39;</span>
-    
+
     <span class="c1"># Simple parametric cloud (single layer)</span>
     <span class="n">layer_bottom_km</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">layer_top_km</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
@@ -737,22 +750,30 @@
     <span class="n">ice_content_g_m3</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">effective_radius_um</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span>
     <span class="n">cloud_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
-    
+
     <span class="c1"># File-based clouds</span>
     <span class="n">wc_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">ic_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    
+
     <span class="c1"># ERA5 cloud generation</span>
     <span class="n">era5_dataset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># xarray Dataset (not serializable in YAML)</span>
     <span class="n">era5_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">era5_lat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">era5_lon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_source</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wc&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">wc_file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">wc_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wc&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">wc_file</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">wc_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+            <span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Water cloud file not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">wc_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ic&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_file</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ic&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_file</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_file</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+            <span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ice cloud file not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ic_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
@@ -811,49 +832,63 @@
 <span class="sd">        On invalid *wavelength_nm* length, unknown *source*, or</span>
 <span class="sd">        out-of-range *albedo_value*.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="c1"># Essential LibRadtran parameters</span>
-    <span class="n">rte_solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;twostr&quot;</span>  <span class="c1"># RTE solver: &#39;twostr&#39;, &#39;disort&#39;, &#39;fdisort1&#39;, &#39;rodents&#39;, etc.</span>
-    <span class="n">mol_abs_param</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;lowtran per_nm&quot;</span>  <span class="c1"># Molecular absorption: &#39;lowtran&#39;, &#39;reptran&#39;, &#39;kato&#39;, etc.</span>
+    <span class="n">rte_solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;twostr&quot;</span>  <span class="c1"># RTE solver: &#39;twostr&#39;, &#39;disort&#39;, &#39;fdisort1&#39;, &#39;rodents&#39;, etc.</span>
+    <span class="p">)</span>
+    <span class="n">mol_abs_param</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;lowtran per_nm&quot;</span>  <span class="c1"># Molecular absorption: &#39;lowtran&#39;, &#39;reptran&#39;, &#39;kato&#39;, etc.</span>
+    <span class="p">)</span>
     <span class="n">source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;solar&quot;</span>  <span class="c1"># Radiation source: &#39;solar&#39; or &#39;thermal&#39;</span>
-    
+
     <span class="c1"># Spectral configuration</span>
     <span class="n">wavelength_nm</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">3600</span><span class="p">])</span>
     <span class="n">integrate_wavelength</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Whether to integrate over wavelength range</span>
-    
+
     <span class="c1"># Output configuration</span>
-    <span class="n">output_columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sza&quot;</span><span class="p">,</span> <span class="s2">&quot;eglo&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;albedo&quot;</span><span class="p">])</span>
+    <span class="n">output_columns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sza&quot;</span><span class="p">,</span> <span class="s2">&quot;eglo&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;albedo&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
     <span class="n">output_altitudes_km</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
-    
+
     <span class="c1"># Surface properties</span>
-    <span class="n">albedo_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Surface albedo (0-1). If None, uvspec default is used.</span>
+    <span class="n">albedo_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="kc">None</span>  <span class="c1"># Surface albedo (0-1). If None, uvspec default is used.</span>
+    <span class="p">)</span>
     <span class="n">surface_temperature_k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Surface temperature in Kelvin</span>
-    
+
     <span class="c1"># Atmospheric composition (commonly used)</span>
     <span class="n">ozone_du</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">300.0</span>  <span class="c1"># Total ozone column in Dobson Units</span>
     <span class="n">h2o_mm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># Precipitable water in mm</span>
     <span class="n">h2o_source</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;fixed&quot;</span>  <span class="c1"># H2O source: &#39;fixed&#39; or &#39;radiosonde&#39;</span>
-    
+
     <span class="c1"># Cloud configuration</span>
     <span class="n">clouds</span><span class="p">:</span> <span class="n">CloudParameters</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">CloudParameters</span><span class="p">)</span>
-    
+
     <span class="c1"># Viewing geometry (simplified)</span>
     <span class="n">viewing_geometry</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nadir&quot;</span>  <span class="c1"># &#39;nadir&#39; or &#39;custom&#39;</span>
-    <span class="n">sza</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Solar zenith angle (degrees) - if None, calculated from time/location</span>
-    
+    <span class="n">sza</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="kc">None</span>  <span class="c1"># Solar zenith angle (degrees) - if None, calculated from time/location</span>
+    <span class="p">)</span>
+
     <span class="c1"># Generic overrides for parameters not covered by strict schema</span>
     <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate configuration parameters.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wavelength_nm</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength_nm</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;wavelength_nm must contain [min, max]&quot;</span><span class="p">)</span>
         <span class="c1"># output_altitudes_km can be empty (defaults to uvspec implicit behavior)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;solar&quot;</span><span class="p">,</span> <span class="s2">&quot;thermal&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;source must be &#39;solar&#39; or &#39;thermal&#39;, got &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;source must be &#39;solar&#39; or &#39;thermal&#39;, got &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">albedo_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">albedo_value</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;albedo_value must be between 0 and 1, got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">albedo_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;albedo_value must be between 0 and 1, got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">albedo_value</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Sort and deduplicate altitude levels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_altitudes_km</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_altitudes_km</span><span class="p">)))</span></div>
 
@@ -876,6 +911,7 @@
 <span class="sd">    timeout_seconds : int, default ``300``</span>
 <span class="sd">        Per-simulation ``uvspec`` timeout.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">max_workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">cleanup_temp_files</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Keep temp files for debugging</span>
     <span class="n">debug_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -898,9 +934,12 @@
 <span class="sd">    netcdf_encoding : dict</span>
 <span class="sd">        Passed to :meth:`xarray.Dataset.to_netcdf` as *encoding*.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">filename_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pyradtran_sim&quot;</span>
     <span class="n">filename_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_results.nc&quot;</span>
-    <span class="n">netcdf_encoding</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;zlib&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;complevel&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span></div>
+    <span class="n">netcdf_encoding</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;zlib&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;complevel&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+    <span class="p">)</span></div>
 
 
 
@@ -924,6 +963,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    load_config : Recommended entry point (merges three layers).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">paths</span><span class="p">:</span> <span class="n">PathsConfig</span>
     <span class="n">simulation_defaults</span><span class="p">:</span> <span class="n">SimulationDefaults</span>
     <span class="n">execution</span><span class="p">:</span> <span class="n">ExecutionConfig</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">ExecutionConfig</span><span class="p">)</span>
@@ -932,7 +972,7 @@
 <div class="viewcode-block" id="SimulationConfig.from_yaml">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.config.SimulationConfig.from_yaml.html#pyradtran.config.SimulationConfig.from_yaml">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;SimulationConfig&#39;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;SimulationConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load configuration from a single YAML file.</span>
 
 <span class="sd">        Parameters</span>
@@ -953,7 +993,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">yaml_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration file not found: </span><span class="si">{</span><span class="n">yaml_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">yaml_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">raw_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_dict_to_dataclass</span><span class="p">(</span><span class="n">raw_config</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span></div>
@@ -964,24 +1004,30 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively convert a nested dictionary to dataclass instances.&quot;&quot;&quot;</span>
         <span class="n">field_types</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">dataclass_type</span><span class="p">)}</span>
         <span class="n">init_args</span> <span class="o">=</span> <span class="p">{}</span>
-        
+
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">field_types</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ignoring unknown config parameter: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">dataclass_type</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Ignoring unknown config parameter: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">dataclass_type</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="k">continue</span>
 
             <span class="n">field_type</span> <span class="o">=</span> <span class="n">field_types</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-            
+
             <span class="c1"># Handle Optional types</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="s1">&#39;__origin__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">field_type</span><span class="o">.</span><span class="n">__origin__</span> <span class="ow">is</span> <span class="n">Union</span><span class="p">:</span>
-                <span class="n">possible_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">field_type</span><span class="o">.</span><span class="n">__args__</span> <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="s2">&quot;__origin__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">field_type</span><span class="o">.</span><span class="n">__origin__</span> <span class="ow">is</span> <span class="n">Union</span><span class="p">:</span>
+                <span class="n">possible_types</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">field_type</span><span class="o">.</span><span class="n">__args__</span> <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="p">]</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">possible_types</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">field_type</span> <span class="o">=</span> <span class="n">possible_types</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">is_dataclass</span><span class="p">(</span><span class="n">field_type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="n">init_args</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_dict_to_dataclass</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">field_type</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">field_type</span> <span class="ow">is</span> <span class="n">Path</span><span class="p">:</span>
-                <span class="n">init_args</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="n">init_args</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">init_args</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
@@ -993,7 +1039,10 @@
             <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">init_args</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">dataclass_type</span><span class="o">.</span><span class="n">__dataclass_fields__</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
                     <span class="n">init_args</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">default</span>
-                <span class="k">elif</span> <span class="n">f</span><span class="o">.</span><span class="n">default_factory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">dataclass_type</span><span class="o">.</span><span class="n">__dataclass_fields__</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">default_factory</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="p">(</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">default_factory</span>
+                    <span class="ow">is</span> <span class="ow">not</span> <span class="n">dataclass_type</span><span class="o">.</span><span class="n">__dataclass_fields__</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">default_factory</span>
+                <span class="p">):</span>
                     <span class="n">init_args</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">default_factory</span><span class="p">()</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -1020,6 +1069,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        to_yaml : Write the result directly to a file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">def</span><span class="w"> </span><span class="nf">_convert</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">is_dataclass</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
                 <span class="k">return</span> <span class="p">{</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">_convert</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">(</span><span class="n">obj</span><span class="p">)}</span>
@@ -1034,8 +1084,8 @@
 
         <span class="n">d</span> <span class="o">=</span> <span class="n">_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="c1"># Drop keys that are not YAML-serialisable (e.g. era5_dataset)</span>
-        <span class="k">if</span> <span class="s1">&#39;simulation_defaults&#39;</span> <span class="ow">in</span> <span class="n">d</span> <span class="ow">and</span> <span class="s1">&#39;clouds&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;simulation_defaults&#39;</span><span class="p">]:</span>
-            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;simulation_defaults&#39;</span><span class="p">][</span><span class="s1">&#39;clouds&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;era5_dataset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;simulation_defaults&quot;</span> <span class="ow">in</span> <span class="n">d</span> <span class="ow">and</span> <span class="s2">&quot;clouds&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_defaults&quot;</span><span class="p">]:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;simulation_defaults&quot;</span><span class="p">][</span><span class="s2">&quot;clouds&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;era5_dataset&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
 
@@ -1064,9 +1114,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                      <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configuration written to </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">path</span></div>
 
@@ -1083,55 +1134,67 @@
 <span class="sd">        dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;paths&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;libradtran_bin&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="p">),</span>
-                <span class="s1">&#39;libradtran_data&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="p">),</span>
-                <span class="s1">&#39;atmosphere_profile&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">atmosphere_profile</span><span class="p">),</span>
-                <span class="s1">&#39;solar_spectrum&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="p">),</span>
-                <span class="s1">&#39;radiosonde_base&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">radiosonde_base</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">radiosonde_base</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;output_dir&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">output_dir</span><span class="p">),</span>
-                <span class="s1">&#39;working_dir&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span><span class="p">)</span>
+            <span class="s2">&quot;paths&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;libradtran_bin&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="p">),</span>
+                <span class="s2">&quot;libradtran_data&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="p">),</span>
+                <span class="s2">&quot;atmosphere_profile&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">atmosphere_profile</span><span class="p">),</span>
+                <span class="s2">&quot;solar_spectrum&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="p">),</span>
+                <span class="s2">&quot;radiosonde_base&quot;</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">radiosonde_base</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">radiosonde_base</span>
+                    <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">output_dir</span><span class="p">),</span>
+                <span class="s2">&quot;working_dir&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">working_dir</span><span class="p">),</span>
             <span class="p">},</span>
-            <span class="s1">&#39;simulation_defaults&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;rte_solver&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span><span class="p">,</span>
-                <span class="s1">&#39;mol_abs_param&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span><span class="p">,</span>
-                <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
-                <span class="s1">&#39;wavelength_nm&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span><span class="p">,</span>
-                <span class="s1">&#39;integrate_wavelength&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span><span class="p">,</span>
-                <span class="s1">&#39;output_columns&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span><span class="p">,</span>
-                <span class="s1">&#39;output_altitudes_km&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span><span class="p">,</span>
-                <span class="s1">&#39;albedo_value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_value</span><span class="p">,</span>
-                <span class="s1">&#39;surface_temperature_k&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">surface_temperature_k</span><span class="p">,</span>
-                <span class="s1">&#39;ozone_du&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">ozone_du</span><span class="p">,</span>
-                <span class="s1">&#39;h2o_mm&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_mm</span><span class="p">,</span>
-                <span class="s1">&#39;h2o_source&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_source</span><span class="p">,</span>
-                <span class="s1">&#39;viewing_geometry&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">viewing_geometry</span><span class="p">,</span>
-                <span class="s1">&#39;sza&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">sza</span><span class="p">,</span>
-                <span class="s1">&#39;clouds&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;enabled&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span>
-                    <span class="s1">&#39;cloud_type&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span><span class="p">,</span>
-                    <span class="s1">&#39;cloud_source&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">cloud_source</span><span class="p">,</span>
-                    <span class="s1">&#39;layer_bottom_km&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_bottom_km</span><span class="p">,</span>
-                    <span class="s1">&#39;layer_top_km&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_top_km</span><span class="p">,</span>
-                    <span class="s1">&#39;water_content_g_m3&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">water_content_g_m3</span><span class="p">,</span>
-                    <span class="s1">&#39;ice_content_g_m3&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">ice_content_g_m3</span><span class="p">,</span>
-                    <span class="s1">&#39;effective_radius_um&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">effective_radius_um</span><span class="p">,</span>
-                    <span class="s1">&#39;cloud_fraction&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">cloud_fraction</span><span class="p">,</span>
-                    <span class="s1">&#39;wc_file&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">wc_file</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">wc_file</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-                    <span class="s1">&#39;ic_file&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">ic_file</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">ic_file</span> <span class="k">else</span> <span class="kc">None</span>
-                <span class="p">}</span>
+            <span class="s2">&quot;simulation_defaults&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;rte_solver&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span><span class="p">,</span>
+                <span class="s2">&quot;mol_abs_param&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
+                <span class="s2">&quot;wavelength_nm&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span><span class="p">,</span>
+                <span class="s2">&quot;integrate_wavelength&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span><span class="p">,</span>
+                <span class="s2">&quot;output_columns&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span><span class="p">,</span>
+                <span class="s2">&quot;output_altitudes_km&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span><span class="p">,</span>
+                <span class="s2">&quot;albedo_value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_value</span><span class="p">,</span>
+                <span class="s2">&quot;surface_temperature_k&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">surface_temperature_k</span><span class="p">,</span>
+                <span class="s2">&quot;ozone_du&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">ozone_du</span><span class="p">,</span>
+                <span class="s2">&quot;h2o_mm&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_mm</span><span class="p">,</span>
+                <span class="s2">&quot;h2o_source&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_source</span><span class="p">,</span>
+                <span class="s2">&quot;viewing_geometry&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">viewing_geometry</span><span class="p">,</span>
+                <span class="s2">&quot;sza&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">sza</span><span class="p">,</span>
+                <span class="s2">&quot;clouds&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span>
+                    <span class="s2">&quot;cloud_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span><span class="p">,</span>
+                    <span class="s2">&quot;cloud_source&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">cloud_source</span><span class="p">,</span>
+                    <span class="s2">&quot;layer_bottom_km&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_bottom_km</span><span class="p">,</span>
+                    <span class="s2">&quot;layer_top_km&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_top_km</span><span class="p">,</span>
+                    <span class="s2">&quot;water_content_g_m3&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">water_content_g_m3</span><span class="p">,</span>
+                    <span class="s2">&quot;ice_content_g_m3&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">ice_content_g_m3</span><span class="p">,</span>
+                    <span class="s2">&quot;effective_radius_um&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">effective_radius_um</span><span class="p">,</span>
+                    <span class="s2">&quot;cloud_fraction&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">cloud_fraction</span><span class="p">,</span>
+                    <span class="s2">&quot;wc_file&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">wc_file</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">wc_file</span>
+                        <span class="k">else</span> <span class="kc">None</span>
+                    <span class="p">),</span>
+                    <span class="s2">&quot;ic_file&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">ic_file</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">ic_file</span>
+                        <span class="k">else</span> <span class="kc">None</span>
+                    <span class="p">),</span>
+                <span class="p">},</span>
             <span class="p">},</span>
-            <span class="s1">&#39;execution&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;max_workers&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span><span class="p">,</span>
-                <span class="s1">&#39;cleanup_temp_files&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span><span class="p">,</span>
-                <span class="s1">&#39;debug_mode&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">,</span>
-                <span class="s1">&#39;timeout_seconds&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">timeout_seconds</span>
+            <span class="s2">&quot;execution&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;max_workers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span><span class="p">,</span>
+                <span class="s2">&quot;cleanup_temp_files&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span><span class="p">,</span>
+                <span class="s2">&quot;debug_mode&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">,</span>
+                <span class="s2">&quot;timeout_seconds&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">timeout_seconds</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;filename_prefix&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_prefix</span><span class="p">,</span>
-                <span class="s1">&#39;filename_suffix&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_suffix</span><span class="p">,</span>
-                <span class="s1">&#39;netcdf_encoding&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">netcdf_encoding</span>
-            <span class="p">}</span>
+            <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;filename_prefix&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_prefix</span><span class="p">,</span>
+                <span class="s2">&quot;filename_suffix&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_suffix</span><span class="p">,</span>
+                <span class="s2">&quot;netcdf_encoding&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">netcdf_encoding</span><span class="p">,</span>
+            <span class="p">},</span>
         <span class="p">}</span></div>
 </div>
 
@@ -1139,7 +1202,6 @@
 
 <span class="c1"># Default configuration path</span>
 <span class="n">_DEFAULT_CONFIG_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;config&quot;</span> <span class="o">/</span> <span class="s2">&quot;clean_simulation.yaml&quot;</span>
-
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_recursive_update</span><span class="p">(</span><span class="n">base</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">update</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
@@ -1181,15 +1243,17 @@
 <span class="sd">        If the merged dictionary cannot be converted to</span>
 <span class="sd">        :class:`SimulationConfig`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="c1"># 1. Start with the default configuration as the base</span>
     <span class="c1"># This ensures we have all required fields (like simulation_defaults)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">_DEFAULT_CONFIG_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">_DEFAULT_CONFIG_PATH</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">final_config_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load default configuration from </span><span class="si">{</span><span class="n">_DEFAULT_CONFIG_PATH</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="c1"># Fallback to empty dict ? No, this will likely fail later. </span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Failed to load default configuration from </span><span class="si">{</span><span class="n">_DEFAULT_CONFIG_PATH</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># Fallback to empty dict ? No, this will likely fail later.</span>
         <span class="c1"># But let&#39;s proceed to try master.</span>
         <span class="n">final_config_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -1199,7 +1263,7 @@
     <span class="k">if</span> <span class="n">master_config_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading master configuration from: </span><span class="si">{</span><span class="n">master_config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">master_config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">master_config_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">master_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
             <span class="n">_recursive_update</span><span class="p">(</span><span class="n">final_config_dict</span><span class="p">,</span> <span class="n">master_config</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1211,25 +1275,32 @@
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading specific configuration from: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">specific_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
             <span class="n">_recursive_update</span><span class="p">(</span><span class="n">final_config_dict</span><span class="p">,</span> <span class="n">specific_config</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load specific configuration from </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to load specific configuration from </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
             <span class="k">raise</span>
-        
+
     <span class="k">try</span><span class="p">:</span>
-        
+
         <span class="c1"># Now convert to dataclass</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">SimulationConfig</span><span class="o">.</span><span class="n">_dict_to_dataclass</span><span class="p">(</span><span class="n">final_config_dict</span><span class="p">,</span> <span class="n">SimulationConfig</span><span class="p">)</span>
-        
+        <span class="n">config</span> <span class="o">=</span> <span class="n">SimulationConfig</span><span class="o">.</span><span class="n">_dict_to_dataclass</span><span class="p">(</span>
+            <span class="n">final_config_dict</span><span class="p">,</span> <span class="n">SimulationConfig</span>
+        <span class="p">)</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Configuration loaded successfully.&quot;</span><span class="p">)</span>
-        
+
         <span class="c1"># Set logging level based on config</span>
         <span class="n">log_level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">debug_mode</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">log_level</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">log_level</span><span class="p">,</span>
+            <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">log_level</span><span class="p">)</span>
-        
+
         <span class="k">return</span> <span class="n">config</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load configuration from </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1336,63 +1407,63 @@
 <span class="sd">        Destination file.  Parent directories are created automatically.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_config</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;paths&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;libradtran_bin&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/libradtran/bin/uvspec&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;libradtran_data&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/libradtran/data&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;atmosphere_profile&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/libradtran/data/atmmod/afglus.dat&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;solar_spectrum&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/libradtran/data/solar_flux/kurudz_1.0nm.dat&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;radiosonde_base&#39;</span><span class="p">:</span> <span class="s1">&#39;/path/to/radiosonde/data&#39;</span><span class="p">,</span>  <span class="c1"># Optional</span>
-            <span class="s1">&#39;output_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;./pyradtran_output&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;working_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;./pyradtran_work&#39;</span>
+        <span class="s2">&quot;paths&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;libradtran_bin&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/libradtran/bin/uvspec&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;libradtran_data&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/libradtran/data&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;atmosphere_profile&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/libradtran/data/atmmod/afglus.dat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;solar_spectrum&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/libradtran/data/solar_flux/kurudz_1.0nm.dat&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;radiosonde_base&quot;</span><span class="p">:</span> <span class="s2">&quot;/path/to/radiosonde/data&quot;</span><span class="p">,</span>  <span class="c1"># Optional</span>
+            <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;./pyradtran_output&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;working_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;./pyradtran_work&quot;</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s1">&#39;simulation_defaults&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;rte_solver&#39;</span><span class="p">:</span> <span class="s1">&#39;twostr&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;mol_abs_param&#39;</span><span class="p">:</span> <span class="s1">&#39;lowtran per_nm&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="s1">&#39;solar&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;wavelength_nm&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">3600</span><span class="p">],</span>
-            <span class="s1">&#39;integrate_wavelength&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;output_columns&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;sza&#39;</span><span class="p">,</span> <span class="s1">&#39;eglo&#39;</span><span class="p">,</span> <span class="s1">&#39;eup&#39;</span><span class="p">,</span> <span class="s1">&#39;albedo&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;output_altitudes_km&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
-            <span class="s1">&#39;albedo_value&#39;</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">,</span>
-            <span class="s1">&#39;surface_temperature_k&#39;</span><span class="p">:</span> <span class="mf">273.15</span><span class="p">,</span>
-            <span class="s1">&#39;ozone_du&#39;</span><span class="p">:</span> <span class="mf">300.0</span><span class="p">,</span>
-            <span class="s1">&#39;h2o_mm&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
-            <span class="s1">&#39;h2o_source&#39;</span><span class="p">:</span> <span class="s1">&#39;fixed&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;viewing_geometry&#39;</span><span class="p">:</span> <span class="s1">&#39;nadir&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;sza&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s1">&#39;clouds&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;enabled&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s1">&#39;cloud_type&#39;</span><span class="p">:</span> <span class="s1">&#39;wc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;cloud_source&#39;</span><span class="p">:</span> <span class="s1">&#39;parametric&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;layer_bottom_km&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-                <span class="s1">&#39;layer_top_km&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
-                <span class="s1">&#39;water_content_g_m3&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-                <span class="s1">&#39;ice_content_g_m3&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s1">&#39;effective_radius_um&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
-                <span class="s1">&#39;cloud_fraction&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-                <span class="s1">&#39;wc_file&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s1">&#39;ic_file&#39;</span><span class="p">:</span> <span class="kc">None</span>
-            <span class="p">}</span>
+        <span class="s2">&quot;simulation_defaults&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;rte_solver&quot;</span><span class="p">:</span> <span class="s2">&quot;twostr&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mol_abs_param&quot;</span><span class="p">:</span> <span class="s2">&quot;lowtran per_nm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;solar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wavelength_nm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">3600</span><span class="p">],</span>
+            <span class="s2">&quot;integrate_wavelength&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;output_columns&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;sza&quot;</span><span class="p">,</span> <span class="s2">&quot;eglo&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;albedo&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;output_altitudes_km&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">&quot;albedo_value&quot;</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">,</span>
+            <span class="s2">&quot;surface_temperature_k&quot;</span><span class="p">:</span> <span class="mf">273.15</span><span class="p">,</span>
+            <span class="s2">&quot;ozone_du&quot;</span><span class="p">:</span> <span class="mf">300.0</span><span class="p">,</span>
+            <span class="s2">&quot;h2o_mm&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="s2">&quot;h2o_source&quot;</span><span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;viewing_geometry&quot;</span><span class="p">:</span> <span class="s2">&quot;nadir&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sza&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;clouds&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;cloud_type&quot;</span><span class="p">:</span> <span class="s2">&quot;wc&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;cloud_source&quot;</span><span class="p">:</span> <span class="s2">&quot;parametric&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;layer_bottom_km&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;layer_top_km&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+                <span class="s2">&quot;water_content_g_m3&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+                <span class="s2">&quot;ice_content_g_m3&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;effective_radius_um&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+                <span class="s2">&quot;cloud_fraction&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;wc_file&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;ic_file&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">},</span>
         <span class="p">},</span>
-        <span class="s1">&#39;execution&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;max_workers&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s1">&#39;cleanup_temp_files&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;debug_mode&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;timeout_seconds&#39;</span><span class="p">:</span> <span class="mi">300</span>
+        <span class="s2">&quot;execution&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;max_workers&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;cleanup_temp_files&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;debug_mode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;timeout_seconds&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;filename_prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;pyradtran_sim&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;filename_suffix&#39;</span><span class="p">:</span> <span class="s1">&#39;_results.nc&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;netcdf_encoding&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;zlib&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;complevel&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
-        <span class="p">}</span>
+        <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;filename_prefix&quot;</span><span class="p">:</span> <span class="s2">&quot;pyradtran_sim&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;filename_suffix&quot;</span><span class="p">:</span> <span class="s2">&quot;_results.nc&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;netcdf_encoding&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;zlib&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;complevel&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+        <span class="p">},</span>
     <span class="p">}</span>
-    
+
     <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
     <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">example_config</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    
+
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Example configuration created at: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 

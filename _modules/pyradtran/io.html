@@ -170,7 +170,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
@@ -181,7 +181,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Processing: Visualizing Sea Ice ERA5 Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
@@ -500,14 +500,15 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputGenerationError</span><span class="p">,</span> <span class="n">OutputParsingError</span>
@@ -523,6 +524,7 @@
 <span class="sd">    The four members encode the two binary choices</span>
 <span class="sd">    (integrated vs. spectral) × (single vs. multi altitude).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">INTEGRATED_SINGLE_ALTITUDE</span> <span class="o">=</span> <span class="s2">&quot;integrated_single_altitude&quot;</span>
     <span class="n">INTEGRATED_MULTI_ALTITUDE</span> <span class="o">=</span> <span class="s2">&quot;integrated_multi_altitude&quot;</span>
     <span class="n">SPECTRAL_SINGLE_ALTITUDE</span> <span class="o">=</span> <span class="s2">&quot;spectral_single_altitude&quot;</span>
@@ -553,6 +555,7 @@
 <span class="sd">    is_brightness_temperature : bool, default ``False``</span>
 <span class="sd">        Whether the output represents brightness temperatures.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">output_type</span><span class="p">:</span> <span class="n">OutputType</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="n">wavelengths</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -560,7 +563,7 @@
     <span class="n">source_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">is_brightness_temperature</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    
+
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize metadata if not provided.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -577,7 +580,7 @@
 <span class="sd">    variables (or ``datetime`` as an alias for ``time``).  Additional</span>
 <span class="sd">    columns are carried through as data variables.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="InputDataLoader.load_simulation_input_data">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.io.InputDataLoader.load_simulation_input_data.html#pyradtran.io.InputDataLoader.load_simulation_input_data">[docs]</a>
     <span class="nd">@staticmethod</span>
@@ -602,44 +605,58 @@
 <span class="sd">            variables.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">input_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">input_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input file not found: </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        
+
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">input_file</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;.csv&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">input_file</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.csv&quot;</span><span class="p">:</span>
                 <span class="c1"># Load CSV and convert to xarray</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
-                
+
                 <span class="c1"># Convert datetime column if it exists</span>
-                <span class="k">if</span> <span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">])</span>
-                <span class="k">elif</span> <span class="s1">&#39;datetime&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-                    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">])</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;datetime&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                
+                <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="s2">&quot;datetime&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime&quot;</span><span class="p">])</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;datetime&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
                 <span class="c1"># Create xarray Dataset</span>
-                <span class="n">ds</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_xarray</span><span class="p">()</span>
-                
-            <span class="k">elif</span> <span class="n">input_file</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;.netcdf&#39;</span><span class="p">]:</span>
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_xarray</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="n">input_file</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.nc&quot;</span><span class="p">,</span> <span class="s2">&quot;.netcdf&quot;</span><span class="p">]:</span>
                 <span class="c1"># Load NetCDF directly</span>
                 <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
-                
+
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported file format: </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+                <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Unsupported file format: </span><span class="si">{</span><span class="n">input_file</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
             <span class="c1"># Validate required coordinates</span>
-            <span class="n">required_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">]</span>
-            <span class="n">missing_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">required_vars</span> <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span> <span class="ow">and</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span> <span class="ow">and</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">]</span>
-            
+            <span class="n">required_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
+            <span class="n">missing_vars</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">var</span>
+                <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">required_vars</span>
+                <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span>
+                <span class="ow">and</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span>
+                <span class="ow">and</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span>
+            <span class="p">]</span>
+
             <span class="k">if</span> <span class="n">missing_vars</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required variables missing: </span><span class="si">{</span><span class="n">missing_vars</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded input data from </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="si">}</span><span class="s2"> time points&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Required variables missing: </span><span class="si">{</span><span class="n">missing_vars</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Loaded input data from </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="si">}</span><span class="s2"> time points&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="n">ds</span>
-            
+
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load input data from </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to load input data from </span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
 </div>
 
 
@@ -657,15 +674,15 @@
 <span class="sd">    --------</span>
 <span class="sd">    RadiosondeAtmosphereGenerator : Atmosphere from real soundings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="ERA5AtmosphereGenerator.create_era5_atmosphere_file">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.create_era5_atmosphere_file.html#pyradtran.io.ERA5AtmosphereGenerator.create_era5_atmosphere_file">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_era5_atmosphere_file</span><span class="p">(</span>
-        <span class="n">era5_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> 
-        <span class="c1">#h2o_unit: str,</span>
-        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-        <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+        <span class="n">era5_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
+        <span class="c1"># h2o_unit: str,</span>
+        <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">],</span>
         <span class="n">output_filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
@@ -699,43 +716,44 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># Physical and chemical constants for conversions</span>
-            <span class="n">G_STD</span> <span class="o">=</span> <span class="mf">9.80665</span>      <span class="c1"># Standard gravity (m/s^2)</span>
-            <span class="n">K_B</span> <span class="o">=</span> <span class="mf">1.380649e-23</span>   <span class="c1"># Boltzmann constant (J/K)</span>
-            <span class="n">M_AIR</span> <span class="o">=</span> <span class="mf">0.0289647</span>    <span class="c1"># Molar mass of dry air (kg/mol)</span>
-            <span class="c1"># M_O3 = 0.0479982     # Molar mass of Ozone (O3) (kg/mol)</span>
-            <span class="n">M_H2O</span> <span class="o">=</span> <span class="mf">0.01801528</span>   <span class="c1"># Molar mass of Water (H2O) (kg/mol)</span>
+            <span class="n">K_B</span> <span class="o">=</span> <span class="mf">1.380649e-23</span>  <span class="c1"># Boltzmann constant (J/K)</span>
+            <span class="n">M_AIR</span> <span class="o">=</span> <span class="mf">0.0289647</span>  <span class="c1"># Molar mass of dry air (kg/mol)</span>
             <span class="c1"># M_CO2 = 0.04401      # Molar mass of Carbon Dioxide (CO2) (kg/mol)</span>
             <span class="c1"># M_NO2 = 0.0460055    # Molar mass of Nitrogen Dioxide (NO2) (kg/mol)</span>
             <span class="c1"># O2_MIXING_RATIO = 0.2095 # Volumetric mixing ratio of O2 in dry air</span>
 
             <span class="c1"># Validate required variables</span>
-            <span class="n">required_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">]</span>
-            <span class="n">required_coords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pressure_level&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_time&#39;</span><span class="p">]</span>
-            
+            <span class="n">required_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;q&quot;</span><span class="p">]</span>
+            <span class="n">required_coords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pressure_level&quot;</span><span class="p">,</span> <span class="s2">&quot;valid_time&quot;</span><span class="p">]</span>
+
             <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">required_vars</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required variable &#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">&#39; not found in ERA5 dataset&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Required variable &#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">&#39; not found in ERA5 dataset&quot;</span>
+                    <span class="p">)</span>
             <span class="n">output_filepath</span>
             <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">required_coords</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">coord</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required coordinate &#39;</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">&#39; not found in ERA5 dataset&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Required coordinate &#39;</span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">&#39; not found in ERA5 dataset&quot;</span>
+                    <span class="p">)</span>
 
             <span class="c1"># Select the data for the nearest point and specified time</span>
             <span class="c1"># Check if data is already spatially selected (latitude/longitude are scalars)</span>
-            <span class="k">if</span> <span class="s1">&#39;latitude&#39;</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="s1">&#39;longitude&#39;</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;latitude&quot;</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="s2">&quot;longitude&quot;</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
                 <span class="c1"># Data still has spatial dimensions, do normal selection</span>
                 <span class="n">profile_data</span> <span class="o">=</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span>
-                    <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span> 
-                    <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span> 
+                    <span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span>
+                    <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span>
                     <span class="n">valid_time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
-                    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span>
+                    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Data is already spatially selected, just select time</span>
-                <span class="k">if</span> <span class="s1">&#39;valid_time&#39;</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;valid_time&quot;</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
                     <span class="c1"># valid_time is still a dimension</span>
-                    <span class="n">profile_data</span> <span class="o">=</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">valid_time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="s1">&#39;time&#39;</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                    <span class="n">profile_data</span> <span class="o">=</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">valid_time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">era5_ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
                     <span class="c1"># time is a dimension, try to select by matching time values</span>
                     <span class="c1"># Convert the target time to the same format as the dataset</span>
                     <span class="n">target_time</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
@@ -751,18 +769,15 @@
             <span class="n">h2o_unit</span> <span class="o">=</span> <span class="n">profile_data</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">units</span>
             <span class="n">p_unit</span> <span class="o">=</span> <span class="n">profile_data</span><span class="o">.</span><span class="n">pressure_level</span><span class="o">.</span><span class="n">units</span>
 
-
             <span class="c1"># Extract variables and perform unit conversions</span>
-            <span class="n">altitude_km</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">p_unit</span> <span class="o">==</span> <span class="s1">&#39;Pa&#39;</span><span class="p">:</span>
-                <span class="n">pressure_pa</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s1">&#39;pressure_level&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">p_unit</span> <span class="o">==</span> <span class="s1">&#39;hPa&#39;</span><span class="p">:</span>
-                <span class="n">pressure_pa</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s1">&#39;pressure_level&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>  <span class="c1"># Convert hPa to Pa</span>
+            <span class="k">if</span> <span class="n">p_unit</span> <span class="o">==</span> <span class="s2">&quot;Pa&quot;</span><span class="p">:</span>
+                <span class="n">pressure_pa</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;pressure_level&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">p_unit</span> <span class="o">==</span> <span class="s2">&quot;hPa&quot;</span><span class="p">:</span>
+                <span class="n">pressure_pa</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;pressure_level&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>  <span class="c1"># Convert hPa to Pa</span>
 
             <span class="n">pressure_hpa</span> <span class="o">=</span> <span class="n">pressure_pa</span> <span class="o">/</span> <span class="mi">100</span>
-            <span class="n">temperature_k</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span>
-            <span class="n">h2o</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span>
+            <span class="n">temperature_k</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span>
+            <span class="n">h2o</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">]</span>
 
             <span class="c1"># Air number density: calculated from ideal gas law p = NkT</span>
             <span class="n">air_number_density_m3</span> <span class="o">=</span> <span class="n">pressure_pa</span> <span class="o">/</span> <span class="p">(</span><span class="n">K_B</span> <span class="o">*</span> <span class="n">temperature_k</span><span class="p">)</span>
@@ -775,17 +790,17 @@
             <span class="c1"># Create the atmosphere file content</span>
             <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">)</span>
             <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# ERA5 atmosphere profile in libradtran radiosonde style</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# p(hPa)  T(K)  h2o(</span><span class="si">{</span><span class="n">h2o_unit</span><span class="si">}</span><span class="s2">) </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-                
+
                 <span class="c1"># Sort by altitude (high to low) for LibRadtran (TOA to surface)</span>
                 <span class="c1"># This means sorting by pressure (low to high) since high altitude = low pressure</span>
                 <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pressure_hpa</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-                
+
                 <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">sorted_indices</span><span class="p">:</span>
-                    <span class="c1">#f.write(f&quot;{altitude_km.values[idx]:.3f}  &quot;)</span>
+                    <span class="c1"># f.write(f&quot;{altitude_km.values[idx]:.3f}  &quot;)</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pressure_hpa</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  &quot;</span><span class="p">)</span>
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">temperature_k</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  &quot;</span><span class="p">)</span>
                     <span class="c1"># f.write(f&quot;{air_number_density_cm3.values[idx]:.3e}  &quot;)</span>
@@ -794,14 +809,17 @@
                     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h2o</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="c1"># f.write(f&quot;{co2_nd.values[idx]:.3e}  &quot;)</span>
                     <span class="c1"># f.write(f&quot;{no2_nd.values[idx]:.3e}\n&quot;)</span>
-            
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created ERA5 atmosphere file: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> with H2O unit </span><span class="si">{</span><span class="n">h2o_unit</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">output_path</span>
-            
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to create ERA5 atmosphere file: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
-</div>
 
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Created ERA5 atmosphere file: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> with H2O unit </span><span class="si">{</span><span class="n">h2o_unit</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">output_path</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to create ERA5 atmosphere file: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+</div>
 
 
 
@@ -837,12 +855,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">col_specs</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">37</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
-                <span class="p">(</span><span class="mi">41</span><span class="p">,</span> <span class="mi">71</span><span class="p">),</span> <span class="p">(</span><span class="mi">72</span><span class="p">,</span> <span class="mi">76</span><span class="p">),</span> <span class="p">(</span><span class="mi">77</span><span class="p">,</span> <span class="mi">81</span><span class="p">),</span> <span class="p">(</span><span class="mi">82</span><span class="p">,</span> <span class="mi">88</span><span class="p">)</span>
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">31</span><span class="p">,</span> <span class="mi">37</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">41</span><span class="p">,</span> <span class="mi">71</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">72</span><span class="p">,</span> <span class="mi">76</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">77</span><span class="p">,</span> <span class="mi">81</span><span class="p">),</span>
+                <span class="p">(</span><span class="mi">82</span><span class="p">,</span> <span class="mi">88</span><span class="p">),</span>
             <span class="p">]</span>
             <span class="n">names</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="s1">&#39;elevation&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;first_year&#39;</span><span class="p">,</span> <span class="s1">&#39;last_year&#39;</span><span class="p">,</span> <span class="s1">&#39;num_obs&#39;</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;latitude&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;longitude&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;elevation&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;state&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;first_year&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_year&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;num_obs&quot;</span><span class="p">,</span>
             <span class="p">]</span>
             <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_fwf</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">colspecs</span><span class="o">=</span><span class="n">col_specs</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -873,12 +905,14 @@
 <span class="sd">            Sorted by ``distance_km`` (ascending).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
-        <span class="n">active_stations</span> <span class="o">=</span> <span class="n">stations_df</span><span class="p">[</span><span class="n">stations_df</span><span class="p">[</span><span class="s1">&#39;last_year&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">current_year</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">active_stations</span> <span class="o">=</span> <span class="n">stations_df</span><span class="p">[</span>
+            <span class="n">stations_df</span><span class="p">[</span><span class="s2">&quot;last_year&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">current_year</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="n">lat_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span>
         <span class="n">lon_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span>
-        <span class="n">stations_lat_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">active_stations</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">])</span>
-        <span class="n">stations_lon_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">active_stations</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">])</span>
+        <span class="n">stations_lat_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">active_stations</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">])</span>
+        <span class="n">stations_lon_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">active_stations</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">])</span>
 
         <span class="n">dlon</span> <span class="o">=</span> <span class="n">stations_lon_rad</span> <span class="o">-</span> <span class="n">lon_rad</span>
         <span class="n">dlat</span> <span class="o">=</span> <span class="n">stations_lat_rad</span> <span class="o">-</span> <span class="n">lat_rad</span>
@@ -889,8 +923,8 @@
         <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">))</span>
         <span class="n">distance</span> <span class="o">=</span> <span class="mi">6371</span> <span class="o">*</span> <span class="n">c</span>
 
-        <span class="n">active_stations</span><span class="p">[</span><span class="s1">&#39;distance_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance</span>
-        <span class="k">return</span> <span class="n">active_stations</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;distance_km&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
+        <span class="n">active_stations</span><span class="p">[</span><span class="s2">&quot;distance_km&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance</span>
+        <span class="k">return</span> <span class="n">active_stations</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;distance_km&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RadiosondeAtmosphereGenerator.get_closest_sounding">
@@ -953,22 +987,26 @@
             <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">closest</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">station_id</span> <span class="o">=</span> <span class="n">station</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
-            <span class="n">station_name</span> <span class="o">=</span> <span class="n">station</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="n">station_distance</span> <span class="o">=</span> <span class="n">station</span><span class="p">[</span><span class="s1">&#39;distance_km&#39;</span><span class="p">]</span>
+            <span class="n">station_id</span> <span class="o">=</span> <span class="n">station</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+            <span class="n">station_name</span> <span class="o">=</span> <span class="n">station</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">station_distance</span> <span class="o">=</span> <span class="n">station</span><span class="p">[</span><span class="s2">&quot;distance_km&quot;</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">time_to_check</span> <span class="ow">in</span> <span class="n">potential_times</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trying station </span><span class="si">{</span><span class="n">station_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">station_id</span><span class="si">}</span><span class="s2">) at </span><span class="si">{</span><span class="n">time_to_check</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Trying station </span><span class="si">{</span><span class="n">station_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">station_id</span><span class="si">}</span><span class="s2">) at </span><span class="si">{</span><span class="n">time_to_check</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
                     <span class="n">df</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="n">IGRAUpperAir</span><span class="o">.</span><span class="n">request_data</span><span class="p">(</span><span class="n">time_to_check</span><span class="p">,</span> <span class="n">station_id</span><span class="p">)</span>
-                    <span class="n">header_text</span>  <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">station_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">time_to_check</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> UTC with distance </span><span class="si">{</span><span class="n">station_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km&quot;</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found sounding for </span><span class="si">{</span><span class="n">station_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">time_to_check</span><span class="si">}</span><span class="s2"> UTC with distance </span><span class="si">{</span><span class="n">station_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km&quot;</span><span class="p">)</span>
+                    <span class="n">header_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">station_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">time_to_check</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> UTC with distance </span><span class="si">{</span><span class="n">station_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km&quot;</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Found sounding for </span><span class="si">{</span><span class="n">station_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">time_to_check</span><span class="si">}</span><span class="s2"> UTC with distance </span><span class="si">{</span><span class="n">station_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km&quot;</span>
+                    <span class="p">)</span>
                     <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
                         <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">header_text</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No data for </span><span class="si">{</span><span class="n">station_name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">time_to_check</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">continue</span>
 
-        <span class="n">station_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">closest</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+        <span class="n">station_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">closest</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;No radiosonde data found for any of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">potential_times</span><span class="p">)</span><span class="si">}</span><span class="s2"> times &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;across </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">station_names</span><span class="p">)</span><span class="si">}</span><span class="s2"> stations: </span><span class="si">{</span><span class="n">station_names</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -1005,29 +1043,33 @@
 <span class="sd">        InputGenerationError</span>
 <span class="sd">            If no data can be found or the file cannot be written.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sounding_df</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">header_text</span> <span class="o">=</span> <span class="n">RadiosondeAtmosphereGenerator</span><span class="o">.</span><span class="n">get_closest_sounding</span><span class="p">(</span>
-            <span class="n">time</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span>
+        <span class="n">sounding_df</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">header_text</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">RadiosondeAtmosphereGenerator</span><span class="o">.</span><span class="n">get_closest_sounding</span><span class="p">(</span>
+                <span class="n">time</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span>
+            <span class="p">)</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">sounding_df</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">sounding_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span><span class="s2">&quot;No radiosonde data found for requested parameters&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span>
+                <span class="s2">&quot;No radiosonde data found for requested parameters&quot;</span>
+            <span class="p">)</span>
 
-        <span class="n">df</span> <span class="o">=</span> <span class="n">sounding_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;dewpoint&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">sounding_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span>
+            <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="s2">&quot;dewpoint&quot;</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span><span class="s2">&quot;No valid levels in radiosonde data&quot;</span><span class="p">)</span>
 
-        <span class="n">e</span> <span class="o">=</span> <span class="mf">6.112</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">17.67</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dewpoint&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dewpoint&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">243.5</span><span class="p">))</span>
-        <span class="n">e_s</span> <span class="o">=</span> <span class="mf">6.112</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">17.67</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">243.5</span><span class="p">))</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="mf">6.112</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">17.67</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;dewpoint&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;dewpoint&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">243.5</span><span class="p">))</span>
+        <span class="n">e_s</span> <span class="o">=</span> <span class="mf">6.112</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">17.67</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">243.5</span><span class="p">))</span>
         <span class="n">rh</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span> <span class="o">/</span> <span class="n">e_s</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>  <span class="c1"># Relative Humidity in %</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="mf">0.622</span> <span class="o">*</span> <span class="n">e</span> <span class="o">/</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">e</span><span class="p">)</span>  <span class="c1"># kg/kg</span>
-        <span class="n">temp_k</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">273.15</span>
-        <span class="n">height_km</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span>
-        <span class="n">pressure_hpa</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;pressure&#39;</span><span class="p">]</span>
+        <span class="n">temp_k</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mf">273.15</span>
+        <span class="n">pressure_hpa</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;pressure&quot;</span><span class="p">]</span>
 
         <span class="n">sorted_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pressure_hpa</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">)</span>
         <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# Radiosonde atmosphere profile</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">header_text</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# p(hPa)  T(K)  h2o(RH%)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1040,6 +1082,7 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created radiosonde atmosphere file: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output_path</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="OutputParser">
@@ -1060,32 +1103,38 @@
 <span class="sd">        Per-point overrides (used to detect brightness-temperature</span>
 <span class="sd">        mode).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="OutputParser.__init__">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.io.OutputParser.__init__.html#pyradtran.io.OutputParser.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">,</span> <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">,</span> <span class="n">parameter_overrides</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameter_overrides</span> <span class="o">=</span> <span class="n">parameter_overrides</span> <span class="ow">or</span> <span class="p">{}</span>
-        
+
         <span class="c1"># Check if brightness temperature output is requested</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_brightness_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_overrides</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_quantity&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;brightness&#39;</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_brightness_output</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameter_overrides</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_quantity&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;brightness&quot;</span>
+        <span class="p">)</span>
+
         <span class="c1"># Build the actual output columns that LibRadtran will produce</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span> <span class="o">=</span> <span class="p">[]</span>
-        
+
         <span class="c1"># Use the user-specified columns directly since we use &#39;output_user&#39;</span>
         <span class="n">original_columns</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">original_columns</span><span class="p">:</span>
             <span class="c1"># For brightness output, LibRadtran doesn&#39;t include albedo column</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_brightness_output</span> <span class="ow">and</span> <span class="n">col</span> <span class="o">==</span> <span class="s1">&#39;albedo&#39;</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping albedo column for brightness temperature output&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_brightness_output</span> <span class="ow">and</span> <span class="n">col</span> <span class="o">==</span> <span class="s2">&quot;albedo&quot;</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Skipping albedo column for brightness temperature output&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">output_altitudes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span> <span class="ow">or</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wavelength_range</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">is_integrated</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;integrate_wavelength&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_integrated</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s2">&quot;integrate_wavelength&quot;</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="p">)</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initialized parser with columns: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
@@ -1110,38 +1159,39 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">output_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="n">OutputParsingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output file not found: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+
             <span class="c1"># Read the output file</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-            
+
             <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">OutputParsingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output file is empty: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+
             <span class="c1"># Determine output type</span>
             <span class="n">output_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determine_output_type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            
+
             <span class="c1"># Parse the data based on type</span>
             <span class="n">parsed_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_data_by_type</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output_type</span><span class="p">)</span>
-            
+
             <span class="k">return</span> <span class="n">ParsedOutput</span><span class="p">(</span>
                 <span class="n">output_type</span><span class="o">=</span><span class="n">output_type</span><span class="p">,</span>
                 <span class="n">data</span><span class="o">=</span><span class="n">parsed_data</span><span class="p">,</span>
                 <span class="n">wavelengths</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_wavelengths</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output_type</span><span class="p">),</span>
                 <span class="n">altitudes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_altitudes</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output_type</span><span class="p">),</span>
                 <span class="n">source_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span>
-                <span class="n">is_brightness_temperature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_brightness_output</span>
+                <span class="n">is_brightness_temperature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">is_brightness_output</span><span class="p">,</span>
             <span class="p">)</span>
-            
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">OutputParsingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to parse output file </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-    
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">OutputParsingError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to parse output file </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_determine_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OutputType</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Infer the :class:`OutputType` from array shape and config.&quot;&quot;&quot;</span>
         <span class="n">n_rows</span><span class="p">,</span> <span class="n">n_cols</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">n_altitudes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_altitudes</span><span class="p">)</span>
-        <span class="n">n_wavelengths</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_integrated</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wavelength_range</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">n_altitudes</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_integrated</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">OutputType</span><span class="o">.</span><span class="n">INTEGRATED_SINGLE_ALTITUDE</span>
@@ -1152,31 +1202,43 @@
                 <span class="k">return</span> <span class="n">OutputType</span><span class="o">.</span><span class="n">INTEGRATED_MULTI_ALTITUDE</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">OutputType</span><span class="o">.</span><span class="n">SPECTRAL_MULTI_ALTITUDE</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_data_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_type</span><span class="p">:</span> <span class="n">OutputType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_data_by_type</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_type</span><span class="p">:</span> <span class="n">OutputType</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Map array columns to named variables.&quot;&quot;&quot;</span>
         <span class="n">parsed</span> <span class="o">=</span> <span class="p">{}</span>
-        
+
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="n">parsed</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
-        
+
         <span class="k">return</span> <span class="n">parsed</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_wavelengths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_type</span><span class="p">:</span> <span class="n">OutputType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_wavelengths</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_type</span><span class="p">:</span> <span class="n">OutputType</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return unique wavelength values when present, else *None*.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">output_type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">OutputType</span><span class="o">.</span><span class="n">SPECTRAL_SINGLE_ALTITUDE</span><span class="p">,</span> <span class="n">OutputType</span><span class="o">.</span><span class="n">SPECTRAL_MULTI_ALTITUDE</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="s1">&#39;lambda&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="p">:</span>
-                <span class="n">lambda_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_type</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">OutputType</span><span class="o">.</span><span class="n">SPECTRAL_SINGLE_ALTITUDE</span><span class="p">,</span>
+            <span class="n">OutputType</span><span class="o">.</span><span class="n">SPECTRAL_MULTI_ALTITUDE</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;lambda&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="p">:</span>
+                <span class="n">lambda_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;lambda&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">lambda_idx</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="n">lambda_idx</span><span class="p">]))</span>
         <span class="k">return</span> <span class="kc">None</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_altitudes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_type</span><span class="p">:</span> <span class="n">OutputType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_altitudes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_type</span><span class="p">:</span> <span class="n">OutputType</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return unique altitude values when present, else *None*.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">output_type</span> <span class="ow">in</span> <span class="p">[</span><span class="n">OutputType</span><span class="o">.</span><span class="n">INTEGRATED_MULTI_ALTITUDE</span><span class="p">,</span> <span class="n">OutputType</span><span class="o">.</span><span class="n">SPECTRAL_MULTI_ALTITUDE</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="s1">&#39;zout&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="p">:</span>
-                <span class="n">zout_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;zout&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_type</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">OutputType</span><span class="o">.</span><span class="n">INTEGRATED_MULTI_ALTITUDE</span><span class="p">,</span>
+            <span class="n">OutputType</span><span class="o">.</span><span class="n">SPECTRAL_MULTI_ALTITUDE</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;zout&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="p">:</span>
+                <span class="n">zout_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_columns</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;zout&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">zout_idx</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="n">zout_idx</span><span class="p">]))</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -1193,60 +1255,76 @@
 <span class="sd">    order produced by</span>
 <span class="sd">    :func:`~pyradtran.interface.execute_simulation_batch`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="OutputToXarray.convert">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.io.OutputToXarray.convert.html#pyradtran.io.OutputToXarray.convert">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="n">parsed_output</span><span class="p">:</span> <span class="n">ParsedOutput</span><span class="p">,</span> <span class="n">input_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> 
-                <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> 
-                <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;longitude&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span>
+        <span class="n">parsed_output</span><span class="p">:</span> <span class="n">ParsedOutput</span><span class="p">,</span>
+        <span class="n">input_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
+        <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span>
+        <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;longitude&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a single :class:`ParsedOutput` to an xarray Dataset.&quot;&quot;&quot;</span>
         <span class="c1"># Create base dataset with coordinates from input</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-        
+
         <span class="c1"># Copy coordinates from input dataset</span>
         <span class="k">for</span> <span class="n">coord_name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">time_var</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">,</span> <span class="n">lon_var</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">coord_name</span> <span class="ow">in</span> <span class="n">input_ds</span><span class="p">:</span>
                 <span class="n">ds</span><span class="p">[</span><span class="n">coord_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_ds</span><span class="p">[</span><span class="n">coord_name</span><span class="p">]</span>
-        
+
         <span class="c1"># Add dimensions based on output type</span>
         <span class="k">if</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">:</span>
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">,</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">)</span>
-        
+            <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;wavelength&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;wavelength&quot;</span><span class="p">,</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">altitudes</span><span class="p">:</span>
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">altitudes</span><span class="p">)</span>
-        
+            <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;altitude&quot;</span><span class="p">,</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">altitudes</span><span class="p">)</span>
+
         <span class="c1"># Add data variables</span>
         <span class="k">for</span> <span class="n">var_name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;zout&#39;</span><span class="p">,</span> <span class="s1">&#39;lambda&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;zout&quot;</span><span class="p">,</span> <span class="s2">&quot;lambda&quot;</span><span class="p">]:</span>
                 <span class="k">continue</span>  <span class="c1"># Skip coordinate variables</span>
-            
+
             <span class="c1"># Determine dimensions based on output type</span>
             <span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="n">time_var</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">:</span>
-                <span class="n">dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">)</span>
+                <span class="n">dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;wavelength&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">altitudes</span><span class="p">:</span>
-                <span class="n">dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
-            
+                <span class="n">dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;altitude&quot;</span><span class="p">)</span>
+
             <span class="c1"># Reshape values to match dimensions</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">ds</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Need to reshape multi-dimensional data</span>
-                <span class="n">reshaped_values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">input_ds</span><span class="p">[</span><span class="n">time_var</span><span class="p">])]</span> <span class="o">+</span> 
-                                                <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">parsed_output</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">)</span> <span class="k">if</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">wavelengths</span> <span class="k">else</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
-                                                <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">parsed_output</span><span class="o">.</span><span class="n">altitudes</span><span class="p">)</span> <span class="k">if</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">altitudes</span> <span class="k">else</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">reshaped_values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                    <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">input_ds</span><span class="p">[</span><span class="n">time_var</span><span class="p">])]</span>
+                    <span class="o">+</span> <span class="p">[</span>
+                        <span class="p">(</span>
+                            <span class="nb">len</span><span class="p">(</span><span class="n">parsed_output</span><span class="o">.</span><span class="n">wavelengths</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">wavelengths</span>
+                            <span class="k">else</span> <span class="mi">1</span>
+                        <span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="o">+</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">parsed_output</span><span class="o">.</span><span class="n">altitudes</span><span class="p">)</span> <span class="k">if</span> <span class="n">parsed_output</span><span class="o">.</span><span class="n">altitudes</span> <span class="k">else</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="p">)</span>
                 <span class="n">ds</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">reshaped_values</span><span class="p">)</span>
-        
+
         <span class="k">return</span> <span class="n">ds</span></div>
 
-    
+
 <div class="viewcode-block" id="OutputToXarray.convert_batch">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.io.OutputToXarray.convert_batch.html#pyradtran.io.OutputToXarray.convert_batch">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">convert_batch</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ParsedOutput</span><span class="p">]],</span> <span class="n">input_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
-                     <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> 
-                     <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;longitude&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_batch</span><span class="p">(</span>
+        <span class="n">parsed_outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">ParsedOutput</span><span class="p">]],</span>
+        <span class="n">input_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
+        <span class="n">time_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+        <span class="n">lat_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span>
+        <span class="n">lon_var</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;longitude&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a batch of :class:`ParsedOutput` objects to a single Dataset.</span>
 
 <span class="sd">        Failed simulations (*None* entries) produce NaN values.</span>
@@ -1267,58 +1345,66 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed_outputs</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No parsed outputs provided&quot;</span><span class="p">)</span>
-        
+
         <span class="c1"># Ensure input_ds is a Dataset</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_ds</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
-            <span class="n">input_ds</span> <span class="o">=</span> <span class="n">input_ds</span><span class="o">.</span><span class="n">to_dataset</span><span class="p">()</span>        
+            <span class="n">input_ds</span> <span class="o">=</span> <span class="n">input_ds</span><span class="o">.</span><span class="n">to_dataset</span><span class="p">()</span>
 
         <span class="c1"># Stack input dataset exactly as done in execute_simulation_batch</span>
         <span class="n">dims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">input_ds</span><span class="o">.</span><span class="n">sizes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">sample_dim</span> <span class="o">=</span> <span class="s1">&#39;sample_batch_dim&#39;</span>
-        
+        <span class="n">sample_dim</span> <span class="o">=</span> <span class="s2">&quot;sample_batch_dim&quot;</span>
+
         <span class="k">if</span> <span class="n">dims</span><span class="p">:</span>
             <span class="n">stacked_ds</span> <span class="o">=</span> <span class="n">input_ds</span><span class="o">.</span><span class="n">stack</span><span class="p">({</span><span class="n">sample_dim</span><span class="p">:</span> <span class="n">dims</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">stacked_ds</span> <span class="o">=</span> <span class="n">input_ds</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">sample_dim</span><span class="p">)</span>
-            
+
         <span class="n">num_points</span> <span class="o">=</span> <span class="n">stacked_ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">sample_dim</span><span class="p">]</span>
-        
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_points</span><span class="p">:</span>
             <span class="c1"># If mismatch, log warning but try to proceed if safe?</span>
             <span class="c1"># Actually, this means data corruption or misalignment.</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of outputs (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">)</span><span class="si">}</span><span class="s2">) does not match input points (</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2">). Dimensions might be wrong.&quot;</span><span class="p">)</span>
-            
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Number of outputs (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">)</span><span class="si">}</span><span class="s2">) does not match input points (</span><span class="si">{</span><span class="n">num_points</span><span class="si">}</span><span class="s2">). Dimensions might be wrong.&quot;</span>
+            <span class="p">)</span>
+
         <span class="c1"># Get structure from the first valid output</span>
-        <span class="n">first_valid_idx</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">first_valid_idx</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">first_valid_idx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All simulations failed, cannot determine output structure&quot;</span><span class="p">)</span>
-             
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;All simulations failed, cannot determine output structure&quot;</span>
+            <span class="p">)</span>
+
         <span class="n">template_output</span> <span class="o">=</span> <span class="n">parsed_outputs</span><span class="p">[</span><span class="n">first_valid_idx</span><span class="p">]</span>
         <span class="n">var_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">template_output</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">altitudes</span> <span class="o">=</span> <span class="n">template_output</span><span class="o">.</span><span class="n">altitudes</span> <span class="k">if</span> <span class="n">template_output</span><span class="o">.</span><span class="n">altitudes</span> <span class="k">else</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">wavelengths</span> <span class="o">=</span> <span class="n">template_output</span><span class="o">.</span><span class="n">wavelengths</span> <span class="k">if</span> <span class="n">template_output</span><span class="o">.</span><span class="n">wavelengths</span> <span class="k">else</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
-        
+        <span class="n">wavelengths</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">template_output</span><span class="o">.</span><span class="n">wavelengths</span> <span class="k">if</span> <span class="n">template_output</span><span class="o">.</span><span class="n">wavelengths</span> <span class="k">else</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+        <span class="p">)</span>
+
         <span class="c1"># Define extra dimensions for the output variables</span>
         <span class="n">extra_dims</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">extra_shape</span> <span class="o">=</span> <span class="p">[]</span>
-        
+
         <span class="k">if</span> <span class="n">wavelengths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">extra_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">)</span>
+            <span class="n">extra_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;wavelength&quot;</span><span class="p">)</span>
             <span class="n">extra_shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">))</span>
-            
-        <span class="n">extra_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
+
+        <span class="n">extra_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;altitude&quot;</span><span class="p">)</span>
         <span class="n">extra_shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">altitudes</span><span class="p">))</span>
-        
+
         <span class="c1"># Dimensions for the stacked array: [sample_dim, wavelength, altitude]</span>
         <span class="n">stacked_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">num_points</span><span class="p">]</span> <span class="o">+</span> <span class="n">extra_shape</span>
-        
+
         <span class="c1"># Create data dictionaries</span>
         <span class="n">data_vars</span> <span class="o">=</span> <span class="p">{}</span>
-        
+
         <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">var_names</span><span class="p">:</span>
             <span class="c1"># Initialize with NaN</span>
             <span class="n">data_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">stacked_shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-            
+
             <span class="c1"># Fill with data</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parsed_outputs</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">output</span> <span class="ow">and</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
@@ -1328,43 +1414,45 @@
                         <span class="n">val_reshaped</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">extra_shape</span><span class="p">)</span>
                         <span class="n">data_arr</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">val_reshaped</span>
                     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape mismatch for </span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2"> at index </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: got </span><span class="si">{</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, expected </span><span class="si">{</span><span class="n">extra_shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Shape mismatch for </span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2"> at index </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: got </span><span class="si">{</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, expected </span><span class="si">{</span><span class="n">extra_shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+
             <span class="c1"># Create temporary DataArray</span>
             <span class="n">da</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span>
                 <span class="n">data_arr</span><span class="p">,</span>
                 <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="n">sample_dim</span><span class="p">:</span> <span class="n">stacked_ds</span><span class="p">[</span><span class="n">sample_dim</span><span class="p">]},</span>
-                <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="n">sample_dim</span><span class="p">]</span> <span class="o">+</span> <span class="n">extra_dims</span>
+                <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="n">sample_dim</span><span class="p">]</span> <span class="o">+</span> <span class="n">extra_dims</span><span class="p">,</span>
             <span class="p">)</span>
-            
+
             <span class="c1"># Unstack to restore original dimensions</span>
             <span class="k">if</span> <span class="n">dims</span><span class="p">:</span>
                 <span class="n">unstacked_da</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">sample_dim</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                 <span class="c1"># If original was scalar, just drop the sample dim</span>
+                <span class="c1"># If original was scalar, just drop the sample dim</span>
                 <span class="n">unstacked_da</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">isel</span><span class="p">({</span><span class="n">sample_dim</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                
+
             <span class="n">data_vars</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">unstacked_da</span>
 
         <span class="c1"># Add coordinates for extra dimensions</span>
         <span class="n">coords</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Copy original coords (relying on unstack restoration, but good to be explicit for extras)</span>
         <span class="c1"># Note: unstack already restores coordinates associated with stacked dims</span>
-        
+
         <span class="c1"># Add extra new coords</span>
         <span class="k">if</span> <span class="n">wavelengths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-             <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wavelengths</span>
-        <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">altitudes</span>
-        
+            <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;wavelength&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wavelengths</span>
+        <span class="n">coords</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">altitudes</span>
+
         <span class="c1"># Create final dataset</span>
-        <span class="c1"># We start with a dataset containing our variables. </span>
+        <span class="c1"># We start with a dataset containing our variables.</span>
         <span class="c1"># The coordinates from input_ds should be preserved by unstacking.</span>
         <span class="n">result_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">)</span>
-        
+
         <span class="c1"># Add attributes</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">template_output</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">template_output</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">):</span>
             <span class="n">result_ds</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">template_output</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
-            
+
         <span class="k">return</span> <span class="n">result_ds</span></div>
 </div>
 
@@ -1374,7 +1462,7 @@
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.html#pyradtran.io.NetCDFSaver">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NetCDFSaver</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Persist simulation results as CF-compliant NetCDF files.&quot;&quot;&quot;</span>
-    
+
 <div class="viewcode-block" id="NetCDFSaver.save_results_to_netcdf">
 <a class="viewcode-back" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.save_results_to_netcdf.html#pyradtran.io.NetCDFSaver.save_results_to_netcdf">[docs]</a>
     <span class="nd">@staticmethod</span>
@@ -1383,7 +1471,7 @@
         <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">input_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">,</span>
-        <span class="n">simulation_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">simulation_params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write results to a NetCDF file with provenance attributes.</span>
 
@@ -1413,42 +1501,46 @@
                 <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
                 <span class="c1"># Basic conversion - would need more sophisticated logic</span>
                 <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
-                        <span class="n">ds</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-            
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+                        <span class="n">ds</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+
             <span class="c1"># Add metadata</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;created_by&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pyradtran&#39;</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;creation_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;created_by&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;pyradtran&quot;</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;creation_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">simulation_params</span><span class="p">:</span>
-                <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;simulation_parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">simulation_params</span><span class="p">)</span>
-            
+                <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;simulation_parameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">simulation_params</span><span class="p">)</span>
+
             <span class="c1"># Add configuration parameters as attributes</span>
             <span class="n">NetCDFSaver</span><span class="o">.</span><span class="n">_add_config_to_attrs</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
-            
+
             <span class="c1"># Filter out None values from attributes as they can&#39;t be serialized to NetCDF</span>
             <span class="n">filtered_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">filtered_attrs</span><span class="p">)</span>
-            
+
             <span class="c1"># Save to file</span>
             <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            
+
             <span class="c1"># Prepare encoding for variables</span>
-            <span class="n">netcdf_settings</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">netcdf_encoding</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">netcdf_encoding</span> <span class="k">else</span> <span class="p">{}</span>
+            <span class="n">netcdf_settings</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">netcdf_encoding</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">netcdf_encoding</span> <span class="k">else</span> <span class="p">{}</span>
+            <span class="p">)</span>
             <span class="n">encoding</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">if</span> <span class="n">netcdf_settings</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">var_name</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
                     <span class="n">encoding</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">netcdf_settings</span>
-            
+
             <span class="n">ds</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">)</span>
-            
+
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results saved to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">output_path</span>
-            
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">OutputParsingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save results to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-    
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">OutputParsingError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to save results to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+
+
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_serialize_for_netcdf</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert values to NetCDF-compatible types.&quot;&quot;&quot;</span>
@@ -1462,55 +1554,88 @@
             <span class="k">return</span> <span class="s2">&quot;None&quot;</span>  <span class="c1"># Convert None to string</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># Convert everything else to string</span>
-    
+
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_config_to_attrs</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SimulationConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add configuration parameters as NetCDF attributes.&quot;&quot;&quot;</span>
         <span class="c1"># Add simulation defaults with None checks</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span><span class="p">)</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;None&#39;</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_rte_solver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span><span class="p">)</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;None&#39;</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_mol_abs_param&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span><span class="p">)</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;None&#39;</span>
-        
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_source&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="s2">&quot;None&quot;</span>
+        <span class="p">)</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_rte_solver&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="s2">&quot;None&quot;</span>
+        <span class="p">)</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_mol_abs_param&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="s2">&quot;None&quot;</span>
+        <span class="p">)</span>
+
         <span class="c1"># Handle numeric parameters that might be None</span>
         <span class="c1"># if config.simulation_defaults.albedo_value is not None:</span>
         <span class="c1">#     ds.attrs[&#39;config_albedo_value&#39;] = float(config.simulation_defaults.albedo_value)</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">ozone_du</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_ozone_du&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">ozone_du</span><span class="p">)</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_ozone_du&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">ozone_du</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_mm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_h2o_mm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_mm</span><span class="p">)</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_h2o_mm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_mm</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">surface_temperature_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_surface_temperature_k&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">surface_temperature_k</span><span class="p">)</span>
-            
-        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_viewing_geometry&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">viewing_geometry</span><span class="p">)</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">viewing_geometry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;None&#39;</span>
-        
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_surface_temperature_k&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">surface_temperature_k</span>
+            <span class="p">)</span>
+
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_viewing_geometry&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">viewing_geometry</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">viewing_geometry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="s2">&quot;None&quot;</span>
+        <span class="p">)</span>
+
         <span class="c1"># Add wavelength range</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;wavelength_nm&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s2">&quot;wavelength_nm&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span>
+        <span class="p">):</span>
             <span class="n">wl_min</span><span class="p">,</span> <span class="n">wl_max</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_wavelength_min_nm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wl_min</span><span class="p">)</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_wavelength_max_nm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wl_max</span><span class="p">)</span>
-        
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_wavelength_min_nm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wl_min</span><span class="p">)</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_wavelength_max_nm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wl_max</span><span class="p">)</span>
+
         <span class="c1"># Add integration setting using the helper function</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;integrate_wavelength&#39;</span><span class="p">):</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_integrate_wavelength&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NetCDFSaver</span><span class="o">.</span><span class="n">_serialize_for_netcdf</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span><span class="p">)</span>
-        
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s2">&quot;integrate_wavelength&quot;</span><span class="p">):</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_integrate_wavelength&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NetCDFSaver</span><span class="o">.</span><span class="n">_serialize_for_netcdf</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span>
+            <span class="p">)</span>
+
         <span class="c1"># Add output altitudes</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s1">&#39;output_altitudes_km&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span><span class="p">:</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_output_altitudes_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NetCDFSaver</span><span class="o">.</span><span class="n">_serialize_for_netcdf</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span><span class="p">)</span>
-        
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="p">,</span> <span class="s2">&quot;output_altitudes_km&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span>
+        <span class="p">):</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_output_altitudes_km&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NetCDFSaver</span><span class="o">.</span><span class="n">_serialize_for_netcdf</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span>
+            <span class="p">)</span>
+
         <span class="c1"># Add path information</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_libradtran_bin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="p">)</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_libradtran_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="p">)</span>
-        
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_libradtran_bin&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_bin</span><span class="p">)</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_libradtran_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="p">)</span>
+
         <span class="c1"># Add execution settings</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_max_workers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;config_timeout_seconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">timeout_seconds</span><span class="p">)</span></div>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_max_workers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span><span class="p">)</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;config_timeout_seconds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">timeout_seconds</span><span class="p">)</span></div>
 
 
 
 <span class="c1"># Expose main classes and functions</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;OutputType&#39;</span><span class="p">,</span> <span class="s1">&#39;ParsedOutput&#39;</span><span class="p">,</span> <span class="s1">&#39;InputDataLoader&#39;</span><span class="p">,</span> <span class="s1">&#39;ERA5AtmosphereGenerator&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;OutputParser&#39;</span><span class="p">,</span> <span class="s1">&#39;OutputToXarray&#39;</span><span class="p">,</span> <span class="s1">&#39;NetCDFSaver&#39;</span>
+    <span class="s2">&quot;OutputType&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ParsedOutput&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InputDataLoader&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ERA5AtmosphereGenerator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OutputParser&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OutputToXarray&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NetCDFSaver&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
