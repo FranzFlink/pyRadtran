@@ -3,7 +3,6 @@
 
 [![Documentation](https://img.shields.io/badge/docs-latest-blue)](https://franzflink.github.io/pyRadtran/)
 [![License](https://img.shields.io/github/license/FranzFlink/pyRadtran)](https://github.com/FranzFlink/pyRadtran/blob/main/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/FranzFlink/pyRadtran)](https://github.com/FranzFlink/pyRadtran)
 [![Tests](https://github.com/FranzFlink/pyRadtran/actions/workflows/tests.yml/badge.svg)](https://github.com/FranzFlink/pyRadtran/actions/workflows/tests.yml)
 
 A flexible and user-friendly Python wrapper for the [libRadtran](http://www.libradtran.org) radiative transfer model (`uvspec`), with seamless integration into [xarray](https://xarray.dev).
