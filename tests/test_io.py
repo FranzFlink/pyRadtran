@@ -13,6 +13,15 @@ import pandas as pd
 import pytest
 import xarray as xr
 
+_has_netcdf_backend = True
+try:
+    import netCDF4  # noqa: F401
+except ImportError:
+    try:
+        import scipy.io.netcdf  # noqa: F401
+    except ImportError:
+        _has_netcdf_backend = False
+
 from pyradtran.config import (
     CloudParameters,
     ExecutionConfig,
@@ -88,6 +97,8 @@ def temp_csv_input():
 @pytest.fixture
 def temp_nc_input():
     """Create a temporary NetCDF input file with test data"""
+    if not _has_netcdf_backend:
+        pytest.skip("netCDF4 or scipy required for NetCDF I/O")
     with tempfile.NamedTemporaryFile(suffix=".nc", delete=False) as tmp:
         # Create test data
         times = pd.date_range("2023-05-01", periods=5, freq="1h")
