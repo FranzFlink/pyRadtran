@@ -32,12 +32,6 @@ A flexible and user-friendly Python wrapper for the [libRadtran](http://www.libr
 - [libRadtran](http://www.libradtran.org) installed and accessible on your system
 - Common scientific Python packages (numpy, pandas, xarray)
 
-### Install from PyPI
-
-```bash
-pip install pyradtran
-```
-
 ### Install from Source
 
 ```bash
@@ -100,8 +94,10 @@ ds_sim.edir.plot()
 ## Acknowledgments
 
 - Emde, C., Buras-Schnell, R., Kylling, A., Mayer, B., Gasteiger, J., Hamann, U., Kylling, J., Richter, B., Pause, C., Dowling, T., and Bugliaro, L.: *The libRadtran software package for radiative transfer calculations (version 2.0.1)*, Geosci. Model Dev., 9, 1647–1672, https://doi.org/10.5194/gmd-9-1647-2016, 2016.
+- B. Mayer and A. Kylling. Technical note: The libRadtran software package for radiative transfer calculations - description and examples of use. Atmos. Chem. Phys., 5: 1855-1877, 2005. 
 - Hoyer, S. & Hamman, J. (2017). *xarray: N-D labeled Arrays and Datasets in Python*. Journal of Open Research Software, 5(1), p.10. DOI: https://doi.org/10.5334/jors.148
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+Please checkout libradtrans [license](https://www.libradtran.org/doc/COPYING)!
+The pyRadtran project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
