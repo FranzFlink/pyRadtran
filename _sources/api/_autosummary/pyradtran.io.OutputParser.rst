@@ -17,5 +17,5 @@ pyradtran.io.OutputParser
 
       
          ~OutputParser.__init__
-         ~OutputParser.parse
+         ~OutputParser.parse_output_file
       

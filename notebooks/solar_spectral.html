@@ -1,0 +1,1721 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quickstart: Solar Spectral &#8212; PyRadtran</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/solar_spectral';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quickstart: ERA5 Atmosphere" href="era5_atmosphere.html" />
+    <link rel="prev" title="Quickstart: Brightness Temperature" href="thermal_imager.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="PyRadtran - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="PyRadtran - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage Guide</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Interactive Notebooks</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Quickstart: Surface Albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Quickstart: Broadband Thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager.html">Quickstart: Brightness Temperature</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Quickstart: Solar Spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="water_cloud.html">Advanced: Water Clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde.html">Advanced: Solar Validation Against HALO-(AC)³</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">Advanced: Thermal Validation Against HALO-(AC)³</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stn2024.html">Processing: Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">Configuration Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_fraction.html">pyradtran.config.CloudParameters.cloud_fraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_source.html">pyradtran.config.CloudParameters.cloud_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.cloud_type.html">pyradtran.config.CloudParameters.cloud_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.effective_radius_um.html">pyradtran.config.CloudParameters.effective_radius_um</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_dataset.html">pyradtran.config.CloudParameters.era5_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_lat.html">pyradtran.config.CloudParameters.era5_lat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_lon.html">pyradtran.config.CloudParameters.era5_lon</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.era5_time.html">pyradtran.config.CloudParameters.era5_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.ic_file.html">pyradtran.config.CloudParameters.ic_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.ice_content_g_m3.html">pyradtran.config.CloudParameters.ice_content_g_m3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_bottom_km.html">pyradtran.config.CloudParameters.layer_bottom_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.layer_top_km.html">pyradtran.config.CloudParameters.layer_top_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.water_content_g_m3.html">pyradtran.config.CloudParameters.water_content_g_m3</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.wc_file.html">pyradtran.config.CloudParameters.wc_file</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.__init__.html">pyradtran.config.ExecutionConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.cleanup_temp_files.html">pyradtran.config.ExecutionConfig.cleanup_temp_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.debug_mode.html">pyradtran.config.ExecutionConfig.debug_mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.max_workers.html">pyradtran.config.ExecutionConfig.max_workers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.timeout_seconds.html">pyradtran.config.ExecutionConfig.timeout_seconds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.OutputConfig.__init__.html">pyradtran.config.OutputConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.OutputConfig.filename_prefix.html">pyradtran.config.OutputConfig.filename_prefix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.OutputConfig.filename_suffix.html">pyradtran.config.OutputConfig.filename_suffix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.OutputConfig.netcdf_encoding.html">pyradtran.config.OutputConfig.netcdf_encoding</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.__init__.html">pyradtran.config.PathsConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.atmosphere_profile.html">pyradtran.config.PathsConfig.atmosphere_profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.output_dir.html">pyradtran.config.PathsConfig.output_dir</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.radiosonde_base.html">pyradtran.config.PathsConfig.radiosonde_base</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.solar_spectrum.html">pyradtran.config.PathsConfig.solar_spectrum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.working_dir.html">pyradtran.config.PathsConfig.working_dir</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.libradtran_bin.html">pyradtran.config.PathsConfig.libradtran_bin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.libradtran_data.html">pyradtran.config.PathsConfig.libradtran_data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.__init__.html">pyradtran.config.SimulationConfig.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.from_yaml.html">pyradtran.config.SimulationConfig.from_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.get_used_parameters.html">pyradtran.config.SimulationConfig.get_used_parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.to_dict.html">pyradtran.config.SimulationConfig.to_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.to_yaml.html">pyradtran.config.SimulationConfig.to_yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.paths.html">pyradtran.config.SimulationConfig.paths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.simulation_defaults.html">pyradtran.config.SimulationConfig.simulation_defaults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.execution.html">pyradtran.config.SimulationConfig.execution</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.output.html">pyradtran.config.SimulationConfig.output</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.__init__.html">pyradtran.config.SimulationDefaults.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.albedo_value.html">pyradtran.config.SimulationDefaults.albedo_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.h2o_mm.html">pyradtran.config.SimulationDefaults.h2o_mm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.h2o_source.html">pyradtran.config.SimulationDefaults.h2o_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.integrate_wavelength.html">pyradtran.config.SimulationDefaults.integrate_wavelength</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.mol_abs_param.html">pyradtran.config.SimulationDefaults.mol_abs_param</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.ozone_du.html">pyradtran.config.SimulationDefaults.ozone_du</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.rte_solver.html">pyradtran.config.SimulationDefaults.rte_solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.source.html">pyradtran.config.SimulationDefaults.source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.surface_temperature_k.html">pyradtran.config.SimulationDefaults.surface_temperature_k</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.sza.html">pyradtran.config.SimulationDefaults.sza</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.viewing_geometry.html">pyradtran.config.SimulationDefaults.viewing_geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.wavelength_nm.html">pyradtran.config.SimulationDefaults.wavelength_nm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.output_columns.html">pyradtran.config.SimulationDefaults.output_columns</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.output_altitudes_km.html">pyradtran.config.SimulationDefaults.output_altitudes_km</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.clouds.html">pyradtran.config.SimulationDefaults.clouds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.parameter_overrides.html">pyradtran.config.SimulationDefaults.parameter_overrides</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.core.Simulation.__init__.html">pyradtran.core.Simulation.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.core.Simulation.format_cloud_profile.html">pyradtran.core.Simulation.format_cloud_profile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.core.Simulation.run_simulation.html">pyradtran.core.Simulation.run_simulation</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PyRadtranAccessor.__init__.html">pyradtran.interface.PyRadtranAccessor.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PyRadtranAccessor.run_uvspec.html">pyradtran.interface.PyRadtranAccessor.run_uvspec</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.__init__.html">pyradtran.io.ERA5AtmosphereGenerator.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.create_era5_atmosphere_file.html">pyradtran.io.ERA5AtmosphereGenerator.create_era5_atmosphere_file</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.InputDataLoader.__init__.html">pyradtran.io.InputDataLoader.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.InputDataLoader.load_simulation_input_data.html">pyradtran.io.InputDataLoader.load_simulation_input_data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.NetCDFSaver.__init__.html">pyradtran.io.NetCDFSaver.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.NetCDFSaver.save_results_to_netcdf.html">pyradtran.io.NetCDFSaver.save_results_to_netcdf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputParser.__init__.html">pyradtran.io.OutputParser.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputParser.parse_output_file.html">pyradtran.io.OutputParser.parse_output_file</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputToXarray.__init__.html">pyradtran.io.OutputToXarray.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputToXarray.convert.html">pyradtran.io.OutputToXarray.convert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputToXarray.convert_batch.html">pyradtran.io.OutputToXarray.convert_batch</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE.html">pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE.html">pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE.html">pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE.html">pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.__init__.html">pyradtran.io.ParsedOutput.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.altitudes.html">pyradtran.io.ParsedOutput.altitudes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.is_brightness_temperature.html">pyradtran.io.ParsedOutput.is_brightness_temperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.metadata.html">pyradtran.io.ParsedOutput.metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.source_file.html">pyradtran.io.ParsedOutput.source_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.wavelengths.html">pyradtran.io.ParsedOutput.wavelengths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.output_type.html">pyradtran.io.ParsedOutput.output_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.data.html">pyradtran.io.ParsedOutput.data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.__init__.html">pyradtran.io.RadiosondeAtmosphereGenerator.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file.html">pyradtran.io.RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.find_closest_active_stations.html">pyradtran.io.RadiosondeAtmosphereGenerator.find_closest_active_stations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.get_closest_sounding.html">pyradtran.io.RadiosondeAtmosphereGenerator.get_closest_sounding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.get_station_list.html">pyradtran.io.RadiosondeAtmosphereGenerator.get_station_list</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.RadiosondeFinder.__init__.html">pyradtran.utils.RadiosondeFinder.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.RadiosondeFinder.find_closest.html">pyradtran.utils.RadiosondeFinder.find_closest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.RadiosondeFinder.find_radiosonde_file.html">pyradtran.utils.RadiosondeFinder.find_radiosonde_file</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/solar_spectral.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Quickstart: Solar Spectral</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explore-the-output-dataset">Explore the Output Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#broadband-irradiance-altitude-time">Broadband Irradiance: Altitude × Time</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-direct-irradiance-at-the-surface">Spectral Direct Irradiance at the Surface</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-irradiance-components-at-a-single-time-step">Spectral Irradiance Components at a Single Time Step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretation">Interpretation</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="quickstart-solar-spectral">
+<h1>Quickstart: Solar Spectral<a class="headerlink" href="#quickstart-solar-spectral" title="Link to this heading">#</a></h1>
+<p>In this notebook, we’ll run a spectral solar simulation — computing wavelength-resolved irradiance over a full day at a fixed location. This is one of the most common pyRadtran use cases: understanding how solar radiation varies spectrally and temporally.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyradtran</span>  <span class="c1"># Registers the .pyradtran xarray accessor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="c1"># Suppress verbose solver output</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pyradtran&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
+
+<span class="c1"># ── Simulation parameters ─────────────────────────────────────────────────────</span>
+<span class="c1"># Load merged defaults + master config (~/.pyradtran/config.yaml), then customise</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
+
+<span class="c1"># Spectral solar — no wavelength integration (retain full spectrum)</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span>           <span class="o">=</span> <span class="s2">&quot;disort&quot;</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span>        <span class="o">=</span> <span class="s2">&quot;lowtran per_nm&quot;</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span>               <span class="o">=</span> <span class="s2">&quot;solar&quot;</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span>        <span class="o">=</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">700</span><span class="p">]</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Output at all altitudes</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span>       <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;zout&quot;</span><span class="p">,</span> <span class="s2">&quot;lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;sza&quot;</span><span class="p">,</span> <span class="s2">&quot;edir&quot;</span><span class="p">,</span> <span class="s2">&quot;eglo&quot;</span><span class="p">,</span> <span class="s2">&quot;edn&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;enet&quot;</span><span class="p">,</span> <span class="s2">&quot;albedo&quot;</span><span class="p">]</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;config/spectral_config.yaml&quot;</span><span class="p">)</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">to_yaml</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Config saved to </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># ── Input dataset ─────────────────────────────────────────────────────────────</span>
+<span class="c1"># Stationary at fixed location, stepping through time</span>
+<span class="n">N_timesteps</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
+    <span class="n">coords</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;time&#39;</span>      <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">&#39;2025-04-04T08:00:00&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">N_timesteps</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;latitude&#39;</span>  <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">61.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">N_timesteps</span><span class="p">),</span>
+        <span class="s1">&#39;longitude&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">22.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">N_timesteps</span><span class="p">),</span>
+        <span class="s1">&#39;altitude&#39;</span>  <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]),</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># ── Run ───────────────────────────────────────────────────────────────────────</span>
+<span class="n">ds_sim</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
+    <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">save_to_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Simulation complete!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset variables: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">ds_sim</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset coordinates: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">ds_sim</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset dimensions: </span><span class="si">{</span><span class="nb">dict</span><span class="p">(</span><span class="n">ds_sim</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2026-04-19 01:27:01,148 - pyradtran.config - INFO - Configuration written to config/spectral_config.yaml
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Config saved to config/spectral_config.yaml
+
+Simulation complete!
+Dataset variables: [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;edir&#39;, &#39;eglo&#39;, &#39;edn&#39;, &#39;eup&#39;, &#39;enet&#39;, &#39;albedo&#39;]
+Dataset coordinates: [&#39;time&#39;, &#39;wavelength&#39;, &#39;altitude&#39;]
+Dataset dimensions: {&#39;time&#39;: 10, &#39;wavelength&#39;: 301, &#39;altitude&#39;: 7}
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_17405/3102401704.py:57: FutureWarning: The return type of `Dataset.dims` will be changed to return a set of dimension names in future, in order to be more consistent with `DataArray.dims`. To access a mapping from dimension names to lengths, please use `Dataset.sizes`.
+  print(f&quot;Dataset dimensions: {dict(ds_sim.dims)}&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<section id="explore-the-output-dataset">
+<h2>Explore the Output Dataset<a class="headerlink" href="#explore-the-output-dataset" title="Link to this heading">#</a></h2>
+<p>The simulation returns an <code class="docutils literal notranslate"><span class="pre">xr.Dataset</span></code> with irradiance fields indexed by <code class="docutils literal notranslate"><span class="pre">time</span></code>, <code class="docutils literal notranslate"><span class="pre">altitude</span></code>, and <code class="docutils literal notranslate"><span class="pre">wavelength</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_sim</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
+<defs>
+<symbol id="icon-database" viewBox="0 0 32 32">
+<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
+<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
+</symbol>
+<symbol id="icon-file-text2" viewBox="0 0 32 32">
+<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
+<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
+</symbol>
+</defs>
+</svg>
+<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
+ *
+ */
+
+:root {
+  --xr-font-color0: var(
+    --jp-content-font-color0,
+    var(--pst-color-text-base rgba(0, 0, 0, 1))
+  );
+  --xr-font-color2: var(
+    --jp-content-font-color2,
+    var(--pst-color-text-base, rgba(0, 0, 0, 0.54))
+  );
+  --xr-font-color3: var(
+    --jp-content-font-color3,
+    var(--pst-color-text-base, rgba(0, 0, 0, 0.38))
+  );
+  --xr-border-color: var(
+    --jp-border-color2,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 10))
+  );
+  --xr-disabled-color: var(
+    --jp-layout-color3,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 40))
+  );
+  --xr-background-color: var(
+    --jp-layout-color0,
+    var(--pst-color-on-background, white)
+  );
+  --xr-background-color-row-even: var(
+    --jp-layout-color1,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 5))
+  );
+  --xr-background-color-row-odd: var(
+    --jp-layout-color2,
+    hsl(from var(--pst-color-on-background, white) h s calc(l - 15))
+  );
+}
+
+html[theme="dark"],
+html[data-theme="dark"],
+body[data-theme="dark"],
+body.vscode-dark {
+  --xr-font-color0: var(
+    --jp-content-font-color0,
+    var(--pst-color-text-base, rgba(255, 255, 255, 1))
+  );
+  --xr-font-color2: var(
+    --jp-content-font-color2,
+    var(--pst-color-text-base, rgba(255, 255, 255, 0.54))
+  );
+  --xr-font-color3: var(
+    --jp-content-font-color3,
+    var(--pst-color-text-base, rgba(255, 255, 255, 0.38))
+  );
+  --xr-border-color: var(
+    --jp-border-color2,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 10))
+  );
+  --xr-disabled-color: var(
+    --jp-layout-color3,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 40))
+  );
+  --xr-background-color: var(
+    --jp-layout-color0,
+    var(--pst-color-on-background, #111111)
+  );
+  --xr-background-color-row-even: var(
+    --jp-layout-color1,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 5))
+  );
+  --xr-background-color-row-odd: var(
+    --jp-layout-color2,
+    hsl(from var(--pst-color-on-background, #111111) h s calc(l + 15))
+  );
+}
+
+.xr-wrap {
+  display: block !important;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.xr-text-repr-fallback {
+  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
+  display: none;
+}
+
+.xr-header {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: solid 1px var(--xr-border-color);
+}
+
+.xr-header > div,
+.xr-header > ul {
+  display: inline;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.xr-obj-type,
+.xr-array-name {
+  margin-left: 2px;
+  margin-right: 10px;
+}
+
+.xr-obj-type {
+  color: var(--xr-font-color2);
+}
+
+.xr-sections {
+  padding-left: 0 !important;
+  display: grid;
+  grid-template-columns: 150px auto auto 1fr 0 20px 0 20px;
+}
+
+.xr-section-item {
+  display: contents;
+}
+
+.xr-section-item input {
+  display: inline-block;
+  opacity: 0;
+  height: 0;
+}
+
+.xr-section-item input + label {
+  color: var(--xr-disabled-color);
+  border: 2px solid transparent !important;
+}
+
+.xr-section-item input:enabled + label {
+  cursor: pointer;
+  color: var(--xr-font-color2);
+}
+
+.xr-section-item input:focus + label {
+  border: 2px solid var(--xr-font-color0) !important;
+}
+
+.xr-section-item input:enabled + label:hover {
+  color: var(--xr-font-color0);
+}
+
+.xr-section-summary {
+  grid-column: 1;
+  color: var(--xr-font-color2);
+  font-weight: 500;
+}
+
+.xr-section-summary > span {
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.xr-section-summary-in:disabled + label {
+  color: var(--xr-font-color2);
+}
+
+.xr-section-summary-in + label:before {
+  display: inline-block;
+  content: "►";
+  font-size: 11px;
+  width: 15px;
+  text-align: center;
+}
+
+.xr-section-summary-in:disabled + label:before {
+  color: var(--xr-disabled-color);
+}
+
+.xr-section-summary-in:checked + label:before {
+  content: "▼";
+}
+
+.xr-section-summary-in:checked + label > span {
+  display: none;
+}
+
+.xr-section-summary,
+.xr-section-inline-details {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.xr-section-inline-details {
+  grid-column: 2 / -1;
+}
+
+.xr-section-details {
+  display: none;
+  grid-column: 1 / -1;
+  margin-bottom: 5px;
+}
+
+.xr-section-summary-in:checked ~ .xr-section-details {
+  display: contents;
+}
+
+.xr-array-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 20px auto;
+}
+
+.xr-array-wrap > label {
+  grid-column: 1;
+  vertical-align: top;
+}
+
+.xr-preview {
+  color: var(--xr-font-color3);
+}
+
+.xr-array-preview,
+.xr-array-data {
+  padding: 0 5px !important;
+  grid-column: 2;
+}
+
+.xr-array-data,
+.xr-array-in:checked ~ .xr-array-preview {
+  display: none;
+}
+
+.xr-array-in:checked ~ .xr-array-data,
+.xr-array-preview {
+  display: inline-block;
+}
+
+.xr-dim-list {
+  display: inline-block !important;
+  list-style: none;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.xr-dim-list li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.xr-dim-list:before {
+  content: "(";
+}
+
+.xr-dim-list:after {
+  content: ")";
+}
+
+.xr-dim-list li:not(:last-child):after {
+  content: ",";
+  padding-right: 5px;
+}
+
+.xr-has-index {
+  font-weight: bold;
+}
+
+.xr-var-list,
+.xr-var-item {
+  display: contents;
+}
+
+.xr-var-item > div,
+.xr-var-item label,
+.xr-var-item > .xr-var-name span {
+  background-color: var(--xr-background-color-row-even);
+  border-color: var(--xr-background-color-row-odd);
+  margin-bottom: 0;
+  padding-top: 2px;
+}
+
+.xr-var-item > .xr-var-name:hover span {
+  padding-right: 5px;
+}
+
+.xr-var-list > li:nth-child(odd) > div,
+.xr-var-list > li:nth-child(odd) > label,
+.xr-var-list > li:nth-child(odd) > .xr-var-name span {
+  background-color: var(--xr-background-color-row-odd);
+  border-color: var(--xr-background-color-row-even);
+}
+
+.xr-var-name {
+  grid-column: 1;
+}
+
+.xr-var-dims {
+  grid-column: 2;
+}
+
+.xr-var-dtype {
+  grid-column: 3;
+  text-align: right;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-preview {
+  grid-column: 4;
+}
+
+.xr-index-preview {
+  grid-column: 2 / 5;
+  color: var(--xr-font-color2);
+}
+
+.xr-var-name,
+.xr-var-dims,
+.xr-var-dtype,
+.xr-preview,
+.xr-attrs dt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.xr-var-name:hover,
+.xr-var-dims:hover,
+.xr-var-dtype:hover,
+.xr-attrs dt:hover {
+  overflow: visible;
+  width: auto;
+  z-index: 1;
+}
+
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  display: none;
+  border-top: 2px dotted var(--xr-background-color);
+  padding-bottom: 20px !important;
+  padding-top: 10px !important;
+}
+
+.xr-var-attrs-in + label,
+.xr-var-data-in + label,
+.xr-index-data-in + label {
+  padding: 0 1px;
+}
+
+.xr-var-attrs-in:checked ~ .xr-var-attrs,
+.xr-var-data-in:checked ~ .xr-var-data,
+.xr-index-data-in:checked ~ .xr-index-data {
+  display: block;
+}
+
+.xr-var-data > table {
+  float: right;
+}
+
+.xr-var-data > pre,
+.xr-index-data > pre,
+.xr-var-data > table > tbody > tr {
+  background-color: transparent !important;
+}
+
+.xr-var-name span,
+.xr-var-data,
+.xr-index-name div,
+.xr-index-data,
+.xr-attrs {
+  padding-left: 25px !important;
+}
+
+.xr-attrs,
+.xr-var-attrs,
+.xr-var-data,
+.xr-index-data {
+  grid-column: 1 / -1;
+}
+
+dl.xr-attrs {
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 125px auto;
+}
+
+.xr-attrs dt,
+.xr-attrs dd {
+  padding: 0;
+  margin: 0;
+  float: left;
+  padding-right: 10px;
+  width: auto;
+}
+
+.xr-attrs dt {
+  font-weight: normal;
+  grid-column: 1;
+}
+
+.xr-attrs dt:hover span {
+  display: inline-block;
+  background: var(--xr-background-color);
+  padding-right: 10px;
+}
+
+.xr-attrs dd {
+  grid-column: 2;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.xr-icon-database,
+.xr-icon-file-text2,
+.xr-no-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1em;
+  height: 1.5em !important;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.xr-var-attrs-in:checked + label > .xr-icon-file-text2,
+.xr-var-data-in:checked + label > .xr-icon-database,
+.xr-index-data-in:checked + label > .xr-icon-database {
+  color: var(--xr-font-color0);
+  filter: drop-shadow(1px 1px 5px var(--xr-font-color2));
+  stroke-width: 0.8px;
+}
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt; Size: 2MB
+Dimensions:     (time: 10, wavelength: 301, altitude: 7)
+Coordinates:
+  * time        (time) datetime64[ns] 80B 2025-04-04T08:00:00 ... 2025-04-04T...
+  * wavelength  (wavelength) float64 2kB 400.0 401.0 402.0 ... 698.0 699.0 700.0
+  * altitude    (altitude) float64 56B 0.0 1.0 5.0 10.0 25.0 50.0 100.0
+Data variables:
+    zout        (wavelength, altitude, time) float64 169kB 0.0 0.0 ... 100.0
+    lambda      (wavelength, altitude, time) float64 169kB 400.0 400.0 ... 700.0
+    sza         (wavelength, altitude, time) float64 169kB 62.63 58.42 ... 88.83
+    edir        (wavelength, altitude, time) float64 169kB 362.5 454.4 ... 28.84
+    eglo        (wavelength, altitude, time) float64 169kB 712.6 840.1 ... 28.84
+    edn         (wavelength, altitude, time) float64 169kB 350.1 ... 8.385e-06
+    eup         (wavelength, altitude, time) float64 169kB 605.7 714.1 ... 15.8
+    enet        (wavelength, altitude, time) float64 169kB 106.9 126.0 ... 13.04
+    albedo      (wavelength, altitude, time) float64 169kB 0.85 0.85 ... 0.5479
+Attributes: (12/24)
+    point_id:                      20250404_080000_61.00_22.00_0
+    time:                          2025-04-04T08:00:00
+    latitude:                      61.0
+    longitude:                     22.0
+    generated_by:                  pyradtran
+    pyradtran_version:             unified_system
+    ...                            ...
+    config_integrate_wavelength:   0
+    config_output_altitudes_km:    [0.0, 1.0, 5.0, 10.0, 25.0, 50.0, 100.0]
+    config_libradtran_bin:         /opt/libRadtran-2.0.6/bin/uvspec
+    config_libradtran_data:        /opt/libRadtran-2.0.6/data
+    config_max_workers:            4
+    config_timeout_seconds:        300</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-c5dced86-df00-4301-8596-18e9eba9122d' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-c5dced86-df00-4301-8596-18e9eba9122d' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 10</li><li><span class='xr-has-index'>wavelength</span>: 301</li><li><span class='xr-has-index'>altitude</span>: 7</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-0abff6cf-6bfd-44d6-a252-f10e5b32179b' class='xr-section-summary-in' type='checkbox'  checked><label for='section-0abff6cf-6bfd-44d6-a252-f10e5b32179b' class='xr-section-summary' >Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>2025-04-04T08:00:00 ... 2025-04-...</div><input id='attrs-cf1ca045-28db-45b6-ae15-15fccf36fdd7' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-cf1ca045-28db-45b6-ae15-15fccf36fdd7' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-2853aa5d-2370-443b-a113-b983718e25f7' class='xr-var-data-in' type='checkbox'><label for='data-2853aa5d-2370-443b-a113-b983718e25f7' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;2025-04-04T08:00:00.000000000&#x27;, &#x27;2025-04-04T09:00:00.000000000&#x27;,
+       &#x27;2025-04-04T10:00:00.000000000&#x27;, &#x27;2025-04-04T11:00:00.000000000&#x27;,
+       &#x27;2025-04-04T12:00:00.000000000&#x27;, &#x27;2025-04-04T13:00:00.000000000&#x27;,
+       &#x27;2025-04-04T14:00:00.000000000&#x27;, &#x27;2025-04-04T15:00:00.000000000&#x27;,
+       &#x27;2025-04-04T16:00:00.000000000&#x27;, &#x27;2025-04-04T17:00:00.000000000&#x27;],
+      dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>wavelength</span></div><div class='xr-var-dims'>(wavelength)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>400.0 401.0 402.0 ... 699.0 700.0</div><input id='attrs-be9c785b-4fe6-48a7-8790-93623e433d57' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-be9c785b-4fe6-48a7-8790-93623e433d57' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-5939b8a1-15c1-44df-8491-3e8bbc068d7d' class='xr-var-data-in' type='checkbox'><label for='data-5939b8a1-15c1-44df-8491-3e8bbc068d7d' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([400., 401., 402., ..., 698., 699., 700.], shape=(301,))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>altitude</span></div><div class='xr-var-dims'>(altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 1.0 5.0 10.0 25.0 50.0 100.0</div><input id='attrs-3a056b9b-28fc-42f6-9983-becce6597a98' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-3a056b9b-28fc-42f6-9983-becce6597a98' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-1c467179-cc12-4310-ad1b-83b34c4e6671' class='xr-var-data-in' type='checkbox'><label for='data-1c467179-cc12-4310-ad1b-83b34c4e6671' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([  0.,   1.,   5.,  10.,  25.,  50., 100.])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-e965710a-1180-4ce4-9a59-6cf73c48b65b' class='xr-section-summary-in' type='checkbox'  checked><label for='section-e965710a-1180-4ce4-9a59-6cf73c48b65b' class='xr-section-summary' >Data variables: <span>(9)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>zout</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0 0.0 ... 100.0 100.0 100.0</div><input id='attrs-53e5edba-7e8e-48fc-90de-8e594abeb6e8' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-53e5edba-7e8e-48fc-90de-8e594abeb6e8' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-2109b824-8c05-4923-aaa6-d15f1070c5e0' class='xr-var-data-in' type='checkbox'><label for='data-2109b824-8c05-4923-aaa6-d15f1070c5e0' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[  0.,   0.,   0., ...,   0.,   0.,   0.],
+        [  1.,   1.,   1., ...,   1.,   1.,   1.],
+        [  5.,   5.,   5., ...,   5.,   5.,   5.],
+        ...,
+        [ 25.,  25.,  25., ...,  25.,  25.,  25.],
+        [ 50.,  50.,  50., ...,  50.,  50.,  50.],
+        [100., 100., 100., ..., 100., 100., 100.]],
+
+       [[  0.,   0.,   0., ...,   0.,   0.,   0.],
+        [  1.,   1.,   1., ...,   1.,   1.,   1.],
+        [  5.,   5.,   5., ...,   5.,   5.,   5.],
+        ...,
+        [ 25.,  25.,  25., ...,  25.,  25.,  25.],
+        [ 50.,  50.,  50., ...,  50.,  50.,  50.],
+        [100., 100., 100., ..., 100., 100., 100.]],
+
+       [[  0.,   0.,   0., ...,   0.,   0.,   0.],
+        [  1.,   1.,   1., ...,   1.,   1.,   1.],
+        [  5.,   5.,   5., ...,   5.,   5.,   5.],
+        ...,
+...
+        ...,
+        [ 25.,  25.,  25., ...,  25.,  25.,  25.],
+        [ 50.,  50.,  50., ...,  50.,  50.,  50.],
+        [100., 100., 100., ..., 100., 100., 100.]],
+
+       [[  0.,   0.,   0., ...,   0.,   0.,   0.],
+        [  1.,   1.,   1., ...,   1.,   1.,   1.],
+        [  5.,   5.,   5., ...,   5.,   5.,   5.],
+        ...,
+        [ 25.,  25.,  25., ...,  25.,  25.,  25.],
+        [ 50.,  50.,  50., ...,  50.,  50.,  50.],
+        [100., 100., 100., ..., 100., 100., 100.]],
+
+       [[  0.,   0.,   0., ...,   0.,   0.,   0.],
+        [  1.,   1.,   1., ...,   1.,   1.,   1.],
+        [  5.,   5.,   5., ...,   5.,   5.,   5.],
+        ...,
+        [ 25.,  25.,  25., ...,  25.,  25.,  25.],
+        [ 50.,  50.,  50., ...,  50.,  50.,  50.],
+        [100., 100., 100., ..., 100., 100., 100.]]], shape=(301, 7, 10))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>lambda</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>400.0 400.0 400.0 ... 700.0 700.0</div><input id='attrs-744b00e3-0081-444e-a316-d83c1f312533' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-744b00e3-0081-444e-a316-d83c1f312533' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-21adc086-fa6e-4497-933a-48ed71fa1f96' class='xr-var-data-in' type='checkbox'><label for='data-21adc086-fa6e-4497-933a-48ed71fa1f96' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[400., 400., 400., ..., 400., 400., 400.],
+        [400., 400., 400., ..., 400., 400., 400.],
+        [400., 400., 400., ..., 400., 400., 400.],
+        ...,
+        [400., 400., 400., ..., 400., 400., 400.],
+        [400., 400., 400., ..., 400., 400., 400.],
+        [400., 400., 400., ..., 400., 400., 400.]],
+
+       [[401., 401., 401., ..., 401., 401., 401.],
+        [401., 401., 401., ..., 401., 401., 401.],
+        [401., 401., 401., ..., 401., 401., 401.],
+        ...,
+        [401., 401., 401., ..., 401., 401., 401.],
+        [401., 401., 401., ..., 401., 401., 401.],
+        [401., 401., 401., ..., 401., 401., 401.]],
+
+       [[402., 402., 402., ..., 402., 402., 402.],
+        [402., 402., 402., ..., 402., 402., 402.],
+        [402., 402., 402., ..., 402., 402., 402.],
+        ...,
+...
+        ...,
+        [698., 698., 698., ..., 698., 698., 698.],
+        [698., 698., 698., ..., 698., 698., 698.],
+        [698., 698., 698., ..., 698., 698., 698.]],
+
+       [[699., 699., 699., ..., 699., 699., 699.],
+        [699., 699., 699., ..., 699., 699., 699.],
+        [699., 699., 699., ..., 699., 699., 699.],
+        ...,
+        [699., 699., 699., ..., 699., 699., 699.],
+        [699., 699., 699., ..., 699., 699., 699.],
+        [699., 699., 699., ..., 699., 699., 699.]],
+
+       [[700., 700., 700., ..., 700., 700., 700.],
+        [700., 700., 700., ..., 700., 700., 700.],
+        [700., 700., 700., ..., 700., 700., 700.],
+        ...,
+        [700., 700., 700., ..., 700., 700., 700.],
+        [700., 700., 700., ..., 700., 700., 700.],
+        [700., 700., 700., ..., 700., 700., 700.]]], shape=(301, 7, 10))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>sza</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>62.63 58.42 56.12 ... 81.57 88.83</div><input id='attrs-2bf7f3fc-8262-4303-8848-5ac88da991c1' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-2bf7f3fc-8262-4303-8848-5ac88da991c1' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-03cdddb0-0170-42dd-8cb0-2af4b8f00d0e' class='xr-var-data-in' type='checkbox'><label for='data-03cdddb0-0170-42dd-8cb0-2af4b8f00d0e' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        ...,
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83]],
+
+       [[62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        ...,
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83]],
+
+       [[62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        ...,
+...
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83]],
+
+       [[62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        ...,
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83]],
+
+       [[62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        ...,
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83],
+        [62.63, 58.42, 56.12, ..., 74.46, 81.57, 88.83]]],
+      shape=(301, 7, 10))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>edir</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>362.5 454.4 504.2 ... 207.1 28.84</div><input id='attrs-a5b59d8a-bdb9-4b4e-9492-08c811fba83a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-a5b59d8a-bdb9-4b4e-9492-08c811fba83a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-7f13e160-e3c1-4c02-8325-b806b54a8d95' class='xr-var-data-in' type='checkbox'><label for='data-7f13e160-e3c1-4c02-8325-b806b54a8d95' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[3.624644e+02, 4.543582e+02, 5.042375e+02, ..., 1.205146e+02,
+         2.167026e+01, 7.647761e-07],
+        [3.959486e+02, 4.910046e+02, 5.423527e+02, ..., 1.402453e+02,
+         2.858919e+01, 5.591389e-06],
+        [5.221846e+02, 6.260278e+02, 6.813949e+02, ..., 2.254894e+02,
+         6.809229e+01, 2.841253e-03],
+        ...,
+        [7.780501e+02, 8.884392e+02, 9.467249e+02, ..., 4.470013e+02,
+         2.377906e+02, 2.253024e+01],
+        [7.931763e+02, 9.035844e+02, 9.618783e+02, ..., 4.620173e+02,
+         2.525912e+02, 3.475696e+01],
+        [7.936732e+02, 9.040811e+02, 9.623751e+02, ..., 4.625139e+02,
+         2.530876e+02, 3.525042e+01]],
+
+       [[3.742972e+02, 4.687274e+02, 5.199601e+02, ..., 1.251723e+02,
+         2.276801e+01, 9.400027e-07],
+        [4.085019e+02, 5.061274e+02, 5.588435e+02, ..., 1.454379e+02,
+         2.995165e+01, 6.732823e-06],
+        [5.372029e+02, 6.436926e+02, 7.004608e+02, ..., 2.326942e+02,
+         7.070097e+01, 3.208095e-03],
+...
+        [6.522631e+02, 7.437437e+02, 7.920447e+02, ..., 3.778836e+02,
+         2.043876e+02, 2.429502e+01],
+        [6.575609e+02, 7.490454e+02, 7.973480e+02, ..., 3.831604e+02,
+         2.096289e+02, 2.912837e+01],
+        [6.576414e+02, 7.491259e+02, 7.974285e+02, ..., 3.832413e+02,
+         2.097097e+02, 2.920880e+01]],
+
+       [[5.362111e+02, 6.225521e+02, 6.682955e+02, ..., 2.810007e+02,
+         1.264892e+02, 1.934285e+00],
+        [5.554126e+02, 6.428284e+02, 6.890981e+02, ..., 2.960293e+02,
+         1.372666e+02, 2.860453e+00],
+        [6.034784e+02, 6.931252e+02, 7.404882e+02, ..., 3.353757e+02,
+         1.674836e+02, 7.313192e+00],
+        ...,
+        [6.441497e+02, 7.344799e+02, 7.821733e+02, ..., 3.732205e+02,
+         2.019054e+02, 2.406434e+01],
+        [6.492907e+02, 7.396245e+02, 7.873195e+02, ..., 3.783422e+02,
+         2.069932e+02, 2.876300e+01],
+        [6.493691e+02, 7.397029e+02, 7.873980e+02, ..., 3.784207e+02,
+         2.070719e+02, 2.884140e+01]]], shape=(301, 7, 10))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>eglo</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>712.6 840.1 908.2 ... 207.1 28.84</div><input id='attrs-ecc35b1c-4e9a-418c-baad-bf9fa53caccc' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-ecc35b1c-4e9a-418c-baad-bf9fa53caccc' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-7420e028-e77f-421f-9acf-88076c833a82' class='xr-var-data-in' type='checkbox'><label for='data-7420e028-e77f-421f-9acf-88076c833a82' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[ 712.6049  ,  840.0837  ,  908.1906  , ...,  350.3641  ,
+          155.1295  ,   15.8394  ],
+        [ 722.2343  ,  848.7167  ,  916.1398  , ...,  359.4832  ,
+          159.7332  ,   16.02303 ],
+        [ 752.2228  ,  874.3206  ,  939.024   , ...,  392.8417  ,
+          180.62    ,   16.70543 ],
+        ...,
+        [ 792.2596  ,  903.4019  ,  962.08    , ...,  458.8284  ,
+          247.8851  ,   29.23869 ],
+        [ 793.6317  ,  904.0633  ,  962.3695  , ...,  462.399   ,
+          252.9215  ,   35.01953 ],
+        [ 793.6733  ,  904.0813  ,  962.3753  , ...,  462.5141  ,
+          253.0878  ,   35.25053 ]],
+
+       [[ 730.6954  ,  861.202   ,  930.9141  , ...,  359.5845  ,
+          159.2421  ,   16.23876 ],
+        [ 740.4852  ,  869.9635  ,  938.9735  , ...,  368.9102  ,
+          163.985   ,   16.42639 ],
+        [ 770.9446  ,  895.9279  ,  962.1562  , ...,  402.958   ,
+          185.4392  ,   17.12385 ],
+...
+        [ 653.3352  ,  744.8725  ,  793.2033  , ...,  378.7837  ,
+          205.1756  ,   24.91815 ],
+        [ 657.5949  ,  749.0812  ,  797.3848  , ...,  383.1891  ,
+          209.6542  ,   29.15002 ],
+        [ 657.6414  ,  749.1259  ,  797.4285  , ...,  383.2413  ,
+          209.7097  ,   29.20881 ]],
+
+       [[ 572.0625  ,  660.6968  ,  707.6361  , ...,  309.5311  ,
+          149.3027  ,    9.649719],
+        [ 588.0975  ,  677.5429  ,  724.8716  , ...,  322.2667  ,
+          158.5363  ,   10.61232 ],
+        [ 624.6148  ,  715.4919  ,  763.4984  , ...,  352.6563  ,
+          181.9183  ,   13.92657 ],
+        ...,
+        [ 645.2073  ,  735.5936  ,  783.3166  , ...,  374.1075  ,
+          202.6814  ,   24.67743 ],
+        [ 649.3243  ,  739.6598  ,  787.3558  , ...,  378.3705  ,
+          207.0181  ,   28.78427 ],
+        [ 649.3691  ,  739.7029  ,  787.398   , ...,  378.4207  ,
+          207.0719  ,   28.84141 ]]], shape=(301, 7, 10))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>edn</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>350.1 385.7 ... 9.805e-06 8.385e-06</div><input id='attrs-68e9023a-f45f-4e4d-aee6-b6cfd050b74c' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-68e9023a-f45f-4e4d-aee6-b6cfd050b74c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-58367465-199b-42d4-b533-1c2fcea40da9' class='xr-var-data-in' type='checkbox'><label for='data-58367465-199b-42d4-b533-1c2fcea40da9' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[3.501405e+02, 3.857256e+02, 4.039531e+02, ..., 2.298495e+02,
+         1.334592e+02, 1.583940e+01],
+        [3.262857e+02, 3.577121e+02, 3.737871e+02, ..., 2.192379e+02,
+         1.311440e+02, 1.602302e+01],
+        [2.300382e+02, 2.482928e+02, 2.576292e+02, ..., 1.673523e+02,
+         1.125277e+02, 1.670258e+01],
+        ...,
+        [1.420952e+01, 1.496269e+01, 1.535514e+01, ..., 1.182714e+01,
+         1.009451e+01, 6.708455e+00],
+        [4.554053e-01, 4.789194e-01, 4.911949e-01, ..., 3.817894e-01,
+         3.303533e-01, 2.625750e-01],
+        [1.794555e-04, 1.887003e-04, 1.935066e-04, ..., 1.504300e-04,
+         1.302306e-04, 1.041367e-04]],
+
+       [[3.563982e+02, 3.924746e+02, 4.109539e+02, ..., 2.344122e+02,
+         1.364741e+02, 1.623876e+01],
+        [3.319833e+02, 3.638361e+02, 3.801300e+02, ..., 2.234724e+02,
+         1.340334e+02, 1.642638e+01],
+        [2.337418e+02, 2.522353e+02, 2.616955e+02, ..., 1.702638e+02,
+         1.147382e+02, 1.712064e+01],
+...
+        [1.072069e+00, 1.128775e+00, 1.158611e+00, ..., 9.000159e-01,
+         7.880015e-01, 6.231204e-01],
+        [3.407285e-02, 3.585108e-02, 3.678755e-02, ..., 2.870545e-02,
+         2.529172e-02, 2.165408e-02],
+        [1.341671e-05, 1.411677e-05, 1.448546e-05, ..., 1.130375e-05,
+         9.960308e-06, 8.536746e-06]],
+
+       [[3.585139e+01, 3.814479e+01, 3.934056e+01, ..., 2.853044e+01,
+         2.281351e+01, 7.715435e+00],
+        [3.268496e+01, 3.471447e+01, 3.577357e+01, ..., 2.623743e+01,
+         2.126970e+01, 7.751867e+00],
+        [2.113644e+01, 2.236666e+01, 2.301021e+01, ..., 1.728057e+01,
+         1.443468e+01, 6.613373e+00],
+        ...,
+        [1.057528e+00, 1.113742e+00, 1.143322e+00, ..., 8.869858e-01,
+         7.759687e-01, 6.130916e-01],
+        [3.360426e-02, 3.536730e-02, 3.629580e-02, ..., 2.828264e-02,
+         2.489629e-02, 2.126931e-02],
+        [1.323215e-05, 1.392624e-05, 1.429179e-05, ..., 1.113721e-05,
+         9.804538e-06, 8.384913e-06]]], shape=(301, 7, 10))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>eup</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>605.7 714.1 772.0 ... 136.9 15.8</div><input id='attrs-15a1860e-6853-421b-9462-e1f4eca78a1d' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-15a1860e-6853-421b-9462-e1f4eca78a1d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a29ac9ea-2859-4f3e-818a-b42ace952e78' class='xr-var-data-in' type='checkbox'><label for='data-a29ac9ea-2859-4f3e-818a-b42ace952e78' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[605.7141  , 714.0712  , 771.962   , ..., 297.8095  ,
+         131.8601  ,  13.46349 ],
+        [615.321   , 722.6788  , 779.8844  , ..., 306.9158  ,
+         136.4579  ,  13.64663 ],
+        [645.2514  , 748.218   , 802.7007  , ..., 340.2384  ,
+         157.3266  ,  14.32774 ],
+        ...,
+        [685.2487  , 777.2565  , 825.7122  , ..., 406.197   ,
+         224.5739  ,  26.85952 ],
+        [686.6207  , 777.9177  , 826.0015  , ..., 409.7676  ,
+         229.6102  ,  32.64032 ],
+        [686.6623  , 777.9358  , 826.0073  , ..., 409.8826  ,
+         229.7764  ,  32.87131 ]],
+
+       [[621.0911  , 732.0217  , 791.277   , ..., 305.6468  ,
+         135.3558  ,  13.80295 ],
+        [630.8558  , 740.7549  , 799.3065  , ..., 314.9582  ,
+         140.0921  ,  13.99003 ],
+        [661.2504  , 766.6472  , 822.4134  , ..., 348.9659  ,
+         161.5261  ,  14.68605 ],
+...
+        [463.6746  , 530.785   , 566.2021  , ..., 262.5487  ,
+         136.7301  ,  15.29192 ],
+        [461.376   , 528.0883  , 563.2956  , ..., 261.4507  ,
+         136.3924  ,  15.71589 ],
+        [461.3597  , 528.0668  , 563.2715  , ..., 261.4495  ,
+         136.401   ,  15.73471 ]],
+
+       [[486.2532  , 561.5923  , 601.4907  , ..., 263.1015  ,
+         126.9073  ,   8.202262],
+        [477.1541  , 550.1604  , 588.7786  , ..., 260.0947  ,
+         126.6645  ,   8.326412],
+        [465.572   , 534.7159  , 571.2229  , ..., 258.6915  ,
+         129.8059  ,   9.794211],
+        ...,
+        [462.9073  , 529.7291  , 564.9934  , ..., 262.6091  ,
+         137.1955  ,  15.36723 ],
+        [460.6541  , 527.0864  , 562.1453  , ..., 261.5308  ,
+         136.8618  ,  15.78406 ],
+        [460.638   , 527.0652  , 562.1216  , ..., 261.5296  ,
+         136.8701  ,  15.80254 ]]], shape=(301, 7, 10))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>enet</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>106.9 126.0 136.2 ... 70.2 13.04</div><input id='attrs-e5b1ba79-199b-4031-8fe8-a2bed052fa19' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-e5b1ba79-199b-4031-8fe8-a2bed052fa19' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-078c4fbf-d421-4155-ae0b-0dfd19bacf79' class='xr-var-data-in' type='checkbox'><label for='data-078c4fbf-d421-4155-ae0b-0dfd19bacf79' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[106.8907  , 126.0125  , 136.2286  , ...,  52.5546  ,
+          23.26942 ,   2.37591 ],
+        [106.9132  , 126.0379  , 136.2554  , ...,  52.56744 ,
+          23.27534 ,   2.376396],
+        [106.9714  , 126.1026  , 136.3234  , ...,  52.60327 ,
+          23.29333 ,   2.377687],
+        ...,
+        [107.0109  , 126.1454  , 136.3679  , ...,  52.63144 ,
+          23.31126 ,   2.379177],
+        [107.011   , 126.1456  , 136.368   , ...,  52.63147 ,
+          23.31133 ,   2.379215],
+        [107.011   , 126.1455  , 136.368   , ...,  52.63147 ,
+          23.31134 ,   2.379219]],
+
+       [[109.6043  , 129.1804  , 139.6371  , ...,  53.93768 ,
+          23.88631 ,   2.435813],
+        [109.6295  , 129.2086  , 139.6671  , ...,  53.95206 ,
+          23.89294 ,   2.436359],
+        [109.6943  , 129.2807  , 139.7429  , ...,  53.9921  ,
+          23.91313 ,   2.437798],
+...
+        [189.6606  , 214.0875  , 227.0012  , ..., 116.2349  ,
+          68.44556 ,   9.626227],
+        [196.2189  , 220.993   , 234.0892  , ..., 121.7385  ,
+          73.26184 ,  13.43413 ],
+        [196.2817  , 221.0591  , 234.157   , ..., 121.7918  ,
+          73.30876 ,  13.4741  ]],
+
+       [[ 85.8093  ,  99.10449 , 106.1454  , ...,  46.42963 ,
+          22.3954  ,   1.447457],
+        [110.9434  , 127.3825  , 136.0931  , ...,  62.17203 ,
+          31.87181 ,   2.285909],
+        [159.0428  , 180.7759  , 192.2755  , ...,  93.96481 ,
+          52.11238 ,   4.132354],
+        ...,
+        [182.3     , 205.8645  , 218.3232  , ..., 111.4984  ,
+          65.48582 ,   9.310197],
+        [188.6702  , 212.5734  , 225.2105  , ..., 116.8397  ,
+          70.15627 ,  13.00021 ],
+        [188.7312  , 212.6377  , 225.2764  , ..., 116.8911  ,
+          70.20172 ,  13.03887 ]]], shape=(301, 7, 10))</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>albedo</span></div><div class='xr-var-dims'>(wavelength, altitude, time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.85 0.85 0.85 ... 0.661 0.5479</div><input id='attrs-2f18e6ad-9746-4e93-b88e-faebe7eda417' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-2f18e6ad-9746-4e93-b88e-faebe7eda417' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d94e6700-2d55-48eb-a6cf-d593c78fbbda' class='xr-var-data-in' type='checkbox'><label for='data-d94e6700-2d55-48eb-a6cf-d593c78fbbda' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([[[0.85     , 0.8500001, 0.85     , ..., 0.85     , 0.85     ,
+         0.85     ],
+        [0.8519688, 0.8514959, 0.8512723, ..., 0.8537694, 0.8542861,
+         0.8516887],
+        [0.857793 , 0.8557708, 0.8548244, ..., 0.8660955, 0.8710368,
+         0.8576698],
+        ...,
+        [0.8649295, 0.8603662, 0.8582572, ..., 0.8852917, 0.9059594,
+         0.9186292],
+        [0.8651629, 0.8604682, 0.8582997, ..., 0.8861774, 0.9078318,
+         0.9320604],
+        [0.8651699, 0.8604711, 0.8583006, ..., 0.8862057, 0.9078923,
+         0.9325054]],
+
+       [[0.85     , 0.85     , 0.85     , ..., 0.85     , 0.85     ,
+         0.8500001],
+        [0.8519492, 0.8514781, 0.8512556, ..., 0.8537529, 0.8542981,
+         0.8516802],
+        [0.8577145, 0.8557019, 0.8547608, ..., 0.8660106, 0.8710459,
+         0.8576373],
+...
+        [0.709704 , 0.712585 , 0.7138171, ..., 0.6931364, 0.666405 ,
+         0.613686 ],
+        [0.7016113, 0.7049813, 0.7064288, ..., 0.6823019, 0.6505587,
+         0.5391381],
+        [0.7015369, 0.7049106, 0.7063599, ..., 0.6822059, 0.6504275,
+         0.5386975]],
+
+       [[0.8500001, 0.85     , 0.85     , ..., 0.8500001, 0.8500001,
+         0.8500001],
+        [0.811352 , 0.8119934, 0.8122522, ..., 0.807079 , 0.7989621,
+         0.7845986],
+        [0.7453745, 0.7473403, 0.7481651, ..., 0.7335513, 0.7135397,
+         0.7032754],
+        ...,
+        [0.7174552, 0.7201383, 0.7212836, ..., 0.7019617, 0.6769026,
+         0.6227242],
+        [0.7094361, 0.7126065, 0.713966 , ..., 0.6912029, 0.6611105,
+         0.5483572],
+        [0.7093623, 0.7125364, 0.7138976, ..., 0.6911082, 0.660979 ,
+         0.5479114]]], shape=(301, 7, 10))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-09406c47-d75c-46df-994a-89edd6db0dcc' class='xr-section-summary-in' type='checkbox'  ><label for='section-09406c47-d75c-46df-994a-89edd6db0dcc' class='xr-section-summary' >Indexes: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>time</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-eb8df342-fc91-4a99-9353-7c83f2a5f0e8' class='xr-index-data-in' type='checkbox'/><label for='index-eb8df342-fc91-4a99-9353-7c83f2a5f0e8' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(DatetimeIndex([&#x27;2025-04-04 08:00:00&#x27;, &#x27;2025-04-04 09:00:00&#x27;,
+               &#x27;2025-04-04 10:00:00&#x27;, &#x27;2025-04-04 11:00:00&#x27;,
+               &#x27;2025-04-04 12:00:00&#x27;, &#x27;2025-04-04 13:00:00&#x27;,
+               &#x27;2025-04-04 14:00:00&#x27;, &#x27;2025-04-04 15:00:00&#x27;,
+               &#x27;2025-04-04 16:00:00&#x27;, &#x27;2025-04-04 17:00:00&#x27;],
+              dtype=&#x27;datetime64[ns]&#x27;, name=&#x27;time&#x27;, freq=&#x27;h&#x27;))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>wavelength</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-a1bc87d8-4f56-4002-b9c7-4ccbe4c5305b' class='xr-index-data-in' type='checkbox'/><label for='index-a1bc87d8-4f56-4002-b9c7-4ccbe4c5305b' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([400.0, 401.0, 402.0, 403.0, 404.0, 405.0, 406.0, 407.0, 408.0, 409.0,
+       ...
+       691.0, 692.0, 693.0, 694.0, 695.0, 696.0, 697.0, 698.0, 699.0, 700.0],
+      dtype=&#x27;float64&#x27;, name=&#x27;wavelength&#x27;, length=301))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>altitude</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-c55523db-e211-4352-afa1-88dc59841a78' class='xr-index-data-in' type='checkbox'/><label for='index-c55523db-e211-4352-afa1-88dc59841a78' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([0.0, 1.0, 5.0, 10.0, 25.0, 50.0, 100.0], dtype=&#x27;float64&#x27;, name=&#x27;altitude&#x27;))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-ed112f5b-4153-47ae-ac5b-caa6f8eb1b79' class='xr-section-summary-in' type='checkbox'  ><label for='section-ed112f5b-4153-47ae-ac5b-caa6f8eb1b79' class='xr-section-summary' >Attributes: <span>(24)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>point_id :</span></dt><dd>20250404_080000_61.00_22.00_0</dd><dt><span>time :</span></dt><dd>2025-04-04T08:00:00</dd><dt><span>latitude :</span></dt><dd>61.0</dd><dt><span>longitude :</span></dt><dd>22.0</dd><dt><span>generated_by :</span></dt><dd>pyradtran</dd><dt><span>pyradtran_version :</span></dt><dd>unified_system</dd><dt><span>generation_date :</span></dt><dd>2026-04-19T01:27:02.963288</dd><dt><span>created_by :</span></dt><dd>pyradtran</dd><dt><span>creation_date :</span></dt><dd>2026-04-19T01:27:02.963299</dd><dt><span>config_source :</span></dt><dd>solar</dd><dt><span>config_rte_solver :</span></dt><dd>disort</dd><dt><span>config_mol_abs_param :</span></dt><dd>lowtran per_nm</dd><dt><span>config_ozone_du :</span></dt><dd>300.0</dd><dt><span>config_h2o_mm :</span></dt><dd>2.0</dd><dt><span>config_surface_temperature_k :</span></dt><dd>273.15</dd><dt><span>config_viewing_geometry :</span></dt><dd>nadir</dd><dt><span>config_wavelength_min_nm :</span></dt><dd>400.0</dd><dt><span>config_wavelength_max_nm :</span></dt><dd>700.0</dd><dt><span>config_integrate_wavelength :</span></dt><dd>0</dd><dt><span>config_output_altitudes_km :</span></dt><dd>[0.0, 1.0, 5.0, 10.0, 25.0, 50.0, 100.0]</dd><dt><span>config_libradtran_bin :</span></dt><dd>/opt/libRadtran-2.0.6/bin/uvspec</dd><dt><span>config_libradtran_data :</span></dt><dd>/opt/libRadtran-2.0.6/data</dd><dt><span>config_max_workers :</span></dt><dd>4</dd><dt><span>config_timeout_seconds :</span></dt><dd>300</dd></dl></div></li></ul></div></div></div></div>
+</div>
+</section>
+<section id="broadband-irradiance-altitude-time">
+<h2>Broadband Irradiance: Altitude × Time<a class="headerlink" href="#broadband-irradiance-altitude-time" title="Link to this heading">#</a></h2>
+<p>We integrate the spectral irradiance over wavelength to get the broadband direct irradiance, then visualise it as a surface over altitude and time of day.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;projection&#39;</span><span class="p">:</span> <span class="s1">&#39;3d&#39;</span><span class="p">})</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))),</span>
+<span class="p">)</span>
+
+<span class="c1"># Integrate over wavelength to get broadband direct irradiance</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="s1">&#39;wavelength&#39;</span><span class="p">)[</span><span class="s1">&#39;edir&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">/</span> <span class="mi">1000</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (UTC)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Altitude (km)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$F_\mathrm</span><span class="si">{dir}</span><span class="s1">^\downarrow$ ($\mathrm{W \cdot m^{-2}}$)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Broadband Direct Irradiance&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_17405/945561024.py:22: UserWarning: Tight layout not applied. The left and right margins cannot be made large enough to accommodate all Axes decorations.
+  plt.tight_layout()
+</pre></div>
+</div>
+<img alt="../_images/355c8b42b384eba3daf5a5a15d09c0b5af423d9aeb32aaffb02ceaa106c06e29.png" src="../_images/355c8b42b384eba3daf5a5a15d09c0b5af423d9aeb32aaffb02ceaa106c06e29.png" />
+</div>
+</div>
+<p>The surface shows a clear peak at local solar noon and increases with altitude as less atmosphere lies above the observer. These are expected behaviours for clear-sky broadband irradiance.</p>
+</section>
+<section id="spectral-direct-irradiance-at-the-surface">
+<h2>Spectral Direct Irradiance at the Surface<a class="headerlink" href="#spectral-direct-irradiance-at-the-surface" title="Link to this heading">#</a></h2>
+<p>A 3-D surface showing how the spectral distribution of direct irradiance at the surface evolves over the course of the day.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))),</span>
+<span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;edir&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ds_sim</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (UTC)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$F_\mathrm</span><span class="si">{dir}</span><span class="s1">^\downarrow$ ($\mathrm{W \cdot m^{-2} \cdot nm^{-1}}$)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Spectral Direct Irradiance at the Surface&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 0.92, &#39;Spectral Direct Irradiance at the Surface&#39;)
+</pre></div>
+</div>
+<img alt="../_images/ee8619d13e0e6819e66357964a0f374010ea7f2677f0b92836d839c251099606.png" src="../_images/ee8619d13e0e6819e66357964a0f374010ea7f2677f0b92836d839c251099606.png" />
+</div>
+</div>
+</section>
+<section id="spectral-irradiance-components-at-a-single-time-step">
+<h2>Spectral Irradiance Components at a Single Time Step<a class="headerlink" href="#spectral-irradiance-components-at-a-single-time-step" title="Link to this heading">#</a></h2>
+<p>At a single altitude and time, we can decompose the irradiance into its direct, diffuse downward, total downward (global), and upward components. This reveals which wavelengths carry the most energy and where atmospheric absorption features appear.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">sel</span> <span class="o">=</span> <span class="n">ds_sim</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="s1">&#39;2025-04-04T12:00:00&#39;</span><span class="p">)</span>
+
+<span class="n">sel</span><span class="p">[</span><span class="s1">&#39;eglo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Global (direct + diffuse)&#39;</span><span class="p">)</span>
+<span class="n">sel</span><span class="p">[</span><span class="s1">&#39;eup&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Upward&#39;</span><span class="p">)</span>
+<span class="n">sel</span><span class="p">[</span><span class="s1">&#39;edir&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Direct&#39;</span><span class="p">)</span>
+<span class="n">sel</span><span class="p">[</span><span class="s1">&#39;edn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Diffuse downward&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Spectral irradiance ($\mathrm{W \cdot m^{-2} \cdot nm^{-1}}$)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Irradiance Components at 0 km, 12:00 UTC, 2025-04-04&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;small&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="interpretation">
+<h2>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Direct irradiance</strong> dominates at visible wavelengths under clear-sky conditions, peaking around 450–550 nm.</p></li>
+<li><p><strong>Diffuse downward irradiance</strong> is relatively small compared to the direct component at solar noon, but grows in proportion at shorter wavelengths due to Rayleigh scattering.</p></li>
+<li><p>The <strong>absorption dips</strong> (e.g., near 690 nm and 720 nm) correspond to O₂ and H₂O absorption bands in the atmosphere.</p></li>
+<li><p><strong>Upward irradiance</strong> at the surface is governed by surface albedo and is much smaller than the downward components.</p></li>
+</ul>
+<p>For integrated (broadband) simulations, see the <em>Solar Integrated</em> quickstart notebook.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="thermal_imager.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Quickstart: Brightness Temperature</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="era5_atmosphere.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Quickstart: ERA5 Atmosphere</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#explore-the-output-dataset">Explore the Output Dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#broadband-irradiance-altitude-time">Broadband Irradiance: Altitude × Time</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-direct-irradiance-at-the-surface">Spectral Direct Irradiance at the Surface</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-irradiance-components-at-a-single-time-step">Spectral Irradiance Components at a Single Time Step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretation">Interpretation</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PyRadtran Developers
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -18,6 +18,9 @@ pyradtran.config.SimulationConfig
       
          ~SimulationConfig.__init__
          ~SimulationConfig.from_yaml
+         ~SimulationConfig.get_used_parameters
+         ~SimulationConfig.to_dict
+         ~SimulationConfig.to_yaml
       
          ~SimulationConfig.paths
          ~SimulationConfig.simulation_defaults

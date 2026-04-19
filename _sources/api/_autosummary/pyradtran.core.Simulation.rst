@@ -17,5 +17,6 @@ pyradtran.core.Simulation
 
       
          ~Simulation.__init__
-         ~Simulation.run
+         ~Simulation.format_cloud_profile
+         ~Simulation.run_simulation
       

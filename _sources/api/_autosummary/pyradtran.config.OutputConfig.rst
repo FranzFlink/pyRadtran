@@ -21,4 +21,3 @@ pyradtran.config.OutputConfig
          ~OutputConfig.filename_prefix
          ~OutputConfig.filename_suffix
          ~OutputConfig.netcdf_encoding
-         ~OutputConfig.variable_encoding
