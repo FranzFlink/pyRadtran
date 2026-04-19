@@ -28,7 +28,6 @@ from pyradtran.io import OutputParser
 
 from helpers import has_libradtran
 
-
 # --- Fixtures ---
 
 

@@ -18,7 +18,12 @@ import pandas as pd
 import pytest
 import xarray as xr
 
-from pyradtran.config import PathsConfig, SimulationConfig, SimulationDefaults, load_config
+from pyradtran.config import (
+    PathsConfig,
+    SimulationConfig,
+    SimulationDefaults,
+    load_config,
+)
 from pyradtran.core import Simulation
 from pyradtran.io import OutputParser, OutputToXarray, OutputType
 
@@ -43,7 +48,9 @@ def base_config(tmp_path):
 @pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
 class TestIORobustness:
 
-    @pytest.mark.xfail(reason="Test assertions assume a different parser output structure")
+    @pytest.mark.xfail(
+        reason="Test assertions assume a different parser output structure"
+    )
     def test_spectral_output_parsing(self, base_config):
         """Test parsing of spectral output (wavelength resolved)."""
         # Configure for spectral output
@@ -86,7 +93,9 @@ class TestIORobustness:
         assert ds["eglo"].dims == ("time", "wavelength", "altitude")
         assert ds["eglo"].shape[1] == len(parsed.wavelengths)
 
-    @pytest.mark.xfail(reason="Test assertions assume a different parser output structure")
+    @pytest.mark.xfail(
+        reason="Test assertions assume a different parser output structure"
+    )
     def test_vertical_profile_parsing(self, base_config):
         """Test parsing of multi-altitude output."""
         # Configure for integrated but multi-altitude
@@ -119,7 +128,9 @@ class TestIORobustness:
         assert len(ds.altitude) == 4
         assert ds["eglo"].shape[1] == 4  # (time, alt) for integrated multi-altitude
 
-    @pytest.mark.xfail(reason="Test assertions assume a different parser output structure")
+    @pytest.mark.xfail(
+        reason="Test assertions assume a different parser output structure"
+    )
     def test_spectral_vertical_profile(self, base_config):
         """Test full complexity: Spectral AND Multi-altitude."""
         base_config.simulation_defaults.integrate_wavelength = False
