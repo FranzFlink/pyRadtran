@@ -56,8 +56,8 @@ cat > ~/.pyradtran/config.yaml << 'EOF'
 paths:
   libradtran_bin: /path/to/your/libradtran/bin/uvspec
   libradtran_data: /path/to/your/libradtran/share/libRadtran/data
-  atmosphere_profile: /path/to/your/libradtran/share/libRadtran/data/atmmod/afglms.dat
-  solar_spectrum: /path/to/your/libradtran/share/libRadtran/data/solar_flux/NewGuey2003.dat
+  atmosphere_profile: afglms
+  solar_spectrum: NewGuey2003
 EOF
 ```
 
