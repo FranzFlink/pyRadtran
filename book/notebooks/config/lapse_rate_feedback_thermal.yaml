@@ -1,10 +1,10 @@
 execution:
-  cleanup_temp_files: false
+  cleanup_temp_files: true
   debug_mode: false
-  max_workers: 16
-  timeout_seconds: 300
+  max_workers: 4
+  timeout_seconds: 3600
 output:
-  filename_prefix: pyradtran_sim
+  filename_prefix: lapse_rate_feedback_thermal
   filename_suffix: _results.nc
   netcdf_encoding:
     complevel: 5
@@ -18,7 +18,7 @@ paths:
   solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
   working_dir: pyradtran_work
 simulation_defaults:
-  albedo_value: 0.3
+  albedo_value: 0.85
   clouds:
     cloud_fraction: 1.0
     cloud_source: parametric
@@ -35,9 +35,9 @@ simulation_defaults:
     water_content_g_m3: 0.1
     wc_file: null
   h2o_mm: 2.0
-  h2o_source: radiosonde
+  h2o_source: fixed
   integrate_wavelength: true
-  mol_abs_param: reptran per_nm
+  mol_abs_param: reptran coarse
   output_altitudes_km:
   - 0.0
   output_columns:
@@ -50,13 +50,14 @@ simulation_defaults:
   - eup
   - enet
   - albedo
+  - heat
   ozone_du: 300.0
   parameter_overrides: {}
   rte_solver: disort
-  source: solar
-  surface_temperature_k: 253.15
+  source: thermal
+  surface_temperature_k: 273.15
   sza: null
   viewing_geometry: nadir
   wavelength_nm:
-  - 400
-  - 4500
+  - 3000
+  - 100000

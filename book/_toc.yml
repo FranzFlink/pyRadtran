@@ -3,40 +3,60 @@
 
 format: jb-book
 root: intro
-chapters:
-- file: installation
-- file: usage
-- file: notebooks/index
-  sections:
-  # Quickstart tutorials
-  - file: notebooks/albedo_test
-  - file: notebooks/thermal
-  - file: notebooks/thermal_imager
-  - file: notebooks/solar_spectral
-  - file: notebooks/era5_atmosphere
-  # Clouds
-  - file: notebooks/water_cloud
-  - file: notebooks/mixed_phase_cloud
-  - file: notebooks/arctic_cloud_experiment
-  # Radiosondes & atmosphere
-  - file: notebooks/get_radiosonde
-  # Advanced topics
-  - file: notebooks/thermal_imager_2
-  - file: notebooks/shupe_and_intrieri_plot
-  - file: notebooks/era5_seasonal_sea_ice_profiles
-  - file: notebooks/halo-ac3_bbr_all_aircraft
-  - file: notebooks/radiosonde_thermal
-  - file: notebooks/radiosonde_solar_spectral
-  # Data processing & campaigns
-  - file: notebooks/sea_ice_era5
-  - file: notebooks/sea_ice_era5_plotting
-  - file: notebooks/carra_atmosphere
-  - file: notebooks/stn2024
-  - file: notebooks/nya_rad
-  - file: notebooks/radiosonde
+parts:
+  - caption: Getting Started
+    chapters:
+    - file: installation
+    - file: usage
 
-- file: examples/index
-- file: notebooks/config/index
-- file: api/index
-- file: contributing
-- file: changelog
+  - caption: Quickstart Tutorials
+    chapters:
+    - file: notebooks/index
+    - file: notebooks/quickstart
+    - file: notebooks/albedo_test
+    - file: notebooks/thermal
+    - file: notebooks/thermal_imager
+    - file: notebooks/solar_spectral
+    - file: notebooks/era5_atmosphere
+
+  - caption: Clouds
+    chapters:
+    - file: notebooks/water_cloud
+    - file: notebooks/mixed_phase_cloud
+    - file: notebooks/arctic_cloud_experiment
+
+  - caption: Radiosondes & Atmosphere
+    chapters:
+    - file: notebooks/get_radiosonde
+#    - file: notebooks/radiosonde
+
+  - caption: Advanced Topics
+    chapters:
+    - file: notebooks/thermal_imager_2
+    - file: notebooks/shupe_and_intrieri_plot
+    - file: notebooks/era5_seasonal_sea_ice_profiles
+    
+  - caption: Campaigns
+    chapters:
+    - file: notebooks/halo-ac3_bbr_all_aircraft
+    - file: notebooks/radiosonde_thermal
+    - file: notebooks/radiosonde_solar_spectral
+
+  - caption: Data Processing & Campaigns
+    chapters:
+    - file: notebooks/sea_ice_era5
+    - file: notebooks/sea_ice_era5_plotting
+    - file: notebooks/carra_atmosphere
+    - file: notebooks/stn2024
+    - file: notebooks/nya_rad
+
+  - caption: Configuration & Examples
+    chapters:
+    - file: examples/index
+    - file: notebooks/config/index
+
+  - caption: Reference
+    chapters:
+    - file: api/index
+    - file: contributing
+    - file: changelog
