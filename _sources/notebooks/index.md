@@ -37,6 +37,7 @@ Start here if you're new to pyRadtran. These notebooks cover the basic simulatio
 
 ### Data Processing & Campaigns
 - **ERA5 Sea Ice Profiles** — Downloading and processing ERA5 data for the Arctic
+- **ERA5 Region Profiles** — Downloading and processing ERA5 data for specific regions
 - **Sea Ice ERA5 Plotting** — Visualizing processed ERA5 sea ice data
 - **Seasonal Sea Ice Profiles** — Seasonal ERA5 profiles for sea ice regions
 - **CARRA Atmosphere** — Working with CARRA reanalysis data
