@@ -1,0 +1,62 @@
+execution:
+  cleanup_temp_files: false
+  debug_mode: false
+  max_workers: 32
+  timeout_seconds: 3600
+output:
+  filename_prefix: pyradtran_sim
+  filename_suffix: _results.nc
+  netcdf_encoding:
+    complevel: 5
+    zlib: true
+paths:
+  atmosphere_profile: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  output_dir: pyradtran_output
+  radiosonde_base: /home/josh/pyRadtran/book/notebooks/radiosonde
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
+  working_dir: pyradtran_work
+simulation_defaults:
+  albedo_value: 0.85
+  clouds:
+    cloud_fraction: 1.0
+    cloud_source: parametric
+    cloud_type: wc
+    effective_radius_um: 10.0
+    enabled: false
+    era5_lat: null
+    era5_lon: null
+    era5_time: null
+    ic_file: null
+    ice_content_g_m3: 0.0
+    layer_bottom_km: 1.0
+    layer_top_km: 2.0
+    water_content_g_m3: 0.1
+    wc_file: null
+  h2o_mm: null
+  h2o_source: radiosonde
+  integrate_wavelength: true
+  mol_abs_param: reptran medium
+  output_altitudes_km:
+  - 0.0
+  output_columns:
+  - zout
+  - lambda
+  - sza
+  - edir
+  - eglo
+  - edn
+  - eup
+  - enet
+  - albedo
+  ozone_du: null
+  parameter_overrides: {}
+  rte_solver: disort
+  source: solar
+  surface_temperature_k: 253.15
+  sza: null
+  viewing_geometry: nadir
+  wavelength_nm:
+  - 290
+  - 4500

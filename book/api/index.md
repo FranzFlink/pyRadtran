@@ -12,7 +12,6 @@ This is the auto-generated API reference for the `pyradtran` package.
    config
    core
    exceptions
-   helpers
    interface
    io
    utils

@@ -8,11 +8,12 @@
    :recursive:
 
    
+      create_example_config
+      list_atmosphere_profiles
+      list_solar_spectra
       load_config
+      save_master_config
    
-      AerosolParameters
-      BRDFCamParameters
-      BRDFRpvParameters
       CloudParameters
       ExecutionConfig
       OutputConfig

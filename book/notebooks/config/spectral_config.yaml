@@ -1,24 +1,41 @@
 execution:
   cleanup_temp_files: false
   debug_mode: false
-  max_workers: 1
-  timeout_seconds: 60
+  max_workers: 4
+  timeout_seconds: 300
 output:
-  filename_prefix: xarray_example
-  filename_suffix: .nc
-  netcdf_encoding: null
-  variable_encoding: {}
+  filename_prefix: pyradtran_sim
+  filename_suffix: _results.nc
+  netcdf_encoding:
+    complevel: 5
+    zlib: true
 paths:
-  atmosphere_profile: /projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat
-  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
-  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
-  output_dir: work
-  radiosonde_base: null
-  solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
-  working_dir: work
+  atmosphere_profile: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  output_dir: pyradtran_output
+  radiosonde_base: /path/to/radiosonde/data
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
+  working_dir: pyradtran_work
 simulation_defaults:
-  albedo_type: const
-  albedo_value: 0.3
+  albedo_value: 0.85
+  clouds:
+    cloud_fraction: 1.0
+    cloud_source: parametric
+    cloud_type: wc
+    effective_radius_um: 10.0
+    enabled: false
+    era5_lat: null
+    era5_lon: null
+    era5_time: null
+    ic_file: null
+    ice_content_g_m3: 0.0
+    layer_bottom_km: 1.0
+    layer_top_km: 2.0
+    water_content_g_m3: 0.1
+    wc_file: null
+  h2o_mm: 2.0
+  h2o_source: fixed
   integrate_wavelength: false
   mol_abs_param: lowtran per_nm
   output_altitudes_km:
@@ -33,9 +50,12 @@ simulation_defaults:
   - eup
   - enet
   - albedo
+  ozone_du: 300.0
+  parameter_overrides: {}
   rte_solver: disort
+  source: solar
   surface_temperature_k: 273.15
-  transmittance_source: default
+  sza: null
   viewing_geometry: nadir
   wavelength_nm:
   - 400

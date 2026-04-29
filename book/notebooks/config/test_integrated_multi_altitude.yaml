@@ -1,25 +1,16 @@
-# Configuration for integrated multi-altitude test  
-# Tests: Wavelength integration enabled, multiple output altitudes
-
-paths:
-  libradtran_bin: /opt/libradtran/2.0.4/bin/uvspec
-  libradtran_data: /opt/libradtran/2.0.4/share/libRadtran/data
-  atmosphere_profile: /projekt_agmwend/data/HALO-AC3/05_VELOX_Tools/add_data/afglsw.dat
-  solar_spectrum: /projekt_agmwend/home_rad/sophie/libradtran/solar_flux/NewGuey2003.dat
-  working_dir: work
-  output_dir: output
+# Integrated multi-altitude test: wavelength integration enabled, multiple altitudes
+# Paths are loaded from ~/.pyradtran/config.yaml (master config)
 
 simulation_defaults:
   rte_solver: disort
   mol_abs_param: reptran
-  wavelength_nm: [400, 700]
-  integrate_wavelength: true  # KEY: Enable wavelength integration
-  output_altitudes_km: [0.0, 1.0, 2.0, 5.0]  # KEY: Multiple altitudes
-  output_columns: ['eglo', 'eup', 'edir', 'albedo']  # zout and lambda will be auto-added
-  albedo_type: const
-  albedo_value: 0.8
   source: solar
-  
+  wavelength_nm: [400, 700]
+  integrate_wavelength: true
+  output_altitudes_km: [0.0, 1.0, 2.0, 5.0]
+  output_columns: [eglo, eup, edir, albedo]
+  albedo_value: 0.8
+
 execution:
   max_workers: 1
   debug_mode: true

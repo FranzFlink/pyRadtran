@@ -9,10 +9,18 @@ copyright: "2025"
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
 execute:
-  execute_notebooks: off
-  timeout: 300  # Increase timeout to 5 minutes for longer simulations
-  allow_errors: true  # Allow notebooks with errors to still build
-  stderr_output: show  # Show stderr output for debugging
+  execute_notebooks: "off"  # Notebooks are pre-executed locally; outputs committed to repo
+  timeout: 1800
+  allow_errors: true
+  stderr_output: show
+  exclude_patterns:
+    - 'notebooks/carra_atmosphere.ipynb'
+    - 'notebooks/radiosonde_solar_spectral.ipynb'
+    - 'notebooks/radiosonde_thermal.ipynb'
+    - 'notebooks/radiosonde.ipynb'
+    - 'notebooks/stn2024.ipynb'
+    - 'notebooks/sea_ice_era5.ipynb'
+    - 'notebooks/sea_ice_era5_plotting.ipynb'
 
 # Define the name of the latex output file for PDF builds
 latex:

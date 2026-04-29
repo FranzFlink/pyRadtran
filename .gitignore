@@ -88,12 +88,30 @@ libradpy_work/
 *.out
 *.nc
 randomseed
+mc.flx
+mc.flx.spc
+mc.rad
+mc.rad.spc
 
 # Allow example NetCDF files in output/ directory
 !output/*.nc
 
 # Allow output directories but ignore their contents
 !output/.gitkeep
+
+# Work and output directories
+pyradtran_work*/
+pyradtran_output/
+output/
+
+# Dev-only scripts and notebooks
+refactor_configs.py
+run_tests.py
+notebooks_dev/
+
+# Jupyter Book build output
+book/_build/
+_build/
 
 # Logs
 *.log

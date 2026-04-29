@@ -1,30 +1,19 @@
+# Fast thermal simulation with clouds
+# Paths are loaded from ~/.pyradtran/config.yaml (master config)
+
+simulation_defaults:
+  rte_solver: disort
+  mol_abs_param: reptran medium
+  source: thermal
+  wavelength_nm: [3500, 50000]
+  integrate_wavelength: true
+  output_columns: [zout, lambda, sza, edir, eglo, edn, eup, enet, albedo]
+
 execution:
   cleanup_temp_files: false
-  debug_mode: false
   max_workers: 16
   timeout_seconds: 60
+
 output:
-  filename_prefix: xarray_example
+  filename_prefix: cloud_thermal_fast
   filename_suffix: .nc
-  netcdf_encoding: null
-  variable_encoding: {}
-simulation_defaults:
-  integrate_wavelength: true
-  mol_abs_param: reptran medium
-  output_columns:
-  - zout
-  - lambda
-  - sza
-  - edir
-  - eglo
-  - edn
-  - eup
-  - enet
-  - albedo
-  rte_solver: disort
-  source: thermal
-  transmittance_source: default
-  viewing_geometry: nadir
-  wavelength_nm:
-  - 3500
-  - 50000

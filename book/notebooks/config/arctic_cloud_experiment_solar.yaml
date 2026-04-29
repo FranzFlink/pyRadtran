@@ -5,14 +5,41 @@ execution:
   timeout_seconds: 3600
 output:
   filename_prefix: arctic_cloud_experiment_solar
-  filename_suffix: .nc
-  netcdf_encoding: null
-  variable_encoding: {}
+  filename_suffix: _results.nc
+  netcdf_encoding:
+    complevel: 5
+    zlib: true
 paths:
-  working_dir: work
+  atmosphere_profile: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  output_dir: pyradtran_output
+  radiosonde_base: /path/to/radiosonde/data
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
+  working_dir: pyradtran_work
 simulation_defaults:
+  albedo_value: 0.85
+  clouds:
+    cloud_fraction: 1.0
+    cloud_source: parametric
+    cloud_type: wc
+    effective_radius_um: 10.0
+    enabled: false
+    era5_lat: null
+    era5_lon: null
+    era5_time: null
+    ic_file: null
+    ice_content_g_m3: 0.0
+    layer_bottom_km: 1.0
+    layer_top_km: 2.0
+    water_content_g_m3: 0.1
+    wc_file: null
+  h2o_mm: 2.0
+  h2o_source: fixed
   integrate_wavelength: true
   mol_abs_param: reptran coarse
+  output_altitudes_km:
+  - 0.0
   output_columns:
   - zout
   - lambda
@@ -24,8 +51,13 @@ simulation_defaults:
   - enet
   - albedo
   - heat
+  ozone_du: 300.0
+  parameter_overrides: {}
   rte_solver: disort
+  source: solar
+  surface_temperature_k: 273.15
+  sza: null
+  viewing_geometry: nadir
   wavelength_nm:
   - 300
   - 3000
-  source: solar

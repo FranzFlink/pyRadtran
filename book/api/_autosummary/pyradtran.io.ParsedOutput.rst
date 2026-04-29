@@ -17,7 +17,6 @@ pyradtran.io.ParsedOutput
 
       
          ~ParsedOutput.__init__
-         ~ParsedOutput.to_xarray
       
          ~ParsedOutput.altitudes
          ~ParsedOutput.is_brightness_temperature
