@@ -229,24 +229,24 @@ class ERA5AtmosphereGenerator:
             output_path = Path(output_filepath)
             output_path.parent.mkdir(parents=True, exist_ok=True)
             
+            # Sort by pressure ascending (TOA to surface: low pressure first)
+            sorted_indices = np.argsort(pressure_hpa.values.ravel())
+            p_sorted = pressure_hpa.values.ravel()[sorted_indices]
+            t_sorted = temperature_k.values.ravel()[sorted_indices]
+            h2o_sorted = h2o.values.ravel()[sorted_indices]
+
+            # Drop consecutive duplicate pressure values (libradtran requires strictly monotonic)
+            keep = np.concatenate(([True], np.diff(p_sorted) != 0))
+            p_sorted = p_sorted[keep]
+            t_sorted = t_sorted[keep]
+            h2o_sorted = h2o_sorted[keep]
+
             with open(output_path, 'w') as f:
                 f.write("# ERA5 atmosphere profile in libradtran radiosonde style\n")
                 f.write(f"# p(hPa)  T(K)  h2o({h2o_unit}) \n")
                 
-                # Sort by altitude (high to low) for LibRadtran (TOA to surface)
-                # This means sorting by pressure (low to high) since high altitude = low pressure
-                sorted_indices = np.argsort(pressure_hpa.values)
-                
-                for idx in sorted_indices:
-                    #f.write(f"{altitude_km.values[idx]:.3f}  ")
-                    f.write(f"{pressure_hpa.values[idx]:.2f}  ")
-                    f.write(f"{temperature_k.values[idx]:.2f}  ")
-                    # f.write(f"{air_number_density_cm3.values[idx]:.3e}  ")
-                    # f.write(f"{o3_nd.values[idx]:.3e}  ")
-                    # f.write(f"{o2_nd.values[idx]:.3e}  ")
-                    f.write(f"{h2o.values[idx]:.3e}\n")
-                    # f.write(f"{co2_nd.values[idx]:.3e}  ")
-                    # f.write(f"{no2_nd.values[idx]:.3e}\n")
+                for p_val, t_val, h2o_val in zip(p_sorted, t_sorted, h2o_sorted):
+                    f.write(f"{p_val:.2f}  {t_val:.2f}  {h2o_val:.3e}\n")
             
             logger.info(f"Created ERA5 atmosphere file: {output_path} with H2O unit {h2o_unit}")
             return output_path

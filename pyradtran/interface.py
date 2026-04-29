@@ -232,15 +232,15 @@ def execute_simulation_batch(
                 dt = pd.to_datetime(t).to_pydatetime()
                 point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
                 
-                # Check if we already generated it
+                # Check if we already generated it for this time point
                 if point_id not in era5_atmosphere_files:
                     atm_file = atm_dir / f"era5_atm_{point_id}.dat"
-                    if not atm_file.exists():
-                        era5_generator.create_era5_atmosphere_file(
-                            era5_atmosphere, lat, lon, dt, atm_file
-                        )
+                    # Always regenerate to avoid stale files from previous runs
+                    era5_generator.create_era5_atmosphere_file(
+                        era5_atmosphere, lat, lon, dt, atm_file
+                    )
                     era5_atmosphere_files[point_id] = atm_file
-                    logger.debug(f"Created/Found ERA5 atmosphere file for {point_id}: {atm_file}")
+                    logger.debug(f"Created ERA5 atmosphere file for {point_id}: {atm_file}")
                     
             except Exception as e:
                 logger.warning(f"Failed to create ERA5 atmosphere file for point {i}: {e}")
@@ -819,7 +819,8 @@ class PyRadtranAccessor:
                 if coord not in era5_atmosphere.coords:
                     raise PyRadtranError(f"Required coordinate '{coord}' not found in ERA5 atmosphere dataset")
                     
-            logger.info(f"ERA5 atmosphere dataset validated with {len(era5_atmosphere.pressure_level)} pressure levels")
+            n_pressure_levels = era5_atmosphere.sizes.get('pressure_level', era5_atmosphere.pressure_level.size)
+            logger.info(f"ERA5 atmosphere dataset validated with {n_pressure_levels} pressure levels")
 
 
 # Expose main functions
