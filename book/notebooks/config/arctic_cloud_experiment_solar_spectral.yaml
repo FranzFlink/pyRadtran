@@ -1,0 +1,33 @@
+execution:
+  cleanup_temp_files: false
+  debug_mode: false
+  max_workers: 48
+  timeout_seconds: 3600
+output:
+  filename_prefix: arctic_cloud_experiment_solar
+  filename_suffix: _results.nc
+  netcdf_encoding:
+    complevel: 5
+    zlib: true
+simulation_defaults:
+  h2o_mm: 2.0
+  h2o_source: fixed
+  integrate_wavelength: false
+  mol_abs_param: reptran fine
+  output_columns:
+  - zout
+  - lambda
+  - sza
+  - edir
+  - eglo
+  - edn
+  - eup
+  - enet
+  - albedo
+  ozone_du: 300.0
+  parameter_overrides: {}
+  rte_solver: disort
+  source: solar
+  wavelength_nm:
+  - 300
+  - 3000

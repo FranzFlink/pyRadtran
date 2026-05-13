@@ -10,12 +10,8 @@ output:
     complevel: 5
     zlib: true
 paths:
-  atmosphere_profile: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
-  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
-  libradtran_data: /opt/libRadtran-2.0.6/data
   output_dir: pyradtran_output
   radiosonde_base: /path/to/radiosonde/data
-  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
   working_dir: pyradtran_work
 simulation_defaults:
   albedo_value: 0.85
