@@ -39,14 +39,14 @@ simulation_defaults:
   output_columns:
   - zout
   - lambda
-  - sza
+#  - sza
   - edir
   - eglo
   - edn
   - eup
   - enet
   - albedo
-  - heat
+#  - heat
   ozone_du: 300.0
   parameter_overrides: {}
   rte_solver: disort

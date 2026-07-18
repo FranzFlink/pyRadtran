@@ -1,7 +1,7 @@
 execution:
   cleanup_temp_files: false
   debug_mode: false
-  max_workers: 48
+  max_workers: 24
   timeout_seconds: 3600
 output:
   filename_prefix: arctic_cloud_experiment_solar

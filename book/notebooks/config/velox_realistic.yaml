@@ -1,0 +1,25 @@
+execution:
+  cleanup_temp_files: false
+  debug_mode: false
+  max_workers: 24
+  timeout_seconds: 120
+
+simulation_defaults:
+  integrate_wavelength: true
+  mol_abs_param: reptran medium
+  output_columns:
+    - zout
+    - lambda
+    - eup
+    - edn
+    - edir
+  ozone_du: 300.0
+  rte_solver: disort
+  source: thermal
+  surface_temperature_k: 248.4
+  # Wavelength covers all six VELOX channels (7.70–12.50 µm).
+  # The per-channel wavelength range is overridden at runtime via
+  # params={'wavelength': 'wl_min wl_max'}.
+  wavelength_nm:
+    - 7700
+    - 12500
