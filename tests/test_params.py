@@ -193,3 +193,8 @@ class TestResolvePoint:
         with pytest.raises(ValidationError) as exc:
             r.validate_var_targets(ds)
         assert "Var(" in str(exc.value)
+
+    def test_missing_var_target_at_point_raises(self, minimal_config):
+        r = ParamResolver(minimal_config, {"albedo": Var("absent")})
+        with pytest.raises(ValidationError, match="absent"):
+            r.resolve_point(_point_ds(other=1.0))

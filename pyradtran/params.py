@@ -321,7 +321,10 @@ class ParamResolver:
         errors = []
         for key, ref in self.var_refs.items():
             if ref.name not in point_ds:
-                skipped.append(key)
+                errors.append(
+                    f"'{key}' references dataset variable '{ref.name}' "
+                    f"which is missing from the point"
+                )
                 continue
             value = point_ds[ref.name].values
             if hasattr(value, "item") and getattr(value, "size", 1) == 1:
