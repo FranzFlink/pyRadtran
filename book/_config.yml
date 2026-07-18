@@ -7,6 +7,8 @@ logo: logo.png
 copyright: "2025"
 
 # Force re-execution of notebooks on each build.
+only_build_toc_files: true
+
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: "off"  # Notebooks are pre-executed locally; outputs committed to repo

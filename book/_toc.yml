@@ -7,58 +7,49 @@ parts:
   - caption: Getting Started
     chapters:
     - file: installation
-    - file: usage
+    - file: notebooks/quickstart
 
-  - caption: Quickstart Tutorials
+  - caption: User Guide
+    chapters:
+    - file: guide/configuration
+    - file: guide/parameters
+    - file: guide/outputs
+    - file: guide/debugging
+    - file: notebooks/parameters_deep_dive
+
+  - caption: Tutorials
     chapters:
     - file: notebooks/index
-    - file: notebooks/quickstart
     - file: notebooks/albedo_test
     - file: notebooks/thermal
     - file: notebooks/thermal_imager
     - file: notebooks/solar_spectral
     - file: notebooks/era5_atmosphere
-
-  - caption: Clouds
-    chapters:
     - file: notebooks/water_cloud
     - file: notebooks/mixed_phase_cloud
-    - file: notebooks/arctic_cloud_experiment
-
-  - caption: Radiosondes & Atmosphere
-    chapters:
     - file: notebooks/get_radiosonde
-#    - file: notebooks/radiosonde
 
-  - caption: Advanced Topics
+  - caption: Case Studies
     chapters:
-    - file: notebooks/thermal_imager_2
+    - file: notebooks/arctic_cloud_experiment
     - file: notebooks/velox_realistic_channels
+    - file: notebooks/thermal_imager_2
+    - file: notebooks/spectral_albedo_shift_cloud
     - file: notebooks/shupe_and_intrieri_plot
     - file: notebooks/era5_seasonal_sea_ice_profiles
-    - file: notebooks/spectral_albedo_shift_cloud
-    
-  - caption: Campaigns
-    chapters:
     - file: notebooks/halo-ac3_bbr_all_aircraft
     - file: notebooks/radiosonde_thermal
     - file: notebooks/radiosonde_solar_spectral
-
-  - caption: Data Processing & Campaigns
-    chapters:
     - file: notebooks/sea_ice_era5
     - file: notebooks/sea_ice_era5_plotting
     - file: notebooks/carra_atmosphere
     - file: notebooks/stn2024
     - file: notebooks/nya_rad
 
-  - caption: Configuration & Examples
+  - caption: Reference
     chapters:
     - file: examples/index
     - file: notebooks/config/index
-
-  - caption: Reference
-    chapters:
     - file: api/index
     - file: contributing
     - file: changelog

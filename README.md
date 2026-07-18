@@ -109,7 +109,7 @@ ds_sim = ds.pyradtran.run(
 Preview the generated input file (with per-line provenance) without running
 anything via `ds.pyradtran.explain()`.
 
-> **Tip:** Always check your input file! Set `cleanup_temp_files: false` in your config to inspect the generated libRadtran `.inp` files in the working directory. See the [documentation](https://franzflink.github.io/pyRadtran/intro.html#check-your-input-file) for debugging guidance.
+> **Tip:** Always check your input file! Set `cleanup_temp_files: false` in your config to inspect the generated libRadtran `.inp` files in the working directory. See the [documentation](https://franzflink.github.io/pyRadtran/guide/debugging.html) for debugging guidance.
 
 ## Acknowledgments
 

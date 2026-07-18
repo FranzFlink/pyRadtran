@@ -49,6 +49,12 @@
 - ERA5 humidity unit (RH vs MMR) detected from the atmosphere file header
 
 ### Documentation & Notebooks
+- Restructured the book: slim landing page with a "where to go next" map,
+  a four-page User Guide (configuration / parameters / results /
+  debugging), tutorials separated from campaign case studies
+- New executed deep-dive notebook covering the whole parameter system:
+  layers and provenance, validation, `describe()`, repeatable options,
+  `Raw`, status codes, channels, and jacobians
 - Overhauled all 21 Jupyter Book notebooks: standardized titles, structure, and API usage
 - Fixed broken TOC references and added 11 previously orphaned notebooks to the book
 - Filled the "Check your input file!" section with detailed debugging guidance

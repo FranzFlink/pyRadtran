@@ -162,4 +162,4 @@ All configuration files follow a common structure with the following main sectio
 - **`execution`**: Runtime and performance settings
 - **`output`**: Output format and naming conventions
 
-For detailed information about each parameter, refer to the [Usage](../usage.md) documentation.
+For detailed information about each parameter, refer to {doc}`/guide/configuration` and {doc}`/guide/parameters`.
