@@ -33,8 +33,10 @@ parts:
   - caption: Advanced Topics
     chapters:
     - file: notebooks/thermal_imager_2
+    - file: notebooks/velox_realistic_channels
     - file: notebooks/shupe_and_intrieri_plot
     - file: notebooks/era5_seasonal_sea_ice_profiles
+    - file: notebooks/spectral_albedo_shift_cloud
     
   - caption: Campaigns
     chapters:

@@ -9,9 +9,13 @@ This is the auto-generated API reference for the `pyradtran` package.
    :toctree: _autosummary
    :recursive:
 
+   channels
+   clouds
    config
    core
    exceptions
+   input_builder
    interface
    io
+   params
    utils

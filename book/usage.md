@@ -61,23 +61,115 @@ execution:
 
 Paths like `libradtran_bin`, `libradtran_data`, `atmosphere_profile`, and `solar_spectrum` are typically set once in your master config (`~/.pyradtran/config.yaml`) and inherited by all simulations. See {doc}`installation` for setup instructions.
 
-### Using `parameter_overrides`
+## Unified Parameter Passing: `params`
 
-You can override individual libRadtran parameters at runtime without changing your YAML config. This is especially useful for parameter sweeps or injecting cloud files:
+All runtime parameters go through a single `params` mapping. A key can be:
+
+1. **A registry parameter** (`albedo`, `sza`, `sur_temperature`, `zout`, `brdf_rpv_type`, `mol_modify O3`, …) — the value is validated (type, physical range) before any simulation runs
+2. **A raw uvspec keyword** (anything from the libRadtran manual, e.g. `crs_model`) — passed through unvalidated as an escape hatch
+3. **A dotted config path** (`simulation_defaults.wavelength_nm`, `execution.max_workers`, …) — applied to the configuration instead of the input file
+
+The value can be:
+
+- **A literal** — the same value for every simulated point
+- **`Var("name")`** — resolved per point from the variable `name` in your input dataset
 
 ```python
+from pyradtran import Var
+
 ds_sim = ds.pyradtran.run(
     config_path=Path('config/solar_config.yaml'),
-    parameter_overrides={
-        'albedo': 0.8,
-        'wc_file': '1D path/to/cloud_file.dat',
+    params={
+        'albedo': Var('surface_albedo'),   # per-point from ds.surface_albedo
+        'mol_modify O3': 320.0,            # same for every point, validated in DU
+        'crs_model': 'rayleigh Bodhaine',  # raw uvspec keyword, passed through
+        'simulation_defaults.wavelength_nm': [400, 700],  # config override
     },
 )
 ```
 
+Points where a `Var` value is NaN simply omit that parameter (the config
+default applies); the coordinates themselves being NaN skips the point and
+records `status=2` in the result.
+
 ```{tip}
-The [libRadtran manual](https://www.libradtran.org/doc/libRadtran.pdf) will be your best friend when working with pyRadtran! You can set *any* libRadtran parameter via `parameter_overrides` — just make sure to use the correct parameter names as documented in the manual.
+The [libRadtran manual](https://www.libradtran.org/doc/libRadtran.pdf) will be your best friend when working with pyRadtran! You can set *any* libRadtran parameter via `params` — just make sure to use the correct parameter names as documented in the manual.
 ```
+
+```{note}
+The old `parameter_overrides=`, `albedo_var=`, `surface_temperature_var=`,
+`surface_type_var=` and `altitude_var=` keyword arguments still work but are
+deprecated — they emit a `DeprecationWarning` and translate onto `params`
+internally. Migrate with `albedo_var="x"` → `params={"albedo": Var("x")}` and
+`parameter_overrides={...}` → `params={...}`.
+```
+
+### Previewing the input file: `explain()`
+
+`ds.pyradtran.explain()` renders the exact uvspec input file for one point —
+without running anything — and annotates every line with the layer it came
+from (`config`, `params-literal`, `dataset-var`, `unvalidated`):
+
+```python
+print(ds.pyradtran.explain(
+    point={'time': ds.time[0]},
+    params={'albedo': Var('surface_albedo')},
+    config_path=config_path,
+))
+```
+
+### Output columns and axes
+
+The `output_user` line is derived from `output_columns` in your config (or a
+per-run `params={'output_user': ...}` override). pyRadtran automatically adds
+the `lambda` column for spectral runs and the `zout` column for multi-altitude
+runs: the output parser needs them to reconstruct the `wavelength` and
+`altitude` axes, so you no longer have to remember to list them yourself.
+
+### Failure reporting
+
+Every result carries a per-point `status` variable (`0` ok, `1` uvspec
+failure, `2` skipped due to NaN coordinates). When at least one point fails, a
+`failures_<timestamp>.log` file with the captured stderr and the kept `.inp`
+path is written to the working directory.
+
+## Instrument Channels & Brightness Temperature
+
+Convolve spectral results with instrument spectral response functions (SRFs),
+either as post-processing or directly in `run()`:
+
+```python
+import xarray as xr
+from pyradtran import convolve_channels, brightness_temperature
+
+# srf: DataArray with dims (channel, wavelength), wavelength in nm
+channel_ds = ds.pyradtran.run(config_path=config_path, channels=srf)
+
+# thermal radiances -> brightness temperature (uvspec default units)
+tb = brightness_temperature(channel_ds['uu'], wavelength_nm=10500.0)
+```
+
+Pass `keep_spectral=True` to retain the original spectral variables as
+`<name>_spectral` alongside the channel-averaged ones.
+
+## Sensitivity Kernels: `jacobian()`
+
+`ds.pyradtran.jacobian(param, delta)` runs the batch twice (base and
+perturbed) and returns the finite-difference kernel
+`(perturbed - base) / delta`:
+
+```python
+jac = ds.pyradtran.jacobian(
+    'albedo', 0.01,
+    params={'albedo': 0.5},   # base value; falls back to the config default
+    config_path=config_path,
+    show_progress=False,
+)
+jac['eup']   # d(eup)/d(albedo), same dims as a normal result
+```
+
+The perturbed parameter must be a scalar (a `params` literal or a config
+default) — perturbing a per-point `Var` is rejected.
 
 
 ## Working with Results
@@ -107,7 +199,7 @@ ds_sim.edir.sel(wavelength=550, method='nearest').plot()
 
 pyRadtran supports several approaches for including clouds:
 
-1. **Parametric clouds via `parameter_overrides`**: Pass cloud properties directly (see the [Water Cloud](notebooks/water_cloud) notebook)
+1. **Parametric clouds via `params`**: Pass cloud properties directly (see the [Water Cloud](notebooks/water_cloud) notebook)
 2. **Cloud files**: Generate cloud profile files and pass them via `wc_file` / `ic_file`
 3. **Automated cloud generation**: Pass cloud variables in your dataset using `cloud_wc_var`, `cloud_top_var`, etc.
 

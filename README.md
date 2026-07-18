@@ -89,6 +89,26 @@ print(ds_sim)
 ds_sim.edir.plot()
 ```
 
+Runtime parameters go through the unified `params` mapping — literals apply to
+every point, `Var("name")` resolves per point from your dataset, and dotted
+keys override the configuration:
+
+```python
+from pyradtran import Var
+
+ds_sim = ds.pyradtran.run(
+    config_path=Path('config/spectral_config.yaml'),
+    params={
+        'albedo': Var('surface_albedo'),               # per-point value
+        'mol_modify O3': 320.0,                        # validated literal
+        'simulation_defaults.wavelength_nm': [400, 700],  # config override
+    },
+)
+```
+
+Preview the generated input file (with per-line provenance) without running
+anything via `ds.pyradtran.explain()`.
+
 > **Tip:** Always check your input file! Set `cleanup_temp_files: false` in your config to inspect the generated libRadtran `.inp` files in the working directory. See the [documentation](https://franzflink.github.io/pyRadtran/intro.html#check-your-input-file) for debugging guidance.
 
 ## Acknowledgments
