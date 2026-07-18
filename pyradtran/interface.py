@@ -1101,6 +1101,78 @@ class PyRadtranAccessor:
             dt, scalar(lat_var), scalar(lon_var), resolved_params=resolved
         )
 
+    def jacobian(
+        self,
+        param: str,
+        delta: float,
+        params: Optional[Dict[str, Any]] = None,
+        config_path: Optional[Union[str, Path]] = None,
+        config: Optional[SimulationConfig] = None,
+        **run_kwargs,
+    ) -> xr.Dataset:
+        """Finite-difference sensitivity kernel for one scalar parameter.
+
+        Runs the batch twice (base and ``param + delta``) and returns
+        ``(perturbed - base) / delta`` with the same dimensions.
+
+        Parameters
+        ----------
+        param : str
+            Registry parameter to perturb (must resolve to a scalar:
+            a ``params`` literal or a config default — not a ``Var``).
+        delta : float
+            Perturbation size in the parameter's units.
+        params : dict, optional
+            Base parameter mapping (same as :meth:`run`).
+        config_path, config
+            Configuration source, same as :meth:`run`.
+        **run_kwargs
+            Forwarded to :meth:`run` (e.g. ``show_progress=False``).
+
+        Returns
+        -------
+        xarray.Dataset
+            Kernel dataset; attrs ``jacobian_param``, ``jacobian_delta``.
+
+        Raises
+        ------
+        ValidationError
+            If *param* is a ``Var`` reference or no base value exists.
+        """
+        from .exceptions import ValidationError
+        from .params import CONFIG_FIELD_MAP
+
+        params = dict(params or {})
+        base_value = params.get(param)
+        if isinstance(base_value, Var):
+            raise ValidationError(
+                f"jacobian() cannot perturb '{param}': it is a per-point "
+                f"Var reference; supply a scalar literal instead"
+            )
+        cfg = config if config is not None else load_config(config_path)
+        if base_value is None:
+            field_name = CONFIG_FIELD_MAP.get(param)
+            if field_name is not None:
+                base_value = getattr(cfg.simulation_defaults, field_name, None)
+        if base_value is None:
+            raise ValidationError(
+                f"jacobian() needs a base value for '{param}': set it in "
+                f"params or in the configuration"
+            )
+
+        run_kwargs.setdefault("save_to_file", False)
+        base_params = {**params, param: float(base_value)}
+        pert_params = {**params, param: float(base_value) + float(delta)}
+
+        base = self.run(config=cfg, params=base_params, **run_kwargs)
+        perturbed = self.run(config=cfg, params=pert_params, **run_kwargs)
+
+        jac = (perturbed - base) / float(delta)
+        jac.attrs["jacobian_param"] = param
+        jac.attrs["jacobian_delta"] = float(delta)
+        jac.attrs["jacobian_base_value"] = float(base_value)
+        return jac
+
     def _validate_input_dataset(
         self,
         time_var: str,
