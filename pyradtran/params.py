@@ -200,9 +200,81 @@ CONFIG_FIELD_MAP: Dict[str, str] = {
 }
 
 
+class ParamResolver:
+    """Resolve a user ``params`` mapping into validated per-point values.
+
+    Responsibilities:
+
+    * Apply and **consume** dotted config overrides
+      (``"simulation_defaults.albedo_value"``) onto *config* — they never
+      reach the uvspec input file.
+    * Split remaining entries into literals (validated immediately) and
+      :class:`Var` references (validated per point).
+    * Tag every value with its provenance.
+
+    Parameters
+    ----------
+    config : SimulationConfig
+        Mutated in place by dotted keys.
+    params : dict, optional
+        Mapping of registry keys / raw uvspec keywords to literal values
+        or :class:`Var` references.
+
+    Raises
+    ------
+    ValidationError
+        If any literal value fails its registry validation. All offending
+        keys are reported in one exception.
+    """
+
+    def __init__(self, config, params: Optional[Dict[str, Any]] = None):
+        self.config = config
+        remaining = dict(params or {})
+
+        # 1. Dotted config overrides: apply to config, consume (B1 fix).
+        for key in [k for k in remaining if "." in k and " " not in k]:
+            value = remaining.pop(key)
+            section_name, _, field_name = key.partition(".")
+            section = getattr(config, section_name, None)
+            if section is not None and hasattr(section, field_name):
+                setattr(section, field_name, value)
+                logger.info(f"Overriding config: {key} = {value}")
+            else:
+                logger.warning(f"Unknown config parameter: {key}")
+
+        # 2. Split literals vs Var refs.
+        self._static: Dict[str, Tuple[Any, str]] = {}
+        self.var_refs: Dict[str, Var] = {}
+        errors = []
+        for key, value in remaining.items():
+            if isinstance(value, Var):
+                self.var_refs[key] = value
+                continue
+            spec = REGISTRY.get(key)
+            if spec is None:
+                self._static[key] = (value, PROV_UNVALIDATED)
+                continue
+            try:
+                spec.validate(value)
+            except ValidationError as e:
+                errors.append(str(e))
+                continue
+            self._static[key] = (value, PROV_LITERAL)
+
+        if errors:
+            raise ValidationError(
+                "Invalid parameter value(s): " + "; ".join(errors)
+            )
+
+    def static_params(self) -> Dict[str, Tuple[Any, str]]:
+        """Return ``key -> (value, provenance)`` for point-independent values."""
+        return dict(self._static)
+
+
 __all__ = [
     "Var",
     "ParamSpec",
+    "ParamResolver",
     "REGISTRY",
     "CONFIG_FIELD_MAP",
     "PROV_CONFIG",

@@ -81,3 +81,61 @@ class TestConfigFieldMap:
     def test_all_map_keys_in_registry(self):
         for key in CONFIG_FIELD_MAP:
             assert key in REGISTRY
+
+
+from pyradtran.params import (
+    PROV_LITERAL,
+    PROV_UNVALIDATED,
+    ParamResolver,
+)
+
+
+class TestParamResolverStatic:
+    def test_literals_become_static_params(self, minimal_config):
+        r = ParamResolver(minimal_config, {"albedo": 0.85, "sza": 60.0})
+        static = r.static_params()
+        assert static["albedo"] == (0.85, PROV_LITERAL)
+        assert static["sza"] == (60.0, PROV_LITERAL)
+
+    def test_unknown_key_is_unvalidated_passthrough(self, minimal_config):
+        r = ParamResolver(minimal_config, {"crs_model": "rayleigh Bodhaine"})
+        assert r.static_params()["crs_model"] == (
+            "rayleigh Bodhaine",
+            PROV_UNVALIDATED,
+        )
+
+    def test_literal_validation_raises_before_run(self, minimal_config):
+        with pytest.raises(ValidationError):
+            ParamResolver(minimal_config, {"albedo": 1.5})
+
+    def test_validation_error_lists_all_offenders(self, minimal_config):
+        with pytest.raises(ValidationError) as exc:
+            ParamResolver(minimal_config, {"albedo": 1.5, "sza": 999.0})
+        assert "albedo" in str(exc.value)
+        assert "sza" in str(exc.value)
+
+    def test_dotted_keys_applied_to_config_and_consumed(self, minimal_config):
+        # B1 regression: dotted keys must never reach uvspec params
+        r = ParamResolver(
+            minimal_config, {"simulation_defaults.albedo_value": 0.3}
+        )
+        assert minimal_config.simulation_defaults.albedo_value == 0.3
+        assert "simulation_defaults.albedo_value" not in r.static_params()
+
+    def test_unknown_dotted_key_warns_and_is_dropped(self, minimal_config, caplog):
+        import logging
+
+        with caplog.at_level(logging.WARNING):
+            r = ParamResolver(minimal_config, {"simulation_defaults.nope": 1})
+        assert "simulation_defaults.nope" not in r.static_params()
+        assert "Unknown config parameter" in caplog.text
+
+    def test_var_refs_separated(self, minimal_config):
+        r = ParamResolver(minimal_config, {"albedo": Var("alb_col")})
+        assert r.var_refs == {"albedo": Var("alb_col")}
+        assert "albedo" not in r.static_params()
+
+    def test_none_params_ok(self, minimal_config):
+        r = ParamResolver(minimal_config, None)
+        assert r.static_params() == {}
+        assert r.var_refs == {}
