@@ -72,7 +72,15 @@ from .io import (  # noqa: E402
 )
 from .utils import RadiosondeFinder  # noqa: E402
 from .channels import brightness_temperature, convolve_channels  # noqa: E402
-from .params import REGISTRY, ParamResolver, ParamSpec, Var  # noqa: E402
+from .params import (  # noqa: E402
+    REGISTRY,
+    ParamResolver,
+    ParamSpec,
+    Raw,
+    Var,
+    describe,
+    search_options,
+)
 
 # Import cloud functionality if available
 try:
@@ -117,6 +125,9 @@ __all__ = [
     "NetCDFSaver",
     # Parameters & channels
     "Var",
+    "Raw",
+    "describe",
+    "search_options",
     "ParamSpec",
     "ParamResolver",
     "REGISTRY",

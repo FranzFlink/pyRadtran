@@ -555,3 +555,47 @@ class TestValueNormalisation:
                 {"wc_modify": ["tau550 set 12", "granite set 1"]},
                 schema=schema,
             )
+
+
+class TestDescribe:
+    def test_describe_signature_and_help(self, mini_schema):
+        from pyradtran.params import describe
+
+        txt = describe("ic_properties", schema=mini_schema)
+        assert "ic_properties" in txt
+        assert "fu|baum_v36|yang" in txt
+        assert "[interpolate]" in txt  # optional token bracketed
+
+    def test_describe_cleans_latex(self):
+        from pyradtran.params import describe
+
+        schema = {
+            "albedo": {
+                "name": "albedo", "group": "Surface",
+                "help": "Lambertian albedo.",
+                "doc": r"Set the \code{albedo} of the surface, see \file{ALB.DAT}.",
+                "non_unique": False, "mandatory": False,
+                "parents": [], "childs": [],
+                "tokens": [{"kind": "value", "datatype": "float",
+                            "valid_range": [0.0, 1.0], "optional": False}],
+            }
+        }
+        txt = describe("albedo", schema=schema)
+        assert "\\code" not in txt
+        assert "`albedo`" in txt
+        assert "ALB.DAT" in txt
+        assert "[0.0, 1.0]" in txt
+
+    def test_describe_unknown_raises(self, mini_schema):
+        from pyradtran.params import describe
+
+        with pytest.raises(KeyError):
+            describe("nonexistent_thing", schema=mini_schema)
+
+    def test_search_options(self, mini_schema):
+        from pyradtran.params import search_options
+
+        hits = search_options("cloud", schema=mini_schema)
+        assert "ic_properties" in hits  # group "Clouds"
+        assert "cloudcover" in hits
+        assert "albedo" not in hits

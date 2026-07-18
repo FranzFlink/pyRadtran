@@ -352,6 +352,125 @@ def _unknown_option_error(base: str, key: str, schema: Dict[str, Any]) -> str:
     )
 
 
+def _clean_latex(text: str) -> str:
+    """Light cleanup of libRadtran's LaTeX-flavoured documentation."""
+    import re
+
+    text = re.sub(r"\\code\{([^}]*)\}", r"`\1`", text)
+    text = re.sub(r"\\file\{([^}]*)\}", r"\1", text)
+    text = re.sub(r"\\fcode\{([^}]*)\}", r"\1", text, flags=re.S)
+    text = re.sub(r"\\emph\{([^}]*)\}", r"\1", text)
+    text = re.sub(r"\\(begin|end)\{[^}]*\}", "", text)
+    text = re.sub(r"\\item\[([^\]]*)\]", r"- \1:", text)
+    text = re.sub(r"\\item\b", "-", text)
+    text = re.sub(r"\\parameter\{([^}]*)\}", r"** \1 **", text)
+    text = re.sub(r"\\(ifthreedmystic|ifmystic)\b", "", text)
+    text = text.replace(r"\_", "_").replace(r"\#", "#").replace(r"\%", "%")
+    text = re.sub(r"~?\\(ref|label)\{[^}]*\}", "", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def _signature(entry: Dict[str, Any]) -> str:
+    """Render a usage signature like ``wc_modify <gg|ssa|tau|tau550> <set|scale> <float>``."""
+    parts = [entry["name"]]
+    for t in entry.get("tokens", []):
+        if t["kind"] == "choice":
+            body = "|".join(t.get("choices", []))
+            if t.get("file_allowed"):
+                body += "|<file>"
+        else:
+            body = t.get("datatype", "str")
+            vr = t.get("valid_range")
+            if vr is not None:
+                body += f" in [{vr[0]}, {vr[1]}]"
+        parts.append(f"[{body}]" if t.get("optional") else f"<{body}>")
+    if entry.get("unmodeled"):
+        parts.append("<...>")
+    return " ".join(parts)
+
+
+def _resolve_schema_arg(schema, config):
+    if schema is not None:
+        return schema
+    if config is None:
+        from .config import load_config
+
+        config = load_config()
+    return get_schema(config)
+
+
+def describe(name: str, config=None, schema: Optional[Dict[str, Any]] = None) -> str:
+    """Return usage, help, and documentation for one uvspec option.
+
+    Parameters
+    ----------
+    name : str
+        The uvspec option name (e.g. ``"wc_modify"``).
+    config : SimulationConfig, optional
+        Used to locate the local libRadtran install; package defaults
+        when *None*.
+    schema : dict, optional
+        Pre-loaded schema (mainly for tests).
+
+    Raises
+    ------
+    KeyError
+        If the option is unknown, with close-match suggestions.
+    RuntimeError
+        If no local libRadtran schema is available.
+    """
+    schema = _resolve_schema_arg(schema, config)
+    if schema is None:
+        raise RuntimeError(
+            "No local libRadtran option schema available; check that "
+            "paths.libradtran_bin points inside a libRadtran source tree"
+        )
+    entry = schema.get(name)
+    if entry is None:
+        import difflib
+
+        matches = difflib.get_close_matches(name, sorted(schema), n=3)
+        hint = f"; close matches: {', '.join(matches)}" if matches else ""
+        raise KeyError(f"Unknown uvspec option '{name}'{hint}")
+
+    lines = [
+        f"{_signature(entry)}",
+        f"group: {entry.get('group', '?')}"
+        + ("   (repeatable)" if entry.get("non_unique") else ""),
+    ]
+    if entry.get("parents"):
+        lines.append(f"requires: {', '.join(entry['parents'])}")
+    help_text = (entry.get("help") or "").strip()
+    doc_text = _clean_latex(entry.get("doc") or "")
+    if help_text and not doc_text.startswith(help_text[:40]):
+        lines.append("")
+        lines.append(help_text)
+    if doc_text:
+        lines.append("")
+        lines.append(doc_text)
+    return "\n".join(lines)
+
+
+def search_options(
+    text: str, config=None, schema: Optional[Dict[str, Any]] = None
+) -> list:
+    """Return uvspec option names whose name, group, or help match *text*."""
+    schema = _resolve_schema_arg(schema, config)
+    if schema is None:
+        return []
+    needle = text.lower()
+    hits = []
+    for name, entry in sorted(schema.items()):
+        haystack = " ".join(
+            [name, entry.get("group", ""), entry.get("help", ""),
+             entry.get("doc", "")]
+        ).lower()
+        if needle in haystack:
+            hits.append(name)
+    return hits
+
+
 class ParamResolver:
     """Resolve a user ``params`` mapping into validated per-point values.
 
@@ -571,6 +690,8 @@ __all__ = [
     "CONFIG_FIELD_MAP",
     "get_schema",
     "validate_against_schema",
+    "describe",
+    "search_options",
     "PROV_CONFIG",
     "PROV_LITERAL",
     "PROV_DATASET",
