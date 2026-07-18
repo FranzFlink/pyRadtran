@@ -133,3 +133,46 @@ class TestSza:
     def test_resolved_sza_wins_over_calculated(self, minimal_config):
         text, _ = build_text(minimal_config, resolved={"sza": (77.7, PROV_LITERAL)})
         assert "sza 77.7" in text
+
+
+# append to tests/test_input_builder.py
+import warnings
+
+
+class TestSimulationWiring:
+    def test_legacy_override_kwargs_warn_and_apply(self, minimal_config):
+        from pyradtran.core import Simulation
+
+        sim = Simulation(minimal_config)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            lines = sim.build_input_lines(
+                DT, 78.0, 15.0,
+                resolved_params=None,
+                override_albedo=0.9,
+            )
+        assert any(issubclass(x.category, DeprecationWarning) for x in w)
+        text = "\n".join(ln.text for ln in lines)
+        assert "albedo 0.9" in text
+
+    def test_legacy_parameter_overrides_still_work(self, minimal_config):
+        from pyradtran.core import Simulation
+
+        sim = Simulation(minimal_config)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", DeprecationWarning)
+            lines = sim.build_input_lines(
+                DT, 78.0, 15.0, parameter_overrides={"number_of_streams": 16}
+            )
+        text = "\n".join(ln.text for ln in lines)
+        assert "number_of_streams 16" in text
+
+    def test_resolved_params_reach_input(self, minimal_config):
+        from pyradtran.core import Simulation
+        from pyradtran.params import PROV_LITERAL
+
+        sim = Simulation(minimal_config)
+        lines = sim.build_input_lines(
+            DT, 78.0, 15.0, resolved_params={"albedo": (0.42, PROV_LITERAL)}
+        )
+        assert "albedo 0.42" in "\n".join(ln.text for ln in lines)
