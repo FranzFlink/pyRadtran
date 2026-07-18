@@ -532,17 +532,6 @@ class SimulationConfig:
                 except (TypeError, ValueError):
                     init_args[name] = value
 
-        # Add default values for missing keys
-        for f in fields(dataclass_type):
-            if f.name not in init_args:
-                if f.default is not dataclass_type.__dataclass_fields__[f.name].default:
-                    init_args[f.name] = f.default
-                elif (
-                    f.default_factory
-                    is not dataclass_type.__dataclass_fields__[f.name].default_factory
-                ):
-                    init_args[f.name] = f.default_factory()
-
         try:
             return dataclass_type(**init_args)
         except TypeError as e:

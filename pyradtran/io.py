@@ -239,7 +239,6 @@ class ERA5AtmosphereGenerator:
                     raise ValueError(
                         f"Required variable '{var}' not found in ERA5 dataset"
                     )
-            output_filepath
             for coord in required_coords:
                 if coord not in era5_ds.coords:
                     raise ValueError(
@@ -273,15 +272,19 @@ class ERA5AtmosphereGenerator:
                     # Data is already fully selected
                     profile_data = era5_ds
 
-            # check the unit of the q variable:
-            h2o_unit = profile_data.q.units
-            p_unit = profile_data.pressure_level.units
+            # Units: attrs may be stripped by xarray operations; default sanely
+            h2o_unit = profile_data["q"].attrs.get("units", "kg kg-1")
+            p_unit = profile_data["pressure_level"].attrs.get("units", "hPa")
 
-            # Extract variables and perform unit conversions
             if p_unit == "Pa":
                 pressure_pa = profile_data["pressure_level"]
-            if p_unit == "hPa":
-                pressure_pa = profile_data["pressure_level"] * 100  # Convert hPa to Pa
+            elif p_unit == "hPa":
+                pressure_pa = profile_data["pressure_level"] * 100
+            else:
+                raise InputGenerationError(
+                    f"Unsupported pressure unit '{p_unit}' in ERA5 dataset; "
+                    f"expected 'Pa' or 'hPa'"
+                )
 
             pressure_hpa = pressure_pa / 100
             temperature_k = profile_data["t"]
@@ -323,6 +326,8 @@ class ERA5AtmosphereGenerator:
             )
             return output_path
 
+        except InputGenerationError:
+            raise
         except Exception as e:
             raise InputGenerationError(
                 f"Failed to create ERA5 atmosphere file: {str(e)}"
@@ -939,9 +944,16 @@ class OutputToXarray:
         # The coordinates from input_ds should be preserved by unstacking.
         result_ds = xr.Dataset(data_vars, coords=coords)
 
-        # Add attributes
-        if hasattr(template_output, "metadata"):
-            result_ds.attrs.update(template_output.metadata)
+        # Add attributes (skip per-point fields — they only describe the
+        # template point, not the whole batch)
+        _POINT_KEYS = {"point_id", "time", "latitude", "longitude",
+                       "albedo", "surface_temperature", "surface_type",
+                       "altitude"}
+        if template_output.metadata:
+            result_ds.attrs.update(
+                {k: v for k, v in template_output.metadata.items()
+                 if k not in _POINT_KEYS}
+            )
 
         return result_ds
 

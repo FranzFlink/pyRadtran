@@ -153,3 +153,26 @@ class TestERA5AtmosphereGenerator:
             ERA5AtmosphereGenerator.create_era5_atmosphere_file(
                 ds, 70.0, 25.0, "2022-03-15T12:00", out
             )
+
+
+from pyradtran.exceptions import InputGenerationError
+
+
+class TestUnitHandling:
+    def test_unknown_pressure_unit_raises_clear_error(
+        self, synthetic_era5_ds, tmp_path
+    ):
+        ds = synthetic_era5_ds.copy(deep=True)
+        ds["pressure_level"].attrs["units"] = "millibars"
+        with pytest.raises(InputGenerationError, match="millibars"):
+            ERA5AtmosphereGenerator.create_era5_atmosphere_file(
+                ds, 70.0, 25.0, "2022-07-01T12:00", tmp_path / "atm.dat"
+            )
+
+    def test_missing_q_units_defaults_to_kg_kg(self, synthetic_era5_ds, tmp_path):
+        ds = synthetic_era5_ds.copy(deep=True)
+        ds["q"].attrs.pop("units", None)
+        out = ERA5AtmosphereGenerator.create_era5_atmosphere_file(
+            ds, 70.0, 25.0, "2022-07-01T12:00", tmp_path / "atm.dat"
+        )
+        assert out.exists()
