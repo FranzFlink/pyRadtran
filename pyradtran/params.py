@@ -40,6 +40,23 @@ class Var:
 
 
 @dataclass(frozen=True)
+class Raw:
+    """Marker: pass this value through without any validation.
+
+    Escape hatch for options the local libRadtran schema does not know
+    (e.g. a patched uvspec build). The value reaches the input file
+    verbatim, tagged with ``unvalidated`` provenance.
+
+    Parameters
+    ----------
+    value : Any
+        The literal value to emit.
+    """
+
+    value: Any
+
+
+@dataclass(frozen=True)
 class ParamSpec:
     """Declarative description of one uvspec parameter.
 
@@ -200,6 +217,141 @@ CONFIG_FIELD_MAP: Dict[str, str] = {
 }
 
 
+#: Memo of loaded schemas, keyed by libRadtran root path.
+_SCHEMA_MEMO: Dict[str, Optional[Dict[str, Any]]] = {}
+
+
+def get_schema(config) -> Optional[Dict[str, Any]]:
+    """Load (and memoise) the libRadtran option schema for *config*.
+
+    Returns *None* when no local libRadtran source tree is available;
+    validation then falls back to the curated registry only.
+    """
+    from .schema import find_libradtran_root, load_schema
+
+    root = find_libradtran_root(config)
+    key = str(root)
+    if key not in _SCHEMA_MEMO:
+        _SCHEMA_MEMO[key] = load_schema(root=root) if root else None
+    return _SCHEMA_MEMO[key]
+
+
+def _tokenize_value(key: str, value: Any):
+    """Split a params key/value pair into uvspec tokens after the option name.
+
+    Returns *None* when the value is not token-like (dict/list cloud
+    profiles), meaning schema validation must be skipped.
+    """
+    key_parts = key.split()
+    extra = key_parts[1:]
+    if isinstance(value, dict):
+        return None
+    if value is True or value is None or value == "":
+        return extra
+    if isinstance(value, (list, tuple)):
+        return extra + [str(v) for v in value]
+    if isinstance(value, str):
+        return extra + value.split()
+    return extra + [str(value)]
+
+
+def _is_number(tok: str) -> bool:
+    try:
+        float(tok)
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
+def validate_against_schema(entry: Dict[str, Any], key: str, value: Any):
+    """Validate one params entry against a schema option definition.
+
+    Raises
+    ------
+    ValidationError
+        On a choice mismatch, an out-of-range or non-numeric value,
+        a missing required token, or extra tokens on a fixed-arity
+        option.
+    """
+    tokens = _tokenize_value(key, value)
+    if tokens is None:
+        return  # dict-valued (cloud machinery) — validated downstream
+    if entry.get("unmodeled"):
+        return  # option name is valid; its signature isn't in the schema
+    queue = list(tokens)
+    spec_tokens = entry.get("tokens", [])
+
+    if not spec_tokens and queue:
+        raise ValidationError(
+            f"'{entry['name']}' takes no value, got {value!r}"
+        )
+
+    for i, st in enumerate(spec_tokens):
+        last = i == len(spec_tokens) - 1
+        if not queue:
+            if st.get("optional"):
+                continue
+            raise ValidationError(
+                f"'{key}' is missing a required value "
+                f"(expected {st.get('kind')} token #{i + 1})"
+            )
+        if st["kind"] == "choice":
+            tok = queue.pop(0)
+            choices = st.get("choices", [])
+            if tok.lower() not in [c.lower() for c in choices]:
+                if st.get("file_allowed"):
+                    continue
+                if st.get("optional"):
+                    queue.insert(0, tok)
+                    continue
+                raise ValidationError(
+                    f"'{key}': '{tok}' is not one of {sorted(choices)}"
+                )
+        else:
+            dtype = st.get("datatype", "str")
+            if dtype in ("floats", "ints", "lines", "files"):
+                rest, queue = queue, []
+                if dtype in ("floats", "ints"):
+                    bad = [t for t in rest if not _is_number(t)]
+                    if bad:
+                        raise ValidationError(
+                            f"'{key}' expects numbers, got {bad}"
+                        )
+            elif dtype in ("str", "file"):
+                if last:
+                    queue = []  # greedy: swallows the rest (e.g. zout list)
+                else:
+                    queue.pop(0)
+            else:  # float / int
+                tok = queue.pop(0)
+                if not _is_number(tok):
+                    raise ValidationError(
+                        f"'{key}' expects a number, got {tok!r}"
+                    )
+                vr = st.get("valid_range")
+                if vr is not None and not (vr[0] <= float(tok) <= vr[1]):
+                    raise ValidationError(
+                        f"'{key}' value {tok} outside [{vr[0]}, {vr[1]}]"
+                    )
+    if queue:
+        raise ValidationError(
+            f"'{key}' got extra value(s) {queue}; "
+            f"expected {len(spec_tokens)} token(s)"
+        )
+
+
+def _unknown_option_error(base: str, key: str, schema: Dict[str, Any]) -> str:
+    import difflib
+
+    known = set(schema) | {k.split()[0] for k in REGISTRY}
+    matches = difflib.get_close_matches(base, sorted(known), n=3, cutoff=0.6)
+    hint = f"; did you mean {' / '.join(matches)}?" if matches else ""
+    return (
+        f"'{key}' is not a known uvspec option of the local libRadtran "
+        f"install{hint} (wrap the value in Raw(...) to bypass validation)"
+    )
+
+
 class ParamResolver:
     """Resolve a user ``params`` mapping into validated per-point values.
 
@@ -227,8 +379,16 @@ class ParamResolver:
         keys are reported in one exception.
     """
 
-    def __init__(self, config, params: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self,
+        config,
+        params: Optional[Dict[str, Any]] = None,
+        schema: Any = "auto",
+    ):
         self.config = config
+        # "auto": discover the local libRadtran schema; None: curated
+        # registry only; dict: injected schema (tests).
+        self.schema = get_schema(config) if schema == "auto" else schema
         remaining = dict(params or {})
 
         # 1. Dotted config overrides: apply to config, consume (B1 fix).
@@ -250,21 +410,53 @@ class ParamResolver:
             if isinstance(value, Var):
                 self.var_refs[key] = value
                 continue
-            spec = REGISTRY.get(key)
-            if spec is None:
-                self._static[key] = (value, PROV_UNVALIDATED)
+            if isinstance(value, Raw):
+                self._static[key] = (value.value, PROV_UNVALIDATED)
                 continue
             try:
-                spec.validate(value)
+                provenance = self._validate_key_value(key, value)
             except ValidationError as e:
                 errors.append(str(e))
                 continue
-            self._static[key] = (value, PROV_LITERAL)
+            self._static[key] = (value, provenance)
 
         if errors:
             raise ValidationError(
                 "Invalid parameter value(s): " + "; ".join(errors)
             )
+
+    def _validate_key_value(self, key: str, value: Any) -> str:
+        """Validate one literal entry; return its provenance tag.
+
+        Curated :data:`REGISTRY` entries win; otherwise the libRadtran
+        schema (when available) validates tokens and rejects unknown
+        option names. Without a schema, unknown keys pass through
+        unvalidated (legacy behaviour).
+
+        Raises
+        ------
+        ValidationError
+        """
+        spec = REGISTRY.get(key)
+        if spec is not None:
+            spec.validate(value)
+            # Curated validation passes strings through; the schema can
+            # still check their tokens (choices, arity, numbers).
+            if isinstance(value, str) and self.schema is not None:
+                entry = self.schema.get(key.split()[0])
+                if entry is not None:
+                    validate_against_schema(entry, key, value)
+            return PROV_LITERAL
+        if self.schema is not None:
+            base = key.split()[0]
+            entry = self.schema.get(base)
+            if entry is None:
+                raise ValidationError(
+                    _unknown_option_error(base, key, self.schema)
+                )
+            validate_against_schema(entry, key, value)
+            return PROV_LITERAL
+        return PROV_UNVALIDATED
 
     def static_params(self) -> Dict[str, Tuple[Any, str]]:
         """Return ``key -> (value, provenance)`` for point-independent values."""
@@ -332,13 +524,11 @@ class ParamResolver:
             if isinstance(value, float) and np.isnan(value):
                 skipped.append(key)
                 continue
-            spec = REGISTRY.get(key)
-            if spec is not None:
-                try:
-                    spec.validate(value)
-                except ValidationError as e:
-                    errors.append(str(e))
-                    continue
+            try:
+                self._validate_key_value(key, value)
+            except ValidationError as e:
+                errors.append(str(e))
+                continue
             resolved[key] = (value, PROV_DATASET)
         if errors:
             raise ValidationError(
@@ -349,10 +539,13 @@ class ParamResolver:
 
 __all__ = [
     "Var",
+    "Raw",
     "ParamSpec",
     "ParamResolver",
     "REGISTRY",
     "CONFIG_FIELD_MAP",
+    "get_schema",
+    "validate_against_schema",
     "PROV_CONFIG",
     "PROV_LITERAL",
     "PROV_DATASET",

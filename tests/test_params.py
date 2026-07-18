@@ -319,3 +319,178 @@ class TestPublicAPI:
         assert callable(pyradtran.convolve_channels)
         assert callable(pyradtran.brightness_temperature)
         assert pyradtran.__version__ == "0.2.0"
+
+
+# ---------------------------------------------------------------------------
+# Schema-backed validation (libRadtran option schema)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def mini_schema():
+    """Hand-built schema mirroring the real extraction format."""
+    return {
+        "albedo": {
+            "name": "albedo", "group": "Surface", "help": "", "doc": "",
+            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
+            "tokens": [{"kind": "value", "datatype": "float",
+                        "valid_range": [0.0, 1.0], "optional": False}],
+        },
+        "ic_properties": {
+            "name": "ic_properties", "group": "Clouds", "help": "", "doc": "",
+            "non_unique": False, "mandatory": False,
+            "parents": ["ic_file"], "childs": [],
+            "tokens": [
+                {"kind": "choice", "choices": ["fu", "baum_v36", "yang"],
+                 "file_allowed": False, "optional": False},
+                {"kind": "choice", "choices": ["interpolate"],
+                 "file_allowed": False, "optional": True},
+            ],
+        },
+        "wc_file": {
+            "name": "wc_file", "group": "Clouds", "help": "", "doc": "",
+            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
+            "tokens": [
+                {"kind": "choice", "choices": ["1d", "3d", "ipa_files"],
+                 "file_allowed": False, "optional": False},
+                {"kind": "value", "datatype": "file",
+                 "valid_range": None, "optional": False},
+            ],
+        },
+        "cloudcover": {
+            "name": "cloudcover", "group": "Clouds", "help": "", "doc": "",
+            "non_unique": True, "mandatory": False,
+            "parents": ["ic_file", "wc_file"], "childs": [],
+            "tokens": [
+                {"kind": "value", "datatype": "str",
+                 "valid_range": None, "optional": False},
+                {"kind": "value", "datatype": "float",
+                 "valid_range": [0.0, 1.0], "optional": False},
+            ],
+        },
+        "zout": {
+            "name": "zout", "group": "Output", "help": "", "doc": "",
+            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
+            "tokens": [{"kind": "value", "datatype": "str",
+                        "valid_range": None, "optional": False}],
+        },
+        "umu": {
+            "name": "umu", "group": "Geometry", "help": "", "doc": "",
+            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
+            "tokens": [{"kind": "value", "datatype": "floats",
+                        "valid_range": None, "optional": False}],
+        },
+        "quiet": {
+            "name": "quiet", "group": "Output", "help": "", "doc": "",
+            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
+            "tokens": [],
+        },
+    }
+
+
+class TestSchemaValidation:
+    def test_unknown_option_rejected_with_suggestion(self, minimal_config, mini_schema):
+        with pytest.raises(ValidationError, match="albedo"):
+            ParamResolver(
+                minimal_config, {"albedoo": 0.5}, schema=mini_schema
+            )
+
+    def test_raw_bypasses_validation(self, minimal_config, mini_schema):
+        from pyradtran.params import PROV_UNVALIDATED, Raw
+
+        r = ParamResolver(
+            minimal_config, {"albedoo": Raw("0.5")}, schema=mini_schema
+        )
+        assert r.static_params()["albedoo"] == ("0.5", PROV_UNVALIDATED)
+
+    def test_choice_validated(self, minimal_config, mini_schema):
+        ParamResolver(
+            minimal_config, {"ic_properties": "baum_v36"}, schema=mini_schema
+        )
+        with pytest.raises(ValidationError, match="ic_properties"):
+            ParamResolver(
+                minimal_config, {"ic_properties": "notahabit"}, schema=mini_schema
+            )
+
+    def test_choice_case_insensitive(self, minimal_config, mini_schema, tmp_path):
+        # users write "1D", the schema stores "1d"
+        ParamResolver(
+            minimal_config,
+            {"wc_file": f"1D {tmp_path}/wc.dat"},
+            schema=mini_schema,
+        )
+
+    def test_multiword_key_tokens_count(self, minimal_config, mini_schema, tmp_path):
+        # key carries the first token, value the second
+        ParamResolver(
+            minimal_config,
+            {"wc_file 1D": f"{tmp_path}/wc.dat"},
+            schema=mini_schema,
+        )
+
+    def test_range_validated(self, minimal_config, mini_schema):
+        ParamResolver(
+            minimal_config, {"cloudcover": ("wc", 0.8)}, schema=mini_schema
+        )
+        with pytest.raises(ValidationError, match="cloudcover"):
+            ParamResolver(
+                minimal_config, {"cloudcover": ("wc", 1.5)}, schema=mini_schema
+            )
+
+    def test_greedy_str_token_accepts_many(self, minimal_config, mini_schema):
+        ParamResolver(
+            minimal_config, {"zout": "0.0 1.0 120.0"}, schema=mini_schema
+        )
+
+    def test_floats_token_rejects_nonnumeric(self, minimal_config, mini_schema):
+        ParamResolver(minimal_config, {"umu": "-1.0 1.0"}, schema=mini_schema)
+        with pytest.raises(ValidationError, match="umu"):
+            ParamResolver(
+                minimal_config, {"umu": "-1.0 up"}, schema=mini_schema
+            )
+
+    def test_flag_option_takes_no_value(self, minimal_config, mini_schema):
+        ParamResolver(minimal_config, {"quiet": True}, schema=mini_schema)
+        with pytest.raises(ValidationError, match="quiet"):
+            ParamResolver(
+                minimal_config, {"quiet": "loudly"}, schema=mini_schema
+            )
+
+    def test_fixed_arity_rejects_extra_tokens(self, minimal_config, mini_schema):
+        with pytest.raises(ValidationError, match="albedo"):
+            ParamResolver(
+                minimal_config, {"albedo": "0.5 0.6"}, schema=mini_schema
+            )
+
+    def test_dict_value_skips_schema(self, minimal_config, mini_schema):
+        # dynamic-cloud dict values are handled downstream
+        ParamResolver(
+            minimal_config,
+            {"wc_file": {"z": [2, 1], "lwc": [0.1, 0.1], "reff": [10, 10]}},
+            schema=mini_schema,
+        )
+
+    def test_curated_registry_wins_over_schema(self, minimal_config, mini_schema):
+        # albedo stays validated by the curated ParamSpec ([0,1])
+        with pytest.raises(ValidationError):
+            ParamResolver(minimal_config, {"albedo": 1.5}, schema=mini_schema)
+
+    def test_no_schema_keeps_passthrough(self, minimal_config):
+        from pyradtran.params import PROV_UNVALIDATED
+
+        r = ParamResolver(minimal_config, {"whatever_odd_key": "x"}, schema=None)
+        assert r.static_params()["whatever_odd_key"] == ("x", PROV_UNVALIDATED)
+
+    def test_var_value_schema_validated_per_point(self, minimal_config, mini_schema):
+        import xarray as xr
+
+        r = ParamResolver(
+            minimal_config,
+            {"ic_properties": Var("habit")},
+            schema=mini_schema,
+        )
+        good = xr.Dataset({"habit": ((), "fu")})
+        resolved, _ = r.resolve_point(good)
+        assert resolved["ic_properties"][0] == "fu"
+        bad = xr.Dataset({"habit": ((), "granite")})
+        with pytest.raises(ValidationError):
+            r.resolve_point(bad)

@@ -117,7 +117,12 @@ for path in sorted(glob.glob("*_options.py")):
         for opt in getattr(grp, "options", []):
             try:
                 d = getattr(opt, "dict", {}) or {}
-                tokens = [convert_token(t) for t in getattr(opt, "tokens", [])]
+                raw_tokens = getattr(opt, "tokens", [])
+                tokens = [convert_token(t) for t in raw_tokens]
+                # No tokens declared but GUI inputs present: the option
+                # takes arguments the schema does not model (e.g.
+                # radiosonde) -> signature unknown, skip arity checks.
+                unmodeled = (not raw_tokens) and bool(getattr(opt, "gui_inputs", ()))
                 options[opt.name] = {
                     "name": opt.name,
                     "group": gname,
@@ -125,6 +130,7 @@ for path in sorted(glob.glob("*_options.py")):
                     "doc": (d.get("documentation") or "").strip(),
                     "non_unique": bool(getattr(opt, "non_unique", False)),
                     "mandatory": bool(getattr(opt, "_mandatory", False)),
+                    "unmodeled": unmodeled,
                     "parents": [p for p in (d.get("parents") or []) if p != "uvspec"],
                     "childs": list(d.get("childs") or []),
                     "tokens": [t for t in tokens if t is not None],
@@ -159,9 +165,14 @@ def find_libradtran_root(config) -> Optional[Path]:
     return None
 
 
+#: Bump when the extracted schema format changes (invalidates caches).
+_SCHEMA_FORMAT = "2"
+
+
 def _cache_key(src_py: Path) -> str:
     """Fingerprint of the src_py option files (name, size, mtime)."""
     h = hashlib.sha1()
+    h.update(_SCHEMA_FORMAT.encode())
     h.update(str(src_py).encode())
     for f in sorted(src_py.glob("*_options.py")):
         st = f.stat()
