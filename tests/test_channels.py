@@ -66,6 +66,83 @@ class TestConvolve:
         assert "wavelength" in out["uu_spectral"].dims
 
 
+class TestRunChannelsIntegration:
+    def test_run_applies_convolution(
+        self, minimal_config, boxcar_srf, spectral_result
+    ):
+        """run(channels=srf) post-processes the converted dataset."""
+        from unittest.mock import patch
+
+        import pyradtran.interface as interface
+
+        ds_in = xr.Dataset(
+            data_vars={
+                "latitude": (["time"], [78.0, 78.1]),
+                "longitude": (["time"], [15.0, 15.1]),
+            },
+            coords={"time": [0, 1]},
+        )
+
+        with patch.object(
+            interface, "execute_simulation_batch"
+        ) as mock_batch, patch.object(
+            interface.OutputToXarray, "convert_batch",
+            return_value=spectral_result,
+        ):
+            from pyradtran.interface import PointOutcome
+
+            mock_batch.return_value = [
+                PointOutcome(object(), 0), PointOutcome(object(), 0)
+            ]
+            out = ds_in.pyradtran.run(
+                config=minimal_config,
+                channels=boxcar_srf,
+                save_to_file=False,
+                show_progress=False,
+            )
+        assert "channel" in out.dims
+        assert "wavelength" not in out["uu"].dims
+
+    def test_run_channels_without_wavelength_dim_warns(
+        self, minimal_config, boxcar_srf, caplog
+    ):
+        """channels= on a non-spectral result skips convolution with a warning."""
+        import logging
+        from unittest.mock import patch
+
+        import pyradtran.interface as interface
+
+        ds_in = xr.Dataset(
+            data_vars={
+                "latitude": (["time"], [78.0]),
+                "longitude": (["time"], [15.0]),
+            },
+            coords={"time": [0]},
+        )
+        integrated = xr.Dataset(
+            {"eglo": (("time",), [500.0])}, coords={"time": [0]}
+        )
+
+        with patch.object(
+            interface, "execute_simulation_batch"
+        ) as mock_batch, patch.object(
+            interface.OutputToXarray, "convert_batch",
+            return_value=integrated,
+        ):
+            from pyradtran.interface import PointOutcome
+
+            mock_batch.return_value = [PointOutcome(object(), 0)]
+            with caplog.at_level(logging.WARNING, logger="pyradtran.interface"):
+                out = ds_in.pyradtran.run(
+                    config=minimal_config,
+                    channels=boxcar_srf,
+                    save_to_file=False,
+                    show_progress=False,
+                )
+        assert "channel" not in out.dims
+        assert any("no wavelength dimension" in r.message for r in caplog.records)
+
+
 class TestBrightnessTemperature:
     def test_planck_roundtrip(self):
         T_true = 280.0

@@ -682,6 +682,8 @@ class PyRadtranAccessor:
         cloud_top_var: Optional[str] = None,
         cloud_bottom_var: Optional[str] = None,
         show_progress: bool = True,
+        channels: Optional[xr.DataArray] = None,
+        keep_spectral: bool = False,
     ) -> Union[xr.Dataset, Path]:
         """
         Run ``uvspec`` for every point in the dataset.
@@ -727,6 +729,16 @@ class PyRadtranAccessor:
             Effective-radius variables.
         cloud_top_var, cloud_bottom_var : str, optional
             Cloud geometry variables (km).
+        channels : xarray.DataArray, optional
+            Instrument spectral response functions, dims
+            ``(channel, wavelength)``.  When given and the result is
+            spectral, every spectral variable is SRF-averaged onto a
+            ``channel`` dimension via
+            :func:`~pyradtran.channels.convolve_channels`; the returned
+            (and saved) dataset is channel-space.
+        keep_spectral : bool, default ``False``
+            With *channels*, also keep the original spectral variables
+            under ``<name>_spectral``.
 
         Returns
         -------
@@ -853,6 +865,12 @@ class PyRadtranAccessor:
             result_ds["status"] = status_da
             result_ds["status"].attrs["flag_values"] = "0: ok, 1: failed, 2: skipped"
 
+            # Instrument-channel convolution
+            if channels is not None:
+                result_ds = self._apply_channels(
+                    result_ds, channels, keep_spectral
+                )
+
             # Add metadata
             result_ds.attrs["generated_by"] = "pyradtran"
             result_ds.attrs["pyradtran_version"] = "unified_system"
@@ -878,6 +896,10 @@ class PyRadtranAccessor:
             result_ds = converter.convert_batch(
                 parsed_outputs, ds_to_execute, time_var, lat_var, lon_var
             )
+            if channels is not None:
+                result_ds = self._apply_channels(
+                    result_ds, channels, keep_spectral
+                )
 
             saver = NetCDFSaver()
             return saver.save_results_to_netcdf(
@@ -889,6 +911,31 @@ class PyRadtranAccessor:
             )
         else:
             raise PyRadtranError("No valid simulation results to return or save")
+
+    @staticmethod
+    def _apply_channels(
+        result_ds: xr.Dataset,
+        channels: xr.DataArray,
+        keep_spectral: bool,
+    ) -> xr.Dataset:
+        """SRF-convolve a spectral result; the status variable passes through."""
+        from .channels import convolve_channels
+
+        if "wavelength" not in result_ds.dims:
+            logger.warning(
+                "channels= given but result has no wavelength dimension; "
+                "skipping convolution"
+            )
+            return result_ds
+        status_var = result_ds.get("status")
+        result_ds = convolve_channels(
+            result_ds.drop_vars("status", errors="ignore"),
+            channels,
+            keep_spectral=keep_spectral,
+        )
+        if status_var is not None:
+            result_ds["status"] = status_var
+        return result_ds
 
     #: Alias for :meth:`run` — kept for backwards compatibility with older
     #: notebooks that call ``ds.pyradtran.run_uvspec(...)``.
