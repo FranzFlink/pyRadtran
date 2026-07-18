@@ -270,6 +270,79 @@ class ParamResolver:
         """Return ``key -> (value, provenance)`` for point-independent values."""
         return dict(self._static)
 
+    def validate_var_targets(self, ds) -> None:
+        """Check every :class:`Var` target (and hijack-suspects) against *ds*.
+
+        Raises
+        ------
+        ValidationError
+            If a ``Var`` names a variable missing from *ds*, or if a bare
+            string literal matches a dataset variable name (ambiguous —
+            the user almost certainly meant ``Var``).
+        """
+        errors = []
+        for key, ref in self.var_refs.items():
+            if ref.name not in ds:
+                errors.append(
+                    f"'{key}' references dataset variable '{ref.name}' "
+                    f"which is not in the dataset"
+                )
+        for key, (value, _prov) in self._static.items():
+            if isinstance(value, str) and value in ds:
+                errors.append(
+                    f"'{key}' has string value '{value}' which matches a "
+                    f"dataset variable name; use Var('{value}') for a "
+                    f"per-point reference or change the literal"
+                )
+        if errors:
+            raise ValidationError("; ".join(errors))
+
+    def resolve_point(self, point_ds):
+        """Resolve all parameters for one stacked point.
+
+        Parameters
+        ----------
+        point_ds : xarray.Dataset
+            A single point (0-d variables), as produced by
+            ``stacked_ds.isel({sample_dim: i})``.
+
+        Returns
+        -------
+        resolved : dict
+            ``key -> (value, provenance)`` merged from literals and
+            per-point references.
+        skipped : list of str
+            Keys omitted for this point because the dataset value was NaN.
+        """
+        import numpy as np
+
+        resolved = dict(self._static)
+        skipped = []
+        errors = []
+        for key, ref in self.var_refs.items():
+            if ref.name not in point_ds:
+                skipped.append(key)
+                continue
+            value = point_ds[ref.name].values
+            if hasattr(value, "item") and getattr(value, "size", 1) == 1:
+                value = value.item()
+            if isinstance(value, float) and np.isnan(value):
+                skipped.append(key)
+                continue
+            spec = REGISTRY.get(key)
+            if spec is not None:
+                try:
+                    spec.validate(value)
+                except ValidationError as e:
+                    errors.append(str(e))
+                    continue
+            resolved[key] = (value, PROV_DATASET)
+        if errors:
+            raise ValidationError(
+                "Invalid per-point value(s): " + "; ".join(errors)
+            )
+        return resolved, skipped
+
 
 __all__ = [
     "Var",

@@ -139,3 +139,57 @@ class TestParamResolverStatic:
         r = ParamResolver(minimal_config, None)
         assert r.static_params() == {}
         assert r.var_refs == {}
+
+
+import numpy as np
+import xarray as xr
+
+from pyradtran.params import PROV_DATASET
+
+
+def _point_ds(**values):
+    """One stacked point: each kwarg becomes a 0-d variable."""
+    return xr.Dataset({k: ((), v) for k, v in values.items()})
+
+
+class TestResolvePoint:
+    def test_var_resolved_from_point(self, minimal_config):
+        r = ParamResolver(minimal_config, {"albedo": Var("alb")})
+        resolved, skipped = r.resolve_point(_point_ds(alb=0.7))
+        assert resolved["albedo"] == (0.7, PROV_DATASET)
+        assert skipped == []
+
+    def test_nan_skips_parameter_and_records(self, minimal_config):
+        # B4 regression: NaN must never reach the input file
+        r = ParamResolver(minimal_config, {"albedo": Var("alb")})
+        resolved, skipped = r.resolve_point(_point_ds(alb=np.nan))
+        assert "albedo" not in resolved
+        assert skipped == ["albedo"]
+
+    def test_static_and_var_merge(self, minimal_config):
+        r = ParamResolver(
+            minimal_config, {"sza": 45.0, "albedo": Var("alb")}
+        )
+        resolved, _ = r.resolve_point(_point_ds(alb=0.2))
+        assert resolved["sza"] == (45.0, PROV_LITERAL)
+        assert resolved["albedo"] == (0.2, PROV_DATASET)
+
+    def test_resolved_var_value_is_validated(self, minimal_config):
+        r = ParamResolver(minimal_config, {"albedo": Var("alb")})
+        with pytest.raises(ValidationError):
+            r.resolve_point(_point_ds(alb=3.0))
+
+    def test_validate_var_targets_missing(self, minimal_config):
+        r = ParamResolver(minimal_config, {"albedo": Var("nope")})
+        ds = xr.Dataset({"alb": (("time",), [0.1])})
+        with pytest.raises(ValidationError) as exc:
+            r.validate_var_targets(ds)
+        assert "nope" in str(exc.value)
+
+    def test_bare_string_matching_dataset_var_raises(self, minimal_config):
+        # Replaces the old silent string-hijack magic
+        ds = xr.Dataset({"alb": (("time",), [0.1])})
+        r = ParamResolver(minimal_config, {"albedo": "alb"})
+        with pytest.raises(ValidationError) as exc:
+            r.validate_var_targets(ds)
+        assert "Var(" in str(exc.value)
