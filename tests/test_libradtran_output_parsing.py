@@ -480,3 +480,25 @@ class TestLibRadtranOutputParsing:
 
         finally:
             os.unlink(malformed_file)
+
+
+@pytest.mark.unit
+@pytest.mark.io
+class TestPerRunAltitudes:
+    def test_explicit_output_altitudes_override_config(self, minimal_config, tmp_path):
+        # Config says 3 altitudes; this run used zout override with 1
+        out = tmp_path / "single_alt.out"
+        out.write_text("  500.000  100.000   50.000\n  600.000  110.000   55.000\n")
+        minimal_config.simulation_defaults.output_columns = ["lambda", "eglo", "eup"]
+        parser = OutputParser(minimal_config, output_altitudes=[1.0])
+        parsed = parser.parse_output_file(out)
+        assert parsed.output_type == OutputType.SPECTRAL_SINGLE_ALTITUDE
+
+    def test_zout_string_in_overrides_parsed(self, minimal_config):
+        # Worker passes raw overrides; zout may be "0.0 1.0 120.0" or a float
+        parser = OutputParser(minimal_config, {"zout": "0.0 1.0 120.0"})
+        assert parser.output_altitudes == [0.0, 1.0, 120.0]
+
+    def test_zout_float_in_overrides_parsed(self, minimal_config):
+        parser = OutputParser(minimal_config, {"zout": 3.5})
+        assert parser.output_altitudes == [3.5]

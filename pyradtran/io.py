@@ -594,35 +594,50 @@ class OutputParser:
     """
 
     def __init__(
-        self, config: SimulationConfig, parameter_overrides: Dict[str, Any] = None
+        self,
+        config: SimulationConfig,
+        parameter_overrides: Dict[str, Any] = None,
+        output_altitudes: Optional[List[float]] = None,
     ):
         self.config = config
         self.parameter_overrides = parameter_overrides or {}
 
-        # Check if brightness temperature output is requested
         self.is_brightness_output = (
             self.parameter_overrides.get("output_quantity") == "brightness"
         )
 
-        # Build the actual output columns that LibRadtran will produce
         self.output_columns = []
-
-        # Use the user-specified columns directly since we use 'output_user'
         original_columns = config.simulation_defaults.output_columns or []
         for col in original_columns:
-            # For brightness output, LibRadtran doesn't include albedo column
             if self.is_brightness_output and col == "albedo":
                 logger.debug("Skipping albedo column for brightness temperature output")
                 continue
             self.output_columns.append(col)
 
-        self.output_altitudes = config.simulation_defaults.output_altitudes_km or [0.0]
+        # B7 fix: per-run altitudes win over config
+        if output_altitudes is not None:
+            self.output_altitudes = list(output_altitudes)
+        elif "zout" in self.parameter_overrides:
+            self.output_altitudes = self._parse_zout(
+                self.parameter_overrides["zout"]
+            )
+        else:
+            self.output_altitudes = (
+                config.simulation_defaults.output_altitudes_km or [0.0]
+            )
+
         self.wavelength_range = config.simulation_defaults.wavelength_nm
         self.is_integrated = getattr(
             config.simulation_defaults, "integrate_wavelength", False
         )
-
         logger.debug(f"Initialized parser with columns: {self.output_columns}")
+
+    @staticmethod
+    def _parse_zout(zout_value) -> List[float]:
+        """Parse a zout override (float or whitespace-separated string)."""
+        if isinstance(zout_value, str):
+            return [float(tok) for tok in zout_value.split()]
+        return [float(zout_value)]
 
     def parse_output_file(self, output_file: Path) -> ParsedOutput:
         """Parse a single ``uvspec`` output file.
