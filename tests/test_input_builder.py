@@ -176,3 +176,44 @@ class TestSimulationWiring:
             DT, 78.0, 15.0, resolved_params={"albedo": (0.42, PROV_LITERAL)}
         )
         assert "albedo 0.42" in "\n".join(ln.text for ln in lines)
+
+    def test_config_parameter_overrides_reach_input(self, minimal_config):
+        from pyradtran.core import Simulation
+
+        minimal_config.simulation_defaults.parameter_overrides = {
+            "number_of_streams": 16
+        }
+        sim = Simulation(minimal_config)
+        lines = sim.build_input_lines(DT, 78.0, 15.0)
+        assert "number_of_streams 16" in "\n".join(ln.text for ln in lines)
+
+    def test_runtime_parameter_overrides_beat_legacy_override(self, minimal_config):
+        from pyradtran.core import Simulation
+
+        sim = Simulation(minimal_config)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", DeprecationWarning)
+            lines = sim.build_input_lines(
+                DT, 78.0, 15.0,
+                override_albedo=0.9,
+                parameter_overrides={"albedo": 0.55},
+            )
+        text = "\n".join(ln.text for ln in lines)
+        assert "albedo 0.55" in text
+        assert "albedo 0.9" not in text
+
+    def test_resolved_params_beat_everything(self, minimal_config):
+        from pyradtran.core import Simulation
+        from pyradtran.params import PROV_LITERAL
+
+        minimal_config.simulation_defaults.parameter_overrides = {"albedo": 0.2}
+        sim = Simulation(minimal_config)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", DeprecationWarning)
+            lines = sim.build_input_lines(
+                DT, 78.0, 15.0,
+                resolved_params={"albedo": (0.42, PROV_LITERAL)},
+                parameter_overrides={"albedo": 0.55},
+            )
+        text = "\n".join(ln.text for ln in lines)
+        assert "albedo 0.42" in text

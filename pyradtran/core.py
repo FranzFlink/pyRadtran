@@ -30,10 +30,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+import numpy as np
+
 from .config import SimulationConfig
 from .exceptions import UvspecExecutionError
 from .input_builder import InputFileBuilder, calculate_solar_zenith_angle  # noqa: F401
-from .params import PROV_LITERAL, PROV_UNVALIDATED
+from .params import PROV_CONFIG, PROV_LITERAL, PROV_UNVALIDATED
 from .utils import RadiosondeFinder
 
 logger = logging.getLogger(__name__)
@@ -63,8 +65,8 @@ class Simulation:
             else None
         )
 
-    @staticmethod
     def _legacy_kwargs_to_resolved(
+        self,
         resolved_params,
         override_albedo=None,
         override_surface_temperature=None,
@@ -72,8 +74,15 @@ class Simulation:
         override_surface_type=None,
         parameter_overrides=None,
     ):
-        """Merge deprecated kwargs into a resolved-params dict."""
-        resolved = dict(resolved_params or {})
+        """Merge deprecated kwargs (and config-level overrides) into a resolved-params dict.
+
+        Layering, later wins:
+
+        1. ``config.simulation_defaults.parameter_overrides`` (PROV_CONFIG)
+        2. legacy ``override_*`` kwargs (PROV_LITERAL)
+        3. runtime ``parameter_overrides`` dict (PROV_UNVALIDATED)
+        4. explicit *resolved_params* (caller-supplied provenance) — wins over all
+        """
         legacy = {
             "albedo": override_albedo,
             "sur_temperature": override_surface_temperature,
@@ -88,17 +97,31 @@ class Simulation:
                 DeprecationWarning,
                 stacklevel=3,
             )
-        import numpy as np
 
+        resolved: Dict[str, Any] = {}
+
+        # Layer 1: config-level escape hatch (no deprecation warning).
+        config_overrides = getattr(
+            self.config.simulation_defaults, "parameter_overrides", None
+        )
+        for key, value in (config_overrides or {}).items():
+            resolved[key] = (value, PROV_CONFIG)
+
+        # Layer 2: legacy override_* kwargs.
         for key, value in legacy.items():
-            if value is None or key in resolved:
+            if value is None:
                 continue
             if isinstance(value, float) and np.isnan(value):
                 continue  # B4: NaN never reaches the input file
             resolved[key] = (value, PROV_LITERAL)
+
+        # Layer 3: runtime parameter_overrides dict.
         for key, value in (parameter_overrides or {}).items():
-            if key not in resolved:
-                resolved[key] = (value, PROV_UNVALIDATED)
+            resolved[key] = (value, PROV_UNVALIDATED)
+
+        # Layer 4: explicit resolved_params — new API always wins.
+        resolved.update(resolved_params or {})
+
         return resolved
 
     def build_input_lines(
