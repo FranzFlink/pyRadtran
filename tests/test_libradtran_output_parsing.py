@@ -549,3 +549,22 @@ class TestEffectiveColumns:
         result = OutputToXarray.convert_batch([parsed], input_ds)
         assert "wavelength" in result.dims
         assert not np.isnan(result["eglo"].values).any()
+
+    def test_axis_columns_not_data_vars(self, minimal_config, tmp_path):
+        """zout/lambda are coordinates, not data variables, in batch results."""
+        minimal_config.simulation_defaults.output_columns = ["eglo"]
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        out = tmp_path / "spec.out"
+        out.write_text("  500.0  100.0\n  600.0  110.0\n")
+        parsed = OutputParser(minimal_config).parse_output_file(out)
+        input_ds = xr.Dataset(
+            coords={
+                "time": [pd.Timestamp("2023-05-01")],
+                "latitude": ("time", [60.0]),
+                "longitude": ("time", [10.0]),
+            }
+        )
+        result = OutputToXarray.convert_batch([parsed], input_ds)
+        assert "lambda" not in result.data_vars
+        assert "zout" not in result.data_vars
+        assert list(result["wavelength"].values) == [500.0, 600.0]

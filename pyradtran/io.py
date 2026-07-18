@@ -864,7 +864,10 @@ class OutputToXarray:
             )
 
         template_output = parsed_outputs[first_valid_idx]
-        var_names = list(template_output.data.keys())
+        # zout/lambda are axis columns, not data (mirrors convert())
+        var_names = [
+            v for v in template_output.data.keys() if v not in ("zout", "lambda")
+        ]
         altitudes = template_output.altitudes if template_output.altitudes else [0]
         wavelengths = (
             template_output.wavelengths if template_output.wavelengths else [None]
