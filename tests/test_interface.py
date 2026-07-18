@@ -23,6 +23,7 @@ from pyradtran.config import (
     SimulationDefaults,
 )
 from pyradtran.interface import (
+    PointOutcome,
     PyRadtranAccessor,
     SimPoint,
     _run_single_simulation_unified,
@@ -113,8 +114,8 @@ def test_execute_simulation_batch(
         },
     )
 
-    for f in mock_futures:
-        f.result.return_value = mock_parsed_output
+    for i, f in enumerate(mock_futures):
+        f.result.return_value = PointOutcome(mock_parsed_output, 0, None, f"point_{i}")
 
     # Configure submit to return a new future each time
     mock_executor.submit.side_effect = mock_futures
@@ -177,7 +178,9 @@ def test_run_single_simulation_unified(
     result = _run_single_simulation_unified(minimal_config, point)
 
     # Verify
-    assert result == mock_parsed_output
+    assert isinstance(result, PointOutcome)
+    assert result.status == 0
+    assert result.parsed == mock_parsed_output
     mock_simulation.run_simulation.assert_called_once()
     mock_parser.parse_output_file.assert_called_once()
 
@@ -247,9 +250,11 @@ def test_pyradtran_accessor(
     # Setup mocks
     mock_load_config.return_value = minimal_config
 
-    # Mock execution results
+    # Mock execution results (accessor.run always requests outcomes)
     mock_parsed_output = MagicMock(spec=ParsedOutput)
-    mock_execute.return_value = [mock_parsed_output] * 3
+    mock_execute.return_value = [
+        PointOutcome(mock_parsed_output, 0, None, f"point_{i}") for i in range(3)
+    ]
 
     # Mock conversion
 

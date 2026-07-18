@@ -60,6 +60,16 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+class PointOutcome:
+    """Result envelope for one point: parsed output + status + failure detail."""
+
+    parsed: Optional[ParsedOutput]
+    status: int  # 0 = ok, 1 = uvspec failure, 2 = skipped (NaN inputs)
+    detail: Optional[str] = None
+    point_id: str = ""
+
+
+@dataclass
 class SimPoint:
     """One flattened simulation point, fully resolved."""
 
@@ -222,6 +232,7 @@ def execute_simulation_batch(
     cloud_top_var: Optional[str] = None,
     cloud_bottom_var: Optional[str] = None,
     show_progress: bool = True,
+    return_outcomes: bool = False,
 ) -> List[Optional[ParsedOutput]]:
     """Run ``uvspec`` in parallel for every point in *input_ds*.
 
@@ -260,6 +271,9 @@ def execute_simulation_batch(
     show_progress : bool, default ``True``
         Show a ``tqdm`` progress bar.  Set to ``False`` to suppress it
         (e.g. when running inside a rendered Jupyter notebook).
+    return_outcomes : bool, default ``False``
+        When ``True``, return the full list of :class:`PointOutcome`
+        (status codes + failure detail) instead of bare parsed outputs.
     cloud_wc_var, cloud_ic_var : str, optional
         Dataset variables for liquid / ice water content.
     cloud_reff_var, cloud_ic_reff_var : str, optional
@@ -273,10 +287,16 @@ def execute_simulation_batch(
     When ``execution.max_workers`` is 1, points run serially in-process (no
     process pool); ``None`` or >1 uses a process pool.
 
+    A ``failures_<YYYYmmdd_HHMMSS>.log`` file is written to
+    ``config.paths.working_dir`` whenever at least one point fails, with
+    one block per failure (point id, status, and detail/stderr).
+
     Returns
     -------
     list of ParsedOutput or None
         One entry per flattened input point.  *None* for failed runs.
+        When *return_outcomes* is ``True``, a list of :class:`PointOutcome`
+        instead.
 
     Raises
     ------
@@ -388,11 +408,19 @@ def execute_simulation_batch(
     resolver.validate_var_targets(input_ds)
 
     points: List[SimPoint] = []
+    prefilled: Dict[int, PointOutcome] = {}
     for i in range(num_points):
         point_ds = stacked_ds.isel({sample_dim: i})
         t = get_val(point_ds, time_var)
         lat = get_val(point_ds, lat_var)
         lon = get_val(point_ds, lon_var)
+
+        if any(
+            v is not None and isinstance(v, float) and np.isnan(v)
+            for v in (lat, lon)
+        ):
+            prefilled[i] = PointOutcome(None, 2, "NaN coordinates", f"point_{i}")
+            continue
 
         resolved, skipped = resolver.resolve_point(point_ds)
 
@@ -469,22 +497,26 @@ def execute_simulation_batch(
         )
 
     # Run simulations in parallel
-    results = [None] * num_points  # Pre-allocate results list to preserve order
+    outcomes: List[Optional[PointOutcome]] = [None] * num_points
+    for idx, outcome in prefilled.items():
+        outcomes[idx] = outcome
 
     # Initialize progress bar
     if HAS_TQDM and show_progress:
         pbar = tqdm(total=num_points, desc="Running simulations", unit="sim")
+        if prefilled:
+            pbar.update(len(prefilled))
     else:
         pbar = None
 
-    completed = 0
+    completed = len(prefilled)
     success_count = 0
 
-    def _record(idx: int, result: Optional[ParsedOutput]) -> None:
+    def _record(idx: int, outcome: Optional[PointOutcome]) -> None:
         nonlocal completed, success_count
         completed += 1
-        results[idx] = result
-        if result:
+        outcomes[idx] = outcome
+        if outcome is not None and outcome.status == 0:
             success_count += 1
         else:
             logger.warning(f"Simulation {idx + 1}/{num_points} produced no output")
@@ -506,24 +538,39 @@ def execute_simulation_batch(
             for future in as_completed(future_to_idx):
                 idx = future_to_idx[future]
                 try:
-                    result = future.result()
+                    outcome = future.result()
                 except Exception as e:
                     logger.error(
                         f"Simulation {idx + 1}/{num_points} failed with error: {str(e)}"
                     )
-                    result = None
-                _record(idx, result)
+                    outcome = PointOutcome(None, 1, str(e), f"point_{idx}")
+                _record(idx, outcome)
     else:
         # Single-worker runs skip the process pool entirely: no pickling
         # round-trip, and results are available synchronously for callers
         # driving simulations from within an already-parallel context.
         for point in points:
-            result = _run_single_simulation_unified(config, point)
-            _record(point.index, result)
+            outcome = _run_single_simulation_unified(config, point)
+            _record(point.index, outcome)
 
     # Close progress bar
     if pbar:
         pbar.close()
+
+    # Write the failure log before the all-failed raise so it exists even
+    # when every simulation in the batch failed.
+    failures = [o for o in outcomes if o is not None and o.status != 0]
+    if failures:
+        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_path = Path(config.paths.working_dir) / f"failures_{run_id}.log"
+        with open(log_path, "w") as f:
+            for o in failures:
+                f.write(f"=== point {o.point_id} (status {o.status}) ===\n")
+                f.write((o.detail or "no detail") + "\n\n")
+        logger.warning(
+            f"{len(failures)}/{num_points} simulations failed; "
+            f"details in {log_path}"
+        )
 
     if success_count == 0:
         raise PyRadtranError("All simulations failed - no valid results produced")
@@ -531,7 +578,9 @@ def execute_simulation_batch(
     logger.info(
         f"Batch execution completed: {success_count}/{num_points} simulations successful"
     )
-    return results
+    if return_outcomes:
+        return outcomes
+    return [o.parsed if o is not None else None for o in outcomes]
 
 
 def _coerce_datetime(time) -> datetime:
@@ -548,7 +597,7 @@ def _coerce_datetime(time) -> datetime:
 def _run_single_simulation_unified(
     config: SimulationConfig,
     point: SimPoint,
-) -> Optional[ParsedOutput]:
+) -> PointOutcome:
     """Execute a single ``uvspec`` run (called by the process pool, or in-process when max_workers == 1)."""
     try:
         sim = Simulation(config)
@@ -574,12 +623,14 @@ def _run_single_simulation_unified(
                     "longitude": point.longitude,
                 }
             )
-            return parsed_output
-        logger.error(f"No output file produced for point {point.point_id}")
-        return None
+            return PointOutcome(parsed_output, 0, None, point.point_id)
+        detail = sim.last_stderr or "no output produced"
+        if sim.last_failed_input is not None:
+            detail = f"input: {sim.last_failed_input}\n{detail}"
+        return PointOutcome(None, 1, detail, point.point_id)
     except Exception as e:
-        logger.error(f"Single simulation failed for point {point.point_id}: {str(e)}")
-        return None
+        logger.error(f"Single simulation failed for point {point.point_id}: {e}")
+        return PointOutcome(None, 1, str(e), point.point_id)
 
 
 @xr.register_dataset_accessor("pyradtran")
@@ -748,7 +799,7 @@ class PyRadtranAccessor:
 
         # Run the simulation batch
 
-        parsed_outputs = execute_simulation_batch(
+        outcomes = execute_simulation_batch(
             config=self._config,
             input_ds=ds_to_execute,
             params=params,
@@ -770,7 +821,9 @@ class PyRadtranAccessor:
             cloud_top_var=cloud_top_var,
             cloud_bottom_var=cloud_bottom_var,
             show_progress=show_progress,
+            return_outcomes=True,
         )
+        parsed_outputs = [o.parsed if o is not None else None for o in outcomes]
 
         # Convert to xarray Dataset
         if return_dataset and parsed_outputs:
@@ -778,6 +831,27 @@ class PyRadtranAccessor:
             result_ds = converter.convert_batch(
                 parsed_outputs, ds_to_execute, time_var, lat_var, lon_var
             )
+
+            # Attach per-point status codes (0 ok / 1 failed / 2 skipped)
+            status_flat = np.array(
+                [o.status if o is not None else 1 for o in outcomes]
+            )
+            status_dims = list(ds_to_execute.sizes.keys())
+            if status_dims:
+                status_stacked = ds_to_execute.stack(
+                    {"sample_batch_dim": status_dims}
+                )
+                status_da = xr.DataArray(
+                    status_flat,
+                    coords={
+                        "sample_batch_dim": status_stacked["sample_batch_dim"]
+                    },
+                    dims=["sample_batch_dim"],
+                ).unstack("sample_batch_dim")
+            else:
+                status_da = xr.DataArray(int(status_flat[0]))
+            result_ds["status"] = status_da
+            result_ds["status"].attrs["flag_values"] = "0: ok, 1: failed, 2: skipped"
 
             # Add metadata
             result_ds.attrs["generated_by"] = "pyradtran"

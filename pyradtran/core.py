@@ -59,6 +59,7 @@ class Simulation:
         self.config = config
         self.builder = InputFileBuilder(config)
         self.last_stderr: Optional[str] = None
+        self.last_failed_input: Optional[Path] = None
         self.radiosonde_finder = (
             RadiosondeFinder(config.paths.radiosonde_base)
             if config.paths.radiosonde_base
@@ -274,9 +275,8 @@ class Simulation:
                     input_path.unlink(missing_ok=True)
                 return output_path
             # Failure: keep input and output for post-mortem (B12)
-            logger.error(
-                f"Simulation failed; input kept at {input_path}"
-            )
+            self.last_failed_input = input_path
+            logger.error(f"Simulation failed; input kept at {input_path}")
             return None
 
         except Exception as e:
@@ -451,6 +451,7 @@ class Simulation:
 
             if result.returncode != 0:
                 error_msg = result.stderr.strip() if result.stderr else "Unknown error"
+                self.last_stderr = error_msg
                 logger.error(
                     f"LibRadtran failed with return code {result.returncode}: {error_msg}"
                 )
@@ -459,11 +460,15 @@ class Simulation:
             return True
 
         except subprocess.TimeoutExpired:
+            self.last_stderr = (
+                f"timeout after {self.config.execution.timeout_seconds}s"
+            )
             logger.error(
                 f"LibRadtran execution timed out after {self.config.execution.timeout_seconds} seconds"
             )
             return False
         except Exception as e:
+            self.last_stderr = str(e)
             logger.error(f"Failed to execute LibRadtran: {str(e)}")
             return False
 
