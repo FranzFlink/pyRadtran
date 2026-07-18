@@ -92,8 +92,64 @@ Points where a `Var` value is NaN simply omit that parameter (the config
 default applies); the coordinates themselves being NaN skips the point and
 records `status=2` in the result.
 
+### Validation against your libRadtran install
+
+libRadtran ships a machine-readable description of every `uvspec` option
+(names, argument types, valid ranges, allowed choices, documentation). On
+first use pyRadtran extracts it from your local installation and caches it
+under `~/.pyradtran/`, so every `params` entry is checked against the exact
+binary you run — *before* any simulation starts:
+
+```python
+ds.pyradtran.run(config_path=cfg, params={'albdeo': 0.3})
+# ValidationError: 'albdeo' is not a known uvspec option of the local
+# libRadtran install; did you mean albedo / albedo_map?
+
+ds.pyradtran.run(config_path=cfg, params={'ic_properties': 'granite'})
+# ValidationError: 'ic_properties': 'granite' is not one of
+# ['baum', 'baum_v36', 'echam4', 'fu', 'hey', 'key', ...]
+```
+
+Repeatable options take a list — one input line per entry:
+
+```python
+params={'wc_modify': ['tau550 set 12', 'ssa set 0.99']}
+```
+
+Flag options take `True` (`params={'aerosol_default': True}` emits the bare
+keyword). To bypass validation (e.g. a patched uvspec build with custom
+options), wrap the value in `Raw`:
+
+```python
+from pyradtran import Raw
+params={'my_custom_option': Raw('anything goes')}
+```
+
+If no libRadtran source tree is found next to your `uvspec` binary,
+validation falls back to the built-in registry and unknown keys pass
+through unvalidated, as before.
+
+### The libRadtran manual, in Python
+
+`describe()` prints the usage signature, valid choices/ranges, option
+dependencies, and the full documentation text for any option;
+`search_options()` greps all of it:
+
+```python
+import pyradtran
+
+print(pyradtran.describe('wc_modify'))
+# wc_modify <gg|ssa|tau|tau550> <set|scale> <float>
+# group: Water and ice clouds   (repeatable)
+# requires: wc_file
+# ...
+
+pyradtran.search_options('optical thickness')
+# ['aerosol_modify', 'ic_modify', 'wc_modify', ...]
+```
+
 ```{tip}
-The [libRadtran manual](https://www.libradtran.org/doc/libRadtran.pdf) will be your best friend when working with pyRadtran! You can set *any* libRadtran parameter via `params` — just make sure to use the correct parameter names as documented in the manual.
+The [libRadtran manual](https://www.libradtran.org/doc/libRadtran.pdf) is still worth reading for the physics — but for signatures and spellings, `pyradtran.describe()` shows you exactly what *your* installed version accepts.
 ```
 
 ```{note}

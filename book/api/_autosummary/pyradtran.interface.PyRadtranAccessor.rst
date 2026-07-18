@@ -17,7 +17,9 @@ pyradtran.interface.PyRadtranAccessor
 
       
          ~PyRadtranAccessor.__init__
+         ~PyRadtranAccessor.explain
          ~PyRadtranAccessor.inspect_cloud_file
+         ~PyRadtranAccessor.jacobian
          ~PyRadtranAccessor.run
          ~PyRadtranAccessor.run_uvspec
       

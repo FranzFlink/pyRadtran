@@ -1,4 +1,4 @@
-pyradtran.core.Simulation
+﻿pyradtran.core.Simulation
 =========================
 
 .. currentmodule:: pyradtran.core
@@ -17,6 +17,8 @@ pyradtran.core.Simulation
 
       
          ~Simulation.__init__
+         ~Simulation.build_input_lines
+         ~Simulation.dry_run
          ~Simulation.format_cloud_profile
          ~Simulation.run_simulation
       

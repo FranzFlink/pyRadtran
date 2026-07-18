@@ -18,4 +18,5 @@ This is the auto-generated API reference for the `pyradtran` package.
    interface
    io
    params
+   schema
    utils

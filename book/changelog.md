@@ -16,6 +16,19 @@
   `albedo_var=`, `surface_temperature_var=`, `surface_type_var=`,
   `altitude_var=`, and the `Simulation.run_simulation(override_*=...)` kwargs
 
+### Schema-Backed Validation (from your libRadtran install)
+- pyRadtran extracts libRadtran's own machine-readable option schema
+  (~244 options: argument types, valid ranges, choices, dependencies,
+  documentation) from the local installation and caches it under
+  `~/.pyradtran/` — validation always matches the exact binary in use
+- Unknown option names are rejected before any simulation runs, with
+  did-you-mean suggestions; enumerated choices and numeric ranges are
+  enforced (`ic_properties`, `wc_modify`, `cloudcover`, ...)
+- Repeatable options accept list values (one input line per entry);
+  flag options accept `True`; `Raw(value)` bypasses validation
+- `pyradtran.describe(name)` / `pyradtran.search_options(text)`: the
+  libRadtran manual — signatures, choices, docs — at the Python prompt
+
 ### Instrument Channels & Jacobians
 - `convolve_channels()` / `run(channels=srf)`: SRF-average spectral results
   onto a `channel` dimension (trapezoidal, pure numpy)
