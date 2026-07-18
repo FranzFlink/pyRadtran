@@ -113,6 +113,74 @@ class TestOverrideReplacement:
         assert "crs_model rayleigh Bodhaine" in text
 
 
+class TestOutputColumns:
+    """The output_user line and the parser must agree on columns.
+
+    Spectral runs need a lambda column (and multi-altitude runs a zout
+    column) to reconstruct the wavelength/altitude axes; without them
+    the batch converter used to silently produce all-NaN results.
+    """
+
+    def _output_user_line(self, text):
+        lines = [ln for ln in text.splitlines() if ln.startswith("output_user")]
+        assert len(lines) == 1
+        return lines[0]
+
+    def test_spectral_injects_lambda(self, minimal_config):
+        # minimal_config is spectral (integrate_wavelength=False) but its
+        # default columns lack lambda
+        minimal_config.simulation_defaults.output_columns = ["sza", "eglo"]
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        text, _ = build_text(minimal_config)
+        cols = self._output_user_line(text).split()[1:]
+        assert "lambda" in cols
+        assert cols[-2:] == ["sza", "eglo"]
+
+    def test_integrated_does_not_inject_lambda(self, minimal_config):
+        minimal_config.simulation_defaults.integrate_wavelength = True
+        minimal_config.simulation_defaults.output_columns = ["sza", "eglo"]
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        text, _ = build_text(minimal_config)
+        assert self._output_user_line(text) == "output_user sza eglo"
+
+    def test_multi_altitude_injects_zout(self, minimal_config):
+        minimal_config.simulation_defaults.integrate_wavelength = True
+        minimal_config.simulation_defaults.output_columns = ["eglo"]
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0, 1.0]
+        text, _ = build_text(minimal_config)
+        cols = self._output_user_line(text).split()[1:]
+        assert "zout" in cols
+
+    def test_lambda_not_duplicated(self, minimal_config):
+        minimal_config.simulation_defaults.output_columns = ["lambda", "eglo"]
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        text, _ = build_text(minimal_config)
+        assert self._output_user_line(text) == "output_user lambda eglo"
+
+    def test_output_user_override_replaces_config_columns(self, minimal_config):
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        text, _ = build_text(
+            minimal_config,
+            resolved={"output_user": ("sza edir", PROV_LITERAL)},
+        )
+        line = self._output_user_line(text)
+        cols = line.split()[1:]
+        # override wins over config columns, injection still applies
+        assert cols[-2:] == ["sza", "edir"]
+        assert "lambda" in cols
+        assert "eglo" not in cols
+
+    def test_zout_override_drives_injection(self, minimal_config):
+        minimal_config.simulation_defaults.integrate_wavelength = True
+        minimal_config.simulation_defaults.output_columns = ["eglo"]
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        text, _ = build_text(
+            minimal_config, resolved={"zout": ("0.0 1.0 2.0", PROV_LITERAL)}
+        )
+        cols = self._output_user_line(text).split()[1:]
+        assert "zout" in cols
+
+
 class TestAnnotatedRender:
     def test_annotations_present(self, minimal_config):
         b = InputFileBuilder(minimal_config)

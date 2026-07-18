@@ -64,6 +64,50 @@ def calculate_solar_zenith_angle(
     return round(float(np.degrees(np.arccos(np.clip(cos_sza, -1, 1)))), 2)
 
 
+def effective_output_altitudes(config, overrides: Optional[Dict[str, Any]] = None) -> List[float]:
+    """Altitudes this run reports at: per-run ``zout`` override, else config."""
+    overrides = overrides or {}
+    zout = overrides.get("zout")
+    if zout is not None:
+        if isinstance(zout, str):
+            return [float(tok) for tok in zout.split()]
+        if isinstance(zout, (list, tuple)):
+            return [float(v) for v in zout]
+        return [float(zout)]
+    return list(config.simulation_defaults.output_altitudes_km or [0.0])
+
+
+def effective_output_columns(config, overrides: Optional[Dict[str, Any]] = None) -> List[str]:
+    """Columns the ``output_user`` line requests, in file order.
+
+    A per-run ``output_user`` override replaces the config columns.
+    Spectral runs get ``lambda`` injected and multi-altitude runs get
+    ``zout``, so the output file can always be mapped back onto its
+    wavelength/altitude axes — without them the batch converter cannot
+    reshape the rows and every value ends up NaN. The
+    :class:`~pyradtran.io.OutputParser` uses this same function, so the
+    file and the parser cannot disagree.
+    """
+    overrides = overrides or {}
+    sd = config.simulation_defaults
+    output_user = overrides.get("output_user")
+    if output_user is not None:
+        cols = (
+            list(output_user.split())
+            if isinstance(output_user, str)
+            else list(output_user)
+        )
+    else:
+        cols = list(sd.output_columns or [])
+    if not cols:
+        return cols  # empty means uvspec's default output — leave untouched
+    if not getattr(sd, "integrate_wavelength", False) and "lambda" not in cols:
+        cols.insert(0, "lambda")
+    if len(effective_output_altitudes(config, overrides)) > 1 and "zout" not in cols:
+        cols.insert(0, "zout")
+    return cols
+
+
 class InputFileBuilder:
     """Build provenance-tagged uvspec input lines.
 
@@ -150,10 +194,21 @@ class InputFileBuilder:
             if "albedo" not in resolved and sd.albedo_value is not None:
                 add("albedo", f"albedo {sd.albedo_value}")
 
-        # Output columns
-        output_columns = " ".join(sd.output_columns)
-        if output_columns:
-            add("output_user", f"output_user {output_columns}")
+        # Output columns: per-run output_user override wins; lambda/zout
+        # are injected so the output stays parseable (see
+        # effective_output_columns). Consumed here, not in the generic
+        # override loop below.
+        output_user_override = resolved.pop("output_user", None)
+        raw_overrides = {k: v for k, (v, _p) in resolved.items()}
+        if output_user_override is not None:
+            raw_overrides["output_user"] = output_user_override[0]
+        columns = effective_output_columns(self.config, raw_overrides)
+        if columns:
+            add(
+                "output_user",
+                "output_user " + " ".join(columns),
+                output_user_override[1] if output_user_override else PROV_CONFIG,
+            )
 
         # Output altitudes
         if "zout" not in resolved and sd.output_altitudes_km:
@@ -258,4 +313,10 @@ def _sniff_h2o_unit(era5_abs_path: Path) -> str:
     return h2o_unit
 
 
-__all__ = ["InputLine", "InputFileBuilder", "calculate_solar_zenith_angle"]
+__all__ = [
+    "InputLine",
+    "InputFileBuilder",
+    "calculate_solar_zenith_angle",
+    "effective_output_columns",
+    "effective_output_altitudes",
+]

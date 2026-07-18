@@ -169,7 +169,8 @@ def test_generate_uvspec_input_content(minimal_config):
     assert "atmosphere_file" in content
     assert "rte_solver disort" in content
     assert "wavelength 400 700" in content
-    assert "output_user sza eglo eup albedo" in content
+    # zout and lambda are auto-injected (multi-altitude, spectral run)
+    assert "output_user zout lambda sza eglo eup albedo" in content
     assert "zout 0.0000 1.0000" in content
 
 

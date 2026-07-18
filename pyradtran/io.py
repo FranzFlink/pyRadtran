@@ -36,6 +36,7 @@ import xarray as xr
 
 from .config import SimulationConfig
 from .exceptions import InputGenerationError, OutputParsingError
+from .input_builder import effective_output_altitudes, effective_output_columns
 
 logger = logging.getLogger(__name__)
 
@@ -611,9 +612,10 @@ class OutputParser:
             self.parameter_overrides.get("output_quantity") == "brightness"
         )
 
+        # Same column list the input builder wrote into output_user
+        # (per-run output_user override, injected lambda/zout included).
         self.output_columns = []
-        original_columns = config.simulation_defaults.output_columns or []
-        for col in original_columns:
+        for col in effective_output_columns(config, self.parameter_overrides):
             if self.is_brightness_output and col == "albedo":
                 logger.debug("Skipping albedo column for brightness temperature output")
                 continue
@@ -622,13 +624,9 @@ class OutputParser:
         # B7 fix: per-run altitudes win over config
         if output_altitudes is not None:
             self.output_altitudes = list(output_altitudes)
-        elif "zout" in self.parameter_overrides:
-            self.output_altitudes = self._parse_zout(
-                self.parameter_overrides["zout"]
-            )
         else:
-            self.output_altitudes = (
-                config.simulation_defaults.output_altitudes_km or [0.0]
+            self.output_altitudes = effective_output_altitudes(
+                config, self.parameter_overrides
             )
 
         self.wavelength_range = config.simulation_defaults.wavelength_nm
@@ -636,13 +634,6 @@ class OutputParser:
             config.simulation_defaults, "integrate_wavelength", False
         )
         logger.debug(f"Initialized parser with columns: {self.output_columns}")
-
-    @staticmethod
-    def _parse_zout(zout_value) -> List[float]:
-        """Parse a zout override (float or whitespace-separated string)."""
-        if isinstance(zout_value, str):
-            return [float(tok) for tok in zout_value.split()]
-        return [float(zout_value)]
 
     def parse_output_file(self, output_file: Path) -> ParsedOutput:
         """Parse a single ``uvspec`` output file.

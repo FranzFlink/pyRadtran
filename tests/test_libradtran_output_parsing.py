@@ -502,3 +502,50 @@ class TestPerRunAltitudes:
     def test_zout_float_in_overrides_parsed(self, minimal_config):
         parser = OutputParser(minimal_config, {"zout": 3.5})
         assert parser.output_altitudes == [3.5]
+
+
+@pytest.mark.unit
+@pytest.mark.io
+class TestEffectiveColumns:
+    """Parser columns must match what the input builder requested."""
+
+    def test_spectral_config_without_lambda_gets_lambda_column(self, minimal_config):
+        # Regression: spectral runs used to require the user to list
+        # lambda in output_columns or the batch converter went all-NaN.
+        minimal_config.simulation_defaults.output_columns = ["sza", "eglo"]
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        parser = OutputParser(minimal_config)
+        assert "lambda" in parser.output_columns
+
+    def test_output_user_override_drives_parser_columns(self, minimal_config):
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        parser = OutputParser(minimal_config, {"output_user": "sza edir"})
+        assert parser.output_columns[-2:] == ["sza", "edir"]
+        assert "eglo" not in parser.output_columns
+
+    def test_spectral_no_lambda_roundtrip_not_nan(self, minimal_config, tmp_path):
+        """End-to-end: file written by the builder parses onto a wavelength axis."""
+        minimal_config.simulation_defaults.output_columns = ["eglo", "eup"]
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+
+        # The builder injects lambda, so uvspec prints: lambda eglo eup
+        out = tmp_path / "spec.out"
+        out.write_text(
+            "  500.0  100.0  50.0\n"
+            "  600.0  110.0  55.0\n"
+            "  700.0  120.0  60.0\n"
+        )
+        parser = OutputParser(minimal_config)
+        parsed = parser.parse_output_file(out)
+        assert parsed.wavelengths == [500.0, 600.0, 700.0]
+
+        input_ds = xr.Dataset(
+            coords={
+                "time": [pd.Timestamp("2023-05-01")],
+                "latitude": ("time", [60.0]),
+                "longitude": ("time", [10.0]),
+            }
+        )
+        result = OutputToXarray.convert_batch([parsed], input_ds)
+        assert "wavelength" in result.dims
+        assert not np.isnan(result["eglo"].values).any()
