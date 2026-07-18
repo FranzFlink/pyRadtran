@@ -285,3 +285,20 @@ class TestSimulationWiring:
             )
         text = "\n".join(ln.text for ln in lines)
         assert "albedo 0.42" in text
+
+
+class TestValueRendering:
+    def test_list_value_emits_multiple_lines(self, minimal_config):
+        text, _ = build_text(
+            minimal_config,
+            resolved={"wc_modify": (["tau550 set 12", "ssa set 0.99"], PROV_LITERAL)},
+        )
+        lines = [ln for ln in text.splitlines() if ln.startswith("wc_modify")]
+        assert lines == ["wc_modify tau550 set 12", "wc_modify ssa set 0.99"]
+
+    def test_flag_value_true_renders_bare_keyword(self, minimal_config):
+        text, _ = build_text(
+            minimal_config, resolved={"aerosol_default": (True, PROV_LITERAL)}
+        )
+        assert "aerosol_default" in text.splitlines()
+        assert "aerosol_default True" not in text

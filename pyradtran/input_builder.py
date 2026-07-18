@@ -232,13 +232,21 @@ class InputFileBuilder:
         # Apply resolved parameters: replace same-keyword lines, then append
         for key, (value, provenance) in resolved.items():
             spec = REGISTRY.get(key)
+            keyword = spec.keyword if spec is not None else key
+            lines = [ln for ln in lines if ln.keyword != keyword]
+            if isinstance(value, list):
+                # Repeatable option (non_unique): one line per entry
+                for item in value:
+                    lines.append(
+                        InputLine(keyword, f"{keyword} {item}", provenance)
+                    )
+                continue
             if spec is not None:
                 text = spec.format_line(value)
-                keyword = spec.keyword
+            elif value is True or value is None or value == "":
+                text = keyword  # flag option, e.g. aerosol_default
             else:
                 text = f"{key} {value}"
-                keyword = key
-            lines = [ln for ln in lines if ln.keyword != keyword]
             lines.append(InputLine(keyword, text, provenance))
             # brdf implies the IGBP library line
             if keyword == "brdf_rpv_type":

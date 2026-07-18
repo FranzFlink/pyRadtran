@@ -494,3 +494,64 @@ class TestSchemaValidation:
         bad = xr.Dataset({"habit": ((), "granite")})
         with pytest.raises(ValidationError):
             r.resolve_point(bad)
+
+
+class TestValueNormalisation:
+    def test_tuple_value_normalised_to_string(self, minimal_config, mini_schema):
+        r = ParamResolver(
+            minimal_config, {"cloudcover": ("wc", 0.8)}, schema=mini_schema
+        )
+        assert r.static_params()["cloudcover"][0] == "wc 0.8"
+
+    def test_list_on_unique_option_joined(self, minimal_config, mini_schema):
+        r = ParamResolver(
+            minimal_config, {"zout": [0.0, 1.0, 120.0]}, schema=mini_schema
+        )
+        assert r.static_params()["zout"][0] == "0.0 1.0 120.0"
+
+    def test_list_on_non_unique_option_kept_as_lines(self, minimal_config):
+        schema = {
+            "wc_modify": {
+                "name": "wc_modify", "group": "Clouds", "help": "", "doc": "",
+                "non_unique": True, "mandatory": False,
+                "parents": ["wc_file"], "childs": [],
+                "tokens": [
+                    {"kind": "choice", "choices": ["gg", "ssa", "tau", "tau550"],
+                     "file_allowed": False, "optional": False},
+                    {"kind": "choice", "choices": ["set", "scale"],
+                     "file_allowed": False, "optional": False},
+                    {"kind": "value", "datatype": "float",
+                     "valid_range": None, "optional": False},
+                ],
+            },
+        }
+        r = ParamResolver(
+            minimal_config,
+            {"wc_modify": [("tau550", "set", 12), "ssa set 0.99"]},
+            schema=schema,
+        )
+        assert r.static_params()["wc_modify"][0] == [
+            "tau550 set 12", "ssa set 0.99"
+        ]
+
+    def test_each_line_of_non_unique_list_validated(self, minimal_config):
+        schema = {
+            "wc_modify": {
+                "name": "wc_modify", "group": "Clouds", "help": "", "doc": "",
+                "non_unique": True, "mandatory": False, "parents": [], "childs": [],
+                "tokens": [
+                    {"kind": "choice", "choices": ["gg", "ssa", "tau", "tau550"],
+                     "file_allowed": False, "optional": False},
+                    {"kind": "choice", "choices": ["set", "scale"],
+                     "file_allowed": False, "optional": False},
+                    {"kind": "value", "datatype": "float",
+                     "valid_range": None, "optional": False},
+                ],
+            },
+        }
+        with pytest.raises(ValidationError, match="wc_modify"):
+            ParamResolver(
+                minimal_config,
+                {"wc_modify": ["tau550 set 12", "granite set 1"]},
+                schema=schema,
+            )

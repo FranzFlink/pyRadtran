@@ -414,7 +414,7 @@ class ParamResolver:
                 self._static[key] = (value.value, PROV_UNVALIDATED)
                 continue
             try:
-                provenance = self._validate_key_value(key, value)
+                value, provenance = self._validate_key_value(key, value)
             except ValidationError as e:
                 errors.append(str(e))
                 continue
@@ -425,13 +425,24 @@ class ParamResolver:
                 "Invalid parameter value(s): " + "; ".join(errors)
             )
 
-    def _validate_key_value(self, key: str, value: Any) -> str:
-        """Validate one literal entry; return its provenance tag.
+    @staticmethod
+    def _join(value: Any) -> str:
+        return " ".join(str(v) for v in value)
+
+    def _validate_key_value(self, key: str, value: Any):
+        """Validate and normalise one literal entry.
 
         Curated :data:`REGISTRY` entries win; otherwise the libRadtran
         schema (when available) validates tokens and rejects unknown
         option names. Without a schema, unknown keys pass through
-        unvalidated (legacy behaviour).
+        unvalidated (legacy behaviour). Tuples become space-joined
+        strings; a list on a repeatable (``non_unique``) option becomes
+        a list of line strings (the builder emits one line each), while
+        a list on a single-line option is space-joined.
+
+        Returns
+        -------
+        (value, provenance)
 
         Raises
         ------
@@ -439,6 +450,8 @@ class ParamResolver:
         """
         spec = REGISTRY.get(key)
         if spec is not None:
+            if isinstance(value, (list, tuple)):
+                value = self._join(value)
             spec.validate(value)
             # Curated validation passes strings through; the schema can
             # still check their tokens (choices, arity, numbers).
@@ -446,7 +459,7 @@ class ParamResolver:
                 entry = self.schema.get(key.split()[0])
                 if entry is not None:
                     validate_against_schema(entry, key, value)
-            return PROV_LITERAL
+            return value, PROV_LITERAL
         if self.schema is not None:
             base = key.split()[0]
             entry = self.schema.get(base)
@@ -454,9 +467,21 @@ class ParamResolver:
                 raise ValidationError(
                     _unknown_option_error(base, key, self.schema)
                 )
+            if entry.get("non_unique") and isinstance(value, list):
+                for item in value:
+                    validate_against_schema(entry, key, item)
+                lines = [
+                    self._join(i) if isinstance(i, (list, tuple)) else str(i)
+                    for i in value
+                ]
+                return lines, PROV_LITERAL
             validate_against_schema(entry, key, value)
-            return PROV_LITERAL
-        return PROV_UNVALIDATED
+            if isinstance(value, (list, tuple)):
+                value = self._join(value)
+            return value, PROV_LITERAL
+        if isinstance(value, (list, tuple)):
+            value = self._join(value)
+        return value, PROV_UNVALIDATED
 
     def static_params(self) -> Dict[str, Tuple[Any, str]]:
         """Return ``key -> (value, provenance)`` for point-independent values."""
@@ -525,7 +550,7 @@ class ParamResolver:
                 skipped.append(key)
                 continue
             try:
-                self._validate_key_value(key, value)
+                value, _prov = self._validate_key_value(key, value)
             except ValidationError as e:
                 errors.append(str(e))
                 continue
