@@ -290,3 +290,22 @@ class TestBatchParams(object):
                 params={"albedo": Var("does_not_exist")},
                 show_progress=False,
             )
+
+    def test_max_workers_none_uses_pool(self, minimal_config, simple_input_dataset):
+        """max_workers=None must select the process pool (auto workers)."""
+        from unittest.mock import patch
+
+        from pyradtran import interface
+
+        minimal_config.execution.max_workers = None
+        with patch.object(interface, "ProcessPoolExecutor") as mock_pool:
+            mock_pool.return_value.__enter__.return_value.submit.side_effect = (
+                RuntimeError("stop")
+            )
+            with pytest.raises(Exception):
+                interface.execute_simulation_batch(
+                    config=minimal_config,
+                    input_ds=simple_input_dataset,
+                    show_progress=False,
+                )
+        mock_pool.assert_called_once_with(max_workers=None)

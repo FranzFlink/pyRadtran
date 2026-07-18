@@ -15,7 +15,7 @@ Run all time steps in an xarray dataset:
 
 >>> result = ds.pyradtran.run(
 ...     config_path="config/my_config.yaml",
-...     parameter_overrides={"albedo": 0.85},
+...     params={"albedo": 0.85},
 ... )
 
 See Also
@@ -45,7 +45,7 @@ except ImportError:
 
 from .config import SimulationConfig, load_config
 from .core import Simulation
-from .exceptions import PyRadtranError, ValidationError
+from .exceptions import PyRadtranError
 from .io import (
     ERA5AtmosphereGenerator,
     InputDataLoader,
@@ -267,6 +267,11 @@ def execute_simulation_batch(
     cloud_top_var, cloud_bottom_var : str, optional
         Cloud-boundary variables (km).  Required when
         *cloud_wc_var* or *cloud_ic_var* is set.
+
+    Notes
+    -----
+    When ``execution.max_workers`` is 1, points run serially in-process (no
+    process pool); ``None`` or >1 uses a process pool.
 
     Returns
     -------
@@ -490,8 +495,10 @@ def execute_simulation_batch(
             # B14 fix: report completed count, not success count
             progress_callback(completed, num_points)
 
-    if config.execution.max_workers and config.execution.max_workers > 1:
-        with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
+    max_workers = config.execution.max_workers
+    use_pool = max_workers is None or max_workers > 1
+    if use_pool:
+        with ProcessPoolExecutor(max_workers=max_workers) as executor:
             future_to_idx = {
                 executor.submit(_run_single_simulation_unified, config, point): point.index
                 for point in points
@@ -542,7 +549,7 @@ def _run_single_simulation_unified(
     config: SimulationConfig,
     point: SimPoint,
 ) -> Optional[ParsedOutput]:
-    """Execute a single ``uvspec`` run (called by the process pool)."""
+    """Execute a single ``uvspec`` run (called by the process pool, or in-process when max_workers == 1)."""
     try:
         sim = Simulation(config)
         dt = _coerce_datetime(point.time)
@@ -587,7 +594,7 @@ class PyRadtranAccessor:
     >>> result = ds.pyradtran.run(
     ...     config_path="config/my_config.yaml",
     ...     era5_atmosphere=era5_ds,
-    ...     parameter_overrides={"albedo": 0.85},
+    ...     params={"albedo": 0.85},
     ... )
 
     See Also
