@@ -163,6 +163,28 @@ class Simulation:
             era5_atmosphere_file=era5_atmosphere_file,
         )
 
+    def dry_run(
+        self,
+        dt: datetime,
+        latitude: float,
+        longitude: float,
+        resolved_params=None,
+        era5_atmosphere_file: Optional[Path] = None,
+    ) -> str:
+        """Render the annotated input file for one point without running uvspec.
+
+        Returns
+        -------
+        str
+            Input-file content, one ``# <provenance>`` comment per line.
+        """
+        lines = self.build_input_lines(
+            dt, latitude, longitude,
+            resolved_params=resolved_params,
+            era5_atmosphere_file=era5_atmosphere_file,
+        )
+        return self.builder.render_annotated(lines)
+
     def run_simulation(
         self,
         dt: datetime,

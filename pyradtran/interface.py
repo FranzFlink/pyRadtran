@@ -928,6 +928,58 @@ class PyRadtranAccessor:
         else:
             return "No valid cloud profile generated for this point."
 
+    def explain(
+        self,
+        point: Optional[Dict[str, Any]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        config_path: Optional[Union[str, Path]] = None,
+        config: Optional[SimulationConfig] = None,
+        time_var: str = "time",
+        lat_var: str = "latitude",
+        lon_var: str = "longitude",
+    ) -> str:
+        """Preview the annotated uvspec input file for one point.
+
+        No simulation is run. Each line is tagged with the layer that
+        produced it (``config`` / ``params-literal`` / ``dataset-var`` /
+        ``unvalidated``).
+
+        Parameters
+        ----------
+        point : dict, optional
+            ``Dataset.sel()``-style selector (nearest match). Defaults to
+            the first element along every dimension.
+        params : dict, optional
+            Same mapping accepted by :meth:`run`.
+        config_path, config
+            Configuration source, same as :meth:`run`.
+
+        Returns
+        -------
+        str
+        """
+        cfg = config if config is not None else load_config(config_path)
+        resolver = ParamResolver(cfg, params)
+        resolver.validate_var_targets(self._obj)
+
+        if point is None:
+            point_ds = self._obj.isel({d: 0 for d in self._obj.dims})
+        else:
+            point_ds = self._obj.sel(point, method="nearest")
+
+        def scalar(var):
+            if var in point_ds:
+                v = point_ds[var].values
+                return v.item() if hasattr(v, "item") else v
+            return None
+
+        resolved, _skipped = resolver.resolve_point(point_ds)
+        dt = pd.to_datetime(scalar(time_var)).to_pydatetime()
+        sim = Simulation(cfg)
+        return sim.dry_run(
+            dt, scalar(lat_var), scalar(lon_var), resolved_params=resolved
+        )
+
     def _validate_input_dataset(
         self,
         time_var: str,
