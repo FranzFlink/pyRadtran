@@ -10,6 +10,7 @@ import xarray as xr
 
 from pyradtran.config import PathsConfig, SimulationConfig, SimulationDefaults
 from pyradtran.interface import PyRadtranAccessor
+from pyradtran.params import Var
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -79,26 +80,10 @@ def test_variational_logic():
         cloud_reff_var="reff",
         cloud_top_var="cth",
         cloud_bottom_var="cbh",
-        # Parameter override for SZA?
-        # IMPORTANT: 'sza' is a data_var.
-        # interface.py handles 'sza' specifically if it matches standard name?
-        # No, 'execute_simulation_batch' doesn't auto-map 'sza' variable to sza parameter
-        # UNLESS the user passed it as 'sza' variable?
-        # Wait, 'execute_simulation_batch' has no argument for 'sza_var'.
-        # However, it pulls 'sza' from simulation_defaults if set.
-        # It does NOT pull sza from dataset variable 'sza'
-        # unless `parameter_overrides` mapping is used or we add support.
-        # But wait, lines 440 in interface.py:
-        # output_file = sim.run_simulation(..., override_albedo=..., override_surface_temperature=...)
-        # It does NOT pass 'override_sza'.
-        # User wants 'sza' variable to drive SZA.
-        # We might need to map 'sza' variable to sza parameter in overrides.
-        parameter_overrides={
-            "sza": "sza"  # Map dataset variable 'sza' to library parameter 'sza'?
-            # Actually interface.py apply_parameter_overrides checks for strings.
-            # But execute_simulation_batch does not extraction for arbitrary keys!
-            # We assume user implies that variations in dataset variables should map to params.
-        },
+        # 'sza' is a dataset variable (varies along sza_dim); Var(...) tells
+        # the resolver to pull a fresh value per simulation point instead of
+        # treating "sza" as a literal.
+        params={"sza": Var("sza")},
         save_to_file=False,
         return_dataset=True,
     )

@@ -198,3 +198,95 @@ class TestResolvePoint:
         r = ParamResolver(minimal_config, {"albedo": Var("absent")})
         with pytest.raises(ValidationError, match="absent"):
             r.resolve_point(_point_ds(other=1.0))
+
+
+# append to tests/test_params.py
+import warnings
+from unittest.mock import patch
+
+from pyradtran.interface import _translate_legacy_kwargs
+
+
+class TestLegacyKwargTranslation:
+    def test_var_kwargs_become_params(self):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            params = _translate_legacy_kwargs(
+                params=None,
+                albedo_var="alb",
+                surface_temperature_var="skin_t",
+                surface_type_var="igbp",
+                altitude_var="flight_alt",
+                parameter_overrides={"number_of_streams": 16},
+            )
+        assert any(issubclass(x.category, DeprecationWarning) for x in w)
+        assert params["albedo"] == Var("alb")
+        assert params["sur_temperature"] == Var("skin_t")
+        assert params["brdf_rpv_type"] == Var("igbp")
+        assert params["zout"] == Var("flight_alt")
+        assert params["number_of_streams"] == 16
+
+    def test_explicit_params_win_over_legacy(self):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", DeprecationWarning)
+            params = _translate_legacy_kwargs(
+                params={"albedo": 0.5}, albedo_var="alb",
+                surface_temperature_var=None, surface_type_var=None,
+                altitude_var=None, parameter_overrides=None,
+            )
+        assert params["albedo"] == 0.5
+
+    def test_no_legacy_no_warning(self):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            params = _translate_legacy_kwargs(
+                params={"albedo": 0.5}, albedo_var=None,
+                surface_temperature_var=None, surface_type_var=None,
+                altitude_var=None, parameter_overrides=None,
+            )
+        assert not any(issubclass(x.category, DeprecationWarning) for x in w)
+        assert params == {"albedo": 0.5}
+
+
+class TestBatchParams(object):
+    def test_batch_resolves_var_per_point(
+        self, minimal_config, simple_input_dataset
+    ):
+        """Batch must hand per-point resolved params to the worker."""
+        captured = []
+
+        def fake_worker(config, point, _resolver_unused=None):
+            captured.append(point)
+            return None
+
+        from pyradtran import interface
+
+        ds = simple_input_dataset.copy()
+        ds["alb"] = (["time"], [0.1, 0.2, 0.3])
+
+        with patch.object(
+            interface, "_run_single_simulation_unified", side_effect=fake_worker
+        ):
+            with pytest.raises(Exception):
+                # All workers return None -> batch raises "all failed"
+                interface.execute_simulation_batch(
+                    config=minimal_config,
+                    input_ds=ds,
+                    params={"albedo": Var("alb")},
+                    show_progress=False,
+                )
+        albs = sorted(p.resolved["albedo"][0] for p in captured)
+        assert albs == [0.1, 0.2, 0.3]
+
+    def test_missing_var_target_raises_before_submission(
+        self, minimal_config, simple_input_dataset
+    ):
+        from pyradtran.interface import execute_simulation_batch
+
+        with pytest.raises(ValidationError):
+            execute_simulation_batch(
+                config=minimal_config,
+                input_ds=simple_input_dataset,
+                params={"albedo": Var("does_not_exist")},
+                show_progress=False,
+            )

@@ -25,10 +25,12 @@ pyradtran.config.load_config : Configuration loading.
 """
 
 import logging
+import warnings
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -43,7 +45,7 @@ except ImportError:
 
 from .config import SimulationConfig, load_config
 from .core import Simulation
-from .exceptions import PyRadtranError
+from .exceptions import PyRadtranError, ValidationError
 from .io import (
     ERA5AtmosphereGenerator,
     InputDataLoader,
@@ -52,8 +54,63 @@ from .io import (
     OutputToXarray,
     ParsedOutput,
 )
+from .params import ParamResolver, Var
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class SimPoint:
+    """One flattened simulation point, fully resolved."""
+
+    index: int
+    time: datetime
+    latitude: float
+    longitude: float
+    resolved: Dict[str, Any]
+    skipped: List[str] = field(default_factory=list)
+    era5_file: Optional[Path] = None
+    point_id: str = ""
+
+
+def _translate_legacy_kwargs(
+    params,
+    albedo_var,
+    surface_temperature_var,
+    surface_type_var,
+    altitude_var,
+    parameter_overrides,
+):
+    """Map deprecated kwargs onto the unified ``params`` mapping.
+
+    Explicit ``params`` entries always win. Emits a single
+    DeprecationWarning if any legacy kwarg is used.
+    """
+    params = dict(params or {})
+    legacy_vars = {
+        "albedo": albedo_var,
+        "sur_temperature": surface_temperature_var,
+        "brdf_rpv_type": surface_type_var,
+        "zout": altitude_var,
+    }
+    used_legacy = any(v is not None for v in legacy_vars.values()) or bool(
+        parameter_overrides
+    )
+    if used_legacy:
+        warnings.warn(
+            "albedo_var/surface_temperature_var/surface_type_var/altitude_var "
+            "and parameter_overrides are deprecated; use "
+            "params={'albedo': Var('...'), ...} instead",
+            DeprecationWarning,
+            stacklevel=3,
+        )
+    for key, var_name in legacy_vars.items():
+        if var_name is not None and key not in params:
+            params[key] = Var(var_name)
+    for key, value in (parameter_overrides or {}).items():
+        if key not in params:
+            params[key] = value
+    return params
 
 
 def run_pyradtran_simulation(
@@ -102,10 +159,6 @@ def run_pyradtran_simulation(
         if max_workers is not None:
             config.execution.max_workers = max_workers
 
-        # Apply parameter overrides if provided
-        if parameter_overrides:
-            _apply_parameter_overrides(config, parameter_overrides)
-
         # Load input data
         loader = InputDataLoader()
         input_ds = loader.load_simulation_input_data(input_file)
@@ -120,9 +173,10 @@ def run_pyradtran_simulation(
         else:
             output_path = Path(output_path)
 
-        # Run the simulation batch
+        # Run the simulation batch. The resolver handles both dotted
+        # config-override keys and raw uvspec keywords.
         parsed_outputs = execute_simulation_batch(
-            config=config, input_ds=input_ds, parameter_overrides=parameter_overrides
+            config=config, input_ds=input_ds, params=parameter_overrides
         )
 
         # Convert to xarray and save results
@@ -149,6 +203,7 @@ def run_pyradtran_simulation(
 def execute_simulation_batch(
     config: SimulationConfig,
     input_ds: xr.Dataset,
+    params: Optional[Dict[str, Any]] = None,
     time_var: str = "time",
     lat_var: str = "latitude",
     lon_var: str = "longitude",
@@ -181,20 +236,25 @@ def execute_simulation_batch(
         Merged configuration.
     input_ds : xarray.Dataset
         Input coordinates (arbitrary number of dimensions).
+    params : dict, optional
+        Unified parameter mapping: registry keys / raw uvspec keywords /
+        dotted config paths to literal values or :class:`~pyradtran.params.Var`
+        per-point dataset references. Preferred over the deprecated
+        ``*_var`` and ``parameter_overrides`` kwargs below.
     time_var, lat_var, lon_var : str
         Names of core coordinate variables.
     albedo_var : str, optional
-        Dataset variable to use as per-point albedo.
+        Deprecated — use ``params={"albedo": Var(...)}``.
     surface_temperature_var : str, optional
-        Per-point surface temperature variable.
+        Deprecated — use ``params={"sur_temperature": Var(...)}``.
     surface_type_var : str, optional
-        Per-point IGBP surface-type variable (1–20).
+        Deprecated — use ``params={"brdf_rpv_type": Var(...)}``.
     altitude_var : str, optional
-        Per-point scalar altitude variable.
+        Deprecated — use ``params={"zout": Var(...)}``.
     era5_atmosphere : xarray.Dataset, optional
         ERA5 dataset for atmosphere file generation.
     parameter_overrides : dict, optional
-        Extra ``key: value`` pairs forwarded to ``uvspec``.
+        Deprecated — use ``params`` instead.
     progress_callback : callable, optional
         ``callback(current, total)`` invoked after each simulation.
     show_progress : bool, default ``True``
@@ -285,8 +345,7 @@ def execute_simulation_batch(
 
         era5_generator = ERA5AtmosphereGenerator()
 
-        # We need to iterate over all points to generate ERA5 files
-        # Note: Optimization possible by finding unique (time, lat, lon) tuples
+        # Cache: one atmosphere file per unique (time, lat, lon)
         for i in range(num_points):
             point_ds = stacked_ds.isel({sample_dim: i})
             t = get_val(point_ds, time_var)
@@ -315,123 +374,92 @@ def execute_simulation_batch(
                 )
                 # We'll continue, and the simulation might fail later or use default
 
-    # Prepare simulation points
-    points = []
+    # Unified params: translate deprecated kwargs, then resolve per point.
+    params = _translate_legacy_kwargs(
+        params, albedo_var, surface_temperature_var, surface_type_var,
+        altitude_var, parameter_overrides,
+    )
+    resolver = ParamResolver(config, params)
+    resolver.validate_var_targets(input_ds)
+
+    points: List[SimPoint] = []
     for i in range(num_points):
         point_ds = stacked_ds.isel({sample_dim: i})
-
         t = get_val(point_ds, time_var)
         lat = get_val(point_ds, lat_var)
         lon = get_val(point_ds, lon_var)
 
-        alb = get_val(point_ds, albedo_var)
-        surf_temp = get_val(point_ds, surface_temperature_var)
-        surf_type = get_val(point_ds, surface_type_var)
-        alt = get_val(point_ds, altitude_var)
+        resolved, skipped = resolver.resolve_point(point_ds)
 
-        # Cloud automation extraction
-        point_overrides = parameter_overrides.copy() if parameter_overrides else {}
-
-        # Improve Variational Logic:
-        # Check if any parameter override is a reference to a dataset variable
-        # This allows varying parameters like 'sza', 'albedo', 'mol_abs_param' etc.
-        # by mapping them to dataset dimensions/variables.
-        if parameter_overrides:
-            for key, val in parameter_overrides.items():
-                if isinstance(val, str) and val in point_ds:
-                    # It's a reference to a variable!
-                    variable_val = get_val(point_ds, val)
-                    if variable_val is not None:
-                        point_overrides[key] = variable_val
-                        # logger.debug(f"Resolved override for '{key}': '{val}' -> {variable_val}")
-
+        # Cloud automation: build dict-valued wc_file/ic_file entries
         try:
             if cloud_wc_var or cloud_ic_var:
                 cth = get_val(point_ds, cloud_top_var)
                 cbh = get_val(point_ds, cloud_bottom_var)
-
-                # Check validity
                 if (
-                    cth is not None
-                    and cbh is not None
-                    and not np.isnan(cth)
-                    and not np.isnan(cbh)
+                    cth is not None and cbh is not None
+                    and not np.isnan(cth) and not np.isnan(cbh)
                 ):
-                    # Sort Z descending (uvspec requirement)
                     z_layer = [max(cth, cbh), min(cth, cbh)]
-
-                    # Liquid Cloud
                     if cloud_wc_var:
                         lwc = get_val(point_ds, cloud_wc_var)
                         reff = (
                             get_val(point_ds, cloud_reff_var)
-                            if cloud_reff_var
-                            else 10.0
-                        )  # Default 10um
+                            if cloud_reff_var else 10.0
+                        )
                         if lwc is not None and not np.isnan(lwc):
-                            # Use reff if valid, else default
                             r_val = (
                                 reff
                                 if (reff is not None and not np.isnan(reff))
                                 else 10.0
                             )
-                            point_overrides["wc_file"] = {
-                                "z": z_layer,
-                                "lwc": [float(lwc), float(lwc)],
-                                "reff": [float(r_val), float(r_val)],
-                            }
-
-                    # Ice Cloud
+                            resolved["wc_file"] = (
+                                {
+                                    "z": z_layer,
+                                    "lwc": [float(lwc), float(lwc)],
+                                    "reff": [float(r_val), float(r_val)],
+                                },
+                                "dataset-var",
+                            )
                     if cloud_ic_var:
                         iwc = get_val(point_ds, cloud_ic_var)
-                        # Use ic_reff if provided, else shared reff, else default
                         r_key = (
-                            cloud_ic_reff_var if cloud_ic_reff_var else cloud_reff_var
+                            cloud_ic_reff_var if cloud_ic_reff_var
+                            else cloud_reff_var
                         )
-                        reff_ice = (
-                            get_val(point_ds, r_key) if r_key else 20.0
-                        )  # Default 20um for ice
+                        reff_ice = get_val(point_ds, r_key) if r_key else 20.0
                         if iwc is not None and not np.isnan(iwc):
                             r_val = (
                                 reff_ice
                                 if (reff_ice is not None and not np.isnan(reff_ice))
                                 else 20.0
                             )
-                            point_overrides["ic_file"] = {
-                                "z": z_layer,
-                                "iwc": [float(iwc), float(iwc)],
-                                "reff": [float(r_val), float(r_val)],
-                            }
-                else:
-                    pass  # Skip cloud if geometry invalid (clear sky fallback?)
+                            resolved["ic_file"] = (
+                                {
+                                    "z": z_layer,
+                                    "iwc": [float(iwc), float(iwc)],
+                                    "reff": [float(r_val), float(r_val)],
+                                },
+                                "dataset-var",
+                            )
         except Exception as e:
             logger.warning(f"Failed to generate cloud parameters for point {i}: {e}")
 
-        # Convert time to proper datetime object
         dt = pd.to_datetime(t).to_pydatetime()
-
-        # Determine Point ID - use index to ensure uniqueness for iteration, but also keep physical ID
-        point_id = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}_{i}"
-
-        # ERA5 file lookup uses physical ID components
         era5_key = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
-        era5_atm_file = (
-            era5_atmosphere_files.get(era5_key) if era5_atmosphere_files else None
-        )
-
-        # Note: We append point_overrides now
         points.append(
-            (
-                dt,
-                lat,
-                lon,
-                alb,
-                surf_temp,
-                surf_type,
-                alt,
-                era5_atm_file,
-                point_id,
-                point_overrides,
+            SimPoint(
+                index=i,
+                time=dt,
+                latitude=lat,
+                longitude=lon,
+                resolved=resolved,
+                skipped=skipped,
+                era5_file=(
+                    era5_atmosphere_files.get(era5_key)
+                    if era5_atmosphere_files else None
+                ),
+                point_id=f"{era5_key}_{i}",
             )
         )
 
@@ -444,99 +472,47 @@ def execute_simulation_batch(
     else:
         pbar = None
 
-    with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
-        # Submit all simulations
-        future_to_idx = {}
-        for i, point_data in enumerate(points):
-            # Unpack the new 10-element tuple (added surf_type)
-            (
-                dt,
-                lat,
-                lon,
-                alb,
-                surf_temp,
-                surf_type,
-                alt,
-                era5_atm_file,
-                point_id,
-                p_overrides,
-            ) = point_data
+    completed = 0
+    success_count = 0
 
-            # Helper wrapper needs to handle the tuple, but _run_single_simulation_unified signature expects args
-            # Actually, executor.submit calls the fn with *args.
-            # We need to match _run_single_simulation_unified signature or wrap it.
-            # _run_single_simulation_unified(config, point, parameter_overrides) <-- this was designed for point tuple
-            # Wait, let's check _run_single_simulation_unified implementation first!
-            # It likely unpacks 'point'. If I change 'point' structure errors will occur.
+    def _record(idx: int, result: Optional[ParsedOutput]) -> None:
+        nonlocal completed, success_count
+        completed += 1
+        results[idx] = result
+        if result:
+            success_count += 1
+        else:
+            logger.warning(f"Simulation {idx + 1}/{num_points} produced no output")
+        if pbar:
+            pbar.update(1)
+            pbar.set_postfix({"Success": success_count, "Total": num_points})
+        if progress_callback:
+            # B14 fix: report completed count, not success count
+            progress_callback(completed, num_points)
 
-            # Let's adjust how we submit.
-            # We should probably pass arguments explicitly to submit,
-            # Or assume _run_... handles a point object.
-
-            # Let's Modify the submission to pass p_overrides explicitly INSTEAD of the global one.
-            # But point_data needs to be compatible if it's passed as a single arg.
-            # Let's see how _run_single_simulation_unified is implemented.
-            pass
-
-            # TEMPORARY PLACEHOLDER: I need to verify _run_single_simulation_unified before concluding this edit.
-            # But I am inside ReplaceFileContent...
-            # I will trust that I can modify _run_single_simulation_unified later if needed,
-            # OR I pass p_overrides as the 3rd argument to _run_single_... which is `parameter_overrides`.
-
-            # Current call:
-            # _run_single_simulation_unified(config, point, parameter_overrides)
-            # If point is (dt, lat, lon, alb, surf, alt, era5, id),
-            # and I changed points.append(...) to include override.
-            # I should strip override from point before passing to function, and pass it as 3rd arg.
-
-            point_tuple = (
-                dt,
-                lat,
-                lon,
-                alb,
-                surf_temp,
-                surf_type,
-                alt,
-                era5_atm_file,
-                point_id,
-            )
-            future = executor.submit(
-                _run_single_simulation_unified, config, point_tuple, p_overrides
-            )
-            future_to_idx[future] = i
-
-        # Collect results as they complete
-        success_count = 0
-        for future in as_completed(future_to_idx):
-            idx = future_to_idx[future]
-
-            try:
-                result = future.result()
-                results[idx] = result  # Store in correct position
-
-                if result:
-                    success_count += 1
-                    logger.debug(
-                        f"Simulation {idx + 1}/{num_points} completed successfully"
+    if config.execution.max_workers and config.execution.max_workers > 1:
+        with ProcessPoolExecutor(max_workers=config.execution.max_workers) as executor:
+            future_to_idx = {
+                executor.submit(_run_single_simulation_unified, config, point): point.index
+                for point in points
+            }
+            for future in as_completed(future_to_idx):
+                idx = future_to_idx[future]
+                try:
+                    result = future.result()
+                except Exception as e:
+                    logger.error(
+                        f"Simulation {idx + 1}/{num_points} failed with error: {str(e)}"
                     )
-                else:
-                    logger.warning(
-                        f"Simulation {idx + 1}/{num_points} produced no output"
-                    )
-
-            except Exception as e:
-                logger.error(
-                    f"Simulation {idx + 1}/{num_points} failed with error: {str(e)}"
-                )
-
-            # Update progress bar
-            if pbar:
-                pbar.update(1)
-                pbar.set_postfix({"Success": success_count, "Total": num_points})
-
-            # Progress callback
-            if progress_callback:
-                progress_callback(success_count, num_points)
+                    result = None
+                _record(idx, result)
+    else:
+        # Single-worker runs skip the process pool entirely: no pickling
+        # round-trip, and results are available synchronously for callers
+        # driving simulations from within an already-parallel context.
+        for point in points:
+            result = _run_single_simulation_unified(config, point)
+            _record(point.index, result)
 
     # Close progress bar
     if pbar:
@@ -551,96 +527,52 @@ def execute_simulation_batch(
     return results
 
 
+def _coerce_datetime(time) -> datetime:
+    """Convert any supported time representation to datetime."""
+    if isinstance(time, datetime):
+        return time
+    if isinstance(time, np.datetime64) or isinstance(time, (int, np.integer)):
+        return pd.to_datetime(time).to_pydatetime()
+    if isinstance(time, str):
+        return datetime.fromisoformat(time)
+    return time
+
+
 def _run_single_simulation_unified(
     config: SimulationConfig,
-    point_data: Tuple,
-    parameter_overrides: Dict[str, Any] = None,
+    point: SimPoint,
 ) -> Optional[ParsedOutput]:
     """Execute a single ``uvspec`` run (called by the process pool)."""
     try:
-        time, lat, lon, albedo, surf_temp, surf_type, altitude, era5_file, point_id = (
-            point_data
-        )
-
-        # Initialize simulation
         sim = Simulation(config)
+        dt = _coerce_datetime(point.time)
 
-        # Convert datetime to datetime object if needed
-        if isinstance(time, datetime):
-            dt = time
-        elif isinstance(time, (np.datetime64, str)):
-            if isinstance(time, np.datetime64):
-                dt = pd.to_datetime(time).to_pydatetime()
-            else:
-                dt = datetime.fromisoformat(time)
-        elif isinstance(time, (int, np.integer)):
-            # Handle timestamp integers (e.g., from pd.date_range)
-            dt = pd.to_datetime(time).to_pydatetime()
-        else:
-            dt = time
-
-        # Run simulation with parameters
         output_file = sim.run_simulation(
             dt=dt,
-            latitude=lat,
-            longitude=lon,
-            override_albedo=albedo,
-            override_surface_temperature=surf_temp,
-            override_surface_type=surf_type,
-            override_altitude_km=altitude,
-            era5_atmosphere_file=era5_file,
-            parameter_overrides=parameter_overrides,
+            latitude=point.latitude,
+            longitude=point.longitude,
+            resolved_params=point.resolved,
+            era5_atmosphere_file=point.era5_file,
         )
 
         if output_file and output_file.exists():
-            # Parse the output
-            parser = OutputParser(config, parameter_overrides)
+            raw_overrides = {k: v for k, (v, _p) in point.resolved.items()}
+            parser = OutputParser(config, raw_overrides)
             parsed_output = parser.parse_output_file(output_file)
-
-            # Add point metadata
             parsed_output.metadata.update(
                 {
-                    "point_id": point_id,
+                    "point_id": point.point_id,
                     "time": dt.isoformat(),
-                    "latitude": lat,
-                    "longitude": lon,
-                    "albedo": albedo,
-                    "surface_temperature": surf_temp,
-                    "surface_type": surf_type,
-                    "altitude": altitude,
+                    "latitude": point.latitude,
+                    "longitude": point.longitude,
                 }
             )
-
             return parsed_output
-        else:
-            logger.error(f"No output file produced for point {point_id}")
-            return None
-
-    except Exception as e:
-        logger.error(
-            f"Single simulation failed for point {point_data[-1] if len(point_data) > 7 else 'unknown'}: {str(e)}"
-        )
+        logger.error(f"No output file produced for point {point.point_id}")
         return None
-
-
-def _apply_parameter_overrides(
-    config: SimulationConfig, parameter_overrides: Dict[str, Any]
-):
-    """Apply dotted-path overrides (e.g. ``simulation_defaults.albedo_value``) to *config*."""
-    for key, value in parameter_overrides.items():
-        parts = key.split(".")
-        if len(parts) == 2:
-            # Config parameter override (e.g., "simulation_defaults.albedo_value")
-            section, param = parts
-            if hasattr(config, section) and hasattr(getattr(config, section), param):
-                setattr(getattr(config, section), param, value)
-                logger.info(f"Overriding config: {section}.{param} = {value}")
-            else:
-                logger.warning(f"Unknown config parameter: {section}.{param}")
-        else:
-            # LibRadtran command override (e.g., "wc_file 1D")
-            # These are passed directly to the core simulation
-            logger.debug(f"LibRadtran parameter override: {key} {value}")
+    except Exception as e:
+        logger.error(f"Single simulation failed for point {point.point_id}: {str(e)}")
+        return None
 
 
 @xr.register_dataset_accessor("pyradtran")
@@ -671,6 +603,7 @@ class PyRadtranAccessor:
         self,
         config_path: Optional[Union[str, Path]] = None,
         config: Optional[SimulationConfig] = None,
+        params: Optional[Dict[str, Any]] = None,
         parameter_overrides: Dict[str, Any] = None,
         time_var: str = "time",
         lat_var: str = "latitude",
@@ -701,16 +634,22 @@ class PyRadtranAccessor:
             YAML configuration file.
         config : SimulationConfig, optional
             Pre-built config (overrides *config_path*).
+        params : dict, optional
+            Unified parameter mapping: registry keys / raw uvspec keywords /
+            dotted config paths to literal values or
+            :class:`~pyradtran.params.Var` per-point dataset references.
+            Preferred over the deprecated ``*_var`` and
+            ``parameter_overrides`` kwargs below.
         parameter_overrides : dict, optional
-            Extra ``key: value`` pairs for ``uvspec``.
+            Deprecated — use ``params`` instead.
         time_var, lat_var, lon_var : str
             Coordinate variable names.
         albedo_var : str, optional
-            Per-point albedo variable.
+            Deprecated — use ``params={"albedo": Var(...)}``.
         surface_temperature_var : str, optional
-            Per-point surface-temperature variable.
+            Deprecated — use ``params={"sur_temperature": Var(...)}``.
         surface_type_var : str, optional
-            Per-point IGBP surface-type variable.
+            Deprecated — use ``params={"brdf_rpv_type": Var(...)}``.
         era5_atmosphere : xarray.Dataset, optional
             ERA5 dataset for custom atmosphere profiles.
         return_dataset : bool, default ``True``
@@ -748,10 +687,6 @@ class PyRadtranAccessor:
         else:
             self._config = load_config(config_path)
 
-        # Apply parameter overrides if provided
-        if parameter_overrides:
-            _apply_parameter_overrides(self._config, parameter_overrides)
-
         # Validate input dataset
         self._validate_input_dataset(
             time_var,
@@ -768,11 +703,11 @@ class PyRadtranAccessor:
         altitude_as_data_var = False
 
         if alt_var in self._obj.dims or alt_var in self._obj.coords:
-            # Altitude is a coordinate - use as list of zout levels
-            dataset_altitudes = self._obj[alt_var].values
-            if len(dataset_altitudes) > 0:
+            dataset_altitudes = np.atleast_1d(self._obj[alt_var].values)
+            if dataset_altitudes.size > 0:
                 logger.info(
-                    f"Altitude found as coordinate - using {len(dataset_altitudes)} levels for zout: {dataset_altitudes}"
+                    f"Altitude found as coordinate - using "
+                    f"{dataset_altitudes.size} levels for zout: {dataset_altitudes}"
                 )
                 self._config.simulation_defaults.output_altitudes_km = [
                     float(alt) for alt in dataset_altitudes
@@ -809,6 +744,7 @@ class PyRadtranAccessor:
         parsed_outputs = execute_simulation_batch(
             config=self._config,
             input_ds=ds_to_execute,
+            params=params,
             time_var=time_var,
             lat_var=lat_var,
             lon_var=lon_var,

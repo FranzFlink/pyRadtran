@@ -24,11 +24,13 @@ from pyradtran.config import (
 )
 from pyradtran.interface import (
     PyRadtranAccessor,
+    SimPoint,
     _run_single_simulation_unified,
     execute_simulation_batch,
     run_pyradtran_simulation,
 )
 from pyradtran.io import OutputToXarray, OutputType, ParsedOutput
+from pyradtran.params import PROV_LITERAL
 
 
 # Fixture for a test dataset
@@ -79,7 +81,9 @@ def minimal_config(tmp_path):
             output_columns=["sza", "eglo", "eup", "albedo"],
             output_altitudes_km=[0.0],
         ),
-        execution=ExecutionConfig(max_workers=1),
+        # max_workers > 1 so tests exercise the ProcessPoolExecutor path
+        # (see execute_simulation_batch's single-worker serial fast path).
+        execution=ExecutionConfig(max_workers=2),
         output=OutputConfig(filename_prefix="test"),
     )
 
@@ -152,12 +156,25 @@ def test_run_single_simulation_unified(
     )
     mock_parser.parse_output_file.return_value = mock_parsed_output
 
-    # Test data point: (time, lat, lon, albedo, surf_temp, surf_type, altitude, era5_file, point_id)
+    # Test data point: a fully-resolved SimPoint (replaces the old 9-tuple)
     dt = datetime(2023, 5, 1, 12, 0)
-    point_data = (dt, 60.0, 10.0, 0.2, 290.0, 1.0, 0.0, None, "test_point")
+    point = SimPoint(
+        index=0,
+        time=dt,
+        latitude=60.0,
+        longitude=10.0,
+        resolved={
+            "albedo": (0.2, PROV_LITERAL),
+            "sur_temperature": (290.0, PROV_LITERAL),
+            "brdf_rpv_type": (1.0, PROV_LITERAL),
+            "zout": (0.0, PROV_LITERAL),
+        },
+        era5_file=None,
+        point_id="test_point",
+    )
 
     # Call function
-    result = _run_single_simulation_unified(minimal_config, point_data)
+    result = _run_single_simulation_unified(minimal_config, point)
 
     # Verify
     assert result == mock_parsed_output
