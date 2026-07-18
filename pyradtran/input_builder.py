@@ -168,6 +168,12 @@ class InputFileBuilder:
         if sd.clouds.enabled:
             self._add_cloud_lines(lines)
 
+        # BRDF surface type unconditionally replaces plain albedo,
+        # regardless of dict ordering.
+        if "brdf_rpv_type" in resolved:
+            resolved.pop("albedo", None)
+            lines = [ln for ln in lines if ln.keyword != "albedo"]
+
         # Apply resolved parameters: replace same-keyword lines, then append
         for key, (value, provenance) in resolved.items():
             spec = REGISTRY.get(key)

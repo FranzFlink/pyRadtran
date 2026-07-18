@@ -91,6 +91,18 @@ class TestOverrideReplacement:
         assert "brdf_rpv_type 7" in text
         assert "albedo" not in [ln.split()[0] for ln in text.splitlines()]
 
+    def test_brdf_suppresses_albedo_regardless_of_order(self, minimal_config):
+        text, _ = build_text(
+            minimal_config,
+            resolved={
+                "brdf_rpv_type": (7, PROV_LITERAL),
+                "albedo": (0.3, PROV_DATASET),
+            },
+        )
+        first_words = [ln.split()[0] for ln in text.splitlines()]
+        assert "albedo" not in first_words
+        assert "brdf_rpv_type" in first_words
+
     def test_unknown_key_passthrough(self, minimal_config):
         from pyradtran.params import PROV_UNVALIDATED
 
