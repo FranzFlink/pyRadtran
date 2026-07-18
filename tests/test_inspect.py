@@ -187,3 +187,34 @@ def _legacy_inspect_feature():
 
 if __name__ == "__main__":
     test_inspect_feature()
+
+
+@pytest.mark.unit
+@pytest.mark.interface
+class TestInspectCloudFileParams:
+    def test_params_dict_cloud_passthrough(self, cloud_dataset):
+        from pyradtran.params import Var  # noqa: F401
+
+        result = cloud_dataset.pyradtran.inspect_cloud_file(
+            params={
+                "wc_file": {"z": [2.0, 1.0], "lwc": [0.3, 0.3], "reff": [9.0, 9.0]}
+            },
+        )
+        assert "0.300000" in result
+        assert "9.000000" in result
+
+    def test_params_var_resolves_per_point(self, cloud_dataset):
+        from pyradtran.params import Var
+
+        times = pd.date_range("2022-01-01 12:00", periods=2, freq="h")
+        result = cloud_dataset.pyradtran.inspect_cloud_file(
+            selector={"time": times[1]},
+            params={"sur_temperature": Var("reff")},  # any Var resolves
+            cloud_wc_var="lwc",
+            cloud_top_var="cth",
+            cloud_bottom_var="cbh",
+            cloud_reff_var="reff",
+        )
+        # point 1: lwc=0.5, reff=15.0 -> cloud profile built from the point
+        assert "0.500000" in result
+        assert "15.000000" in result

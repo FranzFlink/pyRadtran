@@ -127,6 +127,7 @@ def run_pyradtran_simulation(
     input_file: Union[str, Path],
     output_path: Optional[Union[str, Path]] = None,
     config_path: Optional[Union[str, Path]] = None,
+    params: Optional[Dict[str, Any]] = None,
     parameter_overrides: Dict[str, Any] = None,
     max_workers: Optional[int] = None,
 ) -> Path:
@@ -146,8 +147,11 @@ def run_pyradtran_simulation(
         *None*.
     config_path : str or pathlib.Path, optional
         YAML configuration file.  Uses package defaults when *None*.
+    params : dict, optional
+        Unified parameter mapping (registry keys / raw uvspec keywords /
+        dotted config paths, literals or :class:`~pyradtran.params.Var`).
     parameter_overrides : dict, optional
-        Extra ``key: value`` pairs for ``uvspec``.
+        Deprecated — use ``params`` instead.
     max_workers : int, optional
         Override the ``execution.max_workers`` config value.
 
@@ -186,7 +190,10 @@ def run_pyradtran_simulation(
         # Run the simulation batch. The resolver handles both dotted
         # config-override keys and raw uvspec keywords.
         parsed_outputs = execute_simulation_batch(
-            config=config, input_ds=input_ds, params=parameter_overrides
+            config=config,
+            input_ds=input_ds,
+            params=params,
+            parameter_overrides=parameter_overrides,
         )
 
         # Convert to xarray and save results
@@ -200,7 +207,7 @@ def run_pyradtran_simulation(
                 output_path=output_path,
                 input_ds=input_ds,
                 config=config,
-                simulation_params=parameter_overrides,
+                simulation_params=params or parameter_overrides,
             )
         else:
             raise PyRadtranError("No valid simulation results produced")
@@ -884,7 +891,7 @@ class PyRadtranAccessor:
                     output_path=output_path,
                     input_ds=self._obj,
                     config=self._config,
-                    simulation_params=parameter_overrides,
+                    simulation_params=params or parameter_overrides,
                 )
                 logger.info(f"Results saved to {output_path}")
 
@@ -907,7 +914,7 @@ class PyRadtranAccessor:
                 output_path=output_path,
                 input_ds=self._obj,
                 config=self._config,
-                simulation_params=parameter_overrides,
+                simulation_params=params or parameter_overrides,
             )
         else:
             raise PyRadtranError("No valid simulation results to return or save")
@@ -944,6 +951,7 @@ class PyRadtranAccessor:
     def inspect_cloud_file(
         self,
         selector: Dict[str, Any] = None,
+        params: Optional[Dict[str, Any]] = None,
         parameter_overrides: Dict[str, Any] = None,
         cloud_wc_var: Optional[str] = None,
         cloud_ic_var: Optional[str] = None,
@@ -959,7 +967,12 @@ class PyRadtranAccessor:
         selector : dict, optional
             Passed to ``Dataset.sel()`` to pick a single point.
             Defaults to the first element along every dimension.
+        params : dict, optional
+            Unified parameter mapping (same as :meth:`run`);
+            :class:`~pyradtran.params.Var` entries resolve from the
+            selected point.
         parameter_overrides : dict, optional
+            Deprecated — use ``params`` instead.
         cloud_wc_var, cloud_ic_var, cloud_reff_var : str, optional
         cloud_ic_reff_var, cloud_top_var, cloud_bottom_var : str, optional
 
@@ -989,6 +1002,18 @@ class PyRadtranAccessor:
                             val_scalar.item() if val_scalar.size == 1 else val_scalar
                         )
                     point_overrides[key] = val_scalar
+
+        # Unified params: literals pass through, Var resolves per point
+        for key, val in (params or {}).items():
+            if isinstance(val, Var):
+                if val.name not in point_ds:
+                    continue
+                v = point_ds[val.name].values
+                if hasattr(v, "item") and getattr(v, "size", 1) == 1:
+                    v = v.item()
+                point_overrides[key] = v
+            else:
+                point_overrides[key] = val
 
         # Extract variables helper
         def get_val(var):
