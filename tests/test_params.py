@@ -309,3 +309,13 @@ class TestBatchParams(object):
                     show_progress=False,
                 )
         mock_pool.assert_called_once_with(max_workers=None)
+
+
+class TestPublicAPI:
+    def test_top_level_exports(self):
+        import pyradtran
+
+        assert pyradtran.Var is Var
+        assert callable(pyradtran.convolve_channels)
+        assert callable(pyradtran.brightness_temperature)
+        assert pyradtran.__version__ == "0.2.0"

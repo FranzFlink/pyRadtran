@@ -28,7 +28,7 @@ Core public API
     Load and merge the three config layers.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 import logging
 
@@ -71,6 +71,8 @@ from .io import (  # noqa: E402
     ParsedOutput,
 )
 from .utils import RadiosondeFinder  # noqa: E402
+from .channels import brightness_temperature, convolve_channels  # noqa: E402
+from .params import REGISTRY, ParamResolver, ParamSpec, Var  # noqa: E402
 
 # Import cloud functionality if available
 try:
@@ -113,6 +115,13 @@ __all__ = [
     "InputDataLoader",
     "ERA5AtmosphereGenerator",
     "NetCDFSaver",
+    # Parameters & channels
+    "Var",
+    "ParamSpec",
+    "ParamResolver",
+    "REGISTRY",
+    "convolve_channels",
+    "brightness_temperature",
     # Utilities
     "RadiosondeFinder",
     # Exceptions
