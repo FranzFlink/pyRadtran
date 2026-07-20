@@ -24,19 +24,18 @@ def ds_in():
 
 @pytest.fixture
 def fake_result():
-    return xr.Dataset(
-        {"eglo": (("time",), [500.0, 510.0])}, coords={"time": [0, 1]}
-    )
+    return xr.Dataset({"eglo": (("time",), [500.0, 510.0])}, coords={"time": [0, 1]})
 
 
 def _run_mocked(ds_in, fake_result, minimal_config, **kwargs):
     import pyradtran.interface as interface
     from pyradtran.interface import PointOutcome
 
-    with patch.object(
-        interface, "execute_simulation_batch"
-    ) as mock_batch, patch.object(
-        interface.OutputToXarray, "convert_batch", return_value=fake_result
+    with (
+        patch.object(interface, "execute_simulation_batch") as mock_batch,
+        patch.object(
+            interface.OutputToXarray, "convert_batch", return_value=fake_result
+        ),
     ):
         mock_batch.return_value = [PointOutcome(object(), 0), PointOutcome(object(), 0)]
         return ds_in.pyradtran.run(
@@ -55,7 +54,9 @@ class TestProvenanceAttrs:
 
     def test_params_serialized(self, ds_in, fake_result, minimal_config):
         out = _run_mocked(
-            ds_in, fake_result, minimal_config,
+            ds_in,
+            fake_result,
+            minimal_config,
             params={"albedo": Var("surface_albedo"), "mol_modify O3": 320.0},
         )
         recorded = json.loads(out.attrs["pyradtran_params"])
@@ -71,13 +72,15 @@ class TestProvenanceAttrs:
 
     def test_input_example_annotated(self, ds_in, fake_result, minimal_config):
         out = _run_mocked(
-            ds_in, fake_result, minimal_config,
+            ds_in,
+            fake_result,
+            minimal_config,
             params={"albedo": Var("surface_albedo")},
         )
         example = out.attrs["pyradtran_input_example"]
         assert "rte_solver disort" in example
-        assert "# dataset-var" in example      # per-point albedo annotated
-        assert "albedo 0.3" in example         # first point's value
+        assert "# dataset-var" in example  # per-point albedo annotated
+        assert "albedo 0.3" in example  # first point's value
 
     def test_channels_recorded(self, ds_in, minimal_config):
         import numpy as np
@@ -87,9 +90,11 @@ class TestProvenanceAttrs:
             {"uu": (("time", "wavelength"), np.ones((2, 31)))},
             coords={"wavelength": wl, "time": [0, 1]},
         )
-        phi = np.zeros((1, wl.size)); phi[0, 10:20] = 1.0
+        phi = np.zeros((1, wl.size))
+        phi[0, 10:20] = 1.0
         srf = xr.DataArray(
-            phi, dims=("channel", "wavelength"),
+            phi,
+            dims=("channel", "wavelength"),
             coords={"channel": ["ch1"], "wavelength": wl},
         )
         out = _run_mocked(ds_in, spectral, minimal_config, channels=srf)
@@ -99,7 +104,9 @@ class TestProvenanceAttrs:
         self, ds_in, fake_result, minimal_config, tmp_path
     ):
         out = _run_mocked(
-            ds_in, fake_result, minimal_config,
+            ds_in,
+            fake_result,
+            minimal_config,
             params={"albedo": Var("surface_albedo")},
         )
         path = tmp_path / "prov.nc"

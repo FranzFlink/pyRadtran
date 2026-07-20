@@ -452,7 +452,9 @@ def execute_simulation_batch(
     # Core coordinate variables must exist — direct callers otherwise get
     # cryptic per-point crashes deep inside the batch loop.
     for label, var in (
-        ("time", time_var), ("latitude", lat_var), ("longitude", lon_var)
+        ("time", time_var),
+        ("latitude", lat_var),
+        ("longitude", lon_var),
     ):
         if var not in input_ds:
             raise ValueError(
@@ -520,7 +522,8 @@ def execute_simulation_batch(
     if time_flat.size != num_points:
         time_flat = None  # unusual layout; fall back to per-point checks
     bad_time = (
-        pd.isna(time_flat) if time_flat is not None
+        pd.isna(time_flat)
+        if time_flat is not None
         else np.zeros(num_points, dtype=bool)
     )
 
@@ -576,8 +579,12 @@ def execute_simulation_batch(
 
     # Unified params: translate deprecated kwargs, then resolve per point.
     params = _translate_legacy_kwargs(
-        params, albedo_var, surface_temperature_var, surface_type_var,
-        altitude_var, parameter_overrides,
+        params,
+        albedo_var,
+        surface_temperature_var,
+        surface_type_var,
+        altitude_var,
+        parameter_overrides,
     )
     resolver = ParamResolver(config, params)
     resolver.validate_var_targets(input_ds)
@@ -586,9 +593,7 @@ def execute_simulation_batch(
     prefilled: Dict[int, PointOutcome] = {}
     for i in range(num_points):
         if bad_time[i]:
-            prefilled[i] = PointOutcome(
-                None, 2, "missing or NaT time", f"point_{i}"
-            )
+            prefilled[i] = PointOutcome(None, 2, "missing or NaT time", f"point_{i}")
             continue
         point_ds = stacked_ds.isel({sample_dim: i})
         t = get_val(point_ds, time_var)
@@ -597,14 +602,9 @@ def execute_simulation_batch(
 
         if t is None or pd.isna(t):
             # fallback for layouts where the flat time array was unusable
-            prefilled[i] = PointOutcome(
-                None, 2, "missing or NaT time", f"point_{i}"
-            )
+            prefilled[i] = PointOutcome(None, 2, "missing or NaT time", f"point_{i}")
             continue
-        if any(
-            v is None or (isinstance(v, float) and np.isnan(v))
-            for v in (lat, lon)
-        ):
+        if any(v is None or (isinstance(v, float) and np.isnan(v)) for v in (lat, lon)):
             prefilled[i] = PointOutcome(None, 2, "NaN coordinates", f"point_{i}")
             continue
 
@@ -615,8 +615,12 @@ def execute_simulation_batch(
             if cloud_wc_var or cloud_ic_var:
                 wc, ic = _point_cloud_profiles(
                     lambda v: get_val(point_ds, v),
-                    cloud_wc_var, cloud_ic_var, cloud_reff_var,
-                    cloud_ic_reff_var, cloud_top_var, cloud_bottom_var,
+                    cloud_wc_var,
+                    cloud_ic_var,
+                    cloud_reff_var,
+                    cloud_ic_reff_var,
+                    cloud_top_var,
+                    cloud_bottom_var,
                 )
                 if wc is not None:
                     resolved["wc_file"] = (wc, PROV_DATASET)
@@ -647,7 +651,8 @@ def execute_simulation_batch(
                 skipped=skipped,
                 era5_file=(
                     era5_atmosphere_files.get(era5_key)
-                    if era5_atmosphere_files else None
+                    if era5_atmosphere_files
+                    else None
                 ),
                 point_id=f"{era5_key}_{i}",
             )
@@ -689,7 +694,9 @@ def execute_simulation_batch(
     if use_pool:
         with ProcessPoolExecutor(max_workers=max_workers) as executor:
             future_to_idx = {
-                executor.submit(_run_single_simulation_unified, config, point): point.index
+                executor.submit(
+                    _run_single_simulation_unified, config, point
+                ): point.index
                 for point in points
             }
             for future in as_completed(future_to_idx):
@@ -1073,19 +1080,13 @@ class PyRadtranAccessor:
         )
 
         # Attach per-point status codes (0 ok / 1 failed / 2 skipped)
-        status_flat = np.array(
-            [o.status if o is not None else 1 for o in outcomes]
-        )
+        status_flat = np.array([o.status if o is not None else 1 for o in outcomes])
         status_dims = list(ds_to_execute.sizes.keys())
         if status_dims:
-            status_stacked = ds_to_execute.stack(
-                {"sample_batch_dim": status_dims}
-            )
+            status_stacked = ds_to_execute.stack({"sample_batch_dim": status_dims})
             status_da = xr.DataArray(
                 status_flat,
-                coords={
-                    "sample_batch_dim": status_stacked["sample_batch_dim"]
-                },
+                coords={"sample_batch_dim": status_stacked["sample_batch_dim"]},
                 dims=["sample_batch_dim"],
             ).unstack("sample_batch_dim")
         else:
@@ -1271,8 +1272,13 @@ class PyRadtranAccessor:
 
         # Same construction the batch driver uses — preview cannot diverge
         wc, ic = _point_cloud_profiles(
-            get_val, cloud_wc_var, cloud_ic_var, cloud_reff_var,
-            cloud_ic_reff_var, cloud_top_var, cloud_bottom_var,
+            get_val,
+            cloud_wc_var,
+            cloud_ic_var,
+            cloud_reff_var,
+            cloud_ic_reff_var,
+            cloud_top_var,
+            cloud_bottom_var,
         )
 
         # Explicit dict-valued overrides win, per phase
@@ -1283,13 +1289,9 @@ class PyRadtranAccessor:
 
         blocks = []
         if wc:
-            blocks.append(
-                "# wc_file profile\n" + Simulation.format_cloud_profile(wc)
-            )
+            blocks.append("# wc_file profile\n" + Simulation.format_cloud_profile(wc))
         if ic:
-            blocks.append(
-                "# ic_file profile\n" + Simulation.format_cloud_profile(ic)
-            )
+            blocks.append("# ic_file profile\n" + Simulation.format_cloud_profile(ic))
         if blocks:
             return "\n".join(blocks)
         return "No valid cloud profile generated for this point."

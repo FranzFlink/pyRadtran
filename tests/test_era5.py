@@ -18,7 +18,6 @@ from pyradtran.era5 import (
 )
 from pyradtran.exceptions import InputGenerationError
 
-
 N = 13
 P_HPA = np.linspace(1000, 100, N)
 
@@ -50,18 +49,26 @@ def _arco_style():
     """ARCO-ERA5 long names, `level`/`time` coords, no unit attrs."""
     return xr.Dataset(
         {
-            "temperature": (["time", "level", "latitude", "longitude"],
-                            np.full((2, N, 3, 3), 250.0)),
-            "specific_humidity": (["time", "level", "latitude", "longitude"],
-                                  np.full((2, N, 3, 3), 1e-3)),
-            "geopotential": (["time", "level", "latitude", "longitude"],
-                             np.tile(np.linspace(0, 160_000, N)[None, :, None, None],
-                                     (2, 1, 3, 3))),
-            "ozone_mass_mixing_ratio": (["time", "level", "latitude", "longitude"],
-                                        np.full((2, N, 3, 3), 5e-6)),
+            "temperature": (
+                ["time", "level", "latitude", "longitude"],
+                np.full((2, N, 3, 3), 250.0),
+            ),
+            "specific_humidity": (
+                ["time", "level", "latitude", "longitude"],
+                np.full((2, N, 3, 3), 1e-3),
+            ),
+            "geopotential": (
+                ["time", "level", "latitude", "longitude"],
+                np.tile(np.linspace(0, 160_000, N)[None, :, None, None], (2, 1, 3, 3)),
+            ),
+            "ozone_mass_mixing_ratio": (
+                ["time", "level", "latitude", "longitude"],
+                np.full((2, N, 3, 3), 5e-6),
+            ),
             "specific_cloud_liquid_water_content": (
                 ["time", "level", "latitude", "longitude"],
-                np.full((2, N, 3, 3), 0.0)),
+                np.full((2, N, 3, 3), 0.0),
+            ),
         },
         coords={
             "time": pd.date_range("2022-03-15", periods=2, freq="6h"),
@@ -144,8 +151,11 @@ class TestSelectProfile:
 class TestAtmosphereFile:
     def test_three_columns_without_ozone(self, tmp_path):
         out = write_atmosphere_file(_column(), tmp_path / "atm.dat")
-        rows = [l.split() for l in out.read_text().splitlines()
-                if l.strip() and not l.startswith("#")]
+        rows = [
+            l.split()
+            for l in out.read_text().splitlines()
+            if l.strip() and not l.startswith("#")
+        ]
         assert rows and all(len(r) == 3 for r in rows)
 
     def test_four_columns_with_ozone(self, tmp_path):
@@ -153,8 +163,11 @@ class TestAtmosphereFile:
         out = write_atmosphere_file(ds, tmp_path / "atm.dat")
         content = out.read_text()
         assert "# columns: H2O MMR O3 MMR" in content
-        rows = [l.split() for l in content.splitlines()
-                if l.strip() and not l.startswith("#")]
+        rows = [
+            l.split()
+            for l in content.splitlines()
+            if l.strip() and not l.startswith("#")
+        ]
         assert all(len(r) == 4 for r in rows)
 
     def test_column_header_without_ozone(self, tmp_path):
@@ -163,8 +176,11 @@ class TestAtmosphereFile:
 
     def test_toa_first_strictly_monotonic(self, tmp_path):
         out = write_atmosphere_file(_column(), tmp_path / "atm.dat")
-        p = [float(l.split()[0]) for l in out.read_text().splitlines()
-             if l.strip() and not l.startswith("#")]
+        p = [
+            float(l.split()[0])
+            for l in out.read_text().splitlines()
+            if l.strip() and not l.startswith("#")
+        ]
         assert all(b > a for a, b in zip(p, p[1:]))
 
     def test_nan_levels_dropped(self, tmp_path):
@@ -173,8 +189,11 @@ class TestAtmosphereFile:
         t[0] = np.nan
         ds["t"].values = t
         out = write_atmosphere_file(ds, tmp_path / "atm.dat")
-        rows = [l for l in out.read_text().splitlines()
-                if l.strip() and not l.startswith("#")]
+        rows = [
+            l
+            for l in out.read_text().splitlines()
+            if l.strip() and not l.startswith("#")
+        ]
         assert len(rows) == N - 1
 
     def test_nan_ozone_becomes_minus_one(self, tmp_path):
@@ -182,8 +201,11 @@ class TestAtmosphereFile:
         o3[3] = np.nan
         ds = _column(o3=(["pressure_level"], o3, {"units": "kg kg-1"}))
         out = write_atmosphere_file(ds, tmp_path / "atm.dat")
-        vals = [float(l.split()[3]) for l in out.read_text().splitlines()
-                if l.strip() and not l.startswith("#")]
+        vals = [
+            float(l.split()[3])
+            for l in out.read_text().splitlines()
+            if l.strip() and not l.startswith("#")
+        ]
         assert -1.0 in vals
 
     def test_missing_q_raises(self, tmp_path):

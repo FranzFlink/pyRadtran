@@ -172,8 +172,13 @@ class PathsConfig:
     def __post_init__(self):
         # Accept plain strings for every path field (direct construction)
         for name in (
-            "libradtran_bin", "libradtran_data", "atmosphere_profile",
-            "solar_spectrum", "radiosonde_base", "output_dir", "working_dir",
+            "libradtran_bin",
+            "libradtran_data",
+            "atmosphere_profile",
+            "solar_spectrum",
+            "radiosonde_base",
+            "output_dir",
+            "working_dir",
         ):
             value = getattr(self, name)
             if isinstance(value, str):

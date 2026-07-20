@@ -50,7 +50,7 @@ logger = logging.getLogger(__name__)
 CACHE_DIR = Path.home() / ".pyradtran"
 
 # Runs inside the subprocess with cwd = <root>/src_py.
-_EXTRACT_SCRIPT = r'''
+_EXTRACT_SCRIPT = r"""
 import glob, importlib, json, sys
 
 sys.path.insert(0, ".")
@@ -140,7 +140,7 @@ for path in sorted(glob.glob("*_options.py")):
                       file=sys.stderr)
 
 json.dump(options, sys.stdout)
-'''
+"""
 
 
 def find_libradtran_root(config) -> Optional[Path]:
@@ -197,9 +197,7 @@ def extract_schema(root: Path) -> Dict[str, Any]:
         timeout=120,
     )
     if result.returncode != 0:
-        raise RuntimeError(
-            f"Schema extraction from {src_py} failed:\n{result.stderr}"
-        )
+        raise RuntimeError(f"Schema extraction from {src_py} failed:\n{result.stderr}")
     options = json.loads(result.stdout)
     if not options:
         raise RuntimeError(f"Schema extraction from {src_py} found no options")

@@ -199,9 +199,7 @@ class TestZoutOrdering:
         assert zout_line == "zout 0 10"
 
     def test_zout_symbolic_tokens_pass_through(self, minimal_config):
-        text, _ = build_text(
-            minimal_config, resolved={"zout": ("toa", PROV_LITERAL)}
-        )
+        text, _ = build_text(minimal_config, resolved={"zout": ("toa", PROV_LITERAL)})
         assert "zout toa" in text.splitlines()
 
     def test_effective_output_altitudes_sorted_dedup(self, minimal_config):
@@ -219,9 +217,7 @@ class TestZoutOrdering:
 class TestAnnotatedRender:
     def test_annotations_present(self, minimal_config):
         b = InputFileBuilder(minimal_config)
-        lines = b.build(
-            DT, 78.0, 15.0, resolved={"albedo": (0.85, PROV_LITERAL)}
-        )
+        lines = b.build(DT, 78.0, 15.0, resolved={"albedo": (0.85, PROV_LITERAL)})
         annotated = b.render_annotated(lines)
         assert "# params-literal" in annotated
         assert "# config" in annotated
@@ -250,7 +246,9 @@ class TestSimulationWiring:
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             lines = sim.build_input_lines(
-                DT, 78.0, 15.0,
+                DT,
+                78.0,
+                15.0,
                 resolved_params=None,
                 override_albedo=0.9,
             )
@@ -297,7 +295,9 @@ class TestSimulationWiring:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", DeprecationWarning)
             lines = sim.build_input_lines(
-                DT, 78.0, 15.0,
+                DT,
+                78.0,
+                15.0,
                 override_albedo=0.9,
                 parameter_overrides={"albedo": 0.55},
             )
@@ -314,7 +314,9 @@ class TestSimulationWiring:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", DeprecationWarning)
             lines = sim.build_input_lines(
-                DT, 78.0, 15.0,
+                DT,
+                78.0,
+                15.0,
                 resolved_params={"albedo": (0.42, PROV_LITERAL)},
                 parameter_overrides={"albedo": 0.55},
             )
@@ -413,7 +415,9 @@ class TestBrightnessColumns:
         from pyradtran.input_builder import effective_output_columns
 
         minimal_config.simulation_defaults.output_columns = [
-            "sza", "albedo", "eglo",
+            "sza",
+            "albedo",
+            "eglo",
         ]
         minimal_config.simulation_defaults.integrate_wavelength = True
         minimal_config.simulation_defaults.output_altitudes_km = [0.0]
@@ -424,7 +428,9 @@ class TestBrightnessColumns:
 
     def test_builder_output_user_line_matches(self, minimal_config):
         minimal_config.simulation_defaults.output_columns = [
-            "sza", "albedo", "eglo",
+            "sza",
+            "albedo",
+            "eglo",
         ]
         minimal_config.simulation_defaults.integrate_wavelength = True
         minimal_config.simulation_defaults.output_altitudes_km = [0.0]
@@ -434,9 +440,7 @@ class TestBrightnessColumns:
         )
         # albedo dropped from the requested output columns (the separate
         # surface-albedo option line is unaffected)
-        out_lines = [
-            l for l in text.splitlines() if l.startswith("output_user")
-        ]
+        out_lines = [l for l in text.splitlines() if l.startswith("output_user")]
         assert out_lines == ["output_user sza eglo"]
 
     def test_parser_columns_match_builder(self, minimal_config):
@@ -444,7 +448,9 @@ class TestBrightnessColumns:
         from pyradtran.io import OutputParser
 
         minimal_config.simulation_defaults.output_columns = [
-            "sza", "albedo", "eglo",
+            "sza",
+            "albedo",
+            "eglo",
         ]
         minimal_config.simulation_defaults.integrate_wavelength = True
         overrides = {"output_quantity": "brightness"}

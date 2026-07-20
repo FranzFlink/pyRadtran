@@ -116,9 +116,7 @@ class TestParamResolverStatic:
 
     def test_dotted_keys_applied_to_config_and_consumed(self, minimal_config):
         # B1 regression: dotted keys must never reach uvspec params
-        r = ParamResolver(
-            minimal_config, {"simulation_defaults.albedo_value": 0.3}
-        )
+        r = ParamResolver(minimal_config, {"simulation_defaults.albedo_value": 0.3})
         assert minimal_config.simulation_defaults.albedo_value == 0.3
         assert "simulation_defaults.albedo_value" not in r.static_params()
 
@@ -167,9 +165,7 @@ class TestResolvePoint:
         assert skipped == ["albedo"]
 
     def test_static_and_var_merge(self, minimal_config):
-        r = ParamResolver(
-            minimal_config, {"sza": 45.0, "albedo": Var("alb")}
-        )
+        r = ParamResolver(minimal_config, {"sza": 45.0, "albedo": Var("alb")})
         resolved, _ = r.resolve_point(_point_ds(alb=0.2))
         assert resolved["sza"] == (45.0, PROV_LITERAL)
         assert resolved["albedo"] == (0.2, PROV_DATASET)
@@ -230,9 +226,12 @@ class TestLegacyKwargTranslation:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", DeprecationWarning)
             params = _translate_legacy_kwargs(
-                params={"albedo": 0.5}, albedo_var="alb",
-                surface_temperature_var=None, surface_type_var=None,
-                altitude_var=None, parameter_overrides=None,
+                params={"albedo": 0.5},
+                albedo_var="alb",
+                surface_temperature_var=None,
+                surface_type_var=None,
+                altitude_var=None,
+                parameter_overrides=None,
             )
         assert params["albedo"] == 0.5
 
@@ -240,18 +239,19 @@ class TestLegacyKwargTranslation:
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             params = _translate_legacy_kwargs(
-                params={"albedo": 0.5}, albedo_var=None,
-                surface_temperature_var=None, surface_type_var=None,
-                altitude_var=None, parameter_overrides=None,
+                params={"albedo": 0.5},
+                albedo_var=None,
+                surface_temperature_var=None,
+                surface_type_var=None,
+                altitude_var=None,
+                parameter_overrides=None,
             )
         assert not any(issubclass(x.category, DeprecationWarning) for x in w)
         assert params == {"albedo": 0.5}
 
 
 class TestBatchParams(object):
-    def test_batch_resolves_var_per_point(
-        self, minimal_config, simple_input_dataset
-    ):
+    def test_batch_resolves_var_per_point(self, minimal_config, simple_input_dataset):
         """Batch must hand per-point resolved params to the worker."""
         captured = []
 
@@ -325,63 +325,146 @@ class TestPublicAPI:
 # Schema-backed validation (libRadtran option schema)
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def mini_schema():
     """Hand-built schema mirroring the real extraction format."""
     return {
         "albedo": {
-            "name": "albedo", "group": "Surface", "help": "", "doc": "",
-            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
-            "tokens": [{"kind": "value", "datatype": "float",
-                        "valid_range": [0.0, 1.0], "optional": False}],
+            "name": "albedo",
+            "group": "Surface",
+            "help": "",
+            "doc": "",
+            "non_unique": False,
+            "mandatory": False,
+            "parents": [],
+            "childs": [],
+            "tokens": [
+                {
+                    "kind": "value",
+                    "datatype": "float",
+                    "valid_range": [0.0, 1.0],
+                    "optional": False,
+                }
+            ],
         },
         "ic_properties": {
-            "name": "ic_properties", "group": "Clouds", "help": "", "doc": "",
-            "non_unique": False, "mandatory": False,
-            "parents": ["ic_file"], "childs": [],
+            "name": "ic_properties",
+            "group": "Clouds",
+            "help": "",
+            "doc": "",
+            "non_unique": False,
+            "mandatory": False,
+            "parents": ["ic_file"],
+            "childs": [],
             "tokens": [
-                {"kind": "choice", "choices": ["fu", "baum_v36", "yang"],
-                 "file_allowed": False, "optional": False},
-                {"kind": "choice", "choices": ["interpolate"],
-                 "file_allowed": False, "optional": True},
+                {
+                    "kind": "choice",
+                    "choices": ["fu", "baum_v36", "yang"],
+                    "file_allowed": False,
+                    "optional": False,
+                },
+                {
+                    "kind": "choice",
+                    "choices": ["interpolate"],
+                    "file_allowed": False,
+                    "optional": True,
+                },
             ],
         },
         "wc_file": {
-            "name": "wc_file", "group": "Clouds", "help": "", "doc": "",
-            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
+            "name": "wc_file",
+            "group": "Clouds",
+            "help": "",
+            "doc": "",
+            "non_unique": False,
+            "mandatory": False,
+            "parents": [],
+            "childs": [],
             "tokens": [
-                {"kind": "choice", "choices": ["1d", "3d", "ipa_files"],
-                 "file_allowed": False, "optional": False},
-                {"kind": "value", "datatype": "file",
-                 "valid_range": None, "optional": False},
+                {
+                    "kind": "choice",
+                    "choices": ["1d", "3d", "ipa_files"],
+                    "file_allowed": False,
+                    "optional": False,
+                },
+                {
+                    "kind": "value",
+                    "datatype": "file",
+                    "valid_range": None,
+                    "optional": False,
+                },
             ],
         },
         "cloudcover": {
-            "name": "cloudcover", "group": "Clouds", "help": "", "doc": "",
-            "non_unique": True, "mandatory": False,
-            "parents": ["ic_file", "wc_file"], "childs": [],
+            "name": "cloudcover",
+            "group": "Clouds",
+            "help": "",
+            "doc": "",
+            "non_unique": True,
+            "mandatory": False,
+            "parents": ["ic_file", "wc_file"],
+            "childs": [],
             "tokens": [
-                {"kind": "value", "datatype": "str",
-                 "valid_range": None, "optional": False},
-                {"kind": "value", "datatype": "float",
-                 "valid_range": [0.0, 1.0], "optional": False},
+                {
+                    "kind": "value",
+                    "datatype": "str",
+                    "valid_range": None,
+                    "optional": False,
+                },
+                {
+                    "kind": "value",
+                    "datatype": "float",
+                    "valid_range": [0.0, 1.0],
+                    "optional": False,
+                },
             ],
         },
         "zout": {
-            "name": "zout", "group": "Output", "help": "", "doc": "",
-            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
-            "tokens": [{"kind": "value", "datatype": "str",
-                        "valid_range": None, "optional": False}],
+            "name": "zout",
+            "group": "Output",
+            "help": "",
+            "doc": "",
+            "non_unique": False,
+            "mandatory": False,
+            "parents": [],
+            "childs": [],
+            "tokens": [
+                {
+                    "kind": "value",
+                    "datatype": "str",
+                    "valid_range": None,
+                    "optional": False,
+                }
+            ],
         },
         "umu": {
-            "name": "umu", "group": "Geometry", "help": "", "doc": "",
-            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
-            "tokens": [{"kind": "value", "datatype": "floats",
-                        "valid_range": None, "optional": False}],
+            "name": "umu",
+            "group": "Geometry",
+            "help": "",
+            "doc": "",
+            "non_unique": False,
+            "mandatory": False,
+            "parents": [],
+            "childs": [],
+            "tokens": [
+                {
+                    "kind": "value",
+                    "datatype": "floats",
+                    "valid_range": None,
+                    "optional": False,
+                }
+            ],
         },
         "quiet": {
-            "name": "quiet", "group": "Output", "help": "", "doc": "",
-            "non_unique": False, "mandatory": False, "parents": [], "childs": [],
+            "name": "quiet",
+            "group": "Output",
+            "help": "",
+            "doc": "",
+            "non_unique": False,
+            "mandatory": False,
+            "parents": [],
+            "childs": [],
             "tokens": [],
         },
     }
@@ -390,22 +473,16 @@ def mini_schema():
 class TestSchemaValidation:
     def test_unknown_option_rejected_with_suggestion(self, minimal_config, mini_schema):
         with pytest.raises(ValidationError, match="albedo"):
-            ParamResolver(
-                minimal_config, {"albedoo": 0.5}, schema=mini_schema
-            )
+            ParamResolver(minimal_config, {"albedoo": 0.5}, schema=mini_schema)
 
     def test_raw_bypasses_validation(self, minimal_config, mini_schema):
         from pyradtran.params import PROV_UNVALIDATED, Raw
 
-        r = ParamResolver(
-            minimal_config, {"albedoo": Raw("0.5")}, schema=mini_schema
-        )
+        r = ParamResolver(minimal_config, {"albedoo": Raw("0.5")}, schema=mini_schema)
         assert r.static_params()["albedoo"] == ("0.5", PROV_UNVALIDATED)
 
     def test_choice_validated(self, minimal_config, mini_schema):
-        ParamResolver(
-            minimal_config, {"ic_properties": "baum_v36"}, schema=mini_schema
-        )
+        ParamResolver(minimal_config, {"ic_properties": "baum_v36"}, schema=mini_schema)
         with pytest.raises(ValidationError, match="ic_properties"):
             ParamResolver(
                 minimal_config, {"ic_properties": "notahabit"}, schema=mini_schema
@@ -428,38 +505,28 @@ class TestSchemaValidation:
         )
 
     def test_range_validated(self, minimal_config, mini_schema):
-        ParamResolver(
-            minimal_config, {"cloudcover": ("wc", 0.8)}, schema=mini_schema
-        )
+        ParamResolver(minimal_config, {"cloudcover": ("wc", 0.8)}, schema=mini_schema)
         with pytest.raises(ValidationError, match="cloudcover"):
             ParamResolver(
                 minimal_config, {"cloudcover": ("wc", 1.5)}, schema=mini_schema
             )
 
     def test_greedy_str_token_accepts_many(self, minimal_config, mini_schema):
-        ParamResolver(
-            minimal_config, {"zout": "0.0 1.0 120.0"}, schema=mini_schema
-        )
+        ParamResolver(minimal_config, {"zout": "0.0 1.0 120.0"}, schema=mini_schema)
 
     def test_floats_token_rejects_nonnumeric(self, minimal_config, mini_schema):
         ParamResolver(minimal_config, {"umu": "-1.0 1.0"}, schema=mini_schema)
         with pytest.raises(ValidationError, match="umu"):
-            ParamResolver(
-                minimal_config, {"umu": "-1.0 up"}, schema=mini_schema
-            )
+            ParamResolver(minimal_config, {"umu": "-1.0 up"}, schema=mini_schema)
 
     def test_flag_option_takes_no_value(self, minimal_config, mini_schema):
         ParamResolver(minimal_config, {"quiet": True}, schema=mini_schema)
         with pytest.raises(ValidationError, match="quiet"):
-            ParamResolver(
-                minimal_config, {"quiet": "loudly"}, schema=mini_schema
-            )
+            ParamResolver(minimal_config, {"quiet": "loudly"}, schema=mini_schema)
 
     def test_fixed_arity_rejects_extra_tokens(self, minimal_config, mini_schema):
         with pytest.raises(ValidationError, match="albedo"):
-            ParamResolver(
-                minimal_config, {"albedo": "0.5 0.6"}, schema=mini_schema
-            )
+            ParamResolver(minimal_config, {"albedo": "0.5 0.6"}, schema=mini_schema)
 
     def test_dict_value_skips_schema(self, minimal_config, mini_schema):
         # dynamic-cloud dict values are handled downstream
@@ -512,16 +579,33 @@ class TestValueNormalisation:
     def test_list_on_non_unique_option_kept_as_lines(self, minimal_config):
         schema = {
             "wc_modify": {
-                "name": "wc_modify", "group": "Clouds", "help": "", "doc": "",
-                "non_unique": True, "mandatory": False,
-                "parents": ["wc_file"], "childs": [],
+                "name": "wc_modify",
+                "group": "Clouds",
+                "help": "",
+                "doc": "",
+                "non_unique": True,
+                "mandatory": False,
+                "parents": ["wc_file"],
+                "childs": [],
                 "tokens": [
-                    {"kind": "choice", "choices": ["gg", "ssa", "tau", "tau550"],
-                     "file_allowed": False, "optional": False},
-                    {"kind": "choice", "choices": ["set", "scale"],
-                     "file_allowed": False, "optional": False},
-                    {"kind": "value", "datatype": "float",
-                     "valid_range": None, "optional": False},
+                    {
+                        "kind": "choice",
+                        "choices": ["gg", "ssa", "tau", "tau550"],
+                        "file_allowed": False,
+                        "optional": False,
+                    },
+                    {
+                        "kind": "choice",
+                        "choices": ["set", "scale"],
+                        "file_allowed": False,
+                        "optional": False,
+                    },
+                    {
+                        "kind": "value",
+                        "datatype": "float",
+                        "valid_range": None,
+                        "optional": False,
+                    },
                 ],
             },
         }
@@ -530,22 +614,38 @@ class TestValueNormalisation:
             {"wc_modify": [("tau550", "set", 12), "ssa set 0.99"]},
             schema=schema,
         )
-        assert r.static_params()["wc_modify"][0] == [
-            "tau550 set 12", "ssa set 0.99"
-        ]
+        assert r.static_params()["wc_modify"][0] == ["tau550 set 12", "ssa set 0.99"]
 
     def test_each_line_of_non_unique_list_validated(self, minimal_config):
         schema = {
             "wc_modify": {
-                "name": "wc_modify", "group": "Clouds", "help": "", "doc": "",
-                "non_unique": True, "mandatory": False, "parents": [], "childs": [],
+                "name": "wc_modify",
+                "group": "Clouds",
+                "help": "",
+                "doc": "",
+                "non_unique": True,
+                "mandatory": False,
+                "parents": [],
+                "childs": [],
                 "tokens": [
-                    {"kind": "choice", "choices": ["gg", "ssa", "tau", "tau550"],
-                     "file_allowed": False, "optional": False},
-                    {"kind": "choice", "choices": ["set", "scale"],
-                     "file_allowed": False, "optional": False},
-                    {"kind": "value", "datatype": "float",
-                     "valid_range": None, "optional": False},
+                    {
+                        "kind": "choice",
+                        "choices": ["gg", "ssa", "tau", "tau550"],
+                        "file_allowed": False,
+                        "optional": False,
+                    },
+                    {
+                        "kind": "choice",
+                        "choices": ["set", "scale"],
+                        "file_allowed": False,
+                        "optional": False,
+                    },
+                    {
+                        "kind": "value",
+                        "datatype": "float",
+                        "valid_range": None,
+                        "optional": False,
+                    },
                 ],
             },
         }
@@ -571,13 +671,22 @@ class TestDescribe:
 
         schema = {
             "albedo": {
-                "name": "albedo", "group": "Surface",
+                "name": "albedo",
+                "group": "Surface",
                 "help": "Lambertian albedo.",
                 "doc": r"Set the \code{albedo} of the surface, see \file{ALB.DAT}.",
-                "non_unique": False, "mandatory": False,
-                "parents": [], "childs": [],
-                "tokens": [{"kind": "value", "datatype": "float",
-                            "valid_range": [0.0, 1.0], "optional": False}],
+                "non_unique": False,
+                "mandatory": False,
+                "parents": [],
+                "childs": [],
+                "tokens": [
+                    {
+                        "kind": "value",
+                        "datatype": "float",
+                        "valid_range": [0.0, 1.0],
+                        "optional": False,
+                    }
+                ],
             }
         }
         txt = describe("albedo", schema=schema)

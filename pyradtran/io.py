@@ -230,9 +230,7 @@ class ERA5AtmosphereGenerator:
         """
         from .era5 import era5_atmosphere_file
 
-        return era5_atmosphere_file(
-            era5_ds, latitude, longitude, time, output_filepath
-        )
+        return era5_atmosphere_file(era5_ds, latitude, longitude, time, output_filepath)
 
 
 class RadiosondeAtmosphereGenerator:
@@ -815,9 +813,7 @@ class OutputToXarray:
             # restored dims at the end; transpose them back to the front so
             # results read (time, ..., wavelength, altitude).
             if dims:
-                unstacked_da = da.unstack(sample_dim).transpose(
-                    *dims, *extra_dims
-                )
+                unstacked_da = da.unstack(sample_dim).transpose(*dims, *extra_dims)
             else:
                 # If original was scalar, just drop the sample dim
                 unstacked_da = da.isel({sample_dim: 0}, drop=True)
@@ -845,13 +841,23 @@ class OutputToXarray:
 
         # Add attributes (skip per-point fields — they only describe the
         # template point, not the whole batch)
-        _POINT_KEYS = {"point_id", "time", "latitude", "longitude",
-                       "albedo", "surface_temperature", "surface_type",
-                       "altitude"}
+        _POINT_KEYS = {
+            "point_id",
+            "time",
+            "latitude",
+            "longitude",
+            "albedo",
+            "surface_temperature",
+            "surface_type",
+            "altitude",
+        }
         if template_output.metadata:
             result_ds.attrs.update(
-                {k: v for k, v in template_output.metadata.items()
-                 if k not in _POINT_KEYS}
+                {
+                    k: v
+                    for k, v in template_output.metadata.items()
+                    if k not in _POINT_KEYS
+                }
             )
 
         return result_ds

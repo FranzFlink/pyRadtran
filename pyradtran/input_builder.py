@@ -64,7 +64,9 @@ def calculate_solar_zenith_angle(
     return round(float(np.degrees(np.arccos(np.clip(cos_sza, -1, 1)))), 2)
 
 
-def effective_output_altitudes(config, overrides: Optional[Dict[str, Any]] = None) -> List[float]:
+def effective_output_altitudes(
+    config, overrides: Optional[Dict[str, Any]] = None
+) -> List[float]:
     """Altitudes this run reports at: per-run ``zout`` override, else config.
 
     Numeric levels come back sorted and deduplicated — matching the
@@ -78,7 +80,9 @@ def effective_output_altitudes(config, overrides: Optional[Dict[str, Any]] = Non
     return sorted(set(config.simulation_defaults.output_altitudes_km or [0.0]))
 
 
-def effective_output_columns(config, overrides: Optional[Dict[str, Any]] = None) -> List[str]:
+def effective_output_columns(
+    config, overrides: Optional[Dict[str, Any]] = None
+) -> List[str]:
     """Columns the ``output_user`` line requests, in file order.
 
     A per-run ``output_user`` override replaces the config columns.
@@ -147,7 +151,9 @@ class InputFileBuilder:
             add("mol_abs_param", f"mol_abs_param {sd.mol_abs_param}")
 
         add("data_files_path", f"data_files_path {self.config.paths.libradtran_data}")
-        add("atmosphere_file", f"atmosphere_file {self.config.paths.atmosphere_profile}")
+        add(
+            "atmosphere_file", f"atmosphere_file {self.config.paths.atmosphere_profile}"
+        )
 
         # Atmosphere: ERA5 file wins over radiosonde
         radiosonde_columns = None
@@ -163,7 +169,9 @@ class InputFileBuilder:
         # profile comes from the radiosonde file must not additionally be
         # rescaled by mol_modify — that would silently overwrite the
         # measured/reanalysis column with the config scalar.
-        profile_gases = set(radiosonde_columns.split()[::2]) if radiosonde_columns else set()
+        profile_gases = (
+            set(radiosonde_columns.split()[::2]) if radiosonde_columns else set()
+        )
         if sd.ozone_du is not None and "O3" not in profile_gases:
             add("mol_modify O3", REGISTRY["mol_modify O3"].format_line(sd.ozone_du))
         if sd.h2o_mm is not None and "H2O" not in profile_gases:
@@ -176,8 +184,10 @@ class InputFileBuilder:
             else:
                 add("source", f"source solar {self.config.paths.solar_spectrum}")
             if "sza" not in resolved:
-                sza = sd.sza if sd.sza is not None else calculate_solar_zenith_angle(
-                    dt, latitude, longitude
+                sza = (
+                    sd.sza
+                    if sd.sza is not None
+                    else calculate_solar_zenith_angle(dt, latitude, longitude)
                 )
                 add("sza", f"sza {sza}")
             add(
@@ -187,7 +197,10 @@ class InputFileBuilder:
         elif sd.source == "thermal":
             add("source", "source thermal")
             # B3 fix: explicit None check, no `or`
-            if "sur_temperature" not in resolved and sd.surface_temperature_k is not None:
+            if (
+                "sur_temperature" not in resolved
+                and sd.surface_temperature_k is not None
+            ):
                 add(
                     "sur_temperature",
                     f"sur_temperature {sd.surface_temperature_k}",
@@ -252,9 +265,7 @@ class InputFileBuilder:
             if isinstance(value, list):
                 # Repeatable option (non_unique): one line per entry
                 for item in value:
-                    lines.append(
-                        InputLine(keyword, f"{keyword} {item}", provenance)
-                    )
+                    lines.append(InputLine(keyword, f"{keyword} {item}", provenance))
                 continue
             if spec is not None:
                 text = spec.format_line(value)
@@ -265,7 +276,11 @@ class InputFileBuilder:
             lines.append(InputLine(keyword, text, provenance))
             # brdf implies the IGBP library line
             if keyword == "brdf_rpv_type":
-                lines = [ln for ln in lines if ln.keyword not in ("albedo", "brdf_rpv_library")]
+                lines = [
+                    ln
+                    for ln in lines
+                    if ln.keyword not in ("albedo", "brdf_rpv_library")
+                ]
                 lines.append(
                     InputLine("brdf_rpv_library", "brdf_rpv_library IGBP", provenance)
                 )
@@ -316,9 +331,7 @@ class InputFileBuilder:
         if not lines:
             return ""
         width = max(len(ln.text) for ln in lines) + 2
-        return "\n".join(
-            f"{ln.text:<{width}}# {ln.provenance}" for ln in lines
-        ) + "\n"
+        return "\n".join(f"{ln.text:<{width}}# {ln.provenance}" for ln in lines) + "\n"
 
 
 def _sniff_radiosonde_columns(era5_abs_path: Path) -> str:

@@ -180,7 +180,9 @@ class Simulation:
             Input-file content, one ``# <provenance>`` comment per line.
         """
         lines = self.build_input_lines(
-            dt, latitude, longitude,
+            dt,
+            latitude,
+            longitude,
             resolved_params=resolved_params,
             era5_atmosphere_file=era5_atmosphere_file,
         )
@@ -242,7 +244,8 @@ class Simulation:
 
             # Dynamic clouds: dict/list values for wc_file / ic_file
             cloud_overrides = {
-                k: v for k, (v, _p) in resolved.items()
+                k: v
+                for k, (v, _p) in resolved.items()
                 if k in ("wc_file", "ic_file") and isinstance(v, (dict, list))
             }
             if cloud_overrides:
@@ -254,14 +257,18 @@ class Simulation:
                     resolved[k] = (v, resolved[k][1])
 
             lines = self.build_input_lines(
-                dt, latitude, longitude,
+                dt,
+                latitude,
+                longitude,
                 resolved_params=resolved,
                 era5_atmosphere_file=era5_atmosphere_file,
             )
             input_content = self.builder.render(lines)
 
             with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".inp", delete=False,
+                mode="w",
+                suffix=".inp",
+                delete=False,
                 dir=self.config.paths.working_dir,
             ) as inp_file:
                 inp_file.write(input_content)
@@ -465,9 +472,7 @@ class Simulation:
             return True
 
         except subprocess.TimeoutExpired:
-            self.last_stderr = (
-                f"timeout after {self.config.execution.timeout_seconds}s"
-            )
+            self.last_stderr = f"timeout after {self.config.execution.timeout_seconds}s"
             logger.error(
                 f"LibRadtran execution timed out after {self.config.execution.timeout_seconds} seconds"
             )

@@ -205,7 +205,7 @@ def test_generate_uvspec_input_with_clouds(minimal_config):
 # OutputToXarray.convert — one axis-combination per output geometry
 # ---------------------------------------------------------------------------
 
-from pyradtran.io import OutputToXarray, ParsedOutput, OutputType  # noqa: E402
+from pyradtran.io import OutputToXarray, OutputType, ParsedOutput  # noqa: E402
 
 
 def _single_time_ds():
@@ -267,9 +267,7 @@ def test_convert_spectral_multi_altitude():
     )
     out = OutputToXarray.convert(po, _single_time_ds())
     assert out["eglo"].dims == ("time", "wavelength", "altitude")
-    np.testing.assert_allclose(
-        out["eglo"].values, [[[1.0, 2.0], [3.0, 4.0]]]
-    )
+    np.testing.assert_allclose(out["eglo"].values, [[[1.0, 2.0], [3.0, 4.0]]])
 
 
 def test_add_config_attrs_handles_none_max_workers(minimal_config):

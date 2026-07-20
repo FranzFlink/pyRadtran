@@ -42,8 +42,8 @@ from .exceptions import InputGenerationError
 logger = logging.getLogger(__name__)
 
 # Physical constants
-G0 = 9.80665          # standard gravity (m s-2)
-R_DRY = 287.058       # specific gas constant, dry air (J kg-1 K-1)
+G0 = 9.80665  # standard gravity (m s-2)
+R_DRY = 287.058  # specific gas constant, dry air (J kg-1 K-1)
 
 #: canonical name -> accepted aliases (first match wins)
 VAR_ALIASES: Dict[str, Tuple[str, ...]] = {
@@ -219,11 +219,7 @@ def write_atmosphere_file(
     q = np.asarray(profile["q"].values, dtype=float).ravel()
 
     has_o3 = include_ozone and "o3" in profile.variables
-    o3 = (
-        np.asarray(profile["o3"].values, dtype=float).ravel()
-        if has_o3
-        else None
-    )
+    o3 = np.asarray(profile["o3"].values, dtype=float).ravel() if has_o3 else None
 
     valid = ~(np.isnan(p) | np.isnan(t) | np.isnan(q))
     if not valid.any():
@@ -278,9 +274,7 @@ def era5_atmosphere_file(
     except InputGenerationError:
         raise
     except Exception as e:
-        raise InputGenerationError(
-            f"Failed to create ERA5 atmosphere file: {e}"
-        ) from e
+        raise InputGenerationError(f"Failed to create ERA5 atmosphere file: {e}") from e
 
 
 def _z_to_km(z: np.ndarray, units) -> np.ndarray:
@@ -299,7 +293,9 @@ def _z_to_km(z: np.ndarray, units) -> np.ndarray:
     if unit == "km":
         return z
     if unit:
-        logger.warning(f"Unrecognised geopotential unit '{units}'; guessing from magnitude")
+        logger.warning(
+            f"Unrecognised geopotential unit '{units}'; guessing from magnitude"
+        )
     if np.nanmax(np.abs(z)) > 100_000:  # geopotential (m2 s-2)
         return z / G0 / 1000.0
     return z / 1000.0  # geopotential height (m)
@@ -370,7 +366,7 @@ def cloud_profiles(
         p_v, t_v, mmr_v, alt_v = p_v[order], t_v[order], mmr_v[order], alt_v[order]
 
         air_density = (p_v * 100.0) / (R_DRY * t_v)  # kg m-3
-        content = mmr_v * air_density * 1000.0       # g m-3
+        content = mmr_v * air_density * 1000.0  # g m-3
 
         cloudy = content > threshold_g_m3
         if not cloudy.any():
@@ -385,14 +381,19 @@ def cloud_profiles(
         # boundaries midway between levels; half-spacing at the ends
         def boundary_below(i):
             if i == 0:
-                return max(alt_v[0] - (alt_v[1] - alt_v[0]) / 2 if n > 1
-                           else alt_v[0] - 0.05, 0.0)
+                return max(
+                    alt_v[0] - (alt_v[1] - alt_v[0]) / 2 if n > 1 else alt_v[0] - 0.05,
+                    0.0,
+                )
             return (alt_v[i - 1] + alt_v[i]) / 2
 
         def boundary_above(i):
             if i == n - 1:
-                return alt_v[-1] + (alt_v[-1] - alt_v[-2]) / 2 if n > 1 \
+                return (
+                    alt_v[-1] + (alt_v[-1] - alt_v[-2]) / 2
+                    if n > 1
                     else alt_v[-1] + 0.05
+                )
             return (alt_v[i] + alt_v[i + 1]) / 2
 
         # rows from cloud top down: top boundary closes the grid (zero),

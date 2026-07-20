@@ -8,12 +8,11 @@ import numpy as np
 import pandas as pd
 import pytest
 import xarray as xr
+from helpers import has_libradtran
 
 import pyradtran  # noqa: F401  (registers the accessor)
 from pyradtran.config import load_config
 from pyradtran.exceptions import PyRadtranError
-
-from helpers import has_libradtran
 
 N = 13
 P_HPA = np.linspace(1000, 100, N)
@@ -33,12 +32,18 @@ def _era5_ds(with_o3=True, with_clouds=True):
         )
 
     data = {
-        "t": (["valid_time", "pressure_level", "latitude", "longitude"],
-              full(np.linspace(260, 215, N))),
-        "q": (["valid_time", "pressure_level", "latitude", "longitude"],
-              full(np.linspace(2e-3, 1e-6, N))),
-        "z": (["valid_time", "pressure_level", "latitude", "longitude"],
-              full(np.linspace(0, 160_000, N))),
+        "t": (
+            ["valid_time", "pressure_level", "latitude", "longitude"],
+            full(np.linspace(260, 215, N)),
+        ),
+        "q": (
+            ["valid_time", "pressure_level", "latitude", "longitude"],
+            full(np.linspace(2e-3, 1e-6, N)),
+        ),
+        "z": (
+            ["valid_time", "pressure_level", "latitude", "longitude"],
+            full(np.linspace(0, 160_000, N)),
+        ),
     }
     if with_o3:
         data["o3"] = (

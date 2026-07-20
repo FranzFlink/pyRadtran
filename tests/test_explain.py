@@ -15,7 +15,9 @@ class TestDryRun:
     def test_dry_run_returns_annotated_text(self, minimal_config):
         sim = Simulation(minimal_config)
         text = sim.dry_run(
-            datetime(2022, 7, 1, 12), 78.0, 15.0,
+            datetime(2022, 7, 1, 12),
+            78.0,
+            15.0,
             resolved_params={"albedo": (0.85, PROV_LITERAL)},
         )
         assert "albedo 0.85" in text

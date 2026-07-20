@@ -141,15 +141,16 @@ class TestLibRadtranOutputParsing:
         else:
             raise ValueError(f"Unknown output type: {output_type}")
 
-        output_path.write_text(
-            "# mock uvspec output\n" + "\n".join(rows) + "\n"
-        )
+        output_path.write_text("# mock uvspec output\n" + "\n".join(rows) + "\n")
         return output_path
 
     def test_integrated_single_altitude_parsing(self, minimal_config):
         """Integrated single-altitude: one row, plain columns."""
         minimal_config.simulation_defaults.output_columns = [
-            "eglo", "eup", "edir", "albedo",
+            "eglo",
+            "eup",
+            "edir",
+            "albedo",
         ]
         minimal_config.simulation_defaults.output_altitudes_km = [0.0]
         minimal_config.simulation_defaults.integrate_wavelength = True
@@ -173,7 +174,10 @@ class TestLibRadtranOutputParsing:
     def test_integrated_multi_altitude_parsing(self, minimal_config):
         """Integrated multi-altitude: zout column injected, one row per level."""
         minimal_config.simulation_defaults.output_columns = [
-            "eglo", "eup", "edir", "albedo",
+            "eglo",
+            "eup",
+            "edir",
+            "albedo",
         ]
         minimal_config.simulation_defaults.output_altitudes_km = [0.0, 1.0, 2.0]
         minimal_config.simulation_defaults.integrate_wavelength = True
@@ -188,16 +192,17 @@ class TestLibRadtranOutputParsing:
 
             assert result.output_type == OutputType.INTEGRATED_MULTI_ALTITUDE
             assert result.altitudes == [0.0, 1.0, 2.0]
-            np.testing.assert_allclose(
-                result.data["eglo"], [800.5, 750.5, 700.5]
-            )
+            np.testing.assert_allclose(result.data["eglo"], [800.5, 750.5, 700.5])
         finally:
             os.unlink(output_file)
 
     def test_spectral_single_altitude_parsing(self, minimal_config):
         """Spectral single-altitude: lambda column, one row per wavelength."""
         minimal_config.simulation_defaults.output_columns = [
-            "lambda", "eglo", "eup", "edir",
+            "lambda",
+            "eglo",
+            "eup",
+            "edir",
         ]
         minimal_config.simulation_defaults.output_altitudes_km = [0.0]
         minimal_config.simulation_defaults.integrate_wavelength = False
@@ -222,7 +227,10 @@ class TestLibRadtranOutputParsing:
     def test_spectral_multi_altitude_parsing(self, minimal_config):
         """Spectral multi-altitude: flat data in wavelength-outer file order."""
         minimal_config.simulation_defaults.output_columns = [
-            "lambda", "eglo", "eup", "edir",
+            "lambda",
+            "eglo",
+            "eup",
+            "edir",
         ]
         minimal_config.simulation_defaults.output_altitudes_km = [0.0, 1.0, 2.0]
         minimal_config.simulation_defaults.integrate_wavelength = False
@@ -239,9 +247,7 @@ class TestLibRadtranOutputParsing:
             assert result.wavelengths == self.WAVELENGTHS
             assert result.altitudes == self.ALTITUDES
             expected = [
-                self._eglo(wl, alt)
-                for wl in self.WAVELENGTHS
-                for alt in self.ALTITUDES
+                self._eglo(wl, alt) for wl in self.WAVELENGTHS for alt in self.ALTITUDES
             ]
             np.testing.assert_allclose(result.data["eglo"], expected)
         finally:
@@ -250,7 +256,10 @@ class TestLibRadtranOutputParsing:
     def test_to_xarray_integrated_single_altitude(self, minimal_config, test_dataset):
         """convert() maps an integrated single-altitude output onto time."""
         minimal_config.simulation_defaults.output_columns = [
-            "eglo", "eup", "edir", "albedo",
+            "eglo",
+            "eup",
+            "edir",
+            "albedo",
         ]
         minimal_config.simulation_defaults.output_altitudes_km = [0.0]
         minimal_config.simulation_defaults.integrate_wavelength = True
@@ -273,7 +282,10 @@ class TestLibRadtranOutputParsing:
     def test_to_xarray_spectral_multi_altitude(self, minimal_config, test_dataset):
         """convert() reshapes wavelength-outer rows onto (wavelength, altitude)."""
         minimal_config.simulation_defaults.output_columns = [
-            "lambda", "eglo", "eup", "edir",
+            "lambda",
+            "eglo",
+            "eup",
+            "edir",
         ]
         minimal_config.simulation_defaults.output_altitudes_km = [0.0, 1.0, 2.0]
         minimal_config.simulation_defaults.integrate_wavelength = False
@@ -290,9 +302,9 @@ class TestLibRadtranOutputParsing:
             assert ds.eglo.dims == ("time", "wavelength", "altitude")
             assert list(ds.altitude.values) == self.ALTITUDES
             assert list(ds.wavelength.values) == self.WAVELENGTHS
-            assert ds.eglo.sel(
-                wavelength=550.0, altitude=1.0
-            ).item() == pytest.approx(self._eglo(550.0, 1.0))
+            assert ds.eglo.sel(wavelength=550.0, altitude=1.0).item() == pytest.approx(
+                self._eglo(550.0, 1.0)
+            )
         finally:
             os.unlink(output_file)
 
@@ -387,9 +399,7 @@ class TestEffectiveColumns:
         # The builder injects lambda, so uvspec prints: lambda eglo eup
         out = tmp_path / "spec.out"
         out.write_text(
-            "  500.0  100.0  50.0\n"
-            "  600.0  110.0  55.0\n"
-            "  700.0  120.0  60.0\n"
+            "  500.0  100.0  50.0\n" "  600.0  110.0  55.0\n" "  700.0  120.0  60.0\n"
         )
         parser = OutputParser(minimal_config)
         parsed = parser.parse_output_file(out)

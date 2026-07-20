@@ -22,9 +22,9 @@ import xarray as xr
 logger = logging.getLogger(__name__)
 
 # CODATA 2018
-_H = 6.62607015e-34   # J s
-_C = 2.99792458e8     # m s-1
-_KB = 1.380649e-23    # J K-1
+_H = 6.62607015e-34  # J s
+_C = 2.99792458e8  # m s-1
+_KB = 1.380649e-23  # J K-1
 
 #: radiance unit -> factor converting to W m-2 m-1 sr-1 (SI, per metre)
 _UNIT_TO_SI = {
@@ -65,9 +65,7 @@ def convolve_channels(
     norm_vals = np.asarray(norm.values, dtype=float)
     bad = ~np.isfinite(norm_vals) | (norm_vals <= 0)
     if np.any(bad):
-        bad_channels = [
-            str(c) for c in np.asarray(srf["channel"].values)[bad]
-        ]
+        bad_channels = [str(c) for c in np.asarray(srf["channel"].values)[bad]]
         raise ValueError(
             f"SRF for channel(s) {bad_channels} has no overlap with the "
             f"result wavelength grid "
@@ -97,8 +95,13 @@ def _interp_srf(srf: xr.DataArray, wl: xr.DataArray) -> xr.DataArray:
     srf_wl = srf["wavelength"].values.astype(float)
     target = wl.values.astype(float)
     phi_rows = [
-        np.interp(target, srf_wl, srf.isel(channel=i).values.astype(float),
-                  left=0.0, right=0.0)
+        np.interp(
+            target,
+            srf_wl,
+            srf.isel(channel=i).values.astype(float),
+            left=0.0,
+            right=0.0,
+        )
         for i in range(srf.sizes["channel"])
     ]
     return xr.DataArray(

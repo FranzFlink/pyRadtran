@@ -59,8 +59,10 @@ class TestJacobian:
     def test_var_param_rejected(self, minimal_config, ds_in):
         with pytest.raises(ValidationError):
             ds_in.pyradtran.jacobian(
-                "albedo", 0.01,
-                params={"albedo": Var("alb")}, config=minimal_config,
+                "albedo",
+                0.01,
+                params={"albedo": Var("alb")},
+                config=minimal_config,
             )
 
     def test_unresolvable_base_rejected(self, minimal_config, ds_in):

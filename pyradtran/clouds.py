@@ -331,9 +331,7 @@ class CloudGenerator:
             cc = cc[::-1]
             if temp is not None:
                 temp = temp[::-1]
-            logger.debug(
-                "Reversed level arrays to ensure ascending altitude order"
-            )
+            logger.debug("Reversed level arrays to ensure ascending altitude order")
 
         # Convert from kg/kg to g/m³ (typical ERA5 units) using air density
         # ρ_air ≈ p/(R*T) with R ≈ 287 J/(kg·K); rough standard-atmosphere

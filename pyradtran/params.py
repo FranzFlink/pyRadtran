@@ -170,11 +170,19 @@ REGISTRY: Dict[str, ParamSpec] = {
         doc="Surface temperature for thermal source",
     ),
     "sza": ParamSpec(
-        "sza", float, "deg", (0.0, 180.0), applicability="solar",
+        "sza",
+        float,
+        "deg",
+        (0.0, 180.0),
+        applicability="solar",
         doc="Solar zenith angle",
     ),
     "zout": ParamSpec(
-        "zout", float, "km", None, formatter=_fmt_zout,
+        "zout",
+        float,
+        "km",
+        None,
+        formatter=_fmt_zout,
         doc="Output altitude level(s)",
     ),
     "brdf_rpv_type": ParamSpec(
@@ -207,8 +215,17 @@ REGISTRY: Dict[str, ParamSpec] = {
     "rte_solver": ParamSpec(
         "rte_solver",
         str,
-        choices=("twostr", "disort", "fdisort1", "fdisort2", "rodents",
-                 "sslidar", "montecarlo", "mystic", "sdisort"),
+        choices=(
+            "twostr",
+            "disort",
+            "fdisort1",
+            "fdisort2",
+            "rodents",
+            "sslidar",
+            "montecarlo",
+            "mystic",
+            "sdisort",
+        ),
         doc="Radiative transfer equation solver",
     ),
     "mol_abs_param": ParamSpec(
@@ -217,14 +234,15 @@ REGISTRY: Dict[str, ParamSpec] = {
     "umu": ParamSpec(
         "umu", float, None, (-1.0, 1.0), doc="Cosine of viewing zenith angle"
     ),
-    "output_user": ParamSpec(
-        "output_user", str, doc="Output column specification"
-    ),
+    "output_user": ParamSpec("output_user", str, doc="Output column specification"),
     "source": ParamSpec(
         "source", str, choices=("solar", "thermal"), doc="Radiation source"
     ),
     "day_of_year": ParamSpec(
-        "day_of_year", int, None, (1, 366),
+        "day_of_year",
+        int,
+        None,
+        (1, 366),
         formatter=lambda v: f"day_of_year {int(v)}",
         doc="Day of year for Sun–Earth distance correction",
     ),
@@ -308,9 +326,7 @@ def validate_against_schema(entry: Dict[str, Any], key: str, value: Any):
     spec_tokens = entry.get("tokens", [])
 
     if not spec_tokens and queue:
-        raise ValidationError(
-            f"'{entry['name']}' takes no value, got {value!r}"
-        )
+        raise ValidationError(f"'{entry['name']}' takes no value, got {value!r}")
 
     for i, st in enumerate(spec_tokens):
         last = i == len(spec_tokens) - 1
@@ -340,9 +356,7 @@ def validate_against_schema(entry: Dict[str, Any], key: str, value: Any):
                 if dtype in ("floats", "ints"):
                     bad = [t for t in rest if not _is_number(t)]
                     if bad:
-                        raise ValidationError(
-                            f"'{key}' expects numbers, got {bad}"
-                        )
+                        raise ValidationError(f"'{key}' expects numbers, got {bad}")
             elif dtype in ("str", "file"):
                 if last:
                     queue = []  # greedy: swallows the rest (e.g. zout list)
@@ -351,9 +365,7 @@ def validate_against_schema(entry: Dict[str, Any], key: str, value: Any):
             else:  # float / int
                 tok = queue.pop(0)
                 if not _is_number(tok):
-                    raise ValidationError(
-                        f"'{key}' expects a number, got {tok!r}"
-                    )
+                    raise ValidationError(f"'{key}' expects a number, got {tok!r}")
                 vr = st.get("valid_range")
                 if vr is not None and not (vr[0] <= float(tok) <= vr[1]):
                     raise ValidationError(
@@ -489,8 +501,7 @@ def search_options(
     hits = []
     for name, entry in sorted(schema.items()):
         haystack = " ".join(
-            [name, entry.get("group", ""), entry.get("help", ""),
-             entry.get("doc", "")]
+            [name, entry.get("group", ""), entry.get("help", ""), entry.get("doc", "")]
         ).lower()
         if needle in haystack:
             hits.append(name)
@@ -571,9 +582,7 @@ class ParamResolver:
             self._static[key] = (value, provenance)
 
         if errors:
-            raise ValidationError(
-                "Invalid parameter value(s): " + "; ".join(errors)
-            )
+            raise ValidationError("Invalid parameter value(s): " + "; ".join(errors))
 
     @staticmethod
     def _join(value: Any) -> str:
@@ -614,9 +623,7 @@ class ParamResolver:
             base = key.split()[0]
             entry = self.schema.get(base)
             if entry is None:
-                raise ValidationError(
-                    _unknown_option_error(base, key, self.schema)
-                )
+                raise ValidationError(_unknown_option_error(base, key, self.schema))
             if entry.get("non_unique") and isinstance(value, list):
                 for item in value:
                     validate_against_schema(entry, key, item)
@@ -706,9 +713,7 @@ class ParamResolver:
                 continue
             resolved[key] = (value, PROV_DATASET)
         if errors:
-            raise ValidationError(
-                "Invalid per-point value(s): " + "; ".join(errors)
-            )
+            raise ValidationError("Invalid per-point value(s): " + "; ".join(errors))
         return resolved, skipped
 
 

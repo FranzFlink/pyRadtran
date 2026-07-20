@@ -33,7 +33,10 @@ def run_config(minimal_config):
     minimal_config.simulation_defaults.output_altitudes_km = [0.0]
     minimal_config.simulation_defaults.integrate_wavelength = True
     minimal_config.simulation_defaults.output_columns = [
-        "sza", "eglo", "eup", "albedo",
+        "sza",
+        "eglo",
+        "eup",
+        "albedo",
     ]
     _make_succeeding_uvspec(minimal_config)
     return minimal_config
@@ -78,17 +81,13 @@ class TestConfigImmutability:
 
 
 class TestNoSpuriousDeprecation:
-    def test_altitude_data_var_does_not_warn(
-        self, run_config, trajectory_ds, recwarn
-    ):
+    def test_altitude_data_var_does_not_warn(self, run_config, trajectory_ds, recwarn):
         """`altitude` as a data variable is a documented layout; it must
         not trigger the deprecated-kwargs warning."""
         trajectory_ds.pyradtran.run(
             config=run_config, save_to_file=False, show_progress=False
         )
-        assert not [
-            w for w in recwarn if issubclass(w.category, DeprecationWarning)
-        ]
+        assert not [w for w in recwarn if issubclass(w.category, DeprecationWarning)]
 
 
 class TestScratchCleanup:
@@ -162,13 +161,16 @@ class TestFalseOmitsOption:
         assert value is False
 
     def test_builder_emits_no_line_for_false(self, minimal_config):
+        from datetime import datetime
+
         from pyradtran.input_builder import InputFileBuilder
         from pyradtran.params import PROV_UNVALIDATED
-        from datetime import datetime
 
         b = InputFileBuilder(minimal_config)
         lines = b.build(
-            datetime(2022, 7, 1, 12), 78.0, 15.0,
+            datetime(2022, 7, 1, 12),
+            78.0,
+            15.0,
             resolved={"aerosol_default": (False, PROV_UNVALIDATED)},
         )
         assert not any(ln.keyword == "aerosol_default" for ln in lines)
@@ -179,12 +181,12 @@ class TestFalseOmitsOption:
 
         from pyradtran.input_builder import InputFileBuilder
 
-        resolver = ParamResolver(
-            minimal_config, {"albedo": False}, schema=None
-        )
+        resolver = ParamResolver(minimal_config, {"albedo": False}, schema=None)
         b = InputFileBuilder(minimal_config)
         lines = b.build(
-            datetime(2022, 7, 1, 12), 78.0, 15.0,
+            datetime(2022, 7, 1, 12),
+            78.0,
+            15.0,
             resolved=resolver.static_params(),
         )
         assert not any(ln.keyword == "albedo" for ln in lines)
@@ -204,9 +206,7 @@ class TestInputLoaderErrors:
     ):
         """run_pyradtran_simulation must not double-wrap its own
         exception types."""
-        with patch(
-            "pyradtran.interface.load_config", return_value=minimal_config
-        ):
+        with patch("pyradtran.interface.load_config", return_value=minimal_config):
             with pytest.raises(InputGenerationError) as exc_info:
                 run_pyradtran_simulation(tmp_path / "does_not_exist.csv")
         assert "Simulation failed" not in str(exc_info.value)

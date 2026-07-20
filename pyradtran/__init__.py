@@ -35,6 +35,8 @@ import logging
 # Configure basic logging for the package
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
+from .channels import brightness_temperature, convolve_channels  # noqa: E402
+
 # Import cleaned components
 from .config import (  # noqa: E402
     ATMOSPHERE_PROFILES,
@@ -49,6 +51,12 @@ from .config import (  # noqa: E402
     save_master_config,
 )
 from .core import Simulation  # noqa: E402
+from .era5 import (  # noqa: E402
+    cloud_profiles,
+    era5_atmosphere_file,
+    normalize_era5,
+    recommend_atmosphere,
+)
 from .exceptions import (  # noqa: E402
     ConfigurationError,
     InputGenerationError,
@@ -70,14 +78,6 @@ from .io import (  # noqa: E402
     OutputType,
     ParsedOutput,
 )
-from .era5 import (  # noqa: E402
-    cloud_profiles,
-    era5_atmosphere_file,
-    normalize_era5,
-    recommend_atmosphere,
-)
-from .utils import RadiosondeFinder  # noqa: E402
-from .channels import brightness_temperature, convolve_channels  # noqa: E402
 from .params import (  # noqa: E402
     REGISTRY,
     ParamResolver,
@@ -87,6 +87,7 @@ from .params import (  # noqa: E402
     describe,
     search_options,
 )
+from .utils import RadiosondeFinder  # noqa: E402
 
 # Import cloud functionality if available
 try:

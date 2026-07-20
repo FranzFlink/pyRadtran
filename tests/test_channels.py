@@ -67,9 +67,7 @@ class TestConvolve:
 
 
 class TestRunChannelsIntegration:
-    def test_run_applies_convolution(
-        self, minimal_config, boxcar_srf, spectral_result
-    ):
+    def test_run_applies_convolution(self, minimal_config, boxcar_srf, spectral_result):
         """run(channels=srf) post-processes the converted dataset."""
         from unittest.mock import patch
 
@@ -83,16 +81,19 @@ class TestRunChannelsIntegration:
             coords={"time": [0, 1]},
         )
 
-        with patch.object(
-            interface, "execute_simulation_batch"
-        ) as mock_batch, patch.object(
-            interface.OutputToXarray, "convert_batch",
-            return_value=spectral_result,
+        with (
+            patch.object(interface, "execute_simulation_batch") as mock_batch,
+            patch.object(
+                interface.OutputToXarray,
+                "convert_batch",
+                return_value=spectral_result,
+            ),
         ):
             from pyradtran.interface import PointOutcome
 
             mock_batch.return_value = [
-                PointOutcome(object(), 0), PointOutcome(object(), 0)
+                PointOutcome(object(), 0),
+                PointOutcome(object(), 0),
             ]
             out = ds_in.pyradtran.run(
                 config=minimal_config,
@@ -119,15 +120,15 @@ class TestRunChannelsIntegration:
             },
             coords={"time": [0]},
         )
-        integrated = xr.Dataset(
-            {"eglo": (("time",), [500.0])}, coords={"time": [0]}
-        )
+        integrated = xr.Dataset({"eglo": (("time",), [500.0])}, coords={"time": [0]})
 
-        with patch.object(
-            interface, "execute_simulation_batch"
-        ) as mock_batch, patch.object(
-            interface.OutputToXarray, "convert_batch",
-            return_value=integrated,
+        with (
+            patch.object(interface, "execute_simulation_batch") as mock_batch,
+            patch.object(
+                interface.OutputToXarray,
+                "convert_batch",
+                return_value=integrated,
+            ),
         ):
             from pyradtran.interface import PointOutcome
 
