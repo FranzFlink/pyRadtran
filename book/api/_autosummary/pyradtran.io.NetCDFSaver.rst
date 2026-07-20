@@ -8,14 +8,4 @@ pyradtran.io.NetCDFSaver
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~NetCDFSaver.__init__
-         ~NetCDFSaver.save_results_to_netcdf
-      
+   :special-members: __init__

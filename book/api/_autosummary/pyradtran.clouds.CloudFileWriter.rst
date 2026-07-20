@@ -8,15 +8,4 @@ pyradtran.clouds.CloudFileWriter
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~CloudFileWriter.__init__
-         ~CloudFileWriter.write_ice_cloud_file
-         ~CloudFileWriter.write_water_cloud_file
-      
+   :special-members: __init__

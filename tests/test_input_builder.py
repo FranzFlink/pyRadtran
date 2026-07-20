@@ -181,6 +181,41 @@ class TestOutputColumns:
         assert "zout" in cols
 
 
+class TestZoutOrdering:
+    """uvspec hard-errors on unsorted zout; every zout path must sort."""
+
+    def test_config_zout_sorted_after_direct_assignment(self, minimal_config):
+        # the accessor assigns dataset altitudes directly, bypassing the
+        # dataclass __post_init__ sort
+        minimal_config.simulation_defaults.output_altitudes_km = [10.0, 0.0, 10.0]
+        text, _ = build_text(minimal_config)
+        assert "zout 0.0000 10.0000" in text
+
+    def test_zout_override_sorted_and_deduped(self, minimal_config):
+        text, _ = build_text(
+            minimal_config, resolved={"zout": ("10 0 10", PROV_LITERAL)}
+        )
+        zout_line = [l for l in text.splitlines() if l.startswith("zout")][0]
+        assert zout_line == "zout 0 10"
+
+    def test_zout_symbolic_tokens_pass_through(self, minimal_config):
+        text, _ = build_text(
+            minimal_config, resolved={"zout": ("toa", PROV_LITERAL)}
+        )
+        assert "zout toa" in text.splitlines()
+
+    def test_effective_output_altitudes_sorted_dedup(self, minimal_config):
+        from pyradtran.input_builder import effective_output_altitudes
+
+        minimal_config.simulation_defaults.output_altitudes_km = [5.0, 0.0, 5.0]
+        assert effective_output_altitudes(minimal_config) == [0.0, 5.0]
+        assert effective_output_altitudes(minimal_config, {"zout": "3 1 3"}) == [
+            1.0,
+            3.0,
+        ]
+        assert effective_output_altitudes(minimal_config, {"zout": "toa"}) == ["toa"]
+
+
 class TestAnnotatedRender:
     def test_annotations_present(self, minimal_config):
         b = InputFileBuilder(minimal_config)
@@ -302,3 +337,119 @@ class TestValueRendering:
         )
         assert "aerosol_default" in text.splitlines()
         assert "aerosol_default True" not in text
+
+
+class TestRadiosondeColumns:
+    """ERA5 atmosphere files: gas columns and mol_modify suppression."""
+
+    def _era5_file(self, tmp_path, columns="H2O MMR O3 MMR"):
+        f = tmp_path / "era5_atm.dat"
+        f.write_text(
+            "# ERA5 atmosphere profile (libRadtran radiosonde format)\n"
+            f"# columns: {columns}\n"
+            "# p(hPa)  T(K)  ...\n"
+            "100.00  215.00  1.0000e-05  5.0000e-06\n"
+            "1000.00  290.00  1.0000e-02  1.0000e-07\n"
+        )
+        return f
+
+    def test_radiosonde_line_uses_header_columns(self, minimal_config, tmp_path):
+        f = self._era5_file(tmp_path)
+        text, _ = build_text(minimal_config, era5_atmosphere_file=f)
+        assert f"radiosonde {f} H2O MMR O3 MMR" in text
+
+    def test_o3_profile_suppresses_mol_modify_o3(self, minimal_config, tmp_path):
+        minimal_config.simulation_defaults.ozone_du = 300.0
+        f = self._era5_file(tmp_path)
+        text, _ = build_text(minimal_config, era5_atmosphere_file=f)
+        assert "mol_modify O3" not in text
+
+    def test_h2o_profile_suppresses_mol_modify_h2o(self, minimal_config, tmp_path):
+        minimal_config.simulation_defaults.h2o_mm = 2.0
+        f = self._era5_file(tmp_path, columns="H2O MMR")
+        text, _ = build_text(minimal_config, era5_atmosphere_file=f)
+        assert "mol_modify H2O" not in text
+
+    def test_no_o3_column_keeps_mol_modify_o3(self, minimal_config, tmp_path):
+        minimal_config.simulation_defaults.ozone_du = 300.0
+        f = self._era5_file(tmp_path, columns="H2O MMR")
+        text, _ = build_text(minimal_config, era5_atmosphere_file=f)
+        assert "mol_modify O3 300.0 DU" in text
+
+    def test_legacy_file_without_columns_header(self, minimal_config, tmp_path):
+        f = tmp_path / "legacy.dat"
+        f.write_text(
+            "# ERA5 atmosphere profile in libradtran radiosonde style\n"
+            "# p(hPa)  T(K)  h2o(kg kg-1) \n"
+            "100.00  215.00  1.000e-05\n"
+        )
+        text, _ = build_text(minimal_config, era5_atmosphere_file=f)
+        assert f"radiosonde {f} H2O MMR" in text
+
+    def test_legacy_rh_file_sniffed(self, minimal_config, tmp_path):
+        f = tmp_path / "sonde.dat"
+        f.write_text(
+            "# Radiosonde atmosphere profile\n"
+            "# p(hPa)  T(K)  h2o(RH%)\n"
+            "100.00  215.00  30.0\n"
+        )
+        text, _ = build_text(minimal_config, era5_atmosphere_file=f)
+        assert f"radiosonde {f} H2O RH" in text
+
+    def test_no_atmosphere_file_keeps_mol_modify(self, minimal_config):
+        minimal_config.simulation_defaults.ozone_du = 300.0
+        minimal_config.simulation_defaults.h2o_mm = 2.0
+        text, _ = build_text(minimal_config)
+        assert "mol_modify O3 300.0 DU" in text
+        assert "mol_modify H2O 2.0 MM" in text
+
+
+class TestBrightnessColumns:
+    """output_quantity brightness must drop albedo from output_user in the
+    shared column function — builder and parser stay in lock-step even when
+    albedo is not the last configured column."""
+
+    def test_albedo_filtered_mid_list(self, minimal_config):
+        from pyradtran.input_builder import effective_output_columns
+
+        minimal_config.simulation_defaults.output_columns = [
+            "sza", "albedo", "eglo",
+        ]
+        minimal_config.simulation_defaults.integrate_wavelength = True
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        cols = effective_output_columns(
+            minimal_config, {"output_quantity": "brightness"}
+        )
+        assert cols == ["sza", "eglo"]
+
+    def test_builder_output_user_line_matches(self, minimal_config):
+        minimal_config.simulation_defaults.output_columns = [
+            "sza", "albedo", "eglo",
+        ]
+        minimal_config.simulation_defaults.integrate_wavelength = True
+        minimal_config.simulation_defaults.output_altitudes_km = [0.0]
+        text, _ = build_text(
+            minimal_config,
+            resolved={"output_quantity": ("brightness", PROV_LITERAL)},
+        )
+        # albedo dropped from the requested output columns (the separate
+        # surface-albedo option line is unaffected)
+        out_lines = [
+            l for l in text.splitlines() if l.startswith("output_user")
+        ]
+        assert out_lines == ["output_user sza eglo"]
+
+    def test_parser_columns_match_builder(self, minimal_config):
+        from pyradtran.input_builder import effective_output_columns
+        from pyradtran.io import OutputParser
+
+        minimal_config.simulation_defaults.output_columns = [
+            "sza", "albedo", "eglo",
+        ]
+        minimal_config.simulation_defaults.integrate_wavelength = True
+        overrides = {"output_quantity": "brightness"}
+        parser = OutputParser(minimal_config, overrides)
+        assert parser.output_columns == effective_output_columns(
+            minimal_config, overrides
+        )
+        assert parser.is_brightness_output is True

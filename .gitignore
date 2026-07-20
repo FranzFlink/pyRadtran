@@ -114,4 +114,4 @@ book/_build/
 _build/
 
 # Logs
-*.log
+*.logbook/api/_autosummary/

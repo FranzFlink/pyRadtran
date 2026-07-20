@@ -8,16 +8,4 @@ pyradtran.params.ParamResolver
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~ParamResolver.__init__
-         ~ParamResolver.resolve_point
-         ~ParamResolver.static_params
-         ~ParamResolver.validate_var_targets
-      
+   :special-members: __init__

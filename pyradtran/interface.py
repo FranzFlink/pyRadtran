@@ -45,18 +45,69 @@ except ImportError:
 
 from .config import SimulationConfig, load_config
 from .core import Simulation
+from .era5 import cloud_profiles, normalize_era5, select_profile, write_atmosphere_file
 from .exceptions import PyRadtranError
 from .io import (
-    ERA5AtmosphereGenerator,
     InputDataLoader,
     NetCDFSaver,
     OutputParser,
     OutputToXarray,
     ParsedOutput,
 )
-from .params import ParamResolver, Var
+from .params import PROV_DATASET, ParamResolver, Raw, Var
 
 logger = logging.getLogger(__name__)
+
+
+def _serialize_params(params: Optional[Dict[str, Any]]) -> str:
+    """JSON-encode a params mapping for storage in dataset attrs.
+
+    ``Var``/``Raw`` markers and other non-JSON values become their repr.
+    """
+    import json
+
+    def enc(v):
+        if isinstance(v, (Var, Raw)):
+            return repr(v)
+        if isinstance(v, (str, int, float, bool)) or v is None:
+            return v
+        if isinstance(v, (list, tuple)):
+            return [enc(i) for i in v]
+        if isinstance(v, dict):
+            return {str(k): enc(val) for k, val in v.items()}
+        return repr(v)
+
+    return json.dumps({k: enc(v) for k, v in (params or {}).items()})
+
+
+def _provenance_attrs(
+    config: SimulationConfig,
+    params: Optional[Dict[str, Any]],
+    input_example: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Attrs recording exactly what produced a result dataset."""
+    import yaml
+
+    from . import __version__
+
+    attrs = {
+        "pyradtran_version": __version__,
+        "history": (
+            f"{datetime.now().isoformat(timespec='seconds')}: "
+            f"pyradtran {__version__} ds.pyradtran.run()"
+        ),
+        "pyradtran_params": _serialize_params(params),
+        "pyradtran_libradtran_bin": str(config.paths.libradtran_bin),
+    }
+    try:
+        attrs["pyradtran_config"] = yaml.safe_dump(
+            config.to_dict(), default_flow_style=None, sort_keys=False
+        )
+    except Exception as e:  # config must never break a finished run
+        logger.warning(f"Could not serialise config for provenance: {e}")
+    if input_example is not None:
+        attrs["pyradtran_input_example"] = input_example
+    return attrs
 
 
 @dataclass
@@ -81,6 +132,75 @@ class SimPoint:
     skipped: List[str] = field(default_factory=list)
     era5_file: Optional[Path] = None
     point_id: str = ""
+
+
+def _era5_clouds_requested(era5_clouds) -> bool:
+    """True when the caller asked for ERA5 clouds.
+
+    An empty options dict means "enabled with default settings" — plain
+    truthiness would silently disable it.
+    """
+    return era5_clouds is not False and era5_clouds is not None
+
+
+def _point_cloud_profiles(
+    get,
+    cloud_wc_var,
+    cloud_ic_var,
+    cloud_reff_var,
+    cloud_ic_reff_var,
+    cloud_top_var,
+    cloud_bottom_var,
+):
+    """Build dict-valued wc/ic cloud profiles for one point.
+
+    Shared by the batch driver and :meth:`PyRadtranAccessor.inspect_cloud_file`
+    so the preview can never diverge from what a run would build.
+
+    Parameters
+    ----------
+    get : callable
+        Maps a dataset variable name to a scalar value (or *None*).
+
+    Returns
+    -------
+    (wc, ic) : tuple of dict or None
+        Profile dicts for ``wc_file`` / ``ic_file``; *None* for a phase
+        that cannot be built (missing/NaN inputs).
+    """
+
+    def valid(v):
+        return v is not None and not (isinstance(v, float) and np.isnan(v))
+
+    cth = get(cloud_top_var) if cloud_top_var else None
+    cbh = get(cloud_bottom_var) if cloud_bottom_var else None
+    if not (valid(cth) and valid(cbh)):
+        return None, None
+    z_layer = [max(cth, cbh), min(cth, cbh)]
+
+    wc = ic = None
+    if cloud_wc_var:
+        lwc = get(cloud_wc_var)
+        if valid(lwc):
+            reff = get(cloud_reff_var) if cloud_reff_var else None
+            r_val = reff if valid(reff) else 10.0
+            wc = {
+                "z": z_layer,
+                "lwc": [float(lwc), float(lwc)],
+                "reff": [float(r_val), float(r_val)],
+            }
+    if cloud_ic_var:
+        iwc = get(cloud_ic_var)
+        if valid(iwc):
+            r_key = cloud_ic_reff_var if cloud_ic_reff_var else cloud_reff_var
+            reff_ice = get(r_key) if r_key else None
+            r_val = reff_ice if valid(reff_ice) else 20.0
+            ic = {
+                "z": z_layer,
+                "iwc": [float(iwc), float(iwc)],
+                "reff": [float(r_val), float(r_val)],
+            }
+    return wc, ic
 
 
 def _translate_legacy_kwargs(
@@ -212,9 +332,11 @@ def run_pyradtran_simulation(
         else:
             raise PyRadtranError("No valid simulation results produced")
 
+    except PyRadtranError:
+        raise
     except Exception as e:
         logger.error(f"Simulation failed: {str(e)}")
-        raise PyRadtranError(f"Simulation failed: {str(e)}")
+        raise PyRadtranError(f"Simulation failed: {str(e)}") from e
 
 
 def execute_simulation_batch(
@@ -229,6 +351,7 @@ def execute_simulation_batch(
     surface_type_var: Optional[str] = None,
     altitude_var: Optional[str] = None,
     era5_atmosphere: Optional[xr.Dataset] = None,
+    era5_clouds: Union[bool, Dict[str, Any]] = False,
     parameter_overrides: Dict[str, Any] = None,
     progress_callback: Optional[callable] = None,
     # Cloud automation arguments
@@ -270,7 +393,19 @@ def execute_simulation_batch(
     altitude_var : str, optional
         Deprecated — use ``params={"zout": Var(...)}``.
     era5_atmosphere : xarray.Dataset, optional
-        ERA5 dataset for atmosphere file generation.
+        ERA5 dataset for atmosphere file generation.  Accepts raw
+        CDS or ARCO-ERA5 naming — it is normalised via
+        :func:`pyradtran.era5.normalize_era5` before use.  When an
+        ozone profile (``o3``) is present it is written into the
+        radiosonde file and the config ``ozone_du`` scaling is skipped.
+    era5_clouds : bool or dict, default ``False``
+        When truthy, additionally derive per-point ``wc_file`` /
+        ``ic_file`` cloud profiles from the ERA5 ``clwc`` / ``ciwc``
+        fields.  A dict is forwarded as keyword arguments to
+        :func:`pyradtran.era5.cloud_profiles` (e.g.
+        ``{"reff_water_um": 8.0}``).  Explicit cloud parameters
+        (``params`` or the ``cloud_*_var`` kwargs) take precedence for
+        points where both are present.  Requires *era5_atmosphere*.
     parameter_overrides : dict, optional
         Deprecated — use ``params`` instead.
     progress_callback : callable, optional
@@ -313,6 +448,17 @@ def execute_simulation_batch(
     # Ensure input_ds is a Dataset
     if isinstance(input_ds, xr.DataArray):
         input_ds = input_ds.to_dataset()
+
+    # Core coordinate variables must exist — direct callers otherwise get
+    # cryptic per-point crashes deep inside the batch loop.
+    for label, var in (
+        ("time", time_var), ("latitude", lat_var), ("longitude", lon_var)
+    ):
+        if var not in input_ds:
+            raise ValueError(
+                f"{label} variable '{var}' not found in input dataset "
+                f"(have: {sorted([*input_ds.coords, *input_ds.data_vars])})"
+            )
 
     # Validate cloud variables if enabled
     if cloud_wc_var or cloud_ic_var:
@@ -367,18 +513,37 @@ def execute_simulation_batch(
             return val
         return None
 
-    # Handle ERA5 atmosphere files if provided
+    # Per-point time values, extracted once up front: isel on a stacked
+    # MultiIndex crashes outright when the index contains NaT, so NaT
+    # points must be identified from the flat array before any isel.
+    time_flat = np.asarray(stacked_ds[time_var].values).reshape(-1)
+    if time_flat.size != num_points:
+        time_flat = None  # unusual layout; fall back to per-point checks
+    bad_time = (
+        pd.isna(time_flat) if time_flat is not None
+        else np.zeros(num_points, dtype=bool)
+    )
+
+    # Handle ERA5 atmosphere (and optionally cloud) files if provided
+    era5_clouds_on = _era5_clouds_requested(era5_clouds)
+    if era5_clouds_on and era5_atmosphere is None:
+        raise ValueError("era5_clouds requires era5_atmosphere")
+
     era5_atmosphere_files = {}
+    era5_cloud_cache: Dict[str, tuple] = {}
     if era5_atmosphere is not None:
         logger.info("Creating ERA5 atmosphere files for simulation points...")
+        era5_atmosphere = normalize_era5(era5_atmosphere)
+        cloud_kwargs = era5_clouds if isinstance(era5_clouds, dict) else {}
         # Create working directory for atmosphere files
         atm_dir = config.paths.working_dir / "era5_atmospheres"
         atm_dir.mkdir(parents=True, exist_ok=True)
 
-        era5_generator = ERA5AtmosphereGenerator()
-
-        # Cache: one atmosphere file per unique (time, lat, lon)
+        # Cache: one atmosphere file (and cloud profile) per unique
+        # (time, lat, lon)
         for i in range(num_points):
+            if bad_time[i]:
+                continue  # NaT point — skipped in the main loop below
             point_ds = stacked_ds.isel({sample_dim: i})
             t = get_val(point_ds, time_var)
             lat = get_val(point_ds, lat_var)
@@ -390,12 +555,15 @@ def execute_simulation_batch(
 
                 # Check if we already generated it for this time point
                 if point_id not in era5_atmosphere_files:
+                    profile = select_profile(era5_atmosphere, lat, lon, dt)
                     atm_file = atm_dir / f"era5_atm_{point_id}.dat"
                     # Always regenerate to avoid stale files from previous runs
-                    era5_generator.create_era5_atmosphere_file(
-                        era5_atmosphere, lat, lon, dt, atm_file
-                    )
+                    write_atmosphere_file(profile, atm_file)
                     era5_atmosphere_files[point_id] = atm_file
+                    if era5_clouds_on:
+                        era5_cloud_cache[point_id] = cloud_profiles(
+                            profile, **cloud_kwargs
+                        )
                     logger.debug(
                         f"Created ERA5 atmosphere file for {point_id}: {atm_file}"
                     )
@@ -417,13 +585,24 @@ def execute_simulation_batch(
     points: List[SimPoint] = []
     prefilled: Dict[int, PointOutcome] = {}
     for i in range(num_points):
+        if bad_time[i]:
+            prefilled[i] = PointOutcome(
+                None, 2, "missing or NaT time", f"point_{i}"
+            )
+            continue
         point_ds = stacked_ds.isel({sample_dim: i})
         t = get_val(point_ds, time_var)
         lat = get_val(point_ds, lat_var)
         lon = get_val(point_ds, lon_var)
 
+        if t is None or pd.isna(t):
+            # fallback for layouts where the flat time array was unusable
+            prefilled[i] = PointOutcome(
+                None, 2, "missing or NaT time", f"point_{i}"
+            )
+            continue
         if any(
-            v is not None and isinstance(v, float) and np.isnan(v)
+            v is None or (isinstance(v, float) and np.isnan(v))
             for v in (lat, lon)
         ):
             prefilled[i] = PointOutcome(None, 2, "NaN coordinates", f"point_{i}")
@@ -434,59 +613,30 @@ def execute_simulation_batch(
         # Cloud automation: build dict-valued wc_file/ic_file entries
         try:
             if cloud_wc_var or cloud_ic_var:
-                cth = get_val(point_ds, cloud_top_var)
-                cbh = get_val(point_ds, cloud_bottom_var)
-                if (
-                    cth is not None and cbh is not None
-                    and not np.isnan(cth) and not np.isnan(cbh)
-                ):
-                    z_layer = [max(cth, cbh), min(cth, cbh)]
-                    if cloud_wc_var:
-                        lwc = get_val(point_ds, cloud_wc_var)
-                        reff = (
-                            get_val(point_ds, cloud_reff_var)
-                            if cloud_reff_var else 10.0
-                        )
-                        if lwc is not None and not np.isnan(lwc):
-                            r_val = (
-                                reff
-                                if (reff is not None and not np.isnan(reff))
-                                else 10.0
-                            )
-                            resolved["wc_file"] = (
-                                {
-                                    "z": z_layer,
-                                    "lwc": [float(lwc), float(lwc)],
-                                    "reff": [float(r_val), float(r_val)],
-                                },
-                                "dataset-var",
-                            )
-                    if cloud_ic_var:
-                        iwc = get_val(point_ds, cloud_ic_var)
-                        r_key = (
-                            cloud_ic_reff_var if cloud_ic_reff_var
-                            else cloud_reff_var
-                        )
-                        reff_ice = get_val(point_ds, r_key) if r_key else 20.0
-                        if iwc is not None and not np.isnan(iwc):
-                            r_val = (
-                                reff_ice
-                                if (reff_ice is not None and not np.isnan(reff_ice))
-                                else 20.0
-                            )
-                            resolved["ic_file"] = (
-                                {
-                                    "z": z_layer,
-                                    "iwc": [float(iwc), float(iwc)],
-                                    "reff": [float(r_val), float(r_val)],
-                                },
-                                "dataset-var",
-                            )
+                wc, ic = _point_cloud_profiles(
+                    lambda v: get_val(point_ds, v),
+                    cloud_wc_var, cloud_ic_var, cloud_reff_var,
+                    cloud_ic_reff_var, cloud_top_var, cloud_bottom_var,
+                )
+                if wc is not None:
+                    resolved["wc_file"] = (wc, PROV_DATASET)
+                if ic is not None:
+                    resolved["ic_file"] = (ic, PROV_DATASET)
         except Exception as e:
             logger.warning(f"Failed to generate cloud parameters for point {i}: {e}")
 
         dt = pd.to_datetime(t).to_pydatetime()
         era5_key = f"{dt.strftime('%Y%m%d_%H%M%S')}_{lat:.2f}_{lon:.2f}"
+
+        # ERA5-derived cloud profiles: fill in only where nothing more
+        # explicit (params / cloud_*_var) provided a cloud already.
+        if era5_key in era5_cloud_cache:
+            era5_wc, era5_ic = era5_cloud_cache[era5_key]
+            if era5_wc is not None and "wc_file" not in resolved:
+                resolved["wc_file"] = (era5_wc, "era5")
+            if era5_ic is not None and "ic_file" not in resolved:
+                resolved["ic_file"] = (era5_ic, "era5")
+
         points.append(
             SimPoint(
                 index=i,
@@ -590,6 +740,20 @@ def execute_simulation_batch(
     return [o.parsed if o is not None else None for o in outcomes]
 
 
+def _output_has_nan(data) -> bool:
+    """NaN check over ParsedOutput.data (array or dict of arrays)."""
+    try:
+        if data is None:
+            return False
+        if isinstance(data, dict):
+            return any(
+                np.isnan(np.asarray(v, dtype=float)).any() for v in data.values()
+            )
+        return bool(np.isnan(np.asarray(data, dtype=float)).any())
+    except (TypeError, ValueError):
+        return False
+
+
 def _coerce_datetime(time) -> datetime:
     """Convert any supported time representation to datetime."""
     if isinstance(time, datetime):
@@ -597,7 +761,7 @@ def _coerce_datetime(time) -> datetime:
     if isinstance(time, np.datetime64) or isinstance(time, (int, np.integer)):
         return pd.to_datetime(time).to_pydatetime()
     if isinstance(time, str):
-        return datetime.fromisoformat(time)
+        return pd.to_datetime(time).to_pydatetime()
     return time
 
 
@@ -619,9 +783,27 @@ def _run_single_simulation_unified(
         )
 
         if output_file and output_file.exists():
-            raw_overrides = {k: v for k, (v, _p) in point.resolved.items()}
+            # Mirror the input-file layering: config-level parameter_overrides
+            # (layer 1) shape the file too, so the parser must see them,
+            # with per-point resolved values winning.
+            raw_overrides = {
+                **(config.simulation_defaults.parameter_overrides or {}),
+                **{k: v for k, (v, _p) in point.resolved.items()},
+            }
             parser = OutputParser(config, raw_overrides)
             parsed_output = parser.parse_output_file(output_file)
+            if (
+                _output_has_nan(parsed_output.data)
+                and config.simulation_defaults.rte_solver == "twostr"
+                and any(k in point.resolved for k in ("wc_file", "ic_file"))
+            ):
+                logger.warning(
+                    f"Point {point.point_id}: NaN in uvspec output — the "
+                    f"twostr solver is numerically unstable for some "
+                    f"optically thick cloud layers at individual "
+                    f"wavelengths, which poisons integrated output. Use "
+                    f"rte_solver disort for cloudy runs."
+                )
             parsed_output.metadata.update(
                 {
                     "point_id": point.point_id,
@@ -630,6 +812,13 @@ def _run_single_simulation_unified(
                     "longitude": point.longitude,
                 }
             )
+            if config.execution.cleanup_temp_files:
+                # the parsed values are in memory; the raw .out file would
+                # otherwise accumulate forever in the working directory
+                try:
+                    output_file.unlink()
+                except OSError:
+                    pass
             return PointOutcome(parsed_output, 0, None, point.point_id)
         detail = sim.last_stderr or "no output produced"
         if sim.last_failed_input is not None:
@@ -677,6 +866,7 @@ class PyRadtranAccessor:
         surface_temperature_var: Optional[str] = None,
         surface_type_var: Optional[str] = None,
         era5_atmosphere: Optional[xr.Dataset] = None,
+        era5_clouds: Union[bool, Dict[str, Any]] = False,
         return_dataset: bool = True,
         save_to_file: bool = True,
         output_path: Optional[Union[str, Path]] = None,
@@ -718,7 +908,17 @@ class PyRadtranAccessor:
         surface_type_var : str, optional
             Deprecated — use ``params={"brdf_rpv_type": Var(...)}``.
         era5_atmosphere : xarray.Dataset, optional
-            ERA5 dataset for custom atmosphere profiles.
+            ERA5 dataset for custom atmosphere profiles.  Raw CDS or
+            ARCO-ERA5 naming is accepted and normalised automatically;
+            an ``o3`` field adds an ozone profile to the radiosonde
+            file (and disables the config ``ozone_du`` scaling).
+        era5_clouds : bool or dict, default ``False``
+            Also derive per-point cloud profiles (``wc_file`` /
+            ``ic_file``) from the ERA5 ``clwc`` / ``ciwc`` fields.  A
+            dict is forwarded to
+            :func:`pyradtran.era5.cloud_profiles` (e.g.
+            ``{"reff_water_um": 8.0}``).  Explicit cloud settings via
+            ``params`` or ``cloud_*_var`` win over ERA5 clouds.
         return_dataset : bool, default ``True``
             Return results as an xarray Dataset.
         save_to_file : bool, default ``True``
@@ -758,11 +958,17 @@ class PyRadtranAccessor:
         PyRadtranError
             If no valid results are produced.
         """
-        # Load configuration
+        # Load configuration.  A caller-supplied config is copied: this
+        # method (and dotted config overrides in params) adjusts the
+        # config per run and must not mutate the caller's object.
         if config:
-            self._config = config
+            self._config = config.copy()
         else:
             self._config = load_config(config_path)
+
+        # Normalise ERA5 naming once, then validate everything
+        if era5_atmosphere is not None:
+            era5_atmosphere = normalize_era5(era5_atmosphere)
 
         # Validate input dataset
         self._validate_input_dataset(
@@ -773,6 +979,7 @@ class PyRadtranAccessor:
             surface_temperature_var,
             surface_type_var,
             era5_atmosphere,
+            era5_clouds,
         )
 
         # Handle altitude information
@@ -786,12 +993,18 @@ class PyRadtranAccessor:
                     f"Altitude found as coordinate - using "
                     f"{dataset_altitudes.size} levels for zout: {dataset_altitudes}"
                 )
-                self._config.simulation_defaults.output_altitudes_km = [
-                    float(alt) for alt in dataset_altitudes
-                ]
+                # sorted+deduped: direct assignment bypasses the dataclass
+                # __post_init__ sort, and uvspec rejects unsorted zout
+                self._config.simulation_defaults.output_altitudes_km = sorted(
+                    {float(alt) for alt in dataset_altitudes}
+                )
         if alt_var in self._obj.data_vars:
-            # Altitude is a data variable - treat as scalar per time step
+            # Altitude is a data variable - treat as scalar per time step.
+            # Injected as a zout Var in params (not via the deprecated
+            # altitude_var kwarg, which would warn for a documented layout).
             altitude_as_data_var = True
+            if "zout" not in (params or {}):
+                params = {**(params or {}), "zout": Var(alt_var)}
             logger.info(
                 "Altitude found as data variable - will be treated as scalar altitude for each time step"
             )
@@ -828,8 +1041,8 @@ class PyRadtranAccessor:
             albedo_var=albedo_var,
             surface_temperature_var=surface_temperature_var,
             surface_type_var=surface_type_var,
-            altitude_var=alt_var if altitude_as_data_var else None,
             era5_atmosphere=era5_atmosphere,
+            era5_clouds=era5_clouds,
             parameter_overrides=parameter_overrides,
             progress_callback=progress_callback,
             # Forward cloud args
@@ -844,80 +1057,110 @@ class PyRadtranAccessor:
         )
         parsed_outputs = [o.parsed if o is not None else None for o in outcomes]
 
-        # Convert to xarray Dataset
-        if return_dataset and parsed_outputs:
-            converter = OutputToXarray()
-            result_ds = converter.convert_batch(
-                parsed_outputs, ds_to_execute, time_var, lat_var, lon_var
+        if not parsed_outputs:
+            raise PyRadtranError("No valid simulation results to return or save")
+        if not return_dataset and not (save_to_file and output_path):
+            raise PyRadtranError(
+                "Nothing to do: return_dataset=False and save_to_file=False"
             )
 
-            # Attach per-point status codes (0 ok / 1 failed / 2 skipped)
-            status_flat = np.array(
-                [o.status if o is not None else 1 for o in outcomes]
+        # Convert to xarray Dataset. The saved file and the returned
+        # dataset are built identically: status codes, channel
+        # convolution, and provenance attrs in both.
+        converter = OutputToXarray()
+        result_ds = converter.convert_batch(
+            parsed_outputs, ds_to_execute, time_var, lat_var, lon_var
+        )
+
+        # Attach per-point status codes (0 ok / 1 failed / 2 skipped)
+        status_flat = np.array(
+            [o.status if o is not None else 1 for o in outcomes]
+        )
+        status_dims = list(ds_to_execute.sizes.keys())
+        if status_dims:
+            status_stacked = ds_to_execute.stack(
+                {"sample_batch_dim": status_dims}
             )
-            status_dims = list(ds_to_execute.sizes.keys())
-            if status_dims:
-                status_stacked = ds_to_execute.stack(
-                    {"sample_batch_dim": status_dims}
-                )
-                status_da = xr.DataArray(
-                    status_flat,
-                    coords={
-                        "sample_batch_dim": status_stacked["sample_batch_dim"]
-                    },
-                    dims=["sample_batch_dim"],
-                ).unstack("sample_batch_dim")
-            else:
-                status_da = xr.DataArray(int(status_flat[0]))
-            result_ds["status"] = status_da
-            result_ds["status"].attrs["flag_values"] = "0: ok, 1: failed, 2: skipped"
+            status_da = xr.DataArray(
+                status_flat,
+                coords={
+                    "sample_batch_dim": status_stacked["sample_batch_dim"]
+                },
+                dims=["sample_batch_dim"],
+            ).unstack("sample_batch_dim")
+        else:
+            status_da = xr.DataArray(int(status_flat[0]))
+        result_ds["status"] = status_da
+        result_ds["status"].attrs["flag_values"] = "0: ok, 1: failed, 2: skipped"
 
-            # Instrument-channel convolution
-            if channels is not None:
-                result_ds = self._apply_channels(
-                    result_ds, channels, keep_spectral
-                )
+        # Instrument-channel convolution
+        if channels is not None:
+            result_ds = self._apply_channels(result_ds, channels, keep_spectral)
 
-            # Add metadata
-            result_ds.attrs["generated_by"] = "pyradtran"
-            result_ds.attrs["pyradtran_version"] = "unified_system"
-            result_ds.attrs["generation_date"] = datetime.now().isoformat()
-
-            # Save to file if requested
-            if save_to_file and output_path:
-                saver = NetCDFSaver()
-                saver.save_results_to_netcdf(
-                    data=result_ds,
-                    output_path=output_path,
-                    input_ds=self._obj,
-                    config=self._config,
-                    simulation_params=params or parameter_overrides,
-                )
-                logger.info(f"Results saved to {output_path}")
-
-            return result_ds
-
-        elif save_to_file and parsed_outputs and output_path:
-            # Just save to file without returning dataset
-            converter = OutputToXarray()
-            result_ds = converter.convert_batch(
-                parsed_outputs, ds_to_execute, time_var, lat_var, lon_var
+        # Provenance: record what produced this dataset
+        result_ds.attrs["generated_by"] = "pyradtran"
+        result_ds.attrs["generation_date"] = datetime.now().isoformat()
+        result_ds.attrs.update(
+            _provenance_attrs(
+                self._config,
+                params,
+                input_example=self._input_example(ds_to_execute, params),
             )
-            if channels is not None:
-                result_ds = self._apply_channels(
-                    result_ds, channels, keep_spectral
-                )
+        )
+        if channels is not None:
+            result_ds.attrs["pyradtran_channels"] = " ".join(
+                str(c) for c in channels["channel"].values
+            )
+            result_ds.attrs["pyradtran_keep_spectral"] = int(keep_spectral)
 
+        saved_path = None
+        if save_to_file and output_path:
             saver = NetCDFSaver()
-            return saver.save_results_to_netcdf(
+            saved_path = saver.save_results_to_netcdf(
                 data=result_ds,
                 output_path=output_path,
                 input_ds=self._obj,
                 config=self._config,
                 simulation_params=params or parameter_overrides,
             )
-        else:
-            raise PyRadtranError("No valid simulation results to return or save")
+            logger.info(f"Results saved to {output_path}")
+
+        if return_dataset:
+            return result_ds
+        return saved_path
+
+    def _input_example(
+        self,
+        ds: xr.Dataset,
+        params: Optional[Dict[str, Any]],
+        time_var: str = "time",
+        lat_var: str = "latitude",
+        lon_var: str = "longitude",
+    ) -> Optional[str]:
+        """Annotated input file for the first point — provenance attr.
+
+        Best effort: returns *None* instead of raising, a finished run
+        must never fail on metadata.
+        """
+        try:
+            resolver = ParamResolver(self._config, params)
+            point_ds = ds.isel({d: 0 for d in ds.dims})
+
+            def scalar(var):
+                if var in point_ds:
+                    v = point_ds[var].values
+                    return v.item() if hasattr(v, "item") else v
+                return None
+
+            resolved, _skipped = resolver.resolve_point(point_ds)
+            dt = pd.to_datetime(scalar(time_var)).to_pydatetime()
+            sim = Simulation(self._config)
+            return sim.dry_run(
+                dt, scalar(lat_var), scalar(lon_var), resolved_params=resolved
+            )
+        except Exception as e:
+            logger.debug(f"Could not render input example for provenance: {e}")
+            return None
 
     @staticmethod
     def _apply_channels(
@@ -1026,53 +1269,30 @@ class PyRadtranAccessor:
                 return val
             return None
 
-        # Construct content dict
-        content_dict = None
+        # Same construction the batch driver uses — preview cannot diverge
+        wc, ic = _point_cloud_profiles(
+            get_val, cloud_wc_var, cloud_ic_var, cloud_reff_var,
+            cloud_ic_reff_var, cloud_top_var, cloud_bottom_var,
+        )
 
-        cth = get_val(cloud_top_var)
-        cbh = get_val(cloud_bottom_var)
+        # Explicit dict-valued overrides win, per phase
+        if isinstance(point_overrides.get("wc_file"), dict):
+            wc = point_overrides["wc_file"]
+        if isinstance(point_overrides.get("ic_file"), dict):
+            ic = point_overrides["ic_file"]
 
-        if cth is not None and cbh is not None:
-            z_layer = [max(cth, cbh), min(cth, cbh)]
-
-            if cloud_wc_var:
-                lwc = get_val(cloud_wc_var)
-                reff = get_val(cloud_reff_var) if cloud_reff_var else 10.0
-                r_val = reff if (reff is not None and not np.isnan(reff)) else 10.0
-
-                content_dict = {
-                    "z": z_layer,
-                    "lwc": [float(lwc), float(lwc)],
-                    "reff": [float(r_val), float(r_val)],
-                }
-
-            elif cloud_ic_var:
-                iwc = get_val(cloud_ic_var)
-                r_key = cloud_ic_reff_var if cloud_ic_reff_var else cloud_reff_var
-                reff = get_val(r_key) if r_key else 20.0
-                r_val = reff if (reff is not None and not np.isnan(reff)) else 20.0
-
-                content_dict = {
-                    "z": z_layer,
-                    "iwc": [float(iwc), float(iwc)],
-                    "reff": [float(r_val), float(r_val)],
-                }
-
-        # Check explicit overrides for dict-based clouds
-        if hasattr(point_overrides, "get"):
-            if "wc_file" in point_overrides and isinstance(
-                point_overrides["wc_file"], dict
-            ):
-                content_dict = point_overrides["wc_file"]
-            if "ic_file" in point_overrides and isinstance(
-                point_overrides["ic_file"], dict
-            ):
-                content_dict = point_overrides["ic_file"]
-
-        if content_dict:
-            return Simulation.format_cloud_profile(content_dict)
-        else:
-            return "No valid cloud profile generated for this point."
+        blocks = []
+        if wc:
+            blocks.append(
+                "# wc_file profile\n" + Simulation.format_cloud_profile(wc)
+            )
+        if ic:
+            blocks.append(
+                "# ic_file profile\n" + Simulation.format_cloud_profile(ic)
+            )
+        if blocks:
+            return "\n".join(blocks)
+        return "No valid cloud profile generated for this point."
 
     def explain(
         self,
@@ -1192,10 +1412,21 @@ class PyRadtranAccessor:
         base = self.run(config=cfg, params=base_params, **run_kwargs)
         perturbed = self.run(config=cfg, params=pert_params, **run_kwargs)
 
-        jac = (perturbed - base) / float(delta)
+        # status is a flag, not a physical quantity — keep the worst of the
+        # two runs per point instead of differentiating it
+        base_status = base.get("status")
+        pert_status = perturbed.get("status")
+        jac = (
+            perturbed.drop_vars("status", errors="ignore")
+            - base.drop_vars("status", errors="ignore")
+        ) / float(delta)
+        if base_status is not None and pert_status is not None:
+            jac["status"] = np.maximum(base_status, pert_status)
+            jac["status"].attrs["flag_values"] = "0: ok, 1: failed, 2: skipped"
         jac.attrs["jacobian_param"] = param
         jac.attrs["jacobian_delta"] = float(delta)
         jac.attrs["jacobian_base_value"] = float(base_value)
+        jac.attrs.update(_provenance_attrs(cfg, base_params))
         return jac
 
     def _validate_input_dataset(
@@ -1207,6 +1438,7 @@ class PyRadtranAccessor:
         surface_temperature_var: Optional[str],
         surface_type_var: Optional[str],
         era5_atmosphere: Optional[xr.Dataset],
+        era5_clouds: Union[bool, Dict[str, Any]] = False,
     ):
         """Validate that expected variables exist in the dataset."""
         # Check required variables
@@ -1241,22 +1473,27 @@ class PyRadtranAccessor:
                 f"Surface type variable '{surface_type_var}' not found in dataset"
             )
 
-        # Validate ERA5 atmosphere dataset if provided
+        # Validate ERA5 atmosphere dataset if provided (already normalised)
         if era5_atmosphere is not None:
-            required_era5_vars = ["z", "t", "q"]
-            required_era5_coords = ["pressure_level", "valid_time"]
-
-            for var in required_era5_vars:
+            for var in ("t", "q"):
                 if var not in era5_atmosphere.variables:
                     raise PyRadtranError(
-                        f"Required variable '{var}' not found in ERA5 atmosphere dataset"
+                        f"Required variable '{var}' not found in ERA5 atmosphere "
+                        f"dataset (accepted aliases are normalised automatically; "
+                        f"have: {sorted(era5_atmosphere.data_vars)})"
                     )
-
-            for coord in required_era5_coords:
-                if coord not in era5_atmosphere.coords:
-                    raise PyRadtranError(
-                        f"Required coordinate '{coord}' not found in ERA5 atmosphere dataset"
-                    )
+            if "pressure_level" not in era5_atmosphere.coords:
+                raise PyRadtranError(
+                    "Required coordinate 'pressure_level' not found in ERA5 "
+                    "atmosphere dataset"
+                )
+            if _era5_clouds_requested(era5_clouds) and not (
+                "clwc" in era5_atmosphere.variables
+                or "ciwc" in era5_atmosphere.variables
+            ):
+                raise PyRadtranError(
+                    "era5_clouds requires 'clwc' and/or 'ciwc' in the ERA5 dataset"
+                )
 
             n_pressure_levels = era5_atmosphere.sizes.get(
                 "pressure_level", era5_atmosphere.pressure_level.size
@@ -1264,6 +1501,8 @@ class PyRadtranAccessor:
             logger.info(
                 f"ERA5 atmosphere dataset validated with {n_pressure_levels} pressure levels"
             )
+        elif _era5_clouds_requested(era5_clouds):
+            raise PyRadtranError("era5_clouds requires era5_atmosphere")
 
 
 # Expose main functions

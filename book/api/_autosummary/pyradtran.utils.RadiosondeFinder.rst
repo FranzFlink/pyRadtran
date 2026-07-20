@@ -8,15 +8,4 @@ pyradtran.utils.RadiosondeFinder
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~RadiosondeFinder.__init__
-         ~RadiosondeFinder.find_closest
-         ~RadiosondeFinder.find_radiosonde_file
-      
+   :special-members: __init__

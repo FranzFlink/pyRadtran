@@ -6,8 +6,14 @@ author: PyRadtran Developers
 logo: logo.png
 copyright: "2025"
 
-# Force re-execution of notebooks on each build.
-only_build_toc_files: true
+# Build generated files too (autosummary API stubs live outside the TOC);
+# the few work-in-progress notebooks are excluded explicitly below.
+only_build_toc_files: false
+exclude_patterns:
+  - _build
+  - notebooks/era5_region_profiles.ipynb
+  - notebooks/lapse_rate_feedback.ipynb
+  - notebooks/radiosonde.ipynb
 
 # See https://jupyterbook.org/content/execute.html
 execute:
@@ -57,6 +63,8 @@ sphinx:
     - sphinx.ext.viewcode
   config:
     autosummary_generate: true
+    # autosummary stub pages live outside the external TOC by design
+    suppress_warnings: ["etoc.toctree"]
     napoleon_google_docstring: true
     napoleon_numpy_docstring: true
     html_theme_options:

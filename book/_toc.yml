@@ -13,6 +13,7 @@ parts:
     chapters:
     - file: guide/configuration
     - file: guide/parameters
+    - file: guide/atmosphere
     - file: guide/outputs
     - file: guide/debugging
     - file: notebooks/parameters_deep_dive

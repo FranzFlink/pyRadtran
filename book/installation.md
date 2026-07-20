@@ -39,13 +39,21 @@ make check
 
 ## Setting Up Your Master Configuration
 
-pyRadtran uses a **layered configuration system**. The most important first step after installation is creating your personal master configuration file. This tells pyRadtran where to find libRadtran on your machine:
+pyRadtran uses a **layered configuration system**. The most important first step after installation is creating your personal master configuration file. This tells pyRadtran where to find libRadtran on your machine.
 
-```bash
-mkdir -p ~/.pyradtran
+The quickest way is from Python:
+
+```python
+import pyradtran
+
+pyradtran.save_master_config(
+    libradtran_bin="/opt/libradtran/bin/uvspec",
+    libradtran_data="/opt/libradtran/share/libRadtran/data",
+)
+# Master config saved to: ~/.pyradtran/config.yaml
 ```
 
-Create `~/.pyradtran/config.yaml` with the following content, adjusting paths to match your libRadtran installation:
+Or write `~/.pyradtran/config.yaml` by hand, adjusting paths to match your libRadtran installation:
 
 ```yaml
 # ~/.pyradtran/config.yaml — User-specific configuration
@@ -55,9 +63,14 @@ Create `~/.pyradtran/config.yaml` with the following content, adjusting paths to
 paths:
   libradtran_bin: /opt/libradtran/bin/uvspec
   libradtran_data: /opt/libradtran/share/libRadtran/data
-  atmosphere_profile: /opt/libradtran/share/libRadtran/data/atmmod/afglms.dat
-  solar_spectrum: /opt/libradtran/share/libRadtran/data/solar_flux/NewGuey2003.dat
+  atmosphere_profile: afglms        # short name or full path
+  solar_spectrum: NewGuey2003       # short name or full path
 ```
+
+`atmosphere_profile` and `solar_spectrum` accept catalogue short names
+(`afglus`, `afglms`, …, `kurudz_1.0nm`, `NewGuey2003`, …) that resolve
+inside `libradtran_data` — see `pyradtran.list_atmosphere_profiles()`
+and `pyradtran.list_solar_spectra()`.
 
 ```{tip}
 Once your master config is set, you typically don't need to specify libRadtran paths in individual

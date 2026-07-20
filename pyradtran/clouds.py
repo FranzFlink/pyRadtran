@@ -37,6 +37,8 @@ from typing import Dict, List, Optional
 import numpy as np
 import xarray as xr
 
+from .era5 import _z_to_km
+
 logger = logging.getLogger(__name__)
 
 
@@ -269,12 +271,11 @@ class CloudGenerator:
                             .values
                         )
 
-                # Convert geopotential to geometric height (m -> km)
-                # Geopotential height: h = Φ/g, where g ≈ 9.80665 m/s²
-                if np.max(geopotential) > 100000:  # Likely in m²/s² (geopotential)
-                    altitude_levels_km = geopotential / 9.80665 / 1000  # Convert to km
-                else:  # Already in meters
-                    altitude_levels_km = geopotential / 1000  # Convert to km
+                # Convert geopotential to geometric height (m -> km); the
+                # units attribute decides, magnitude only as fallback
+                altitude_levels_km = _z_to_km(
+                    geopotential, ds_point[geopotential_var].attrs.get("units")
+                )
 
                 logger.debug(
                     f"Using geopotential height data with {len(altitude_levels_km)} levels"
@@ -294,6 +295,30 @@ class CloudGenerator:
                     f"Calculated {len(altitude_levels_km)} altitude levels from pressure"
                 )
 
+        # Extract every per-level array in the dataset's native level order,
+        # so the ascending-altitude reordering below moves them all together.
+        lwc_var = cloud_variables.get("lwc")
+        iwc_var = cloud_variables.get("iwc")
+        cc_var = cloud_variables.get("cc")
+        temp_var = cloud_variables.get("temp", "t")
+
+        lwc = (
+            ds_point[lwc_var].values
+            if lwc_var and lwc_var in ds_point
+            else np.zeros_like(pressure)
+        )
+        iwc = (
+            ds_point[iwc_var].values
+            if iwc_var and iwc_var in ds_point
+            else np.zeros_like(pressure)
+        )
+        cc = (
+            ds_point[cc_var].values
+            if cc_var and cc_var in ds_point
+            else np.ones_like(pressure)
+        )
+        temp = ds_point[temp_var].values if temp_var in ds_point else None
+
         # Ensure altitudes are in ascending order (surface to top)
         if (
             len(altitude_levels_km) > 1
@@ -301,59 +326,30 @@ class CloudGenerator:
         ):
             altitude_levels_km = altitude_levels_km[::-1]
             pressure = pressure[::-1]
+            lwc = lwc[::-1]
+            iwc = iwc[::-1]
+            cc = cc[::-1]
+            if temp is not None:
+                temp = temp[::-1]
             logger.debug(
-                "Reversed altitude and pressure arrays to ensure ascending order"
+                "Reversed level arrays to ensure ascending altitude order"
             )
 
-        # Extract cloud variables
+        # Convert from kg/kg to g/m³ (typical ERA5 units) using air density
+        # ρ_air ≈ p/(R*T) with R ≈ 287 J/(kg·K); rough standard-atmosphere
+        # fallback without a temperature profile
+        if temp is not None:
+            air_density = (pressure * 100) / (287 * temp)  # kg/m³
+        else:
+            air_density = pressure / 10  # kg/m³
+        if lwc_var and lwc_var in ds_point:
+            lwc = lwc * air_density * 1000
+        if iwc_var and iwc_var in ds_point:
+            iwc = iwc * air_density * 1000
+
         cloud_layers = []
 
         try:
-            # Get cloud water content variables
-            lwc_var = cloud_variables.get("lwc")
-            iwc_var = cloud_variables.get("iwc")
-            cc_var = cloud_variables.get("cc")
-
-            lwc = (
-                ds_point[lwc_var].values
-                if lwc_var and lwc_var in ds_point
-                else np.zeros_like(pressure)
-            )
-            iwc = (
-                ds_point[iwc_var].values
-                if iwc_var and iwc_var in ds_point
-                else np.zeros_like(pressure)
-            )
-            cc = (
-                ds_point[cc_var].values
-                if cc_var and cc_var in ds_point
-                else np.ones_like(pressure)
-            )
-
-            # Convert from kg/kg to g/m³ if needed (typical ERA5 units)
-            if lwc_var and lwc_var in ds_point:
-                # Estimate air density for conversion (rough approximation)
-                # ρ_air ≈ p/(R*T) where R ≈ 287 J/(kg·K)
-                temp_var = cloud_variables.get("temp", "t")
-                if temp_var in ds_point:
-                    temp = ds_point[temp_var].values
-                    air_density = (pressure * 100) / (287 * temp)  # kg/m³
-                    lwc = lwc * air_density * 1000  # Convert to g/m³
-                else:
-                    # Use standard atmosphere approximation
-                    air_density = pressure / 10  # Rough approximation in kg/m³
-                    lwc = lwc * air_density * 1000
-
-            if iwc_var and iwc_var in ds_point:
-                temp_var = cloud_variables.get("temp", "t")
-                if temp_var in ds_point:
-                    temp = ds_point[temp_var].values
-                    air_density = (pressure * 100) / (287 * temp)  # kg/m³
-                    iwc = iwc * air_density * 1000  # Convert to g/m³
-                else:
-                    air_density = pressure / 10  # Rough approximation
-                    iwc = iwc * air_density * 1000
-
             # Create cloud layers for each level with significant cloud content
             for i, (alt, p, lwc_val, iwc_val, cc_val) in enumerate(
                 zip(altitude_levels_km, pressure, lwc, iwc, cc)

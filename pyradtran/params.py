@@ -131,6 +131,31 @@ def _fmt_mol_modify(gas: str, unit: str) -> Callable[[Any], str]:
     return fmt
 
 
+def _zout_tokens(value: Any) -> list:
+    """Normalise a zout value to sorted unique floats.
+
+    uvspec hard-errors on unsorted or duplicated zout levels.  Symbolic
+    levels (``toa``, ``sur``, ``cpt``) cannot be ordered numerically and
+    are returned untouched, in their original token order.
+    """
+    if isinstance(value, str):
+        toks = value.split()
+    elif isinstance(value, (list, tuple)):
+        toks = [str(v) for v in value]
+    else:
+        toks = [str(value)]
+    try:
+        return sorted({float(t) for t in toks})
+    except ValueError:
+        return toks
+
+
+def _fmt_zout(value: Any) -> str:
+    return "zout " + " ".join(
+        f"{t:g}" if isinstance(t, float) else str(t) for t in _zout_tokens(value)
+    )
+
+
 #: Registry of known uvspec parameters (single source of truth).
 REGISTRY: Dict[str, ParamSpec] = {
     "albedo": ParamSpec(
@@ -149,7 +174,8 @@ REGISTRY: Dict[str, ParamSpec] = {
         doc="Solar zenith angle",
     ),
     "zout": ParamSpec(
-        "zout", float, "km", None, doc="Output altitude level(s)"
+        "zout", float, "km", None, formatter=_fmt_zout,
+        doc="Output altitude level(s)",
     ),
     "brdf_rpv_type": ParamSpec(
         "brdf_rpv_type",
@@ -526,6 +552,11 @@ class ParamResolver:
         self.var_refs: Dict[str, Var] = {}
         errors = []
         for key, value in remaining.items():
+            if value is False:
+                # explicit "omit this option": reaches the builder, which
+                # removes any config-supplied line and emits nothing
+                self._static[key] = (False, PROV_LITERAL)
+                continue
             if isinstance(value, Var):
                 self.var_refs[key] = value
                 continue

@@ -218,3 +218,35 @@ class TestInspectCloudFileParams:
         # point 1: lwc=0.5, reff=15.0 -> cloud profile built from the point
         assert "0.500000" in result
         assert "15.000000" in result
+
+
+@pytest.mark.unit
+@pytest.mark.interface
+class TestInspectRobustness:
+    def test_nan_lwc_returns_message_not_crash(self, cloud_dataset):
+        ds = cloud_dataset.copy(deep=True)
+        ds["lwc"].values[:] = np.nan
+        result = ds.pyradtran.inspect_cloud_file(
+            selector={"time": ds.time.values[0]},
+            cloud_wc_var="lwc",
+            cloud_top_var="cth",
+            cloud_bottom_var="cbh",
+            cloud_reff_var="reff",
+        )
+        assert isinstance(result, str)
+        assert "No valid cloud profile" in result
+
+    def test_mixed_phase_shows_both_profiles(self, cloud_dataset):
+        ds = cloud_dataset.copy(deep=True)
+        ds["iwc"] = (("time",), [0.02, 0.03])
+        result = ds.pyradtran.inspect_cloud_file(
+            selector={"time": ds.time.values[0]},
+            cloud_wc_var="lwc",
+            cloud_ic_var="iwc",
+            cloud_top_var="cth",
+            cloud_bottom_var="cbh",
+            cloud_reff_var="reff",
+        )
+        # both phases previewed, matching what run() would build
+        assert "0.100000" in result  # lwc
+        assert "0.020000" in result  # iwc

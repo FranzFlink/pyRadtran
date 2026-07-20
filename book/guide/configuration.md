@@ -16,9 +16,7 @@ simulation_defaults:
   source: solar
   rte_solver: disort
   mol_abs_param: lowtran per_nm
-  wavelength_nm:
-    start: 400
-    end: 770
+  wavelength_nm: [400, 770]     # nm; {start: 400, end: 770} also accepted
   output_columns: [eglo, eup, edir]
   output_altitudes_km: [0.0]
 

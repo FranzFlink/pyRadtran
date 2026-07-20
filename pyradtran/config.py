@@ -170,6 +170,15 @@ class PathsConfig:
     working_dir: Path = Path("./pyradtran_work")
 
     def __post_init__(self):
+        # Accept plain strings for every path field (direct construction)
+        for name in (
+            "libradtran_bin", "libradtran_data", "atmosphere_profile",
+            "solar_spectrum", "radiosonde_base", "output_dir", "working_dir",
+        ):
+            value = getattr(self, name)
+            if isinstance(value, str):
+                setattr(self, name, Path(value).expanduser())
+
         # Validate essential paths
         if not self.libradtran_bin.is_file():
             raise FileNotFoundError(
@@ -387,6 +396,18 @@ class SimulationDefaults:
 
     def __post_init__(self):
         """Validate configuration parameters."""
+        if isinstance(self.wavelength_nm, dict):
+            # accept the {start: ..., end: ...} YAML spelling
+            try:
+                self.wavelength_nm = [
+                    self.wavelength_nm["start"],
+                    self.wavelength_nm["end"],
+                ]
+            except KeyError:
+                raise ValueError(
+                    "wavelength_nm mapping needs 'start' and 'end' keys, "
+                    f"got {sorted(self.wavelength_nm)}"
+                )
         if self.wavelength_nm and len(self.wavelength_nm) != 2:
             raise ValueError("wavelength_nm must contain [min, max]")
         # output_altitudes_km can be empty (defaults to uvspec implicit behavior)
@@ -538,6 +559,27 @@ class SimulationConfig:
             logger.error(f"Error creating dataclass {dataclass_type.__name__}: {e}")
             logger.error(f"Arguments provided: {init_args}")
             raise
+
+    def copy(self) -> "SimulationConfig":
+        """Return an independent deep copy of this configuration.
+
+        The one exception is ``clouds.era5_dataset`` (potentially a large
+        xarray Dataset), which is carried over by reference.
+
+        Used by the accessor so that per-run adjustments (dataset-derived
+        ``zout`` levels, dotted config overrides in ``params``) never
+        mutate a caller-owned config object.
+        """
+        import copy as _copy
+
+        era5 = self.simulation_defaults.clouds.era5_dataset
+        self.simulation_defaults.clouds.era5_dataset = None
+        try:
+            new = _copy.deepcopy(self)
+        finally:
+            self.simulation_defaults.clouds.era5_dataset = era5
+        new.simulation_defaults.clouds.era5_dataset = era5
+        return new
 
     def to_dict(self) -> Dict[str, Any]:
         """Serialise the full configuration to a plain nested dict.
@@ -768,13 +810,10 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
 
         logger.debug("Configuration loaded successfully.")
 
-        # Set logging level based on config
-        log_level = logging.DEBUG if config.execution.debug_mode else logging.INFO
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        )
-        logger.setLevel(log_level)
+        # debug_mode raises the package logger's verbosity; the root
+        # logger and handlers belong to the application, not to us
+        if config.execution.debug_mode:
+            logging.getLogger("pyradtran").setLevel(logging.DEBUG)
 
         return config
     except Exception as e:

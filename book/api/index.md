@@ -13,6 +13,7 @@ This is the auto-generated API reference for the `pyradtran` package.
    clouds
    config
    core
+   era5
    exceptions
    input_builder
    interface

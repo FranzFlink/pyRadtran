@@ -70,6 +70,12 @@ from .io import (  # noqa: E402
     OutputType,
     ParsedOutput,
 )
+from .era5 import (  # noqa: E402
+    cloud_profiles,
+    era5_atmosphere_file,
+    normalize_era5,
+    recommend_atmosphere,
+)
 from .utils import RadiosondeFinder  # noqa: E402
 from .channels import brightness_temperature, convolve_channels  # noqa: E402
 from .params import (  # noqa: E402
@@ -123,6 +129,11 @@ __all__ = [
     "InputDataLoader",
     "ERA5AtmosphereGenerator",
     "NetCDFSaver",
+    # ERA5 helpers
+    "normalize_era5",
+    "era5_atmosphere_file",
+    "cloud_profiles",
+    "recommend_atmosphere",
     # Parameters & channels
     "Var",
     "Raw",

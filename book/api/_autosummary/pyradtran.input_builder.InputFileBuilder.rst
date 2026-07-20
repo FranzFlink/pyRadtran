@@ -8,16 +8,4 @@ pyradtran.input_builder.InputFileBuilder
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~InputFileBuilder.__init__
-         ~InputFileBuilder.build
-         ~InputFileBuilder.render
-         ~InputFileBuilder.render_annotated
-      
+   :special-members: __init__

@@ -62,6 +62,19 @@ def convolve_channels(
     phi = _interp_srf(srf, wl)
     norm = phi.integrate("wavelength")
 
+    norm_vals = np.asarray(norm.values, dtype=float)
+    bad = ~np.isfinite(norm_vals) | (norm_vals <= 0)
+    if np.any(bad):
+        bad_channels = [
+            str(c) for c in np.asarray(srf["channel"].values)[bad]
+        ]
+        raise ValueError(
+            f"SRF for channel(s) {bad_channels} has no overlap with the "
+            f"result wavelength grid "
+            f"({float(wl.min())}–{float(wl.max())} nm); convolution would "
+            f"divide by zero"
+        )
+
     out = xr.Dataset(attrs=dict(result.attrs))
     for name, da in result.data_vars.items():
         if "wavelength" in da.dims:

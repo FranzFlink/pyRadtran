@@ -162,9 +162,11 @@ class TestUnitHandling:
     def test_unknown_pressure_unit_raises_clear_error(
         self, synthetic_era5_ds, tmp_path
     ):
+        # "millibars" (ARCO-ERA5) is accepted as hPa; a truly unknown
+        # unit must still fail loudly.
         ds = synthetic_era5_ds.copy(deep=True)
-        ds["pressure_level"].attrs["units"] = "millibars"
-        with pytest.raises(InputGenerationError, match="millibars"):
+        ds["pressure_level"].attrs["units"] = "furlongs"
+        with pytest.raises(InputGenerationError, match="furlongs"):
             ERA5AtmosphereGenerator.create_era5_atmosphere_file(
                 ds, 70.0, 25.0, "2022-07-01T12:00", tmp_path / "atm.dat"
             )

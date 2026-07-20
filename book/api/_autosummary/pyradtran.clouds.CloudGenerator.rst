@@ -8,15 +8,4 @@ pyradtran.clouds.CloudGenerator
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~CloudGenerator.__init__
-         ~CloudGenerator.from_era5_dataset
-         ~CloudGenerator.from_simple_parameters
-      
+   :special-members: __init__

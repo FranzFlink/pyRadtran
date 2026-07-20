@@ -24,9 +24,11 @@ execution:
 ```
 
 then look in the working directory (default `pyradtran_work/`), one
-`.inp` per simulation point. Failed points keep their input file even
-with cleanup enabled, and the captured stderr lands in
-`failures_<timestamp>.log`.
+`.inp` (and one raw `.out`) per simulation point. Failed points keep
+their input file — and any generated cloud profile files it references —
+even with cleanup enabled, and the captured stderr lands in
+`failures_<timestamp>.log`. With `cleanup_temp_files: true`, successful
+runs remove both their `.inp` and `.out` files once parsed.
 
 ## What to check
 

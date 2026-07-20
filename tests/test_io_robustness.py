@@ -47,9 +47,6 @@ def base_config(tmp_path):
 @pytest.mark.skipif(not has_libradtran(), reason="LibRadtran not available")
 class TestIORobustness:
 
-    @pytest.mark.xfail(
-        reason="Test assertions assume a different parser output structure"
-    )
     def test_spectral_output_parsing(self, base_config):
         """Test parsing of spectral output (wavelength resolved)."""
         # Configure for spectral output
@@ -84,7 +81,11 @@ class TestIORobustness:
 
         # Convert to Xarray
         input_ds = xr.Dataset(
-            coords={"time": [dt], "latitude": [0.0], "longitude": [0.0]}
+            coords={
+                "time": [dt],
+                "latitude": ("time", [0.0]),
+                "longitude": ("time", [0.0]),
+            }
         )
         ds = OutputToXarray.convert_batch([parsed], input_ds)
 
@@ -92,9 +93,6 @@ class TestIORobustness:
         assert ds["eglo"].dims == ("time", "wavelength", "altitude")
         assert ds["eglo"].shape[1] == len(parsed.wavelengths)
 
-    @pytest.mark.xfail(
-        reason="Test assertions assume a different parser output structure"
-    )
     def test_vertical_profile_parsing(self, base_config):
         """Test parsing of multi-altitude output."""
         # Configure for integrated but multi-altitude
@@ -119,7 +117,11 @@ class TestIORobustness:
 
         # Convert to Xarray
         input_ds = xr.Dataset(
-            coords={"time": [dt], "latitude": [0.0], "longitude": [0.0]}
+            coords={
+                "time": [dt],
+                "latitude": ("time", [0.0]),
+                "longitude": ("time", [0.0]),
+            }
         )
         ds = OutputToXarray.convert_batch([parsed], input_ds)
 
@@ -127,9 +129,6 @@ class TestIORobustness:
         assert len(ds.altitude) == 4
         assert ds["eglo"].shape[1] == 4  # (time, alt) for integrated multi-altitude
 
-    @pytest.mark.xfail(
-        reason="Test assertions assume a different parser output structure"
-    )
     def test_spectral_vertical_profile(self, base_config):
         """Test full complexity: Spectral AND Multi-altitude."""
         base_config.simulation_defaults.integrate_wavelength = False
@@ -163,7 +162,11 @@ class TestIORobustness:
 
         # Convert to Xarray should reshape relevantly
         input_ds = xr.Dataset(
-            coords={"time": [dt], "latitude": [0.0], "longitude": [0.0]}
+            coords={
+                "time": [dt],
+                "latitude": ("time", [0.0]),
+                "longitude": ("time", [0.0]),
+            }
         )
         ds = OutputToXarray.convert_batch([parsed], input_ds)
 

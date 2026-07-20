@@ -19,7 +19,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from .params import PROV_CONFIG, REGISTRY
+from .params import PROV_CONFIG, REGISTRY, _zout_tokens
 
 logger = logging.getLogger(__name__)
 
@@ -65,16 +65,17 @@ def calculate_solar_zenith_angle(
 
 
 def effective_output_altitudes(config, overrides: Optional[Dict[str, Any]] = None) -> List[float]:
-    """Altitudes this run reports at: per-run ``zout`` override, else config."""
+    """Altitudes this run reports at: per-run ``zout`` override, else config.
+
+    Numeric levels come back sorted and deduplicated — matching the
+    ``zout`` line the builder writes (uvspec rejects unsorted levels).
+    Symbolic levels (``toa``, ``sur``) pass through as strings.
+    """
     overrides = overrides or {}
     zout = overrides.get("zout")
     if zout is not None:
-        if isinstance(zout, str):
-            return [float(tok) for tok in zout.split()]
-        if isinstance(zout, (list, tuple)):
-            return [float(v) for v in zout]
-        return [float(zout)]
-    return list(config.simulation_defaults.output_altitudes_km or [0.0])
+        return _zout_tokens(zout)
+    return sorted(set(config.simulation_defaults.output_altitudes_km or [0.0]))
 
 
 def effective_output_columns(config, overrides: Optional[Dict[str, Any]] = None) -> List[str]:
@@ -101,6 +102,10 @@ def effective_output_columns(config, overrides: Optional[Dict[str, Any]] = None)
         cols = list(sd.output_columns or [])
     if not cols:
         return cols  # empty means uvspec's default output — leave untouched
+    if str(overrides.get("output_quantity", "")).strip() == "brightness":
+        # albedo is meaningless for brightness temperatures; filtering it
+        # here keeps the output_user line and the parser in lock-step
+        cols = [c for c in cols if c != "albedo"]
     if not getattr(sd, "integrate_wavelength", False) and "lambda" not in cols:
         cols.insert(0, "lambda")
     if len(effective_output_altitudes(config, overrides)) > 1 and "zout" not in cols:
@@ -145,17 +150,23 @@ class InputFileBuilder:
         add("atmosphere_file", f"atmosphere_file {self.config.paths.atmosphere_profile}")
 
         # Atmosphere: ERA5 file wins over radiosonde
+        radiosonde_columns = None
         if era5_atmosphere_file is not None:
             era5_abs_path = Path(era5_atmosphere_file).resolve()
-            h2o_unit = _sniff_h2o_unit(era5_abs_path)
-            add("radiosonde", f"radiosonde {era5_abs_path} H2O {h2o_unit}")
+            radiosonde_columns = _sniff_radiosonde_columns(era5_abs_path)
+            add("radiosonde", f"radiosonde {era5_abs_path} {radiosonde_columns}")
         elif radiosonde_path and sd.h2o_source == "radiosonde":
-            add("radiosonde", f"radiosonde {radiosonde_path} H2O RH")
+            radiosonde_columns = "H2O RH"
+            add("radiosonde", f"radiosonde {radiosonde_path} {radiosonde_columns}")
 
-        # Molecular columns (B2 fix: emit when configured)
-        if sd.ozone_du is not None:
+        # Molecular columns (B2 fix: emit when configured).  A gas whose
+        # profile comes from the radiosonde file must not additionally be
+        # rescaled by mol_modify — that would silently overwrite the
+        # measured/reanalysis column with the config scalar.
+        profile_gases = set(radiosonde_columns.split()[::2]) if radiosonde_columns else set()
+        if sd.ozone_du is not None and "O3" not in profile_gases:
             add("mol_modify O3", REGISTRY["mol_modify O3"].format_line(sd.ozone_du))
-        if sd.h2o_mm is not None:
+        if sd.h2o_mm is not None and "H2O" not in profile_gases:
             add("mol_modify H2O", REGISTRY["mol_modify H2O"].format_line(sd.h2o_mm))
 
         # Source
@@ -210,9 +221,11 @@ class InputFileBuilder:
                 output_user_override[1] if output_user_override else PROV_CONFIG,
             )
 
-        # Output altitudes
+        # Output altitudes (sorted+deduped — uvspec rejects unsorted zout)
         if "zout" not in resolved and sd.output_altitudes_km:
-            alt_str = " ".join(f"{alt:.4f}" for alt in sd.output_altitudes_km)
+            alt_str = " ".join(
+                f"{alt:.4f}" for alt in effective_output_altitudes(self.config)
+            )
             add("zout", f"zout {alt_str}")
 
         # Viewing geometry
@@ -234,6 +247,8 @@ class InputFileBuilder:
             spec = REGISTRY.get(key)
             keyword = spec.keyword if spec is not None else key
             lines = [ln for ln in lines if ln.keyword != keyword]
+            if value is False:
+                continue  # flag explicitly switched off — emit nothing
             if isinstance(value, list):
                 # Repeatable option (non_unique): one line per entry
                 for item in value:
@@ -306,19 +321,27 @@ class InputFileBuilder:
         ) + "\n"
 
 
-def _sniff_h2o_unit(era5_abs_path: Path) -> str:
-    """Read the header of an ERA5 atmosphere file to determine the H2O unit."""
-    h2o_unit = "MMR"
+def _sniff_radiosonde_columns(era5_abs_path: Path) -> str:
+    """Read the gas-column spec from an atmosphere file header.
+
+    Files written by :mod:`pyradtran.era5` carry a machine-readable
+    ``# columns: H2O MMR O3 MMR`` header line.  Older files without it
+    fall back to the historical H2O-only sniff (``%`` in the header
+    means RH, otherwise MMR).
+    """
     try:
         with open(era5_abs_path, "r") as f:
-            second_line = f.readlines()[1].strip()
-        if "%" in second_line:
-            h2o_unit = "RH"
-    except (OSError, IndexError):
+            header = [f.readline().strip() for _ in range(3)]
+        for line in header:
+            if line.lower().startswith("# columns:"):
+                return line.split(":", 1)[1].strip()
+        if any("%" in line for line in header[:2]):
+            return "H2O RH"
+    except OSError:
         logger.warning(
-            f"Could not sniff H2O unit from {era5_abs_path}; assuming MMR"
+            f"Could not sniff columns from {era5_abs_path}; assuming H2O MMR"
         )
-    return h2o_unit
+    return "H2O MMR"
 
 
 __all__ = [

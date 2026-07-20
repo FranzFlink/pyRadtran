@@ -33,8 +33,13 @@ ds_sim = ds.pyradtran.run(
 ```
 
 Points where a `Var` value is NaN simply omit that parameter (the config
-default applies); NaN *coordinates* skip the whole point and record
-`status=2` in the result.
+default applies); NaN *coordinates* or a missing/NaT *time* skip the
+whole point and record `status=2` in the result.
+
+Flag options take `True` (emit the bare keyword) or `False` (emit
+nothing — useful to switch a config-supplied flag off for one run).
+Numeric `zout` values are sorted and de-duplicated automatically:
+uvspec hard-errors on unsorted output altitudes.
 
 ## Validated against *your* libRadtran
 

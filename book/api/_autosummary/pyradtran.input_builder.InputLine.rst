@@ -8,16 +8,4 @@ pyradtran.input_builder.InputLine
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~InputLine.__init__
-      
-         ~InputLine.keyword
-         ~InputLine.text
-         ~InputLine.provenance
+   :special-members: __init__

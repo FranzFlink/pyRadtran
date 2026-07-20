@@ -21,6 +21,37 @@ reconstructed.
 With `save_to_file=True` (default) the dataset is also written to a
 CF-style NetCDF file with the full configuration embedded as metadata.
 
+## Provenance: know what you did
+
+Every result records exactly what produced it, in its attrs (and thus in
+the saved NetCDF):
+
+| attr | contents |
+|---|---|
+| `pyradtran_version`, `history` | package version, CF-style history line |
+| `pyradtran_params` | the `params` mapping as JSON (`Var`/`Raw` as their repr) |
+| `pyradtran_config` | the full merged configuration as YAML |
+| `pyradtran_input_example` | the annotated uvspec input of the first point — the `explain()` view, frozen into the result |
+| `pyradtran_libradtran_bin` | which uvspec binary ran |
+| `pyradtran_channels` | channel names, when `channels=` was used |
+
+```python
+print(res.attrs['pyradtran_input_example'])
+# rte_solver twostr        # config
+# albedo 0.4               # dataset-var
+# ...
+
+import yaml, json
+cfg_used = yaml.safe_load(res.attrs['pyradtran_config'])
+params_used = json.loads(res.attrs['pyradtran_params'])
+```
+
+Six months later, the NetCDF alone tells you the solver, spectral range,
+parameter sources, and the exact input file shape — no lab notebook
+required. Coordinates carry units too (`wavelength` in nm, `altitude` in
+km); `jacobian()` results additionally record `jacobian_param`,
+`jacobian_delta`, and `jacobian_base_value`.
+
 ## Status codes & failure logs
 
 Every result carries a per-point `status` variable:
@@ -29,7 +60,7 @@ Every result carries a per-point `status` variable:
 |-------|---------|
 | 0 | ok |
 | 1 | uvspec failed |
-| 2 | skipped (NaN coordinates) |
+| 2 | skipped (NaN coordinates, or missing/NaT time) |
 
 When at least one point fails, a `failures_<timestamp>.log` with the
 captured stderr is written to the working directory, and the failing
@@ -64,4 +95,6 @@ jac['eup']    # d(eup)/d(albedo), same dims as a normal result
 ```
 
 The perturbed parameter must be a scalar (a `params` literal or config
-default) — perturbing a per-point `Var` is rejected.
+default) — perturbing a per-point `Var` is rejected. The `status`
+variable is not differentiated: the kernel carries the worst status of
+the two runs per point.

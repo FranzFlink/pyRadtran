@@ -228,6 +228,7 @@ class Simulation:
             (:attr:`last_stderr` then holds the captured stderr).
         """
         self.last_stderr = None
+        self.last_failed_input = None
         temp_cloud_files = []
         try:
             resolved = self._legacy_kwargs_to_resolved(
@@ -281,15 +282,19 @@ class Simulation:
 
         except Exception as e:
             logger.error(f"Simulation failed: {str(e)}")
-            raise UvspecExecutionError(f"Simulation failed: {str(e)}")
+            raise UvspecExecutionError(f"Simulation failed: {str(e)}") from e
 
         finally:
-            for p in temp_cloud_files:
-                try:
-                    if os.path.exists(p):
-                        os.unlink(p)
-                except Exception as e:
-                    logger.warning(f"Failed to cleanup temp file {p}: {e}")
+            # On failure the kept input file references these cloud files —
+            # deleting them would break the promised post-mortem.
+            keep_for_postmortem = self.last_failed_input is not None
+            if self.config.execution.cleanup_temp_files and not keep_for_postmortem:
+                for p in temp_cloud_files:
+                    try:
+                        if os.path.exists(p):
+                            os.unlink(p)
+                    except Exception as e:
+                        logger.warning(f"Failed to cleanup temp file {p}: {e}")
 
     @staticmethod
     def format_cloud_profile(data: Dict[str, Any]) -> str:
@@ -342,10 +347,10 @@ class Simulation:
             lines = []
             for row in data_matrix:
                 lines.append(f"{row[0]:.6f} {row[1]:.6f} {row[2]:.6f}")
-            return "\n".join(lines)
+            return "\n".join(lines) + "\n"
 
         except Exception as e:
-            raise RuntimeError(f"Failed to format cloud profile: {e}")
+            raise RuntimeError(f"Failed to format cloud profile: {e}") from e
 
     def _handle_dynamic_clouds(
         self, overrides: Dict[str, Any]

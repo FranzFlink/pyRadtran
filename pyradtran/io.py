@@ -25,7 +25,7 @@ pyradtran.interface : High-level batch driver.
 
 import logging
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
@@ -135,6 +135,11 @@ class InputDataLoader:
                 elif "datetime" in df.columns:
                     df["time"] = pd.to_datetime(df["datetime"])
                     df = df.drop("datetime", axis=1)
+                else:
+                    raise InputGenerationError(
+                        f"CSV input {input_file} needs a 'time' (or "
+                        f"'datetime') column; have: {list(df.columns)}"
+                    )
 
                 # Create xarray Dataset
                 ds = df.set_index("time").to_xarray()
@@ -168,10 +173,12 @@ class InputDataLoader:
             )
             return ds
 
+        except InputGenerationError:
+            raise
         except Exception as e:
             raise InputGenerationError(
                 f"Failed to load input data from {input_file}: {str(e)}"
-            )
+            ) from e
 
 
 class ERA5AtmosphereGenerator:
@@ -218,121 +225,14 @@ class ERA5AtmosphereGenerator:
 
         Raises
         ------
-        ValueError
-            If required variables or coordinates are missing.
         InputGenerationError
-            If file writing fails.
+            If required variables are missing or file writing fails.
         """
-        try:
-            # Physical and chemical constants for conversions
-            K_B = 1.380649e-23  # Boltzmann constant (J/K)
-            M_AIR = 0.0289647  # Molar mass of dry air (kg/mol)
-            # M_CO2 = 0.04401      # Molar mass of Carbon Dioxide (CO2) (kg/mol)
-            # M_NO2 = 0.0460055    # Molar mass of Nitrogen Dioxide (NO2) (kg/mol)
-            # O2_MIXING_RATIO = 0.2095 # Volumetric mixing ratio of O2 in dry air
+        from .era5 import era5_atmosphere_file
 
-            # Validate required variables
-            required_vars = ["z", "t", "q"]
-            required_coords = ["pressure_level", "valid_time"]
-
-            for var in required_vars:
-                if var not in era5_ds.variables:
-                    raise ValueError(
-                        f"Required variable '{var}' not found in ERA5 dataset"
-                    )
-            for coord in required_coords:
-                if coord not in era5_ds.coords:
-                    raise ValueError(
-                        f"Required coordinate '{coord}' not found in ERA5 dataset"
-                    )
-
-            # Select the data for the nearest point and specified time
-            # Check if data is already spatially selected (latitude/longitude are scalars)
-            if "latitude" in era5_ds.dims or "longitude" in era5_ds.dims:
-                # Data still has spatial dimensions, do normal selection
-                profile_data = era5_ds.sel(
-                    latitude=latitude,
-                    longitude=longitude,
-                    valid_time=time,
-                    method="nearest",
-                )
-            else:
-                # Data is already spatially selected, just select time
-                if "valid_time" in era5_ds.dims:
-                    # valid_time is still a dimension
-                    profile_data = era5_ds.sel(valid_time=time, method="nearest")
-                elif "time" in era5_ds.dims:
-                    # time is a dimension, try to select by matching time values
-                    # Convert the target time to the same format as the dataset
-                    target_time = pd.to_datetime(time)
-                    # Find the closest time in the dataset
-                    time_diffs = abs(pd.to_datetime(era5_ds.time.values) - target_time)
-                    closest_idx = time_diffs.argmin()
-                    profile_data = era5_ds.isel(time=closest_idx)
-                else:
-                    # Data is already fully selected
-                    profile_data = era5_ds
-
-            # Units: attrs may be stripped by xarray operations; default sanely
-            h2o_unit = profile_data["q"].attrs.get("units", "kg kg-1")
-            p_unit = profile_data["pressure_level"].attrs.get("units", "hPa")
-
-            if p_unit == "Pa":
-                pressure_pa = profile_data["pressure_level"]
-            elif p_unit == "hPa":
-                pressure_pa = profile_data["pressure_level"] * 100
-            else:
-                raise InputGenerationError(
-                    f"Unsupported pressure unit '{p_unit}' in ERA5 dataset; "
-                    f"expected 'Pa' or 'hPa'"
-                )
-
-            pressure_hpa = pressure_pa / 100
-            temperature_k = profile_data["t"]
-            h2o = profile_data["q"]
-
-            # Air number density: calculated from ideal gas law p = NkT
-            air_number_density_m3 = pressure_pa / (K_B * temperature_k)
-            air_number_density_cm3 = air_number_density_m3 / 1e6
-
-            # Function to convert mass mixing ratio (kg/kg) to number density (molecules/cm^3)
-            def mmr_to_nd(mmr, m_gas):
-                return mmr * (M_AIR / m_gas) * air_number_density_cm3
-
-            # Create the atmosphere file content
-            output_path = Path(output_filepath)
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-
-            # Sort by pressure ascending (TOA to surface: low pressure first)
-            sorted_indices = np.argsort(pressure_hpa.values.ravel())
-            p_sorted = pressure_hpa.values.ravel()[sorted_indices]
-            t_sorted = temperature_k.values.ravel()[sorted_indices]
-            h2o_sorted = h2o.values.ravel()[sorted_indices]
-
-            # Drop consecutive duplicate pressure values (libradtran requires strictly monotonic)
-            keep = np.concatenate(([True], np.diff(p_sorted) != 0))
-            p_sorted = p_sorted[keep]
-            t_sorted = t_sorted[keep]
-            h2o_sorted = h2o_sorted[keep]
-
-            with open(output_path, "w") as f:
-                f.write("# ERA5 atmosphere profile in libradtran radiosonde style\n")
-                f.write(f"# p(hPa)  T(K)  h2o({h2o_unit}) \n")
-
-                for p_val, t_val, h2o_val in zip(p_sorted, t_sorted, h2o_sorted):
-                    f.write(f"{p_val:.2f}  {t_val:.2f}  {h2o_val:.3e}\n")
-
-            logger.info(
-                f"Created ERA5 atmosphere file: {output_path} with H2O unit {h2o_unit}"
-            )
-            return output_path
-
-        except InputGenerationError:
-            raise
-        except Exception as e:
-            raise InputGenerationError(
-                f"Failed to create ERA5 atmosphere file: {str(e)}"
-            )
+        return era5_atmosphere_file(
+            era5_ds, latitude, longitude, time, output_filepath
+        )
 
 
 class RadiosondeAtmosphereGenerator:
@@ -409,7 +309,7 @@ class RadiosondeAtmosphereGenerator:
         pandas.DataFrame
             Sorted by ``distance_km`` (ascending).
         """
-        current_year = datetime.utcnow().year
+        current_year = datetime.now(timezone.utc).year
         active_stations = stations_df[
             stations_df["last_year"] >= current_year - 1
         ].copy()
@@ -498,11 +398,11 @@ class RadiosondeAtmosphereGenerator:
                         f"Trying station {station_name} ({station_id}) at {time_to_check}"
                     )
                     df, header = IGRAUpperAir.request_data(time_to_check, station_id)
-                    header_text = f"{station_name} at {time_to_check.strftime('%Y-%m-%d %H:%M')} UTC with distance {station_distance:.2f} km"
-                    logger.info(
-                        f"Found sounding for {station_name} at {time_to_check} UTC with distance {station_distance:.2f} km"
-                    )
                     if df is not None and not df.empty:
+                        header_text = f"{station_name} at {time_to_check.strftime('%Y-%m-%d %H:%M')} UTC with distance {station_distance:.2f} km"
+                        logger.info(
+                            f"Found sounding for {station_name} at {time_to_check} UTC with distance {station_distance:.2f} km"
+                        )
                         return df, header, header_text
                 except Exception as e:
                     logger.debug(f"No data for {station_name} at {time_to_check}: {e}")
@@ -564,7 +464,12 @@ class RadiosondeAtmosphereGenerator:
         temp_k = df["temperature"] + 273.15
         pressure_hpa = df["pressure"]
 
+        # TOA first (ascending pressure); drop duplicate levels —
+        # libRadtran requires a strictly monotonic pressure grid
         sorted_idx = np.argsort(pressure_hpa.values)
+        p_sorted = pressure_hpa.values[sorted_idx]
+        keep = np.concatenate(([True], np.diff(p_sorted) > 0))
+        sorted_idx = sorted_idx[keep]
 
         output_path = Path(output_filepath)
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -613,13 +518,11 @@ class OutputParser:
         )
 
         # Same column list the input builder wrote into output_user
-        # (per-run output_user override, injected lambda/zout included).
-        self.output_columns = []
-        for col in effective_output_columns(config, self.parameter_overrides):
-            if self.is_brightness_output and col == "albedo":
-                logger.debug("Skipping albedo column for brightness temperature output")
-                continue
-            self.output_columns.append(col)
+        # (per-run output_user override, injected lambda/zout, and the
+        # brightness albedo filter all included).
+        self.output_columns = list(
+            effective_output_columns(config, self.parameter_overrides)
+        )
 
         # B7 fix: per-run altitudes win over config
         if output_altitudes is not None:
@@ -676,10 +579,12 @@ class OutputParser:
                 is_brightness_temperature=self.is_brightness_output,
             )
 
+        except OutputParsingError:
+            raise
         except Exception as e:
             raise OutputParsingError(
                 f"Failed to parse output file {output_file}: {str(e)}"
-            )
+            ) from e
 
     def _determine_output_type(self, data: np.ndarray) -> OutputType:
         """Infer the :class:`OutputType` from array shape and config."""
@@ -776,30 +681,22 @@ class OutputToXarray:
             if var_name in ["zout", "lambda"]:
                 continue  # Skip coordinate variables
 
-            # Determine dimensions based on output type
+            # One axis per present dimension; shape stays aligned with dims.
+            # uvspec output_user rows are wavelength-outer, zout-inner.
             dims = [time_var]
+            shape = [len(input_ds[time_var])]
             if parsed_output.wavelengths:
                 dims.append("wavelength")
+                shape.append(len(parsed_output.wavelengths))
             if parsed_output.altitudes:
                 dims.append("altitude")
+                shape.append(len(parsed_output.altitudes))
 
-            # Reshape values to match dimensions
+            values = np.asarray(values)
             if len(dims) == 1:
                 ds[var_name] = (dims, values)
             else:
-                # Need to reshape multi-dimensional data
-                reshaped_values = values.reshape(
-                    [len(input_ds[time_var])]
-                    + [
-                        (
-                            len(parsed_output.wavelengths)
-                            if parsed_output.wavelengths
-                            else 1
-                        )
-                    ]
-                    + [len(parsed_output.altitudes) if parsed_output.altitudes else 1]
-                )
-                ds[var_name] = (dims, reshaped_values)
+                ds[var_name] = (dims, values.reshape(shape))
 
         return ds
 
@@ -914,9 +811,13 @@ class OutputToXarray:
                 dims=[sample_dim] + extra_dims,
             )
 
-            # Unstack to restore original dimensions
+            # Unstack to restore original dimensions. unstack appends the
+            # restored dims at the end; transpose them back to the front so
+            # results read (time, ..., wavelength, altitude).
             if dims:
-                unstacked_da = da.unstack(sample_dim)
+                unstacked_da = da.unstack(sample_dim).transpose(
+                    *dims, *extra_dims
+                )
             else:
                 # If original was scalar, just drop the sample dim
                 unstacked_da = da.isel({sample_dim: 0}, drop=True)
@@ -937,6 +838,10 @@ class OutputToXarray:
         # We start with a dataset containing our variables.
         # The coordinates from input_ds should be preserved by unstacking.
         result_ds = xr.Dataset(data_vars, coords=coords)
+        if "wavelength" in result_ds.coords:
+            result_ds["wavelength"].attrs["units"] = "nm"
+        if "altitude" in result_ds.coords:
+            result_ds["altitude"].attrs["units"] = "km"
 
         # Add attributes (skip per-point fields — they only describe the
         # template point, not the whole batch)
@@ -1028,7 +933,7 @@ class NetCDFSaver:
         except Exception as e:
             raise OutputParsingError(
                 f"Failed to save results to {output_path}: {str(e)}"
-            )
+            ) from e
 
     @staticmethod
     def _serialize_for_netcdf(value):
@@ -1110,8 +1015,9 @@ class NetCDFSaver:
         ds.attrs["config_libradtran_bin"] = str(config.paths.libradtran_bin)
         ds.attrs["config_libradtran_data"] = str(config.paths.libradtran_data)
 
-        # Add execution settings
-        ds.attrs["config_max_workers"] = int(config.execution.max_workers)
+        # Add execution settings (max_workers None means auto pool size)
+        if config.execution.max_workers is not None:
+            ds.attrs["config_max_workers"] = int(config.execution.max_workers)
         ds.attrs["config_timeout_seconds"] = int(config.execution.timeout_seconds)
 
 

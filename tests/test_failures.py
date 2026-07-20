@@ -94,3 +94,80 @@ class TestFailedInputKept:
             )
         kept = list(single_alt_config.paths.working_dir.glob("*.inp"))
         assert kept, "failed-run input files must be kept for post-mortem"
+
+
+class TestBadCoordinates:
+    """NaT / missing coordinate handling in execute_simulation_batch."""
+
+    def test_nat_time_skipped_not_crash(self, single_alt_config):
+        _make_succeeding_uvspec(single_alt_config)
+        times = np.array(
+            ["2023-06-01T12:00", "NaT"], dtype="datetime64[ns]"
+        )
+        ds = xr.Dataset(
+            {
+                "latitude": ("time", [10.0, 11.0]),
+                "longitude": ("time", [20.0, 21.0]),
+            },
+            coords={"time": times},
+        )
+        outcomes = execute_simulation_batch(
+            config=single_alt_config,
+            input_ds=ds,
+            show_progress=False,
+            return_outcomes=True,
+        )
+        assert outcomes[0].status == 0
+        assert outcomes[1].status == 2
+        assert "time" in (outcomes[1].detail or "")
+
+    def test_missing_lat_var_raises_clear_error(self, single_alt_config):
+        ds = xr.Dataset(
+            coords={
+                "time": np.array(["2023-06-01"], dtype="datetime64[ns]")
+            }
+        )
+        with pytest.raises(ValueError, match="latitude"):
+            execute_simulation_batch(
+                config=single_alt_config, input_ds=ds, show_progress=False
+            )
+
+
+class TestConfigParameterOverridesParsing:
+    """Layer-1 config parameter_overrides shape the input file, so the
+    output parser must see them too — otherwise output_user/zout in the
+    config escape hatch silently scrambles column names."""
+
+    def test_config_output_user_reaches_parser(self, single_alt_config):
+        cfg = single_alt_config
+        cfg.simulation_defaults.parameter_overrides = {
+            "output_user": "eglo eup"
+        }
+        bin_path = cfg.paths.libradtran_bin
+        bin_path.write_text(
+            "#!/bin/bash\ncat > /dev/null\necho ' 100.0  50.0'\n"
+        )
+        bin_path.chmod(bin_path.stat().st_mode | stat.S_IEXEC)
+
+        ds = xr.Dataset(
+            {
+                "latitude": ("time", [10.0]),
+                "longitude": ("time", [20.0]),
+            },
+            coords={
+                "time": np.array(
+                    ["2023-06-01T12:00"], dtype="datetime64[ns]"
+                )
+            },
+        )
+        outcomes = execute_simulation_batch(
+            config=cfg,
+            input_ds=ds,
+            show_progress=False,
+            return_outcomes=True,
+        )
+        parsed = outcomes[0].parsed
+        assert parsed is not None
+        assert set(parsed.data) == {"eglo", "eup"}
+        assert parsed.data["eglo"][0] == 100.0
+        assert parsed.data["eup"][0] == 50.0

@@ -252,6 +252,11 @@ def load_schema(config=None, root: Optional[Path] = None) -> Optional[Dict[str, 
     try:
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
         cache_file.write_text(json.dumps(options))
+        # keep only the current fingerprint — stale caches never expire
+        # on their own
+        for old in CACHE_DIR.glob("option_schema_*.json"):
+            if old != cache_file:
+                old.unlink(missing_ok=True)
         logger.info(
             f"Cached libRadtran option schema ({len(options)} options) "
             f"at {cache_file}"
