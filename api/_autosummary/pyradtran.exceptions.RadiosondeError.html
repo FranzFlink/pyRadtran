@@ -16,40 +16,37 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -68,7 +65,6 @@
     <link rel="prev" title="pyradtran.exceptions.PyRadtranError" href="pyradtran.exceptions.PyRadtranError.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -84,8 +80,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -93,6 +100,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -100,8 +108,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -117,8 +125,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -148,166 +155,108 @@
     
     
     <img src="../../_static/logo.png" class="logo__image only-light" alt="PyRadtran - Home"/>
-    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="PyRadtran - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="PyRadtran - Home"/>`);</script>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage Guide</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Quickstart Tutorials</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Interactive Notebooks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebook Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Clouds</span></p>
-<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Radiosondes &amp; Atmosphere</span></p>
-<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Advanced Topics</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/lapse_rate_feedback.html">Advanced: A Simple Tropical Lapse-Rate Experiment</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Campaigns</span></p>
-<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Data Processing &amp; Campaigns</span></p>
-<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_region_profiles.html">Processing: ERA5 Regional Mean Profiles for Libradtran</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Configuration &amp; Examples</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.__init__.html">pyradtran.config.CloudParameters.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_fraction.html">pyradtran.config.CloudParameters.cloud_fraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_source.html">pyradtran.config.CloudParameters.cloud_source</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.cloud_type.html">pyradtran.config.CloudParameters.cloud_type</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.effective_radius_um.html">pyradtran.config.CloudParameters.effective_radius_um</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.enabled.html">pyradtran.config.CloudParameters.enabled</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_dataset.html">pyradtran.config.CloudParameters.era5_dataset</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_lat.html">pyradtran.config.CloudParameters.era5_lat</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_lon.html">pyradtran.config.CloudParameters.era5_lon</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.era5_time.html">pyradtran.config.CloudParameters.era5_time</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.ic_file.html">pyradtran.config.CloudParameters.ic_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.ice_content_g_m3.html">pyradtran.config.CloudParameters.ice_content_g_m3</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_bottom_km.html">pyradtran.config.CloudParameters.layer_bottom_km</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.layer_top_km.html">pyradtran.config.CloudParameters.layer_top_km</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.water_content_g_m3.html">pyradtran.config.CloudParameters.water_content_g_m3</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.CloudParameters.wc_file.html">pyradtran.config.CloudParameters.wc_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.__init__.html">pyradtran.config.ExecutionConfig.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.cleanup_temp_files.html">pyradtran.config.ExecutionConfig.cleanup_temp_files</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.debug_mode.html">pyradtran.config.ExecutionConfig.debug_mode</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.max_workers.html">pyradtran.config.ExecutionConfig.max_workers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.ExecutionConfig.timeout_seconds.html">pyradtran.config.ExecutionConfig.timeout_seconds</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.__init__.html">pyradtran.config.OutputConfig.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.filename_prefix.html">pyradtran.config.OutputConfig.filename_prefix</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.filename_suffix.html">pyradtran.config.OutputConfig.filename_suffix</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.OutputConfig.netcdf_encoding.html">pyradtran.config.OutputConfig.netcdf_encoding</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.__init__.html">pyradtran.config.PathsConfig.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.atmosphere_profile.html">pyradtran.config.PathsConfig.atmosphere_profile</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.output_dir.html">pyradtran.config.PathsConfig.output_dir</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.radiosonde_base.html">pyradtran.config.PathsConfig.radiosonde_base</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.solar_spectrum.html">pyradtran.config.PathsConfig.solar_spectrum</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.working_dir.html">pyradtran.config.PathsConfig.working_dir</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.libradtran_bin.html">pyradtran.config.PathsConfig.libradtran_bin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.PathsConfig.libradtran_data.html">pyradtran.config.PathsConfig.libradtran_data</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.__init__.html">pyradtran.config.SimulationConfig.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.from_yaml.html">pyradtran.config.SimulationConfig.from_yaml</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.get_used_parameters.html">pyradtran.config.SimulationConfig.get_used_parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.to_dict.html">pyradtran.config.SimulationConfig.to_dict</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.to_yaml.html">pyradtran.config.SimulationConfig.to_yaml</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.paths.html">pyradtran.config.SimulationConfig.paths</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.simulation_defaults.html">pyradtran.config.SimulationConfig.simulation_defaults</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.execution.html">pyradtran.config.SimulationConfig.execution</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationConfig.output.html">pyradtran.config.SimulationConfig.output</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.__init__.html">pyradtran.config.SimulationDefaults.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.albedo_value.html">pyradtran.config.SimulationDefaults.albedo_value</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.h2o_mm.html">pyradtran.config.SimulationDefaults.h2o_mm</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.h2o_source.html">pyradtran.config.SimulationDefaults.h2o_source</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.integrate_wavelength.html">pyradtran.config.SimulationDefaults.integrate_wavelength</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.mol_abs_param.html">pyradtran.config.SimulationDefaults.mol_abs_param</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.ozone_du.html">pyradtran.config.SimulationDefaults.ozone_du</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.rte_solver.html">pyradtran.config.SimulationDefaults.rte_solver</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.source.html">pyradtran.config.SimulationDefaults.source</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.surface_temperature_k.html">pyradtran.config.SimulationDefaults.surface_temperature_k</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.sza.html">pyradtran.config.SimulationDefaults.sza</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.viewing_geometry.html">pyradtran.config.SimulationDefaults.viewing_geometry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.wavelength_nm.html">pyradtran.config.SimulationDefaults.wavelength_nm</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.output_columns.html">pyradtran.config.SimulationDefaults.output_columns</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.output_altitudes_km.html">pyradtran.config.SimulationDefaults.output_altitudes_km</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.clouds.html">pyradtran.config.SimulationDefaults.clouds</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.config.SimulationDefaults.parameter_overrides.html">pyradtran.config.SimulationDefaults.parameter_overrides</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.core.Simulation.html">pyradtran.core.Simulation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.core.Simulation.__init__.html">pyradtran.core.Simulation.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.core.Simulation.format_cloud_profile.html">pyradtran.core.Simulation.format_cloud_profile</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.core.Simulation.run_simulation.html">pyradtran.core.Simulation.run_simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="pyradtran.exceptions.html">pyradtran.exceptions</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -320,80 +269,52 @@
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+</ul>
+</details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.__init__.html">pyradtran.interface.PyRadtranAccessor.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.run_uvspec.html">pyradtran.interface.PyRadtranAccessor.run_uvspec</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ERA5AtmosphereGenerator.__init__.html">pyradtran.io.ERA5AtmosphereGenerator.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ERA5AtmosphereGenerator.create_era5_atmosphere_file.html">pyradtran.io.ERA5AtmosphereGenerator.create_era5_atmosphere_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.InputDataLoader.__init__.html">pyradtran.io.InputDataLoader.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.InputDataLoader.load_simulation_input_data.html">pyradtran.io.InputDataLoader.load_simulation_input_data</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.params.Var.html">pyradtran.params.Var</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.NetCDFSaver.__init__.html">pyradtran.io.NetCDFSaver.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.NetCDFSaver.save_results_to_netcdf.html">pyradtran.io.NetCDFSaver.save_results_to_netcdf</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputParser.__init__.html">pyradtran.io.OutputParser.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputParser.parse_output_file.html">pyradtran.io.OutputParser.parse_output_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputToXarray.__init__.html">pyradtran.io.OutputToXarray.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputToXarray.convert.html">pyradtran.io.OutputToXarray.convert</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputToXarray.convert_batch.html">pyradtran.io.OutputToXarray.convert_batch</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.OutputType.html">pyradtran.io.OutputType</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE.html">pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE.html">pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE.html">pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE.html">pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.__init__.html">pyradtran.io.ParsedOutput.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.altitudes.html">pyradtran.io.ParsedOutput.altitudes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.is_brightness_temperature.html">pyradtran.io.ParsedOutput.is_brightness_temperature</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.metadata.html">pyradtran.io.ParsedOutput.metadata</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.source_file.html">pyradtran.io.ParsedOutput.source_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.wavelengths.html">pyradtran.io.ParsedOutput.wavelengths</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.output_type.html">pyradtran.io.ParsedOutput.output_type</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.ParsedOutput.data.html">pyradtran.io.ParsedOutput.data</a></li>
-</ul>
-</details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.RadiosondeAtmosphereGenerator.__init__.html">pyradtran.io.RadiosondeAtmosphereGenerator.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file.html">pyradtran.io.RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.RadiosondeAtmosphereGenerator.find_closest_active_stations.html">pyradtran.io.RadiosondeAtmosphereGenerator.find_closest_active_stations</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.RadiosondeAtmosphereGenerator.get_closest_sounding.html">pyradtran.io.RadiosondeAtmosphereGenerator.get_closest_sounding</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.io.RadiosondeAtmosphereGenerator.get_station_list.html">pyradtran.io.RadiosondeAtmosphereGenerator.get_station_list</a></li>
-</ul>
-</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.__init__.html">pyradtran.utils.RadiosondeFinder.__init__</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.find_closest.html">pyradtran.utils.RadiosondeFinder.find_closest</a></li>
-<li class="toctree-l4"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.find_radiosonde_file.html">pyradtran.utils.RadiosondeFinder.find_radiosonde_file</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
 </ul>
 </details></li>
 </ul>
@@ -408,14 +329,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -498,7 +414,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  class="btn btn-sm btn-fullscreen-button"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -512,17 +428,25 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
-<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -622,16 +546,14 @@
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item"><div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+  <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.exceptions.RadiosondeError"><code class="docutils literal notranslate"><span class="pre">RadiosondeError</span></code></a></li>
 </ul>
@@ -682,8 +604,8 @@ By PyRadtran Developers
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -8,15 +8,4 @@ pyradtran.core.Simulation
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~Simulation.__init__
-         ~Simulation.format_cloud_profile
-         ~Simulation.run_simulation
-      
+   :special-members: __init__

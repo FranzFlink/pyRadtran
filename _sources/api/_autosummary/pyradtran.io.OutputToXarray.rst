@@ -8,15 +8,4 @@ pyradtran.io.OutputToXarray
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~OutputToXarray.__init__
-         ~OutputToXarray.convert
-         ~OutputToXarray.convert_batch
-      
+   :special-members: __init__

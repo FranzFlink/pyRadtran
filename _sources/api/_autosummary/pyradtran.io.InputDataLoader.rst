@@ -8,14 +8,4 @@ pyradtran.io.InputDataLoader
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~InputDataLoader.__init__
-         ~InputDataLoader.load_simulation_input_data
-      
+   :special-members: __init__

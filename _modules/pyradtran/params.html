@@ -1,0 +1,1271 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyradtran.params &#8212; PyRadtran</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyradtran/params';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="PyRadtran - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="PyRadtran - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebook Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyradtran.params</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Parameter registry and resolution for pyRadtran.</span>
+
+<span class="sd">Defines the single source of truth for every uvspec parameter the package</span>
+<span class="sd">understands (:data:`REGISTRY`), the :class:`Var` marker for per-point</span>
+<span class="sd">dataset references, and :class:`ParamResolver`, which turns a user</span>
+<span class="sd">``params`` mapping into validated, provenance-tagged per-point values.</span>
+
+<span class="sd">See Also</span>
+<span class="sd">--------</span>
+<span class="sd">pyradtran.input_builder : Renders resolved parameters to uvspec input lines.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1">#: Provenance tags (exact strings used in explain() output)</span>
+<span class="n">PROV_CONFIG</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span>
+<span class="n">PROV_LITERAL</span> <span class="o">=</span> <span class="s2">&quot;params-literal&quot;</span>
+<span class="n">PROV_DATASET</span> <span class="o">=</span> <span class="s2">&quot;dataset-var&quot;</span>
+<span class="n">PROV_UNVALIDATED</span> <span class="o">=</span> <span class="s2">&quot;unvalidated&quot;</span>
+
+
+<div class="viewcode-block" id="Var">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.Var.html#pyradtran.params.Var">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Var</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Marker: resolve this parameter per point from a dataset variable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the variable in the input dataset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="Raw">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.Raw.html#pyradtran.params.Raw">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Raw</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Marker: pass this value through without any validation.</span>
+
+<span class="sd">    Escape hatch for options the local libRadtran schema does not know</span>
+<span class="sd">    (e.g. a patched uvspec build). The value reaches the input file</span>
+<span class="sd">    verbatim, tagged with ``unvalidated`` provenance.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value : Any</span>
+<span class="sd">        The literal value to emit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">value</span><span class="p">:</span> <span class="n">Any</span></div>
+
+
+
+<div class="viewcode-block" id="ParamSpec">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParamSpec</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Declarative description of one uvspec parameter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    keyword : str</span>
+<span class="sd">        The uvspec keyword (possibly multi-word, e.g. ``&quot;mol_modify O3&quot;``).</span>
+<span class="sd">    dtype : type, default ``float``</span>
+<span class="sd">        Expected scalar type; used for coercion before validation.</span>
+<span class="sd">    units : str, optional</span>
+<span class="sd">        Physical units, for documentation and error messages.</span>
+<span class="sd">    valid_range : tuple of float, optional</span>
+<span class="sd">        Inclusive ``(lo, hi)`` range for numeric values.</span>
+<span class="sd">    choices : tuple, optional</span>
+<span class="sd">        Allowed values for enumerated parameters.</span>
+<span class="sd">    applicability : {&quot;solar&quot;, &quot;thermal&quot;, &quot;both&quot;}, default ``&quot;both&quot;``</span>
+<span class="sd">        Which source modes the parameter applies to.</span>
+<span class="sd">    formatter : callable, optional</span>
+<span class="sd">        ``value -&gt; full input line``. Defaults to ``&quot;{keyword} {value}&quot;``.</span>
+<span class="sd">    doc : str</span>
+<span class="sd">        One-line description.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="nb">float</span>
+    <span class="n">units</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">valid_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">choices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">applicability</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;both&quot;</span>
+    <span class="n">formatter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">doc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParamSpec.validate">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raise :class:`ValidationError` if *value* is out of spec.</span>
+
+<span class="sd">        String values are passed through unvalidated (escape hatch for</span>
+<span class="sd">        raw uvspec syntax), except for ``choices`` parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&#39; must be one of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&#39; expects a number, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_range</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">lo</span> <span class="o">&lt;=</span> <span class="n">v</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">):</span>
+                <span class="n">unit</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&#39; must be in [</span><span class="si">{</span><span class="n">lo</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">}</span><span class="s2">]</span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ParamSpec.format_line">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.format_line">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the full uvspec input line for *value*.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatter</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fmt_mol_modify</span><span class="p">(</span><span class="n">gas</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;mol_modify </span><span class="si">{</span><span class="n">gas</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="n">fmt</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_zout_tokens</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalise a zout value to sorted unique floats.</span>
+
+<span class="sd">    uvspec hard-errors on unsorted or duplicated zout levels.  Symbolic</span>
+<span class="sd">    levels (``toa``, ``sur``, ``cpt``) cannot be ordered numerically and</span>
+<span class="sd">    are returned untouched, in their original token order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">({</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">toks</span><span class="p">})</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">toks</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fmt_zout</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;zout &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_zout_tokens</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="c1">#: Registry of known uvspec parameters (single source of truth).</span>
+<span class="n">REGISTRY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ParamSpec</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;albedo&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;albedo&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Lambertian surface albedo&quot;</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;sur_temperature&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;sur_temperature&quot;</span><span class="p">,</span>
+        <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">),</span>
+        <span class="n">applicability</span><span class="o">=</span><span class="s2">&quot;thermal&quot;</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Surface temperature for thermal source&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;sza&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;sza&quot;</span><span class="p">,</span>
+        <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">&quot;deg&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">180.0</span><span class="p">),</span>
+        <span class="n">applicability</span><span class="o">=</span><span class="s2">&quot;solar&quot;</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Solar zenith angle&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;zout&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;zout&quot;</span><span class="p">,</span>
+        <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">&quot;km&quot;</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">formatter</span><span class="o">=</span><span class="n">_fmt_zout</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Output altitude level(s)&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;brdf_rpv_type&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;brdf_rpv_type&quot;</span><span class="p">,</span>
+        <span class="nb">int</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="n">formatter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;brdf_rpv_type </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;IGBP surface type for RPV BRDF library&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;wavelength&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;wavelength&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="s2">&quot;nm&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Wavelength range [min max]&quot;</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;mol_modify O3&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;mol_modify O3&quot;</span><span class="p">,</span>
+        <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">&quot;DU&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">),</span>
+        <span class="n">formatter</span><span class="o">=</span><span class="n">_fmt_mol_modify</span><span class="p">(</span><span class="s2">&quot;O3&quot;</span><span class="p">,</span> <span class="s2">&quot;DU&quot;</span><span class="p">),</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Total ozone column&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;mol_modify H2O&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;mol_modify H2O&quot;</span><span class="p">,</span>
+        <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">&quot;MM&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">),</span>
+        <span class="n">formatter</span><span class="o">=</span><span class="n">_fmt_mol_modify</span><span class="p">(</span><span class="s2">&quot;H2O&quot;</span><span class="p">,</span> <span class="s2">&quot;MM&quot;</span><span class="p">),</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Precipitable water column&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;rte_solver&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;rte_solver&quot;</span><span class="p">,</span>
+        <span class="nb">str</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;twostr&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;disort&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fdisort1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fdisort2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rodents&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sslidar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;montecarlo&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mystic&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sdisort&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Radiative transfer equation solver&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;mol_abs_param&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;mol_abs_param&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Molecular absorption parameterisation&quot;</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;umu&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;umu&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Cosine of viewing zenith angle&quot;</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;output_user&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span><span class="s2">&quot;output_user&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Output column specification&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;solar&quot;</span><span class="p">,</span> <span class="s2">&quot;thermal&quot;</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Radiation source&quot;</span>
+    <span class="p">),</span>
+    <span class="s2">&quot;day_of_year&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
+        <span class="s2">&quot;day_of_year&quot;</span><span class="p">,</span>
+        <span class="nb">int</span><span class="p">,</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">366</span><span class="p">),</span>
+        <span class="n">formatter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;day_of_year </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Day of year for Sun–Earth distance correction&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1">#: Registry key -&gt; SimulationDefaults attribute providing the config default.</span>
+<span class="n">CONFIG_FIELD_MAP</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;albedo&quot;</span><span class="p">:</span> <span class="s2">&quot;albedo_value&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sur_temperature&quot;</span><span class="p">:</span> <span class="s2">&quot;surface_temperature_k&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sza&quot;</span><span class="p">:</span> <span class="s2">&quot;sza&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rte_solver&quot;</span><span class="p">:</span> <span class="s2">&quot;rte_solver&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mol_abs_param&quot;</span><span class="p">:</span> <span class="s2">&quot;mol_abs_param&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mol_modify O3&quot;</span><span class="p">:</span> <span class="s2">&quot;ozone_du&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mol_modify H2O&quot;</span><span class="p">:</span> <span class="s2">&quot;h2o_mm&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1">#: Memo of loaded schemas, keyed by libRadtran root path.</span>
+<span class="n">_SCHEMA_MEMO</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="get_schema">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.get_schema.html#pyradtran.params.get_schema">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_schema</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load (and memoise) the libRadtran option schema for *config*.</span>
+
+<span class="sd">    Returns *None* when no local libRadtran source tree is available;</span>
+<span class="sd">    validation then falls back to the curated registry only.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_libradtran_root</span><span class="p">,</span> <span class="n">load_schema</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">find_libradtran_root</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_SCHEMA_MEMO</span><span class="p">:</span>
+        <span class="n">_SCHEMA_MEMO</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">load_schema</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">)</span> <span class="k">if</span> <span class="n">root</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">_SCHEMA_MEMO</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_tokenize_value</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split a params key/value pair into uvspec tokens after the option name.</span>
+
+<span class="sd">    Returns *None* when the value is not token-like (dict/list cloud</span>
+<span class="sd">    profiles), meaning schema validation must be skipped.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key_parts</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="n">key_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extra</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">extra</span> <span class="o">+</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">extra</span> <span class="o">+</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">extra</span> <span class="o">+</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_number</span><span class="p">(</span><span class="n">tok</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="validate_against_schema">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html#pyradtran.params.validate_against_schema">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_against_schema</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate one params entry against a schema option definition.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValidationError</span>
+<span class="sd">        On a choice mismatch, an out-of-range or non-numeric value,</span>
+<span class="sd">        a missing required token, or extra tokens on a fixed-arity</span>
+<span class="sd">        option.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">_tokenize_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tokens</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>  <span class="c1"># dict-valued (cloud machinery) — validated downstream</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unmodeled&quot;</span><span class="p">):</span>
+        <span class="k">return</span>  <span class="c1"># option name is valid; its signature isn&#39;t in the schema</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+    <span class="n">spec_tokens</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">spec_tokens</span> <span class="ow">and</span> <span class="n">queue</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; takes no value, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">st</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spec_tokens</span><span class="p">):</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec_tokens</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">queue</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;optional&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is missing a required value &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(expected </span><span class="si">{</span><span class="n">st</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;kind&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> token #</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">st</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;choice&quot;</span><span class="p">:</span>
+            <span class="n">tok</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">choices</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;choices&quot;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">if</span> <span class="n">tok</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">choices</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file_allowed&quot;</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;optional&quot;</span><span class="p">):</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tok</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;: &#39;</span><span class="si">{</span><span class="n">tok</span><span class="si">}</span><span class="s2">&#39; is not one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;datatype&quot;</span><span class="p">,</span> <span class="s2">&quot;str&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;floats&quot;</span><span class="p">,</span> <span class="s2">&quot;ints&quot;</span><span class="p">,</span> <span class="s2">&quot;lines&quot;</span><span class="p">,</span> <span class="s2">&quot;files&quot;</span><span class="p">):</span>
+                <span class="n">rest</span><span class="p">,</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span><span class="p">,</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;floats&quot;</span><span class="p">,</span> <span class="s2">&quot;ints&quot;</span><span class="p">):</span>
+                    <span class="n">bad</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">rest</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_number</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span>
+                    <span class="k">if</span> <span class="n">bad</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; expects numbers, got </span><span class="si">{</span><span class="n">bad</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">last</span><span class="p">:</span>
+                    <span class="n">queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># greedy: swallows the rest (e.g. zout list)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># float / int</span>
+                <span class="n">tok</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_number</span><span class="p">(</span><span class="n">tok</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; expects a number, got </span><span class="si">{</span><span class="n">tok</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">vr</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;valid_range&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">vr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">vr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">vr</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; value </span><span class="si">{</span><span class="n">tok</span><span class="si">}</span><span class="s2"> outside [</span><span class="si">{</span><span class="n">vr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">vr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span>
+                    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">queue</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; got extra value(s) </span><span class="si">{</span><span class="n">queue</span><span class="si">}</span><span class="s2">; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;expected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">spec_tokens</span><span class="p">)</span><span class="si">}</span><span class="s2"> token(s)&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_unknown_option_error</span><span class="p">(</span><span class="n">base</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">difflib</span>
+
+    <span class="n">known</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">REGISTRY</span><span class="p">}</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">known</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">hint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;; did you mean </span><span class="si">{</span><span class="s1">&#39; / &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span><span class="si">}</span><span class="s2">?&quot;</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is not a known uvspec option of the local libRadtran &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;install</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2"> (wrap the value in Raw(...) to bypass validation)&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_clean_latex</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Light cleanup of libRadtran&#39;s LaTeX-flavoured documentation.&quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">code\{([^}]*)\}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;`\1`&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">file\{([^}]*)\}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">fcode\{([^}]*)\}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">emph\{([^}]*)\}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">(begin|end)\{[^}]*\}&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">item\[([^\]]*)\]&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;- \1:&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">item\b&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">parameter\{([^}]*)\}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;** \1 **&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">(ifthreedmystic|ifmystic)\b&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\_&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\#&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\%&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;~?</span><span class="se">\\</span><span class="s2">(ref|label)\{[^}]*\}&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\n{3,}&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_signature</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a usage signature like ``wc_modify &lt;gg|ssa|tau|tau550&gt; &lt;set|scale&gt; &lt;float&gt;``.&quot;&quot;&quot;</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;choice&quot;</span><span class="p">:</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;choices&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+            <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file_allowed&quot;</span><span class="p">):</span>
+                <span class="n">body</span> <span class="o">+=</span> <span class="s2">&quot;|&lt;file&gt;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;datatype&quot;</span><span class="p">,</span> <span class="s2">&quot;str&quot;</span><span class="p">)</span>
+            <span class="n">vr</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;valid_range&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">vr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">body</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; in [</span><span class="si">{</span><span class="n">vr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">vr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;optional&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unmodeled&quot;</span><span class="p">):</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;...&gt;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_schema_arg</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">schema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">schema</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">get_schema</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="describe">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.describe.html#pyradtran.params.describe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return usage, help, and documentation for one uvspec option.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The uvspec option name (e.g. ``&quot;wc_modify&quot;``).</span>
+<span class="sd">    config : SimulationConfig, optional</span>
+<span class="sd">        Used to locate the local libRadtran install; package defaults</span>
+<span class="sd">        when *None*.</span>
+<span class="sd">    schema : dict, optional</span>
+<span class="sd">        Pre-loaded schema (mainly for tests).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    KeyError</span>
+<span class="sd">        If the option is unknown, with close-match suggestions.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If no local libRadtran schema is available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">_resolve_schema_arg</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">schema</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">&quot;No local libRadtran option schema available; check that &quot;</span>
+            <span class="s2">&quot;paths.libradtran_bin points inside a libRadtran source tree&quot;</span>
+        <span class="p">)</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">difflib</span>
+
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">schema</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">hint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;; close matches: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown uvspec option &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_signature</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;group: </span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;group&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;?&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;   (repeatable)&quot;</span> <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;non_unique&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parents&quot;</span><span class="p">):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;requires: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;parents&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">doc_text</span> <span class="o">=</span> <span class="n">_clean_latex</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;doc&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">help_text</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">doc_text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">help_text</span><span class="p">[:</span><span class="mi">40</span><span class="p">]):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">help_text</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">doc_text</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="search_options">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.search_options.html#pyradtran.params.search_options">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">search_options</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return uvspec option names whose name, group, or help match *text*.&quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">_resolve_schema_arg</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">schema</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">needle</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">hits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">haystack</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;doc&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">needle</span> <span class="ow">in</span> <span class="n">haystack</span><span class="p">:</span>
+            <span class="n">hits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hits</span></div>
+
+
+
+<div class="viewcode-block" id="ParamResolver">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParamResolver</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve a user ``params`` mapping into validated per-point values.</span>
+
+<span class="sd">    Responsibilities:</span>
+
+<span class="sd">    * Apply and **consume** dotted config overrides</span>
+<span class="sd">      (``&quot;simulation_defaults.albedo_value&quot;``) onto *config* — they never</span>
+<span class="sd">      reach the uvspec input file.</span>
+<span class="sd">    * Split remaining entries into literals (validated immediately) and</span>
+<span class="sd">      :class:`Var` references (validated per point).</span>
+<span class="sd">    * Tag every value with its provenance.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : SimulationConfig</span>
+<span class="sd">        Mutated in place by dotted keys.</span>
+<span class="sd">    params : dict, optional</span>
+<span class="sd">        Mapping of registry keys / raw uvspec keywords to literal values</span>
+<span class="sd">        or :class:`Var` references.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValidationError</span>
+<span class="sd">        If any literal value fails its registry validation. All offending</span>
+<span class="sd">        keys are reported in one exception.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParamResolver.__init__">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">schema</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="c1"># &quot;auto&quot;: discover the local libRadtran schema; None: curated</span>
+        <span class="c1"># registry only; dict: injected schema (tests).</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">get_schema</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">if</span> <span class="n">schema</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span> <span class="k">else</span> <span class="n">schema</span>
+        <span class="n">remaining</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">params</span> <span class="ow">or</span> <span class="p">{})</span>
+
+        <span class="c1"># 1. Dotted config overrides: apply to config, consume (B1 fix).</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">remaining</span> <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">k</span> <span class="ow">and</span> <span class="s2">&quot; &quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">k</span><span class="p">]:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">section_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">field_name</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">section</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">section</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overriding config: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown config parameter: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 2. Split literals vs Var refs.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_refs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Var</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">remaining</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="c1"># explicit &quot;omit this option&quot;: reaches the builder, which</span>
+                <span class="c1"># removes any config-supplied line and emits nothing</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">PROV_LITERAL</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Var</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">var_refs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Raw</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">PROV_UNVALIDATED</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span><span class="p">,</span> <span class="n">provenance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_key_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">provenance</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;Invalid parameter value(s): &quot;</span> <span class="o">+</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_join</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_key_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate and normalise one literal entry.</span>
+
+<span class="sd">        Curated :data:`REGISTRY` entries win; otherwise the libRadtran</span>
+<span class="sd">        schema (when available) validates tokens and rejects unknown</span>
+<span class="sd">        option names. Without a schema, unknown keys pass through</span>
+<span class="sd">        unvalidated (legacy behaviour). Tuples become space-joined</span>
+<span class="sd">        strings; a list on a repeatable (``non_unique``) option becomes</span>
+<span class="sd">        a list of line strings (the builder emits one line each), while</span>
+<span class="sd">        a list on a single-line option is space-joined.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        (value, provenance)</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValidationError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">REGISTRY</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_join</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">spec</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="c1"># Curated validation passes strings through; the schema can</span>
+            <span class="c1"># still check their tokens (choices, arity, numbers).</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">validate_against_schema</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">PROV_LITERAL</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">_unknown_option_error</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;non_unique&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">validate_against_schema</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_join</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">value</span>
+                <span class="p">]</span>
+                <span class="k">return</span> <span class="n">lines</span><span class="p">,</span> <span class="n">PROV_LITERAL</span>
+            <span class="n">validate_against_schema</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_join</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">PROV_LITERAL</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_join</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">PROV_UNVALIDATED</span>
+
+<div class="viewcode-block" id="ParamResolver.static_params">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.static_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">static_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``key -&gt; (value, provenance)`` for point-independent values.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ParamResolver.validate_var_targets">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.validate_var_targets">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_var_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check every :class:`Var` target (and hijack-suspects) against *ds*.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValidationError</span>
+<span class="sd">            If a ``Var`` names a variable missing from *ds*, or if a bare</span>
+<span class="sd">            string literal matches a dataset variable name (ambiguous —</span>
+<span class="sd">            the user almost certainly meant ``Var``).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_refs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; references dataset variable &#39;</span><span class="si">{</span><span class="n">ref</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;which is not in the dataset&quot;</span>
+                <span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">_prov</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; has string value &#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; which matches a &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;dataset variable name; use Var(&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;) for a &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;per-point reference or change the literal&quot;</span>
+                <span class="p">)</span>
+        <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ParamResolver.resolve_point">
+<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.resolve_point">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resolve_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_ds</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve all parameters for one stacked point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        point_ds : xarray.Dataset</span>
+<span class="sd">            A single point (0-d variables), as produced by</span>
+<span class="sd">            ``stacked_ds.isel({sample_dim: i})``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        resolved : dict</span>
+<span class="sd">            ``key -&gt; (value, provenance)`` merged from literals and</span>
+<span class="sd">            per-point references.</span>
+<span class="sd">        skipped : list of str</span>
+<span class="sd">            Keys omitted for this point because the dataset value was NaN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+        <span class="n">resolved</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">)</span>
+        <span class="n">skipped</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_refs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">point_ds</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; references dataset variable &#39;</span><span class="si">{</span><span class="n">ref</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;which is missing from the point&quot;</span>
+                <span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">point_ds</span><span class="p">[</span><span class="n">ref</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">skipped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span><span class="p">,</span> <span class="n">_prov</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_key_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="k">continue</span>
+            <span class="n">resolved</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">PROV_DATASET</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;Invalid per-point value(s): &quot;</span> <span class="o">+</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">resolved</span><span class="p">,</span> <span class="n">skipped</span></div>
+</div>
+
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Var&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Raw&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ParamSpec&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ParamResolver&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;REGISTRY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CONFIG_FIELD_MAP&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;get_schema&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;validate_against_schema&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;describe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;search_options&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PROV_CONFIG&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PROV_LITERAL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PROV_DATASET&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PROV_UNVALIDATED&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PyRadtran Developers
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

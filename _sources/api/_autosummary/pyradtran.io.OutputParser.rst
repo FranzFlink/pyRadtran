@@ -8,14 +8,4 @@ pyradtran.io.OutputParser
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~OutputParser.__init__
-         ~OutputParser.parse_output_file
-      
+   :special-members: __init__

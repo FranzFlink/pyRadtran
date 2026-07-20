@@ -8,17 +8,4 @@ pyradtran.io.RadiosondeAtmosphereGenerator
    :undoc-members:
    :show-inheritance:
    :inherited-members:
-
-   .. automethod:: __init__
-
-   .. autosummary::
-      :toctree:
-      :recursive:
-
-      
-         ~RadiosondeAtmosphereGenerator.__init__
-         ~RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file
-         ~RadiosondeAtmosphereGenerator.find_closest_active_stations
-         ~RadiosondeAtmosphereGenerator.get_closest_sounding
-         ~RadiosondeAtmosphereGenerator.get_station_list
-      
+   :special-members: __init__
