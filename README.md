@@ -12,7 +12,7 @@ A flexible and user-friendly Python wrapper for the [libRadtran](http://www.libr
 **[View the full documentation →](https://franzflink.github.io/pyRadtran/)**
 
 - [Installation Guide](https://franzflink.github.io/pyRadtran/installation.html)
-- [Usage Examples](https://franzflink.github.io/pyRadtran/usage.html)
+- [Configuration](https://franzflink.github.io/pyRadtran/guide/configuration.html) · [Parameters](https://franzflink.github.io/pyRadtran/guide/parameters.html) · [Results](https://franzflink.github.io/pyRadtran/guide/outputs.html) · [Debugging](https://franzflink.github.io/pyRadtran/guide/debugging.html)
 - [Interactive Notebooks](https://franzflink.github.io/pyRadtran/notebooks/index.html)
 - [API Reference](https://franzflink.github.io/pyRadtran/api/index.html)
 
