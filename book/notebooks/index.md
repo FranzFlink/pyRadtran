@@ -19,6 +19,7 @@ adaptable — swap in your own file paths.
 | {doc}`water_cloud` | A parametric water cloud via `wc_file` |
 | {doc}`mixed_phase_cloud` | Mixed-phase cloud profiles from files |
 | {doc}`get_radiosonde` | Atmosphere files from IGRA radiosondes |
+| {doc}`led_horizontal_extinction` | Horizontal LED light extinction through marine aerosol |
 
 ## Case studies — full research workflows
 

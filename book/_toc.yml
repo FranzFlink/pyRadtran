@@ -29,6 +29,7 @@ parts:
     - file: notebooks/water_cloud
     - file: notebooks/mixed_phase_cloud
     - file: notebooks/get_radiosonde
+    - file: notebooks/led_horizontal_extinction
 
   - caption: Case Studies
     chapters:
