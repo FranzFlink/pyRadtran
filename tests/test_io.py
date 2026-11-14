@@ -198,7 +198,9 @@ def test_generate_uvspec_input_with_clouds(minimal_config):
     content = sim._generate_input_content(dt=dt, latitude=lat, longitude=lon)
 
     # Verify cloud content
-    assert "wc_layer 1.0 2.0 0.1 10.0" in content
+    # wc_layer is not a uvspec option: the layer goes through wc_file
+    assert "wc_layer" not in content
+    assert "wc_file 1D" in content
 
 
 # ---------------------------------------------------------------------------

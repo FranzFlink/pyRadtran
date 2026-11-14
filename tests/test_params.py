@@ -120,13 +120,9 @@ class TestParamResolverStatic:
         assert minimal_config.simulation_defaults.albedo_value == 0.3
         assert "simulation_defaults.albedo_value" not in r.static_params()
 
-    def test_unknown_dotted_key_warns_and_is_dropped(self, minimal_config, caplog):
-        import logging
-
-        with caplog.at_level(logging.WARNING):
-            r = ParamResolver(minimal_config, {"simulation_defaults.nope": 1})
-        assert "simulation_defaults.nope" not in r.static_params()
-        assert "Unknown config parameter" in caplog.text
+    def test_unknown_dotted_key_raises(self, minimal_config):
+        with pytest.raises(ValidationError, match="simulation_defaults.nope"):
+            ParamResolver(minimal_config, {"simulation_defaults.nope": 1})
 
     def test_var_refs_separated(self, minimal_config):
         r = ParamResolver(minimal_config, {"albedo": Var("alb_col")})

@@ -1,4 +1,4 @@
-"""
+r"""
 libRadtran option-schema extraction.
 
 libRadtran ships a machine-readable description of every ``uvspec``
@@ -7,33 +7,99 @@ extracts that description from the *locally installed* libRadtran — so
 validation always matches the exact binary being run — and caches it as
 JSON under ``~/.pyradtran/``.
 
+.. autosummary::
+
+   load_schema
+   extract_schema
+   find_libradtran_root
+
+Most users never call this module directly: the schema is what makes
+``params={"wc_modfy": ...}`` fail with a "did you mean ``wc_modify``?"
+before any simulation starts, and what
+:func:`~pyradtran.params.describe` and
+:func:`~pyradtran.params.search_options` print.
+
 The extraction runs in a subprocess to keep libRadtran's GUI modules out
 of the pyradtran process. Nothing from libRadtran is redistributed with
 pyradtran; the schema is generated on the user's machine from their own
 installation.
 
-Schema format (one entry per uvspec option)::
+Notes
+-----
+**Cache.** The schema is stored as
+``~/.pyradtran/option_schema_<fingerprint>.json`` (:data:`CACHE_DIR`).
+The fingerprint is a hash of the ``src_py`` path and the name, size and
+modification time of every ``*_options.py`` file, so pointing pyradtran
+at another libRadtran install — or patching the current one —
+regenerates the schema automatically. Only the file for the current
+fingerprint is kept. Deleting the file is always safe; it is regenerated on
+the next use.
+
+**Structure.** The schema is a ``dict`` mapping each option name to one
+entry. A real entry from libRadtran 2.0.6 (``doc`` shortened)::
 
     {
       "name": "wc_modify",
       "group": "Water and ice clouds",
       "help": "Modify water cloud optical properties.",
-      "doc": "...",                      # long documentation text
-      "non_unique": true,                # option may appear on several lines
+      "doc": "Modify water cloud optical properties.\n \\fcode{ ...",
+      "non_unique": true,
       "mandatory": false,
-      "parents": ["wc_file"],            # requires one of these
-      "childs": [...],
-      "tokens": [                        # user-supplied tokens, in order
+      "unmodeled": false,
+      "parents": ["wc_file"],
+      "childs": [],
+      "tokens": [
         {"kind": "choice", "choices": ["gg", "ssa", "tau", "tau550"],
-         "optional": false, "file_allowed": false},
-        {"kind": "value", "datatype": "float", "valid_range": [0, 1],
+         "file_allowed": false, "optional": false},
+        {"kind": "choice", "choices": ["set", "scale"],
+         "file_allowed": false, "optional": false},
+        {"kind": "value", "datatype": "float", "valid_range": null,
          "optional": false}
       ]
     }
 
+``name``
+    The uvspec option keyword.
+``group``
+    Section of the libRadtran manual / GUI, e.g. ``"Surface"``.
+``help``, ``doc``
+    One-line help and the long documentation (LaTeX-flavoured).
+``non_unique``
+    The option may appear on several input lines (``wc_modify``,
+    ``mol_modify``, ``crs_model``, ...). A ``params`` list on such an
+    option becomes one line per element.
+``mandatory``
+    libRadtran's own "must be present" flag.
+``unmodeled``
+    The option takes arguments that libRadtran's description does not
+    spell out (e.g. ``radiosonde``): only the name is validated.
+``parents``, ``childs``
+    Options this one requires / enables. Informational: shown by
+    :func:`~pyradtran.params.describe`, not enforced.
+``tokens``
+    The values the user supplies after the keyword, in order. A
+    ``"choice"`` token lists the allowed ``choices``
+    (``file_allowed`` means a file name is accepted as well); a
+    ``"value"`` token has a ``datatype`` — ``float``, ``int``, ``str``,
+    ``file`` or one of the variable-length types ``floats``, ``ints``,
+    ``files``, ``lines`` — and, for numbers, an inclusive
+    ``valid_range`` or ``null``. ``optional`` tokens may be left out.
+    An empty list is a flag option such as ``aerosol_default``.
+
+Examples
+--------
+>>> from pyradtran import load_config
+>>> from pyradtran.schema import load_schema
+>>> schema = load_schema(load_config())  # doctest: +SKIP
+>>> len(schema)  # doctest: +SKIP
+244
+>>> schema["albedo"]["tokens"]  # doctest: +SKIP
+[{'kind': 'value', 'datatype': 'float', 'valid_range': [0.0, 1.0], 'optional': False}]
+
 See Also
 --------
 pyradtran.params : Uses the schema for parameter validation.
+pyradtran.params.describe : Human-readable view of one schema entry.
 """
 
 import hashlib
@@ -46,7 +112,8 @@ from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
-#: Where cached schema files live.
+#: Directory holding the cached schema files
+#: (``~/.pyradtran/option_schema_<fingerprint>.json``).
 CACHE_DIR = Path.home() / ".pyradtran"
 
 # Runs inside the subprocess with cwd = <root>/src_py.
@@ -146,9 +213,58 @@ json.dump(options, sys.stdout)
 def find_libradtran_root(config) -> Optional[Path]:
     """Locate the libRadtran installation root from config paths.
 
-    Tries the parents of ``paths.libradtran_bin`` (``<root>/bin/uvspec``)
-    and ``paths.libradtran_data`` (``<root>/data``); returns the first
-    candidate that contains ``src_py``.
+    The root is the directory that contains ``src_py`` (libRadtran's
+    option descriptions), i.e. a source/build tree rather than a bare
+    ``bin`` + ``data`` installation.
+
+    Parameters
+    ----------
+    config : SimulationConfig
+        Only ``config.paths.libradtran_bin`` and
+        ``config.paths.libradtran_data`` are read; either may be missing
+        or ``None``.
+
+    Returns
+    -------
+    pathlib.Path or None
+        The first of these candidates that has a ``src_py``
+        sub-directory, in this order: two and one levels above
+        ``libradtran_bin`` (``<root>/bin/uvspec`` or ``<root>/uvspec``),
+        then one and two levels above ``libradtran_data``
+        (``<root>/data`` or ``<root>/share/data``). ``None`` when no
+        candidate qualifies.
+
+    See Also
+    --------
+    load_schema : Uses the root to extract and cache the schema.
+
+    Examples
+    --------
+    A minimal fake installation tree (any object with a ``paths``
+    attribute works as *config*):
+
+    >>> import tempfile
+    >>> from pathlib import Path
+    >>> from types import SimpleNamespace
+    >>> from pyradtran.schema import find_libradtran_root
+    >>> tmp = Path(tempfile.mkdtemp())
+    >>> (tmp / "src_py").mkdir()
+    >>> paths = SimpleNamespace(libradtran_bin=tmp / "bin" / "uvspec")
+    >>> find_libradtran_root(SimpleNamespace(paths=paths)) == tmp
+    True
+
+    Without a ``src_py`` directory there is no root, and schema
+    validation is switched off:
+
+    >>> paths = SimpleNamespace(libradtran_bin=tmp / "elsewhere" / "bin" / "uvspec")
+    >>> print(find_libradtran_root(SimpleNamespace(paths=paths)))
+    None
+
+    With a real configuration:
+
+    >>> from pyradtran import load_config
+    >>> find_libradtran_root(load_config())  # doctest: +SKIP
+    PosixPath('/opt/libRadtran-2.0.6')
     """
     candidates = []
     bin_path = getattr(config.paths, "libradtran_bin", None)
@@ -183,10 +299,49 @@ def _cache_key(src_py: Path) -> str:
 def extract_schema(root: Path) -> Dict[str, Any]:
     """Extract the option schema from ``<root>/src_py`` (no cache).
 
+    Imports every ``*_options.py`` module of libRadtran's ``src_py``
+    directory in a separate Python subprocess (same interpreter, working
+    directory ``src_py``, 120 s timeout) and converts the option objects
+    to plain JSON-compatible dictionaries. Modules, option groups or
+    single options that fail to import are skipped; the skip notes are
+    logged at ``DEBUG`` level.
+
+    Parameters
+    ----------
+    root : str or pathlib.Path
+        libRadtran installation root (the directory containing
+        ``src_py``).
+
+    Returns
+    -------
+    dict
+        ``{option_name: schema_entry}``; see the module docstring of
+        :mod:`pyradtran.schema` for the entry structure.
+
     Raises
     ------
     RuntimeError
-        If the extraction subprocess fails or returns no options.
+        If the extraction subprocess exits with an error or finds no
+        options.
+    FileNotFoundError
+        If ``<root>/src_py`` does not exist.
+    subprocess.TimeoutExpired
+        If the extraction takes longer than 120 s.
+
+    See Also
+    --------
+    load_schema : Cached variant that returns ``None`` instead of raising.
+
+    Examples
+    --------
+    >>> from pyradtran.schema import extract_schema
+    >>> schema = extract_schema("/opt/libRadtran-2.0.6")  # doctest: +SKIP
+    >>> len(schema)  # doctest: +SKIP
+    244
+    >>> sorted(schema["wc_modify"])  # doctest: +SKIP
+    ['childs', 'doc', 'group', 'help', 'mandatory', 'name', 'non_unique', 'parents', 'tokens', 'unmodeled']
+    >>> schema["sza"]["tokens"]  # doctest: +SKIP
+    [{'kind': 'value', 'datatype': 'float', 'valid_range': [0.0, 180.0], 'optional': False}]
     """
     src_py = Path(root) / "src_py"
     result = subprocess.run(
@@ -209,20 +364,67 @@ def extract_schema(root: Path) -> Dict[str, Any]:
 def load_schema(config=None, root: Optional[Path] = None) -> Optional[Dict[str, Any]]:
     """Return the option schema for the local libRadtran install, cached.
 
+    The first call for a given installation runs
+    :func:`extract_schema` and writes the result to
+    ``~/.pyradtran/option_schema_<fingerprint>.json``; later calls (in
+    any process) read that file. The fingerprint covers the ``src_py``
+    path and the name, size and modification time of its
+    ``*_options.py`` files, so a changed installation is re-extracted
+    automatically and the stale cache file is removed.
+
+    This function never raises for a missing or broken installation: it
+    logs a warning and returns ``None``, and parameter validation falls
+    back to the curated :data:`~pyradtran.params.REGISTRY` only.
+
     Parameters
     ----------
     config : SimulationConfig, optional
-        Used to locate the installation when *root* is not given.
-    root : pathlib.Path, optional
+        Used to locate the installation (via
+        :func:`find_libradtran_root`) when *root* is not given.
+    root : str or pathlib.Path, optional
         libRadtran installation root (the directory containing
-        ``src_py``).
+        ``src_py``). Takes precedence over *config*.
 
     Returns
     -------
     dict or None
-        ``{option_name: schema_entry}``, or *None* when no local
-        libRadtran source tree can be found (validation then falls back
-        to the curated registry only).
+        ``{option_name: schema_entry}`` (see the module docstring of
+        :mod:`pyradtran.schema`), or ``None`` when neither *config* nor
+        *root* is given, no ``src_py`` directory can be found, or the
+        extraction fails.
+
+    See Also
+    --------
+    pyradtran.params.get_schema : Same, memoised in-process per root.
+    pyradtran.params.describe : Pretty-print one entry.
+    extract_schema : The uncached extraction.
+
+    Notes
+    -----
+    A cache file that cannot be read or parsed is regenerated; a cache
+    directory that cannot be written only produces a warning (the schema
+    is then re-extracted in every new process).
+
+    Examples
+    --------
+    Nothing to locate, nothing returned:
+
+    >>> from pyradtran.schema import load_schema
+    >>> print(load_schema())
+    None
+    >>> print(load_schema(root="/no/such/libRadtran"))
+    None
+
+    With a working configuration (libRadtran 2.0.6):
+
+    >>> from pyradtran import load_config
+    >>> schema = load_schema(load_config())  # doctest: +SKIP
+    >>> len(schema)  # doctest: +SKIP
+    244
+    >>> schema["wc_modify"]["tokens"][0]  # doctest: +SKIP
+    {'kind': 'choice', 'choices': ['gg', 'ssa', 'tau', 'tau550'], 'file_allowed': False, 'optional': False}
+    >>> schema["wc_modify"]["non_unique"]  # doctest: +SKIP
+    True
     """
     if root is None:
         if config is None:
