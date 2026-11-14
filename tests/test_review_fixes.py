@@ -1,8 +1,8 @@
 """Regressions found in the 0.2 release review."""
 
+import warnings
 from datetime import datetime, timezone
 from pathlib import Path
-import warnings
 
 import numpy as np
 import pandas as pd
