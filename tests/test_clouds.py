@@ -213,6 +213,63 @@ class TestCloudGeneratorERA5:
         if liquid_layers:
             assert liquid_layers[0].r_eff_um == pytest.approx(8.0)
 
+    @staticmethod
+    def _ascending_plev_ds():
+        """ERA5-CDS style: pressure_level ascending (top -> surface).
+
+        Altitude comes out descending, which triggers the internal
+        reordering. Cloud sits only at the lowest level (1000 hPa,
+        ~0.1 km).
+        """
+        plev = np.array([300.0, 500.0, 1000.0])
+        z = np.array([9000.0, 5500.0, 100.0]) * 9.80665  # m2/s2
+        clwc = np.array([0.0, 0.0, 5e-4])
+        t = np.array([230.0, 260.0, 285.0])
+        return xr.Dataset(
+            {
+                "clwc": (
+                    ["time", "pressure_level", "latitude", "longitude"],
+                    clwc.reshape(1, 3, 1, 1),
+                    {"units": "kg kg-1"},
+                ),
+                "t": (
+                    ["time", "pressure_level", "latitude", "longitude"],
+                    t.reshape(1, 3, 1, 1),
+                    {"units": "K"},
+                ),
+                "z": (
+                    ["time", "pressure_level", "latitude", "longitude"],
+                    z.reshape(1, 3, 1, 1),
+                    {"units": "m**2 s**-2"},
+                ),
+            },
+            coords={
+                "time": [pd.Timestamp("2024-01-01")],
+                "pressure_level": (["pressure_level"], plev, {"units": "hPa"}),
+                "latitude": [10.0],
+                "longitude": [20.0],
+            },
+        )
+
+    def test_ascending_plev_content_stays_aligned(self):
+        """Content, temperature, and pressure must be reordered together
+        with altitude — the surface cloud must not migrate upward."""
+        layers = CloudGenerator.from_era5_dataset(
+            self._ascending_plev_ds(), lat=10.0, lon=20.0
+        )
+        assert len(layers) == 1
+        layer = layers[0]
+        assert layer.z_top_km < 3.0
+        # density at the cloud's own level (1000 hPa / 285 K)
+        expected = 5e-4 * (1000.0 * 100) / (287 * 285.0) * 1000
+        assert layer.lwc_g_m3 == pytest.approx(expected, rel=1e-3)
+
+    def test_low_top_geopotential_uses_units(self):
+        """z units attr must win over the <100000 magnitude heuristic."""
+        ds = self._ascending_plev_ds()
+        layers = CloudGenerator.from_era5_dataset(ds, lat=10.0, lon=20.0)
+        assert all(l.z_top_km < 12.0 for l in layers)
+
 
 # ---------------------------------------------------------------------------
 # CloudFileWriter tests

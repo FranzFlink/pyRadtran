@@ -1,24 +1,59 @@
-# Radiosonde-driven spectral solar simulation (no wavelength integration)
-# Paths are loaded from ~/.pyradtran/config.yaml (master config)
-
-simulation_defaults:
-  rte_solver: disort
-  mol_abs_param: reptran per_nm
-  source: solar
-  wavelength_nm: [1024, 2400]
-  integrate_wavelength: false
-  h2o_source: radiosonde
-  albedo_value: 0.3
-  surface_temperature_k: 273.15
-  ozone_du: 300.0
-  output_altitudes_km: [0]
-  output_columns: [zout, lambda, sza, edir, eglo, edn, eup, enet, albedo]
-
 execution:
   cleanup_temp_files: false
-  max_workers: 16
-  timeout_seconds: 60
-
+  debug_mode: false
+  max_workers: 8
+  timeout_seconds: 120
 output:
   filename_prefix: radiosonde_solar_spectral
-  filename_suffix: .nc
+  filename_suffix: _results.nc
+  netcdf_encoding:
+    complevel: 5
+    zlib: true
+paths:
+  atmosphere_profile: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  output_dir: pyradtran_output
+  radiosonde_base: radiosonde
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
+  working_dir: pyradtran_work
+simulation_defaults:
+  albedo_value: 0.3
+  clouds:
+    cloud_fraction: 1.0
+    cloud_source: parametric
+    cloud_type: wc
+    effective_radius_um: 10.0
+    enabled: false
+    era5_lat: null
+    era5_lon: null
+    era5_time: null
+    ic_file: null
+    ice_content_g_m3: 0.0
+    layer_bottom_km: 1.0
+    layer_top_km: 2.0
+    water_content_g_m3: 0.1
+    wc_file: null
+  h2o_mm: 2.0
+  h2o_source: radiosonde
+  integrate_wavelength: false
+  mol_abs_param: reptran coarse
+  output_altitudes_km:
+  - 0.0
+  output_columns:
+  - zout
+  - lambda
+  - sza
+  - edir
+  - edn
+  - eup
+  ozone_du: 300.0
+  parameter_overrides: {}
+  rte_solver: disort
+  source: solar
+  surface_temperature_k: 273.15
+  sza: null
+  viewing_geometry: nadir
+  wavelength_nm:
+  - 1024
+  - 2400

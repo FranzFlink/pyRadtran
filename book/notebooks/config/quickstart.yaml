@@ -41,7 +41,6 @@ simulation_defaults:
   output_altitudes_km:
   - 0.0
   output_columns:
-  - lambda
   - edir
   - edn
   - eup

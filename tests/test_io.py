@@ -169,7 +169,8 @@ def test_generate_uvspec_input_content(minimal_config):
     assert "atmosphere_file" in content
     assert "rte_solver disort" in content
     assert "wavelength 400 700" in content
-    assert "output_user sza eglo eup albedo" in content
+    # zout and lambda are auto-injected (multi-altitude, spectral run)
+    assert "output_user zout lambda sza eglo eup albedo" in content
     assert "zout 0.0000 1.0000" in content
 
 
@@ -197,4 +198,84 @@ def test_generate_uvspec_input_with_clouds(minimal_config):
     content = sim._generate_input_content(dt=dt, latitude=lat, longitude=lon)
 
     # Verify cloud content
-    assert "wc_layer 1.0 2.0 0.1 10.0" in content
+    # wc_layer is not a uvspec option: the layer goes through wc_file
+    assert "wc_layer" not in content
+    assert "wc_file 1D" in content
+
+
+# ---------------------------------------------------------------------------
+# OutputToXarray.convert — one axis-combination per output geometry
+# ---------------------------------------------------------------------------
+
+from pyradtran.io import OutputToXarray, OutputType, ParsedOutput  # noqa: E402
+
+
+def _single_time_ds():
+    return xr.Dataset(
+        coords={
+            "time": [pd.Timestamp("2024-01-01T12:00")],
+            "latitude": ("time", [10.0]),
+            "longitude": ("time", [20.0]),
+        }
+    )
+
+
+def test_convert_integrated_single_altitude():
+    po = ParsedOutput(
+        output_type=OutputType.INTEGRATED_SINGLE_ALTITUDE,
+        data={"eglo": np.array([800.5])},
+        wavelengths=None,
+        altitudes=None,
+    )
+    out = OutputToXarray.convert(po, _single_time_ds())
+    assert out["eglo"].dims == ("time",)
+    assert out["eglo"].values[0] == pytest.approx(800.5)
+
+
+def test_convert_spectral_single_altitude():
+    """Two dims (time, wavelength): reshape must match the dims list."""
+    po = ParsedOutput(
+        output_type=OutputType.SPECTRAL_SINGLE_ALTITUDE,
+        data={"eglo": np.array([1.0, 2.0, 3.0])},
+        wavelengths=[400.0, 500.0, 600.0],
+        altitudes=None,
+    )
+    out = OutputToXarray.convert(po, _single_time_ds())
+    assert out["eglo"].dims == ("time", "wavelength")
+    np.testing.assert_allclose(out["eglo"].values, [[1.0, 2.0, 3.0]])
+
+
+def test_convert_integrated_multi_altitude():
+    """Two dims (time, altitude)."""
+    po = ParsedOutput(
+        output_type=OutputType.INTEGRATED_MULTI_ALTITUDE,
+        data={"eup": np.array([10.0, 20.0])},
+        wavelengths=None,
+        altitudes=[0.0, 1.0],
+    )
+    out = OutputToXarray.convert(po, _single_time_ds())
+    assert out["eup"].dims == ("time", "altitude")
+    np.testing.assert_allclose(out["eup"].values, [[10.0, 20.0]])
+
+
+def test_convert_spectral_multi_altitude():
+    """Three dims; uvspec rows are wavelength-outer, zout-inner."""
+    # rows: (wl=400, z=0), (wl=400, z=1), (wl=500, z=0), (wl=500, z=1)
+    po = ParsedOutput(
+        output_type=OutputType.SPECTRAL_MULTI_ALTITUDE,
+        data={"eglo": np.array([1.0, 2.0, 3.0, 4.0])},
+        wavelengths=[400.0, 500.0],
+        altitudes=[0.0, 1.0],
+    )
+    out = OutputToXarray.convert(po, _single_time_ds())
+    assert out["eglo"].dims == ("time", "wavelength", "altitude")
+    np.testing.assert_allclose(out["eglo"].values, [[[1.0, 2.0], [3.0, 4.0]]])
+
+
+def test_add_config_attrs_handles_none_max_workers(minimal_config):
+    """max_workers=None (auto pool size) must not break saving results."""
+    minimal_config.execution.max_workers = None
+    ds = xr.Dataset()
+    NetCDFSaver._add_config_to_attrs(ds, minimal_config)
+    assert "config_max_workers" not in ds.attrs
+    assert "config_timeout_seconds" in ds.attrs

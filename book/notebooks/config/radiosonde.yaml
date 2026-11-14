@@ -1,7 +1,7 @@
 execution:
   cleanup_temp_files: false
   debug_mode: false
-  max_workers: 16
+  max_workers: 8
   timeout_seconds: 300
 output:
   filename_prefix: pyradtran_sim
@@ -14,11 +14,11 @@ paths:
   libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
   libradtran_data: /opt/libRadtran-2.0.6/data
   output_dir: pyradtran_output
-  radiosonde_base: /path/to/radiosonde/data
+  radiosonde_base: radiosonde
   solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
   working_dir: pyradtran_work
 simulation_defaults:
-  albedo_value: 0.3
+  albedo_value: 0.8
   clouds:
     cloud_fraction: 1.0
     cloud_source: parametric
@@ -37,7 +37,7 @@ simulation_defaults:
   h2o_mm: 2.0
   h2o_source: radiosonde
   integrate_wavelength: true
-  mol_abs_param: reptran per_nm
+  mol_abs_param: reptran coarse
   output_altitudes_km:
   - 0.0
   output_columns:
@@ -58,5 +58,5 @@ simulation_defaults:
   sza: null
   viewing_geometry: nadir
   wavelength_nm:
-  - 400
+  - 290
   - 4500

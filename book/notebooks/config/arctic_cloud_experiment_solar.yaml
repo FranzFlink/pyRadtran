@@ -1,59 +1,26 @@
+# Broadband solar irradiance at the surface, for Arctic cloud radiative effect
+# studies. Paths come from ~/.pyradtran/config.yaml (master config).
+# Output is in mW m-2 (divide by 1000 for W m-2).
+
+paths:
+  atmosphere_profile: afglsw     # subarctic winter
+
+simulation_defaults:
+  source: solar
+  rte_solver: disort             # twostr overestimates eup by ~15 %
+  mol_abs_param: reptran coarse
+  wavelength_nm: [300, 4000]
+  integrate_wavelength: true
+  output_columns: [edir, edn, eup]
+  output_altitudes_km: [0.0]
+  h2o_mm: null                   # keep the humidity of the profile
+  ozone_du: null                 # keep the ozone of the profile
+
 execution:
-  cleanup_temp_files: false
-  debug_mode: false
-  max_workers: 30
-  timeout_seconds: 3600
+  max_workers: 8
+  timeout_seconds: 300
+  cleanup_temp_files: true
+
 output:
   filename_prefix: arctic_cloud_experiment_solar
-  filename_suffix: _results.nc
-  netcdf_encoding:
-    complevel: 5
-    zlib: true
-paths:
-  output_dir: pyradtran_output
-  radiosonde_base: /path/to/radiosonde/data
-  working_dir: pyradtran_work
-simulation_defaults:
-  albedo_value: 0.85
-  clouds:
-    cloud_fraction: 1.0
-    cloud_source: parametric
-    cloud_type: wc
-    effective_radius_um: 10.0
-    enabled: false
-    era5_lat: null
-    era5_lon: null
-    era5_time: null
-    ic_file: null
-    ice_content_g_m3: 0.0
-    layer_bottom_km: 1.0
-    layer_top_km: 2.0
-    water_content_g_m3: 0.1
-    wc_file: null
-  h2o_mm: 2.0
-  h2o_source: fixed
-  integrate_wavelength: true
-  mol_abs_param: reptran coarse
-  output_altitudes_km:
-  - 0.0
-  output_columns:
-  - zout
-  - lambda
-  - sza
-  - edir
-  - eglo
-  - edn
-  - eup
-  - enet
-  - albedo
-  - heat
-  ozone_du: 300.0
-  parameter_overrides: {}
-  rte_solver: disort
-  source: solar
-  surface_temperature_k: 273.15
-  sza: null
-  viewing_geometry: nadir
-  wavelength_nm:
-  - 300
-  - 3000
+  filename_suffix: .nc

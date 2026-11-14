@@ -2,14 +2,34 @@
 """
 Utility helpers for pyRadtran.
 
-Currently provides :class:`RadiosondeFinder`, which scans a directory tree
-for radiosonde ``.dat`` files and returns the one closest in time to a
-given target datetime.
+:class:`RadiosondeFinder` scans a directory tree for radiosonde ``.dat``
+files and returns the one closest in time to a target datetime.
+
+.. autosummary::
+
+   RadiosondeFinder
+
+Notes
+-----
+The finder connects a local radiosonde archive to a simulation.  With
+
+.. code-block:: yaml
+
+    paths:
+      radiosonde_base: /data/halo_ac3/radiosonde
+    simulation_defaults:
+      h2o_source: radiosonde
+
+every simulated point gets the line ``radiosonde <closest file> H2O RH`` in
+its ``uvspec`` input: the pressure, temperature and relative-humidity
+profile of the sounding nearest in time replaces the lower part of the
+background atmosphere.
 
 See Also
 --------
-pyradtran.io.ERA5AtmosphereGenerator : Alternative atmosphere source.
-pyradtran.io.RadiosondeAtmosphereGenerator : Online radiosonde retrieval.
+pyradtran.io.RadiosondeAtmosphereGenerator : Download soundings from IGRA
+    and write them in the expected format.
+pyradtran.era5.era5_atmosphere_file : Atmosphere profiles from ERA5.
 """
 
 import logging
@@ -22,29 +42,91 @@ from typing import List, Optional, Tuple
 logger = logging.getLogger(__name__)
 
 
-class RadiosondeFinder:
-    """Locate the radiosonde file closest in time to a target datetime.
+_FAR_WARNED: set = set()  # sondes already reported as far in time
 
-    On construction the *base_path* directory tree is scanned for files
-    matching the pattern ``YYYYMMDD_SSSSSSOD.dat`` (date + seconds-of-day).
-    Subsequent calls to :meth:`find_closest` perform a fast binary search
-    on the pre-sorted file list.
+
+class RadiosondeFinder:
+    r"""Locate the radiosonde file closest in time to a target datetime.
+
+    The constructor scans *base_path* recursively for files named
+    ``YYYYMMDD_SSSSSSOD.dat``: the launch date followed by the five-digit
+    seconds of day (UTC), e.g. ``20220328_43200SOD.dat`` for a sounding
+    at 12:00 UTC on 28 March 2022.  :meth:`find_closest` then does a
+    binary search on the time-sorted file list.
 
     Parameters
     ----------
     base_path : pathlib.Path or None
-        Root directory to scan.  If *None*, no scanning is performed and
-        all look-ups return *None*.
+        Root directory to scan.  If *None* (or not an existing directory),
+        nothing is indexed and all look-ups return *None*.
 
-    Examples
-    --------
-    >>> finder = RadiosondeFinder(Path("/data/radiosondes"))
-    >>> finder.find_closest(datetime(2022, 3, 28, 12, 0))
-    PosixPath('/data/radiosondes/2022/20220328_43200SOD.dat')
+    Attributes
+    ----------
+    base_path : pathlib.Path or None
+        The directory given at construction.
 
     See Also
     --------
     pyradtran.io.RadiosondeAtmosphereGenerator : Fetch soundings from IGRA.
+    pyradtran.config.PathsConfig : ``radiosonde_base`` is the directory
+        handed to this class during a simulation.
+
+    Notes
+    -----
+    A file name with date :math:`d` and seconds of day :math:`s` is
+    assigned the time
+
+    .. math::
+
+        t = d\ \text{00:00 UTC} + s\ \mathrm{seconds},
+        \qquad 0 \le s \le 99999 .
+
+    ``.dat`` files that do not match the pattern are ignored, as are
+    files whose date part is not a valid calendar date (with a logged
+    warning).  Only the file name is used; the contents are never read
+    here.  The index is built once: files added later are not seen until
+    a new finder is created.
+
+    The files are three-column tables (pressure in hPa, temperature in
+    K, relative humidity in %), ordered from the top of the sounding
+    downwards, as ``uvspec``'s ``radiosonde ... H2O RH`` option expects.
+
+    Examples
+    --------
+    An archive with one directory per flight:
+
+    >>> import tempfile
+    >>> from datetime import datetime
+    >>> from pathlib import Path
+    >>> from pyradtran import RadiosondeFinder
+    >>> root = Path(tempfile.mkdtemp())
+    >>> for name in [
+    ...     "Flight_20220328/20220328_37218SOD.dat",
+    ...     "Flight_20220328/20220328_45046SOD.dat",
+    ...     "Flight_20220329/20220329_40000SOD.dat",
+    ...     "Flight_20220329/notes.dat",
+    ... ]:
+    ...     (root / name).parent.mkdir(exist_ok=True)
+    ...     (root / name).touch()
+    >>> finder = RadiosondeFinder(root)
+
+    37218 s is 10:20 UTC and 45046 s is 12:31 UTC, so 11:00 UTC matches
+    the first sounding and 12:00 UTC the second:
+
+    >>> finder.find_closest(datetime(2022, 3, 28, 11, 0)).name
+    '20220328_37218SOD.dat'
+    >>> finder.find_closest(datetime(2022, 3, 28, 12, 0)).name
+    '20220328_45046SOD.dat'
+
+    Times outside the covered period get the first or last sounding:
+
+    >>> finder.find_closest(datetime(2023, 1, 1)).name
+    '20220329_40000SOD.dat'
+
+    Without a directory nothing is found:
+
+    >>> RadiosondeFinder(None).find_closest(datetime(2022, 3, 28)) is None
+    True
     """
 
     _SONDE_FILENAME_PATTERN = re.compile(r"(\d{8})_(\d{5})SOD\.dat")
@@ -58,8 +140,12 @@ class RadiosondeFinder:
             logger.info("No radiosonde base path provided, skipping sonde scan.")
 
     def _scan_sondes(self):
-        """Scan *base_path* recursively for radiosonde files."""
-        if not self.base_path or not self.base_path.is_dir():
+        """Index all ``YYYYMMDD_SSSSSSOD.dat`` files below *base_path*.
+
+        Fills ``_sonde_data`` with time-sorted ``(UTC datetime, path)``
+        tuples.  Does nothing if *base_path* is not a directory.
+        """
+        if not self.base_path.is_dir():
             logger.debug(
                 f"Radiosonde base path does not exist or not provided: {self.base_path}"
             )
@@ -89,69 +175,130 @@ class RadiosondeFinder:
         if not self._sonde_data:
             logger.warning("No valid radiosonde files found in the specified path.")
 
-    def find_closest(self, target_dt: datetime) -> Optional[Path]:
-        """Return the radiosonde file closest in time to *target_dt*.
+    def find_closest(
+        self, target_dt: datetime, max_hours: Optional[float] = None
+    ) -> Optional[Path]:
+        r"""Return the radiosonde file closest in time to *target_dt*.
 
         Parameters
         ----------
-        target_dt : datetime
-            Target time (UTC assumed if timezone-naive).
+        target_dt : datetime.datetime
+            Target time.  Naive values are taken as UTC; aware values
+            are converted to UTC.
+        max_hours : float, optional
+            Largest accepted time difference in hours.  Default: no
+            limit.
 
         Returns
         -------
         pathlib.Path or None
-            Absolute path to the best-matching file, or *None* when no
-            files have been indexed.
+            Path of the closest file (below *base_path*, absolute if
+            *base_path* is), or *None* when no files are indexed or the
+            closest one is more than *max_hours* away.
+
+        Notes
+        -----
+        The result minimises :math:`|t_i - t|` over all indexed sounding
+        times :math:`t_i`.  Without *max_hours*, a target before the
+        first (after the last) sounding returns the first (last) file,
+        however far away.  A warning is logged when the returned sounding
+        is more than 12 h from the target.  Exactly halfway between two
+        soundings, the earlier one is returned.
+
+        Examples
+        --------
+        >>> import tempfile
+        >>> from datetime import datetime, timedelta, timezone
+        >>> from pathlib import Path
+        >>> from pyradtran import RadiosondeFinder
+        >>> root = Path(tempfile.mkdtemp())
+        >>> for name in ["20220328_36000SOD.dat", "20220328_43200SOD.dat"]:
+        ...     (root / name).touch()
+        >>> finder = RadiosondeFinder(root)
+        >>> finder.find_closest(datetime(2022, 3, 28, 10, 30)).name
+        '20220328_36000SOD.dat'
+
+        Halfway (11:00 UTC between 10:00 and 12:00), the earlier sounding
+        wins:
+
+        >>> finder.find_closest(datetime(2022, 3, 28, 11, 0)).name
+        '20220328_36000SOD.dat'
+
+        Aware datetimes are converted (13:30 at UTC+2 is 11:30 UTC):
+
+        >>> cest = timezone(timedelta(hours=2))
+        >>> finder.find_closest(datetime(2022, 3, 28, 13, 30, tzinfo=cest)).name
+        '20220328_43200SOD.dat'
+
+        Without a limit, a sounding months away is still returned:
+
+        >>> finder.find_closest(datetime(2022, 9, 1)).name
+        '20220328_43200SOD.dat'
+        >>> finder.find_closest(datetime(2022, 9, 1), max_hours=6) is None
+        True
         """
         if not self._sonde_data:
             return None
 
-        # Ensure target_dt is timezone-aware (assume UTC if naive)
+        # Compare in UTC (a naive target_dt is assumed to be UTC)
         if target_dt.tzinfo is None:
             target_dt = target_dt.replace(tzinfo=timezone.utc)
-        elif target_dt.tzinfo != timezone.utc:
-            # Convert to UTC if it's a different timezone
+        else:
             target_dt = target_dt.astimezone(timezone.utc)
 
-        sonde_times = [item[0] for item in self._sonde_data]
+        # insertion point of target_dt in the time-sorted index
+        pos = bisect_left([item[0] for item in self._sonde_data], target_dt)
 
-        # bisect_left finds the insertion point for target_dt in the sorted list sonde_times
-        pos = bisect_left(sonde_times, target_dt)
+        # Candidates: the neighbours of the insertion point (earlier one
+        # first, so it wins a tie).
+        candidates = self._sonde_data[max(pos - 1, 0) : pos + 1]
+        sonde_dt, path = min(candidates, key=lambda item: abs(item[0] - target_dt))
 
-        if pos == 0:
-            # Target time is before the first sonde
-            return self._sonde_data[0][1]
-        if pos == len(sonde_times):
-            # Target time is after the last sonde
-            return self._sonde_data[-1][1]
-
-        # Target time is between sonde_times[pos-1] and sonde_times[pos]
-        dt_before = target_dt - sonde_times[pos - 1]
-        dt_after = sonde_times[pos] - target_dt
-
-        # Return the path of the sonde with the smaller time difference
-        if dt_before <= dt_after:
-            return self._sonde_data[pos - 1][1]
-        else:
-            return self._sonde_data[pos][1]
+        hours = abs(sonde_dt - target_dt).total_seconds() / 3600
+        if max_hours is not None and hours > max_hours:
+            logger.warning(
+                f"Closest radiosonde {path.name} is {hours:.1f} h from "
+                f"{target_dt:%Y-%m-%d %H:%M} UTC (max_hours={max_hours}); none used."
+            )
+            return None
+        if hours > 12 and path not in _FAR_WARNED:  # once per file and process
+            _FAR_WARNED.add(path)
+            logger.warning(
+                f"Closest radiosonde {path.name} is {hours:.1f} h from "
+                f"{target_dt:%Y-%m-%d %H:%M} UTC."
+            )
+        return path
 
     def find_radiosonde_file(
         self, dt: datetime, latitude: float, longitude: float
     ) -> Optional[Path]:
-        """Find the radiosonde file closest to *dt*.
+        """Find the radiosonde file closest in time to *dt*.
+
+        The simulation engine calls this for every point when
+        ``simulation_defaults.h2o_source`` is ``"radiosonde"``.  It
+        delegates to :meth:`find_closest`; the position is ignored.
 
         Parameters
         ----------
-        dt : datetime
-            Target time.
+        dt : datetime.datetime
+            Target time (UTC if timezone-naive).
         latitude, longitude : float
-            Reserved for future spatial matching; currently unused.
+            Unused; reserved for spatial matching.
 
         Returns
         -------
         pathlib.Path or None
+            Closest file in time, or *None* when no files are indexed.
+
+        See Also
+        --------
+        find_closest : The underlying time search.
+
+        Examples
+        --------
+        >>> finder = RadiosondeFinder(Path("/data/halo_ac3/radiosonde"))  # doctest: +SKIP
+        >>> path = finder.find_radiosonde_file(  # doctest: +SKIP
+        ...     datetime(2022, 3, 28, 11, 0), latitude=78.9, longitude=11.9
+        ... )
         """
         return self.find_closest(dt)
-
-
-# Add other general utility functions here if needed

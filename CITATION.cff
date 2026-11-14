@@ -1,0 +1,63 @@
+cff-version: 1.2.0
+message: >-
+  If you use pyRadtran, please cite this software and libRadtran
+  (see references).
+title: "pyRadtran: a Python interface for the libRadtran radiative transfer model"
+type: software
+authors:
+  - family-names: Müller
+    given-names: Joshua Jeremias
+version: 0.2.0
+license: MIT
+repository-code: "https://github.com/FranzFlink/pyRadtran"
+url: "https://franzflink.github.io/pyRadtran/"
+keywords:
+  - radiative transfer
+  - libRadtran
+  - atmospheric science
+  - xarray
+references:
+  - type: article
+    title: "The libRadtran software package for radiative transfer calculations (version 2.0.1)"
+    authors:
+      - family-names: Emde
+        given-names: Claudia
+      - family-names: Buras-Schnell
+        given-names: Robert
+      - family-names: Kylling
+        given-names: Arve
+      - family-names: Mayer
+        given-names: Bernhard
+      - family-names: Gasteiger
+        given-names: Josef
+      - family-names: Hamann
+        given-names: Ulrich
+      - family-names: Kylling
+        given-names: Jonas
+      - family-names: Richter
+        given-names: Bettina
+      - family-names: Pause
+        given-names: Christian
+      - family-names: Dowling
+        given-names: Timothy
+      - family-names: Bugliaro
+        given-names: Luca
+    journal: Geoscientific Model Development
+    volume: 9
+    start: 1647
+    end: 1672
+    year: 2016
+    doi: 10.5194/gmd-9-1647-2016
+  - type: article
+    title: "Technical note: The libRadtran software package for radiative transfer calculations – description and examples of use"
+    authors:
+      - family-names: Mayer
+        given-names: Bernhard
+      - family-names: Kylling
+        given-names: Arve
+    journal: Atmospheric Chemistry and Physics
+    volume: 5
+    start: 1855
+    end: 1877
+    year: 2005
+    doi: 10.5194/acp-5-1855-2005

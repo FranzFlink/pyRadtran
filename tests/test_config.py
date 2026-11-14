@@ -115,3 +115,24 @@ def test_simulation_config_from_yaml(temp_config_file, monkeypatch):
     assert config.simulation_defaults.rte_solver == "disort"
     assert config.execution.max_workers == 2
     assert config.output.filename_prefix == "test"
+
+
+def test_wavelength_nm_accepts_start_end_mapping():
+    """The {start:, end:} YAML spelling must normalise to [min, max]."""
+    from pyradtran.config import SimulationConfig, SimulationDefaults
+
+    sd = SimulationConfig._dict_to_dataclass(
+        {"wavelength_nm": {"start": 400, "end": 770}}, SimulationDefaults
+    )
+    assert sd.wavelength_nm == [400, 770]
+
+
+def test_wavelength_nm_bad_mapping_raises():
+    import pytest
+
+    from pyradtran.config import SimulationConfig, SimulationDefaults
+
+    with pytest.raises(ValueError, match="start"):
+        SimulationConfig._dict_to_dataclass(
+            {"wavelength_nm": {"lo": 400, "hi": 770}}, SimulationDefaults
+        )

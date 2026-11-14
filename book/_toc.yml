@@ -1,5 +1,8 @@
 # Table of contents
 # Learn more at https://jupyterbook.org/customize/toc.html
+#
+# Notebooks are grouped by topic; every group has a short landing page
+# (tutorials/*.md, case_studies/*.md). `title:` sets the sidebar label.
 
 format: jb-book
 root: intro
@@ -7,56 +10,98 @@ parts:
   - caption: Getting Started
     chapters:
     - file: installation
-    - file: usage
+    - file: notebooks/quickstart
+      title: Quickstart
+    - file: guide/concepts
 
-  - caption: Quickstart Tutorials
+  - caption: User Guide
+    chapters:
+    - file: guide/configuration
+    - file: guide/parameters
+      sections:
+      - file: notebooks/parameters_deep_dive
+        title: Deep dive (notebook)
+    - file: guide/atmosphere
+    - file: guide/clouds
+    - file: guide/outputs
+    - file: guide/debugging
+    - file: examples/index
+
+  - caption: Tutorials
     chapters:
     - file: notebooks/index
-    - file: notebooks/quickstart
-    - file: notebooks/albedo_test
-    - file: notebooks/thermal
-    - file: notebooks/thermal_imager
-    - file: notebooks/solar_spectral
-    - file: notebooks/era5_atmosphere
+      title: Overview
+    - file: tutorials/basics
+      sections:
+      - file: notebooks/albedo_test
+        title: "Surface albedo"
+      - file: notebooks/solar_spectral
+        title: "Solar spectra"
+      - file: notebooks/thermal
+        title: "Broadband thermal"
+      - file: notebooks/thermal_imager
+        title: "Brightness temperature"
+    - file: tutorials/atmosphere
+      sections:
+      - file: notebooks/era5_atmosphere
+        title: "ERA5 atmosphere"
+      - file: notebooks/get_radiosonde
+        title: "Radiosondes (IGRA2)"
+      - file: notebooks/lapse_rate_feedback
+        title: "Lapse-rate feedback"
+    - file: tutorials/clouds
+      sections:
+      - file: notebooks/water_cloud
+        title: "Water clouds"
+      - file: notebooks/mixed_phase_cloud
+        title: "Mixed-phase clouds"
+    - file: tutorials/instruments
+      sections:
+      - file: notebooks/led_horizontal_extinction
+        title: "Horizontal LED extinction"
 
-  - caption: Clouds
+  - caption: Case Studies
     chapters:
-    - file: notebooks/water_cloud
-    - file: notebooks/mixed_phase_cloud
-    - file: notebooks/arctic_cloud_experiment
-
-  - caption: Radiosondes & Atmosphere
-    chapters:
-    - file: notebooks/get_radiosonde
-#    - file: notebooks/radiosonde
-
-  - caption: Advanced Topics
-    chapters:
-    - file: notebooks/thermal_imager_2
-    - file: notebooks/shupe_and_intrieri_plot
-    - file: notebooks/era5_seasonal_sea_ice_profiles
-    
-  - caption: Campaigns
-    chapters:
-    - file: notebooks/halo-ac3_bbr_all_aircraft
-    - file: notebooks/radiosonde_thermal
-    - file: notebooks/radiosonde_solar_spectral
-
-  - caption: Data Processing & Campaigns
-    chapters:
-    - file: notebooks/sea_ice_era5
-    - file: notebooks/sea_ice_era5_plotting
-    - file: notebooks/carra_atmosphere
-    - file: notebooks/stn2024
-    - file: notebooks/nya_rad
-
-  - caption: Configuration & Examples
-    chapters:
-    - file: examples/index
-    - file: notebooks/config/index
+    - file: case_studies/cloud_forcing
+      sections:
+      - file: notebooks/arctic_cloud_experiment
+        title: "Multi-dimensional cloud experiment"
+      - file: notebooks/shupe_and_intrieri_plot
+        title: "Shupe & Intrieri (2004)"
+      - file: notebooks/era5_seasonal_sea_ice_profiles
+        title: "Shupe & Intrieri with seasonal ERA5 profiles"
+      - file: notebooks/spectral_albedo_shift_cloud
+        title: "Cloud forcing with ACLOUD data"
+    - file: case_studies/thermal_imaging
+      sections:
+      - file: notebooks/velox_realistic_channels
+        title: "VELOX channels"
+      - file: notebooks/thermal_imager_2
+        title: "Custom dimension iteration"
+    - file: case_studies/campaigns
+      sections:
+      - file: notebooks/halo-ac3_bbr_all_aircraft
+        title: "HALO-(AC)³ broadband radiation"
+      - file: notebooks/radiosonde_thermal
+        title: "Observed clouds, thermal"
+      - file: notebooks/radiosonde_solar_spectral
+        title: "Observed clouds, solar spectral"
+      - file: notebooks/nya_rad
+        title: "Ny-Ålesund radiation"
+      - file: notebooks/stn2024
+        title: "Station Nord 2024"
+    - file: case_studies/reanalysis
+      sections:
+      - file: notebooks/sea_ice_era5
+        title: "ERA5 sea-ice profiles"
+      - file: notebooks/sea_ice_era5_plotting
+        title: "Arctic atmosphere in a warming climate"
+      - file: notebooks/carra_atmosphere
+        title: "CARRA atmosphere"
 
   - caption: Reference
     chapters:
     - file: api/index
+    - file: notebooks/config/index
+      title: Example config files
     - file: contributing
-    - file: changelog
