@@ -1,6 +1,6 @@
 # Campaign validation
 
-Simulations along real flight tracks and at stations, compared with measurements. Most need non-public campaign data — swap in your own file paths.
+Simulations along real flight tracks and at stations, compared with measurements. Most need campaign data that is not public; replace the file paths with your own.
 
 | Notebook | What it shows |
 |---|---|

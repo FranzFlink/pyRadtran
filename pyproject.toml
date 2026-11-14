@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 authors = [
-    {name = "Joshua Müller", email = "josh2197@gmail.com"},
+    {name = "Joshua Jeremias Müller", email = "josh2197@gmail.com"},
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

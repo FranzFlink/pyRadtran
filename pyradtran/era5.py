@@ -1,27 +1,24 @@
 r"""
 ERA5 integration: normalisation, atmosphere files, and cloud profiles.
 
-ERA5 data arrives under several naming conventions — the CDS NetCDF short
+ERA5 data arrives under several naming conventions: the CDS NetCDF short
 names (``t``, ``q``, ``o3``, ``clwc``, coordinate ``pressure_level``) and
 the ARCO-ERA5 Zarr long names (``temperature``, ``specific_humidity``,
-``geopotential``, coordinate ``level``).  :func:`normalize_era5` maps any
-of them onto one canonical form so the rest of pyRadtran never has to
-care which flavour the user opened.
+``geopotential``, coordinate ``level``).  :func:`normalize_era5` maps
+either onto one canonical form.
 
-From a normalised dataset this module can produce, per (time, lat, lon)
+From a normalised dataset this module produces, per (time, lat, lon)
 point:
 
-* a libRadtran ``radiosonde`` atmosphere file — pressure, temperature,
-  humidity and (when available) an ozone profile
-  (:func:`write_atmosphere_file`), and
+* a libRadtran ``radiosonde`` atmosphere file with pressure, temperature,
+  humidity and, when available, ozone (:func:`write_atmosphere_file`);
 * dict-valued ``wc_file`` / ``ic_file`` cloud profiles from the ERA5
   ``clwc`` / ``ciwc`` fields (:func:`cloud_profiles`).
 
 :func:`recommend_atmosphere` suggests the AFGL background profile
-(``atmosphere_file``) that matches a latitude and date.  The background
-profile still matters when a radiosonde is used: libRadtran takes every
-level above the radiosonde top — and every gas the radiosonde does not
-provide — from the ``atmosphere_file``.
+(``atmosphere_file``) for a latitude and date.  The background still
+matters with a radiosonde: libRadtran takes every level above the
+radiosonde top, and every gas the radiosonde lacks, from it.
 
 .. autosummary::
 
@@ -34,7 +31,7 @@ provide — from the ``atmosphere_file``.
 
 Examples
 --------
-Most users never call this module directly: passing the ERA5 dataset to
+Passing the ERA5 dataset to
 :meth:`~pyradtran.interface.PyRadtranAccessor.run` does all of it per
 point (``era5`` is any pressure-level ERA5 dataset, ``ds`` the dataset of
 points to simulate):
@@ -159,12 +156,12 @@ def normalize_era5(ds: xr.Dataset) -> xr.Dataset:
       both exist the canonical one wins and the alias is left in place.
     * "Units set" is the ``units`` attribute written when the variable
       has none.  An existing attribute is never overwritten and the data
-      are never rescaled — except for the pressure coordinate.
+      are never rescaled, except for the pressure coordinate.
     * The pressure coordinate is divided by 100 when its ``units``
-      attribute is ``Pa`` (or ``Pascal``, in any case), or when it has no ``units`` and its
-      largest value exceeds 2000 (no atmospheric pressure level in hPa
-      is that large).  Its ``units`` attribute is always set to ``hPa``
-      and its values are cast to ``float``.
+      attribute is ``Pa`` (or ``Pascal``, in any case), or when it has
+      no ``units`` and its largest value exceeds 2000 (no atmospheric
+      pressure level in hPa is that large).  Its ``units`` attribute is
+      always set to ``hPa`` and its values are cast to ``float``.
 
     Examples
     --------
@@ -190,8 +187,8 @@ def normalize_era5(ds: xr.Dataset) -> xr.Dataset:
     >>> ds.pressure_level.attrs["units"], ds.t.attrs["units"], ds.z.attrs["units"]
     ('hPa', 'K', 'm2 s-2')
 
-    The same column as a CDS download would deliver it (short names,
-    ``pressure_level`` in hPa) ends up identical:
+    The same column as a CDS download (short names, ``pressure_level``
+    in hPa) ends up identical:
 
     >>> cds = xr.Dataset(
     ...     {
@@ -204,8 +201,8 @@ def normalize_era5(ds: xr.Dataset) -> xr.Dataset:
     >>> normalize_era5(cds).identical(ds)
     True
 
-    The call is idempotent, and an unknown pressure unit is refused
-    rather than guessed:
+    The call is idempotent; an unknown pressure unit is refused, not
+    guessed:
 
     >>> normalize_era5(ds).identical(ds)
     True
@@ -216,7 +213,7 @@ def normalize_era5(ds: xr.Dataset) -> xr.Dataset:
         ...
     pyradtran.exceptions.InputGenerationError: Unsupported pressure unit 'bar' in ERA5 dataset; expected 'Pa' or 'hPa'
 
-    The alias tables are plain module-level dicts:
+    The alias tables are module-level dicts:
 
     >>> from pyradtran.era5 import COORD_ALIASES
     >>> COORD_ALIASES["pressure_level"]
@@ -288,12 +285,11 @@ def select_profile(
 ) -> xr.Dataset:
     """Select a single vertical profile from a (normalised) ERA5 dataset.
 
-    Handles datasets that still carry spatial/time dimensions as well as
-    ones already reduced to a single column.  Selection is
-    nearest-neighbour, without any distance tolerance: a point outside
-    the dataset's domain or time range returns the closest edge column.
-    A warning is logged when that column is more than 1° away from the
-    requested position.
+    Works on datasets with spatial/time dimensions and on ones already
+    reduced to a single column.  Selection is nearest-neighbour without
+    a distance tolerance: a point outside the domain or time range
+    returns the closest edge column.  A warning is logged when that
+    column is more than 1° from the requested position.
 
     Parameters
     ----------
@@ -331,14 +327,14 @@ def select_profile(
 
     Notes
     -----
-    Any dimension other than ``pressure_level`` that is still present
-    after the selection (an ensemble ``number``, ``expver``, ...) is
-    reduced by taking its **first** element.
+    Any other dimension still present after the selection (an ensemble
+    ``number``, ``expver``, ...) is reduced by taking its **first**
+    element.
 
     A dataset whose largest longitude exceeds 180 is taken to use
-    0…360, any other −180…180.  The nearest-neighbour search itself is
-    not cyclic: on a global 0…360 grid a request just west of 0° picks
-    the last column, not the first — at most one grid cell off.
+    0…360, any other −180…180.  The nearest-neighbour search is not
+    cyclic: on a global 0…360 grid a request just west of 0° picks the
+    last column, not the first (at most one grid cell off).
 
     Examples
     --------
@@ -373,13 +369,13 @@ def select_profile(
     >>> profile.t.values
     array([291., 303., 315.])
 
-    The longitude convention of the request does not matter — 15.2° E
-    is 15.2 − 360 = −344.8:
+    The longitude convention of the request does not matter (15.2° E is
+    15.2 − 360 = −344.8):
 
     >>> float(select_profile(era5, 78.4, -344.8, "2024-07-15T05:00").longitude)
     15.0
 
-    Forgetting the position of a gridded dataset is an error:
+    A gridded dataset needs a position:
 
     >>> select_profile(era5, time="2024-07-15T05:00")
     Traceback (most recent call last):
@@ -428,16 +424,15 @@ def write_atmosphere_file(
     r"""Write a profile as a libRadtran ``radiosonde`` atmosphere file.
 
     Columns are pressure (hPa), temperature (K), specific humidity
-    (MMR, kg/kg) and — when ``o3`` is present and *include_ozone* is
-    true — ozone MMR.  The column layout is recorded in a
-    machine-readable header line (``# columns: H2O MMR O3 MMR``) that
-    the input builder reads back to construct the matching
-    ``radiosonde`` option line.
+    (MMR, kg/kg) and, when ``o3`` is present and *include_ozone* is
+    true, ozone MMR.  A header line (``# columns: H2O MMR O3 MMR``)
+    records the layout; the input builder reads it back to construct the
+    matching ``radiosonde`` option line.
 
-    Levels containing NaN pressure/temperature/humidity (e.g. ERA5
-    levels below the surface) are dropped; NaN ozone values become
-    ``-1``, which tells libRadtran to fall back to the
-    ``atmosphere_file`` value at that level.
+    Levels with NaN pressure/temperature/humidity (e.g. ERA5 levels
+    below the surface) are dropped; NaN ozone values become ``-1``,
+    which tells libRadtran to fall back to the ``atmosphere_file`` value
+    at that level.
 
     Parameters
     ----------
@@ -493,30 +488,29 @@ def write_atmosphere_file(
     4      O\ :sub:`3` MMR        kg kg\ :sup:`-1`   ``%.4e``
     ====== ====================== ================== ==========
 
-    Column 4 is present only when ozone is written; the second header
-    line then reads ``# columns: H2O MMR O3 MMR``, otherwise
-    ``# columns: H2O MMR``.  pyRadtran's input builder copies that
-    string verbatim into the uvspec input::
+    Column 4 is present only when ozone is written; otherwise the second
+    header line reads ``# columns: H2O MMR``.  The input builder copies
+    that string verbatim into the uvspec input::
 
         radiosonde <file> H2O MMR O3 MMR
 
     **Level handling.**  Rows are sorted by pressure regardless of the
     order in *profile*.  Levels whose pressure does not strictly
     increase after sorting (duplicates) are dropped, because libRadtran
-    requires a strictly monotonic grid.  Note that the ``%.2f`` format
-    resolves pressure to 0.01 hPa only.
+    requires a strictly monotonic grid.  The ``%.2f`` format resolves
+    pressure to 0.01 hPa.
 
     **Humidity.**  No conversion is applied: the ERA5 specific humidity
-    :math:`q` (mass of water vapour per mass of *moist* air) is written
+    :math:`q` (mass of water vapour per mass of moist air) is written
     as is and declared to libRadtran as a mass mixing ratio (``MMR``).
-    The mixing ratio with respect to *dry* air would be
+    The mixing ratio with respect to dry air would be
 
     .. math::
 
         w = \frac{q}{1 - q}
 
     which differs from :math:`q` by the relative amount
-    :math:`q/(1-q)` — below 2 % even for a very moist tropical boundary
+    :math:`q/(1-q)`: below 2 % even for a very moist tropical boundary
     layer (:math:`q \approx 0.02`) and negligible in the upper
     troposphere.  Ozone is treated the same way.
 
@@ -616,12 +610,12 @@ def era5_atmosphere_file(
     output_filepath: Union[str, Path],
     include_ozone: bool = True,
 ) -> Path:
-    """One-step: normalise, select a point, write the atmosphere file.
+    """Normalise, select a point and write the atmosphere file.
 
     Chains :func:`normalize_era5`, :func:`select_profile` and
-    :func:`write_atmosphere_file`.  This is what
+    :func:`write_atmosphere_file`, as
     :meth:`~pyradtran.interface.PyRadtranAccessor.run` does for every
-    point when it is given ``era5_atmosphere=``.
+    point when given ``era5_atmosphere=``.
 
     Parameters
     ----------
@@ -776,7 +770,7 @@ def cloud_profiles(
     Returns
     -------
     wc : dict or None
-        ``{"z": [...], "lwc": [...], "reff": [...]}`` — altitude (km),
+        ``{"z": [...], "lwc": [...], "reff": [...]}``: altitude (km),
         liquid water content (g m\ :sup:`-3`) and effective radius (µm)
         as plain lists, ordered **top-down**.  *None* when ``clwc`` is
         absent or no level exceeds the threshold.
@@ -816,8 +810,8 @@ def cloud_profiles(
         \mathrm{LWC} = 1000\; q_c\; \rho_\mathrm{air}
 
     (and likewise IWC from ``ciwc``).  No virtual-temperature correction
-    is applied, and the grid-box mean is used as is — it is not divided
-    by the cloud fraction ``cc``.  Negative values are clipped to zero.
+    is applied, and the grid-box mean is used as is (not divided by the
+    cloud fraction ``cc``).  Negative values are clipped to zero.
 
     **Altitude.**  When *profile* has ``z`` it is converted according to
     its ``units`` attribute: a geopotential :math:`\Phi`
@@ -856,12 +850,11 @@ def cloud_profiles(
         (b_{i_\mathrm{hi}-1/2},\ c_{i_\mathrm{hi}}), \quad \dots, \quad
         (b_{i_\mathrm{lo}-1/2},\ c_{i_\mathrm{lo}})
 
-    so that every content value :math:`c_i` sits at the *lower*
-    boundary of its layer and the zero on top closes the grid — exactly
-    how libRadtran reads a ``wc_file 1D`` / ``ic_file 1D``.  One
-    contiguous block is written per phase: levels between two cloud
-    decks keep their own (sub-threshold) content instead of being set
-    to zero.
+    so that every content value :math:`c_i` sits at the lower boundary
+    of its layer and the zero on top closes the grid, which is how
+    libRadtran reads a ``wc_file 1D`` / ``ic_file 1D``.  One contiguous
+    block is written per phase: levels between two cloud decks keep
+    their own (sub-threshold) content instead of being set to zero.
 
     Examples
     --------
@@ -914,8 +907,8 @@ def cloud_profiles(
     ...     config_path=cfg, params={"wc_file": wc}
     ... )
 
-    A deeper synthetic column — markers are the ERA5 level values, the
-    steps the layers libRadtran sees:
+    A deeper synthetic column.  Markers are the ERA5 level values, steps
+    the layers libRadtran sees:
 
     .. plot::
 
@@ -1033,10 +1026,10 @@ def recommend_atmosphere(
 ) -> str:
     r"""Suggest the AFGL ``atmosphere_file`` shortname for a location/date.
 
-    The background atmosphere still supplies everything a radiosonde
-    profile does not: levels above the profile top and all trace gases
-    without a dedicated column.  Matching it to the season and latitude
-    band keeps those fill-ins consistent with the profile.
+    The background atmosphere supplies everything a radiosonde profile
+    does not: levels above the profile top and all trace gases without a
+    dedicated column.  Matching it to the season and latitude band keeps
+    those fill-ins consistent with the profile.
 
     Parameters
     ----------
@@ -1050,8 +1043,8 @@ def recommend_atmosphere(
     -------
     str
         One of ``"afglt"``, ``"afglms"``, ``"afglmw"``, ``"afglss"``,
-        ``"afglsw"`` — accepted directly by
-        ``paths.atmosphere_profile`` and the ``atmosphere_file`` option.
+        ``"afglsw"``; accepted directly by ``paths.atmosphere_profile``
+        and the ``atmosphere_file`` option.
 
     See Also
     --------
@@ -1061,8 +1054,7 @@ def recommend_atmosphere(
 
     Notes
     -----
-    The rule is a plain lookup on :math:`|\varphi|` (absolute latitude)
-    and the half-year:
+    A lookup on :math:`|\varphi|` (absolute latitude) and the half-year:
 
     ================================= ================== ==================
     Latitude band                     Summer half-year   Winter half-year
@@ -1097,8 +1089,7 @@ def recommend_atmosphere(
     >>> recommend_atmosphere(-75.0, np.datetime64("2024-07-01T12:00"))
     'afglsw'
 
-    Use the result as a parameter of a run that takes its lower
-    atmosphere from ERA5:
+    As a parameter of a run that takes its lower atmosphere from ERA5:
 
     >>> result = ds.pyradtran.run(  # doctest: +SKIP
     ...     config_path=cfg,

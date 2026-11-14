@@ -1,6 +1,6 @@
 # Cloud radiative effect
 
-Parameter sweeps over cloud and surface properties, and the classic Arctic cloud-forcing analyses.
+Parameter sweeps over cloud and surface properties, and Arctic cloud-forcing analyses after Shupe & Intrieri (2004).
 
 | Notebook | What it shows |
 |---|---|

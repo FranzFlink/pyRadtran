@@ -1,7 +1,6 @@
 # Cookbook
 
-Short, copy-paste recipes for the things people do most. Each one is
-self-contained apart from this common setup:
+Short recipes to copy. Each needs only this common setup:
 
 ```python
 import numpy as np
@@ -12,7 +11,7 @@ import pyradtran                              # registers ds.pyradtran
 from pyradtran import Var, load_config
 
 def scene(**extra_coords):
-    """One point: Ny-Ålesund, midsummer noon — plus any sweep dimensions."""
+    """One point (Ny-Ålesund, midsummer noon) plus any sweep dimensions."""
     return xr.Dataset(
         coords={
             "time": [pd.Timestamp("2025-06-21 12:00")],
@@ -25,7 +24,7 @@ def scene(**extra_coords):
 def make_config(source="solar", wavelength_nm=(300, 3500), integrate=True,
                 columns=("edir", "edn", "eup"), solver="disort",
                 mol_abs_param="reptran coarse"):
-    """A config built in Python — no YAML needed for quick experiments."""
+    """A config built in Python instead of YAML."""
     cfg = load_config()                       # package defaults + ~/.pyradtran
     sd = cfg.simulation_defaults
     sd.source, sd.rte_solver, sd.mol_abs_param = source, solver, mol_abs_param
@@ -34,7 +33,7 @@ def make_config(source="solar", wavelength_nm=(300, 3500), integrate=True,
     sd.output_columns = list(columns)
     return cfg
 
-RUN = dict(save_to_file=False, show_progress=False)   # keep recipes quiet
+RUN = dict(save_to_file=False, show_progress=False)   # no file, no progress bar
 ```
 
 Every recipe passes `config=`; with a YAML file you would pass
@@ -130,7 +129,7 @@ res.eup.isel(time=0, altitude=0).plot()       # upward irradiance vs albedo
 
 ### A two-dimensional sweep
 
-Each dimension is a loop — here 4 × 5 = 20 simulations:
+Each dimension is a loop; here 4 × 5 = 20 simulations:
 
 ```python
 ds = scene(sza=[20.0, 40.0, 60.0, 80.0], albedo=np.linspace(0.05, 0.9, 5))
@@ -156,7 +155,7 @@ res = scene().pyradtran.run(
 )
 ```
 
-### Find and understand an option
+### Look up an option
 
 ```python
 pyradtran.search_options("aerosol")[:5]
@@ -182,7 +181,7 @@ res = scene().pyradtran.run(
 print(f"downward longwave: {res.edn.item():.0f} W m-2")       # thermal: W m-2
 ```
 
-### Brightness temperature, the short way
+### Brightness temperature from uvspec
 
 ```python
 cfg = make_config(source="thermal", wavelength_nm=(10000, 12000), columns=("uu",))
@@ -281,7 +280,7 @@ res = scene().pyradtran.run(
 )
 ```
 
-### Pick the matching background atmosphere
+### Choose the background atmosphere
 
 ```python
 pyradtran.recommend_atmosphere(latitude=78.9, time="2025-06-21")
@@ -341,7 +340,7 @@ good = res.where(res.status == 0)
 print(f"{int((res.status != 0).sum())} of {res.status.size} points failed")
 ```
 
-### Save, reload, and recover what you did
+### Save, reload and read the provenance
 
 ```python
 path = scene().pyradtran.run(

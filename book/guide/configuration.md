@@ -1,13 +1,13 @@
 # Configuration
 
-pyRadtran assembles its configuration from **three YAML layers** — later
-layers override earlier ones:
+The configuration is merged from **three YAML layers**; later layers
+override earlier ones:
 
-1. **Package defaults** — sensible values shipped with pyRadtran
-2. **Your master config** — `~/.pyradtran/config.yaml`: machine-specific
+1. **Package defaults**, shipped with pyRadtran
+2. **Master config** `~/.pyradtran/config.yaml`: machine-specific
    paths, set once (see {doc}`/installation`)
-3. **Simulation config** — the YAML you pass as `config_path=`: only what
-   is *different* for this experiment
+3. **Simulation config**, the YAML passed as `config_path=`: only what
+   differs for this experiment
 
 A typical simulation config is short:
 
@@ -40,8 +40,7 @@ cfg.simulation_defaults.albedo_value = 0.2
 cfg.to_yaml('config/my_simulation.yaml')    # save for reuse
 ```
 
-You can also override any config field per run without touching YAML,
-using a dotted key in `params`:
+A dotted key in `params` overrides a config field for one run:
 
 ```python
 ds.pyradtran.run(
@@ -50,19 +49,19 @@ ds.pyradtran.run(
 )
 ```
 
-## Which knob lives where?
+## Config or `params`?
 
-- **Config**: everything that defines the *experiment* — solver, spectral
-  range, output columns/altitudes, parallelism, paths
-- **`params`**: everything that varies *at run time* — per-point values,
-  parameter sweeps, extra uvspec options (see {doc}`parameters`)
+- **Config**: what defines the experiment (solver, spectral range,
+  output columns and altitudes, parallelism, paths)
+- **`params`**: what varies at run time (per-point values, parameter
+  sweeps, extra uvspec options; see {doc}`parameters`)
 
-Both end up in the same generated input file;
-`ds.pyradtran.explain()` shows exactly which layer produced each line.
+Both end up in the same input file; `ds.pyradtran.explain()` shows
+which layer produced each line.
 
 ## Field reference
 
-All fields of a simulation config, by section. Authoritative details:
+All fields of a simulation config, by section. Details:
 {class}`~pyradtran.config.SimulationDefaults`,
 {class}`~pyradtran.config.PathsConfig`,
 {class}`~pyradtran.config.ExecutionConfig`,
@@ -127,14 +126,13 @@ All fields of a simulation config, by section. Authoritative details:
 
 ```{warning}
 `twostr` is a quick-look solver. With libRadtran 2.0.6 its upward
-irradiance at a reflecting surface comes out as
-$E^\uparrow = \tfrac{2}{\sqrt{3}}\,\alpha\,E_\mathrm{glo}$ — about
+irradiance at a reflecting surface is
+$E^\uparrow = \tfrac{2}{\sqrt{3}}\,\alpha\,E_\mathrm{glo}$, about
 15 % above the Lambertian value $\alpha\,E_\mathrm{glo}$ that `disort`
-and `rodents` return (a plain uvspec property, independent of
-pyRadtran). Use `disort` (or `rodents` for a fast two-stream
+and `rodents` return. This is a property of uvspec, not of pyRadtran. Use `disort` (or `rodents` for a fast two-stream
 alternative) whenever `eup`, `enet` or the albedo matter.
 ```
 
 `pyradtran.describe("mol_abs_param")` and
-`pyradtran.describe("rte_solver")` print the full libRadtran
-documentation for the version you have installed.
+`pyradtran.describe("rte_solver")` print the libRadtran
+documentation of the installed version.

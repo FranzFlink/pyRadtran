@@ -1,9 +1,9 @@
 # How pyRadtran works
 
-pyRadtran does one thing: it turns **an xarray dataset of places and
-times** into **an xarray dataset of radiative-transfer results**, by
-writing one libRadtran (`uvspec`) input file per point, running them in
-parallel, and stitching the outputs back onto your dimensions.
+pyRadtran turns **an xarray dataset of places and times** into **an
+xarray dataset of radiative-transfer results**. It writes one libRadtran
+(`uvspec`) input file per point, runs them in parallel, and puts the
+outputs back on the dimensions of the input.
 
 ```text
  your Dataset                 pyRadtran                         result Dataset
@@ -16,11 +16,11 @@ parallel, and stitching the outputs back onto your dimensions.
 └──────────────┘   └──────────────────────────────────┘   └─────────────────────┘
 ```
 
-Everything else in this guide is detail on one of those five steps.
+The rest of this guide covers these five steps.
 
 ## The input dataset
 
-A dataset needs three things — everything else is optional:
+Three names are required:
 
 | Name | Role |
 |---|---|
@@ -41,7 +41,7 @@ ds = xr.Dataset(
 )
 ```
 
-Different names? Pass `time_var=`, `lat_var=`, `lon_var=` to
+For other names pass `time_var=`, `lat_var=`, `lon_var=` to
 {meth}`~pyradtran.interface.PyRadtranAccessor.run`.
 
 ### Every dimension is a loop
@@ -49,8 +49,7 @@ Different names? Pass `time_var=`, `lat_var=`, `lon_var=` to
 pyRadtran simulates the **outer product of all dimensions** of the
 dataset. A dataset with dims `(time: 5)` is 5 simulations; add a
 dimension `albedo: 4` and it becomes 20, and the result has dims
-`(time, albedo, …)`. That is how parameter sweeps work — there is no
-separate "sweep" API:
+`(time, albedo, …)`. A parameter sweep is a dataset dimension:
 
 ```python
 import numpy as np
@@ -61,7 +60,7 @@ ds = xr.Dataset(
         "time": [pd.Timestamp("2025-06-21 12:00")],
         "latitude": ("time", [78.9]),
         "longitude": ("time", [11.9]),
-        "albedo": np.linspace(0.05, 0.9, 5),          # ← sweep axis
+        "albedo": np.linspace(0.05, 0.9, 5),          # sweep axis
     }
 )
 ds["surface_albedo"] = ds.albedo                      # variable to reference
@@ -81,23 +80,24 @@ axis, one on both varies over the full grid.
 ```{note}
 If a sweep dimension has the same name as an output column you request
 (`sza`, `albedo`), the column is returned as `sza_out` / `albedo_out`
-so it cannot clash with the coordinate.
+so it does not clash with the coordinate.
 ```
 
 ```{tip}
 The number of uvspec runs is the product of **all** dimension sizes.
-Check `np.prod(list(ds.sizes.values()))` before launching a big sweep,
-and drop dimensions you do not want to loop over.
+Check `np.prod(list(ds.sizes.values()))` before a large sweep, and drop
+dimensions you do not want to loop over.
 ```
 
-### Altitude: two layouts, two meanings
+### Altitude
 
-`altitude` (km) is the one name with special treatment:
+`altitude` (km) means different things as a coordinate and as a data
+variable:
 
 | Layout | Meaning | Result |
 |---|---|---|
-| `altitude` is a **dimension / coordinate** | output levels of *one* simulation (`zout 0 1 2 …`) | an `altitude` dimension with those levels — a vertical profile from a single uvspec call per point |
-| `altitude` is a **data variable** (e.g. on `time`) | the sensor altitude of *each* point (`zout` per point) | one level per point — an aircraft track |
+| `altitude` is a **dimension / coordinate** | output levels of *one* simulation (`zout 0 1 2 …`) | an `altitude` dimension with those levels: a vertical profile from one uvspec call per point |
+| `altitude` is a **data variable** (e.g. on `time`) | the sensor altitude of *each* point (`zout` per point) | one level per point: an aircraft track |
 
 ```python
 # vertical profile at every time step
@@ -112,25 +112,24 @@ Without any `altitude`, the config's `output_altitudes_km` is used
 
 ## From dataset to input file
 
-For each point, three sources are layered into one input file — later
-wins:
+For each point, three sources are merged into one input file. Later
+ones win:
 
-1. **Config** — the merged YAML layers ({doc}`configuration`): solver,
+1. **Config**: the merged YAML layers ({doc}`configuration`), i.e. solver,
    spectral range, output columns, atmosphere file, defaults for albedo
    etc.
-2. **`params` literals** — the same value for every point
+2. **`params` literals**: the same value for every point
    ({doc}`parameters`).
-3. **`params` `Var(...)` references** — a different value per point,
+3. **`params` `Var(...)` references**: a different value per point,
    read from your dataset.
 
-On top of that pyRadtran computes what depends on the point itself:
-the solar zenith angle from time and location (unless you set `sza`),
-the `day_of_year` for the Sun–Earth distance, and — if requested —
-per-point atmosphere and cloud files from ERA5 or radiosondes
+pyRadtran adds what depends on the point: the solar zenith angle from
+time and location (unless you set `sza`), the `day_of_year` for the
+Sun–Earth distance and, if requested, per-point atmosphere and cloud
+files from ERA5 or radiosondes
 ({doc}`atmosphere`, {doc}`clouds`).
 
-You can always see the outcome, tagged by source, without running
-anything:
+`explain()` shows the result, tagged by source, without running:
 
 ```python
 print(ds.pyradtran.explain(
@@ -181,14 +180,14 @@ pass `params={"sza": Var("my_sza")}`.
 ## Running in parallel
 
 Each point is an independent `uvspec` process. `execution.max_workers`
-sets how many run at once; `execution.timeout_seconds` kills runaway
-runs. Points fail individually — a failed or skipped point becomes NaN
-with a non-zero `status` ({doc}`outputs`), the rest of the batch
-continues, and only a batch where *every* point fails raises
+sets how many run at once; `execution.timeout_seconds` stops runs that
+hang. Points fail individually: a failed or skipped point becomes NaN
+with a non-zero `status` ({doc}`outputs`) and the batch continues. Only
+a batch where *every* point fails raises
 {class}`~pyradtran.exceptions.PyRadtranError`.
 
-Measured cost per point on one core (libRadtran 2.0.6) — the spectral
-resolution and the solver dominate, so start coarse:
+Measured cost per point on one core (libRadtran 2.0.6). Spectral
+resolution and solver dominate, so start coarse:
 
 | Setup | Time per point |
 |---|---|
@@ -196,7 +195,7 @@ resolution and the solver dominate, so start coarse:
 | `disort`, `reptran fine`, 8–13 µm spectral radiance | ~1 s |
 | `disort`, `reptran coarse`, 300–3500 nm broadband | ~3.5 s |
 
-## Where the pieces live
+## Modules
 
 | Step | Module | Key entry points |
 |---|---|---|

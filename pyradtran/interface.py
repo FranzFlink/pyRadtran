@@ -2,10 +2,9 @@
 """
 High-level user-facing interface for pyRadtran.
 
-Describe *where and when* you want radiative transfer as an
-:class:`xarray.Dataset`, and get the ``uvspec`` results back as a dataset
-with the same dimensions. Importing :mod:`pyradtran` registers the
-``ds.pyradtran`` accessor on every dataset.
+Describe *where and when* to simulate as an :class:`xarray.Dataset`;
+the ``uvspec`` results come back as a dataset with the same dimensions.
+Importing :mod:`pyradtran` registers the ``ds.pyradtran`` accessor.
 
 .. autosummary::
 
@@ -15,19 +14,18 @@ with the same dimensions. Importing :mod:`pyradtran` registers the
    PointOutcome
    SimPoint
 
-* :class:`PyRadtranAccessor` — the xarray accessor (``ds.pyradtran``):
-  :meth:`~PyRadtranAccessor.run`, :meth:`~PyRadtranAccessor.explain`,
-  :meth:`~PyRadtranAccessor.jacobian`,
+* :class:`PyRadtranAccessor`: the xarray accessor (``ds.pyradtran``)
+  with :meth:`~PyRadtranAccessor.run`, :meth:`~PyRadtranAccessor.explain`,
+  :meth:`~PyRadtranAccessor.jacobian` and
   :meth:`~PyRadtranAccessor.inspect_cloud_file`.
-* :func:`execute_simulation_batch` — the batch driver behind
-  :meth:`~PyRadtranAccessor.run`; returns parsed outputs instead of a
-  dataset.
-* :func:`run_pyradtran_simulation` — file in, NetCDF out.
+* :func:`execute_simulation_batch`: the batch driver behind
+  :meth:`~PyRadtranAccessor.run`; returns parsed outputs, not a dataset.
+* :func:`run_pyradtran_simulation`: file in, NetCDF out.
 
 Examples
 --------
-One simulation per time step, with a per-point surface albedo taken from
-the dataset and a fixed aerosol setting:
+One simulation per time step, with per-point surface albedo from the
+dataset and a fixed aerosol setting:
 
 >>> import pandas as pd
 >>> import xarray as xr
@@ -94,10 +92,7 @@ logger = logging.getLogger(__name__)
 
 
 def _serialize_params(params: Optional[Dict[str, Any]]) -> str:
-    """JSON-encode a params mapping for storage in dataset attrs.
-
-    ``Var``/``Raw`` markers and other non-JSON values become their repr.
-    """
+    """JSON-encode a params mapping; non-JSON values become their repr."""
 
     def enc(v):
         if isinstance(v, (Var, Raw)):
@@ -118,7 +113,7 @@ def _provenance_attrs(
     params: Optional[Dict[str, Any]],
     input_example: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Attrs recording exactly what produced a result dataset."""
+    """Attrs recording what produced a result dataset."""
     from . import __version__
 
     attrs = {
@@ -145,26 +140,25 @@ def _provenance_attrs(
 class PointOutcome:
     """Result envelope for one simulation point.
 
-    One :class:`PointOutcome` per flattened input point is returned by
-    :func:`execute_simulation_batch` with ``return_outcomes=True``; the
-    ``status`` variable of a :meth:`PyRadtranAccessor.run` result is built
-    from these.
+    :func:`execute_simulation_batch` with ``return_outcomes=True``
+    returns one per flattened input point; the ``status`` variable of a
+    :meth:`PyRadtranAccessor.run` result is built from them.
 
     Parameters
     ----------
     parsed : ParsedOutput or None
         Parsed ``uvspec`` output; *None* unless ``status == 0``.
     status : int
-        ``0`` — ok; ``1`` — the run failed (``uvspec`` error, timeout,
-        or an exception while building/parsing); ``2`` — skipped before
-        running because time, latitude or longitude was missing/NaN.
+        ``0``: ok; ``1``: failed (``uvspec`` error, timeout, or an
+        exception while building/parsing); ``2``: skipped because time,
+        latitude or longitude was missing/NaN.
     detail : str, optional
-        Failure description: captured ``uvspec`` stderr (prefixed with the
-        path of the kept input file), the exception text, or the skip
-        reason. *None* for successful points.
+        Failure description: ``uvspec`` stderr (prefixed with the path
+        of the kept input file), the exception text, or the skip reason.
+        *None* for successful points.
     point_id : str
-        ``"<YYYYmmdd_HHMMSS>_<lat>_<lon>_<index>"`` for points that were
-        run, ``"point_<index>"`` for skipped ones.
+        ``"<YYYYmmdd_HHMMSS>_<lat>_<lon>_<index>"`` for points that ran,
+        ``"point_<index>"`` for skipped ones.
 
     Examples
     --------
@@ -173,7 +167,7 @@ class PointOutcome:
     >>> skipped.status, skipped.detail
     (2, 'NaN coordinates')
 
-    Collect the failures of a batch (``config`` and ``ds`` as in
+    Outcomes of a batch (``config`` and ``ds`` as in
     :func:`execute_simulation_batch`):
 
     >>> outcomes = execute_simulation_batch(  # doctest: +SKIP
@@ -195,9 +189,8 @@ class PointOutcome:
 class SimPoint:
     """One flattened simulation point, fully resolved.
 
-    The unit of work handed to a worker process: everything needed to
-    write one ``uvspec`` input file. Built by
-    :func:`execute_simulation_batch`; users normally never create one.
+    The unit of work for a worker process: everything needed to write
+    one ``uvspec`` input file. Built by :func:`execute_simulation_batch`.
 
     Parameters
     ----------
@@ -212,13 +205,13 @@ class SimPoint:
         :meth:`pyradtran.params.ParamResolver.resolve_point`, plus any
         dict-valued ``wc_file`` / ``ic_file`` cloud profiles.
     skipped : list of str
-        ``params`` keys left out for this point because their dataset
-        value was NaN (the configuration default then applies).
+        ``params`` keys dropped for this point because their dataset
+        value was NaN (the configuration default applies).
     era5_file : pathlib.Path, optional
         Per-point atmosphere file written from ``era5_atmosphere``.
     point_id : str
-        ``"<YYYYmmdd_HHMMSS>_<lat>_<lon>_<index>"``; used in log messages
-        and in the failure log.
+        ``"<YYYYmmdd_HHMMSS>_<lat>_<lon>_<index>"``, used in log
+        messages and the failure log.
     """
 
     index: int
@@ -248,11 +241,7 @@ def _auto_output_path(config: SimulationConfig) -> Path:
 
 
 def _era5_clouds_requested(era5_clouds) -> bool:
-    """True when the caller asked for ERA5 clouds.
-
-    An empty options dict means "enabled with default settings" — plain
-    truthiness would silently disable it.
-    """
+    """True when ERA5 clouds are requested (an empty dict means defaults)."""
     return era5_clouds is not False and era5_clouds is not None
 
 
@@ -265,21 +254,10 @@ def _point_cloud_profiles(
     cloud_top_var,
     cloud_bottom_var,
 ):
-    """Build dict-valued wc/ic cloud profiles for one point.
+    """Return ``(wc, ic)`` cloud-profile dicts for one point (*None* if unbuildable).
 
-    Shared by the batch driver and :meth:`PyRadtranAccessor.inspect_cloud_file`
-    so the preview can never diverge from what a run would build.
-
-    Parameters
-    ----------
-    get : callable
-        Maps a dataset variable name to a scalar value (or *None*).
-
-    Returns
-    -------
-    (wc, ic) : tuple of dict or None
-        Profile dicts for ``wc_file`` / ``ic_file``; *None* for a phase
-        that cannot be built (missing/NaN inputs).
+    *get* maps a dataset variable name to a scalar. Shared by the batch
+    driver and :meth:`PyRadtranAccessor.inspect_cloud_file`.
     """
 
     def valid(v):
@@ -329,11 +307,7 @@ def _translate_legacy_kwargs(
     altitude_var,
     parameter_overrides,
 ):
-    """Map deprecated kwargs onto the unified ``params`` mapping.
-
-    Explicit ``params`` entries always win. Emits a single
-    DeprecationWarning if any legacy kwarg is used.
-    """
+    """Map deprecated kwargs onto ``params`` (explicit entries win; one warning)."""
     params = dict(params or {})
     legacy_vars = {
         "albedo": albedo_var,
@@ -371,32 +345,29 @@ def run_pyradtran_simulation(
 ) -> Path:
     """Run a full simulation pipeline from a CSV/NetCDF input file.
 
-    File-in, file-out convenience wrapper: load the input points with
-    :meth:`pyradtran.io.InputDataLoader.load_simulation_input_data`, run
-    ``uvspec`` for every point with :func:`execute_simulation_batch`, and
-    write the results to NetCDF.
+    Loads the input points with
+    :meth:`pyradtran.io.InputDataLoader.load_simulation_input_data`, runs
+    ``uvspec`` for every point with :func:`execute_simulation_batch` and
+    writes the results to NetCDF.
 
     Parameters
     ----------
     input_file : str or pathlib.Path
-        Path to a ``.csv`` or ``.nc`` file with ``time``, ``latitude``
-        and ``longitude`` columns/variables. Further columns can be
-        referenced from *params* with :class:`~pyradtran.params.Var`.
+        ``.csv`` or ``.nc`` file with ``time``, ``latitude`` and
+        ``longitude``. *params* can reference further columns with
+        :class:`~pyradtran.params.Var`.
     output_path : str or pathlib.Path, optional
         Destination NetCDF. When *None*,
         ``<paths.output_dir>/<output.filename_prefix>_<YYYYmmdd_HHMMSS>``
         ``<output.filename_suffix>`` from the configuration is used.
     config_path : str or pathlib.Path, optional
         Simulation YAML, merged over the package defaults and the master
-        config by :func:`~pyradtran.config.load_config`. Only those two
-        layers are used when *None*.
+        config by :func:`~pyradtran.config.load_config`. *None* uses only
+        those two layers.
     params : dict, optional
-        Unified parameter mapping, same as in
-        :meth:`PyRadtranAccessor.run`: registry keys / raw uvspec
-        keywords / dotted config paths mapped to literal values or
-        :class:`~pyradtran.params.Var` per-point references.
+        Parameter mapping, as in :meth:`PyRadtranAccessor.run`.
     parameter_overrides : dict, optional
-        Deprecated — use ``params`` instead.
+        Deprecated; use ``params``.
     max_workers : int, optional
         Override the ``execution.max_workers`` config value.
     show_progress : bool, default ``True``
@@ -415,19 +386,17 @@ def run_pyradtran_simulation(
 
     See Also
     --------
-    PyRadtranAccessor.run : The same pipeline starting from an in-memory
+    PyRadtranAccessor.run : The same pipeline from an in-memory
         dataset, with ERA5, cloud and channel options.
     execute_simulation_batch : The batch driver used internally.
 
     Notes
     -----
-    This function is a thin wrapper and exposes fewer features than
-    :meth:`PyRadtranAccessor.run`: the written file has no per-point
-    ``status`` variable and none of the ``pyradtran_*`` provenance
-    attributes (the saver records ``config_*`` attributes and
-    ``simulation_parameters`` instead) and there are no ERA5 / cloud /
-    channel options. For anything beyond a plain batch, open the file
-    yourself and call ``ds.pyradtran.run(...)``.
+    Compared with :meth:`PyRadtranAccessor.run`, the written file has no
+    per-point ``status`` variable and no ``pyradtran_*`` provenance
+    attributes (only the saver's ``config_*`` attributes and
+    ``simulation_parameters``), and there are no ERA5 / cloud / channel
+    options. For more, open the file and call ``ds.pyradtran.run(...)``.
 
     Examples
     --------
@@ -529,92 +498,86 @@ def execute_simulation_batch(
 ) -> List[Optional[ParsedOutput]]:
     r"""Run ``uvspec`` for every point in *input_ds*.
 
-    The input dataset is flattened (stacked) over **all** its dimensions
-    so that each combination of coordinates becomes one simulation.
-    Results are returned in the same flat order, ready for
-    :meth:`~pyradtran.io.OutputToXarray.convert_batch`. This is the
-    engine behind :meth:`PyRadtranAccessor.run`, which adds the altitude
-    handling, the conversion to a dataset, the ``status`` variable,
-    channel convolution, provenance and saving.
+    The input dataset is stacked over **all** its dimensions; each
+    combination of coordinates is one simulation. Results come back in
+    the same flat order, ready for
+    :meth:`~pyradtran.io.OutputToXarray.convert_batch`.
+    :meth:`PyRadtranAccessor.run` builds on this and adds altitude
+    handling, conversion to a dataset, the ``status`` variable, channel
+    convolution, provenance and saving.
 
     Parameters
     ----------
     config : SimulationConfig
         Merged configuration, e.g. from
         :func:`~pyradtran.config.load_config`. Dotted config keys in
-        *params* modify this object in place — pass ``config.copy()`` if
-        you reuse it.
+        *params* modify it in place; pass ``config.copy()`` to reuse it.
     input_ds : xarray.Dataset
         Input points. Every dimension is iterated; a dataset without
-        dimensions (scalar ``time`` / ``latitude`` / ``longitude``) is a
-        single point. A :class:`xarray.DataArray` is converted with
+        dimensions (scalar ``time`` / ``latitude`` / ``longitude``) is
+        one point. A :class:`xarray.DataArray` is converted with
         ``to_dataset()``.
     params : dict, optional
-        Unified parameter mapping: registry keys / raw uvspec keywords /
-        dotted config paths to literal values or :class:`~pyradtran.params.Var`
-        per-point dataset references. Preferred over the deprecated
-        ``*_var`` and ``parameter_overrides`` kwargs below.
+        Parameter mapping, as in :meth:`PyRadtranAccessor.run`.
+        Preferred over the deprecated ``*_var`` and
+        ``parameter_overrides`` arguments.
     time_var, lat_var, lon_var : str
         Names of the time / latitude / longitude variables in
         *input_ds* (coordinates or data variables).
     albedo_var : str, optional
-        Deprecated — use ``params={"albedo": Var(...)}``.
+        Deprecated; use ``params={"albedo": Var(...)}``.
     surface_temperature_var : str, optional
-        Deprecated — use ``params={"sur_temperature": Var(...)}``.
+        Deprecated; use ``params={"sur_temperature": Var(...)}``.
     surface_type_var : str, optional
-        Deprecated — use ``params={"brdf_rpv_type": Var(...)}``.
+        Deprecated; use ``params={"brdf_rpv_type": Var(...)}``.
     altitude_var : str, optional
-        Deprecated — use ``params={"zout": Var(...)}``.
+        Deprecated; use ``params={"zout": Var(...)}``.
     era5_atmosphere : xarray.Dataset, optional
-        ERA5 dataset for atmosphere file generation.  Accepts raw
-        CDS or ARCO-ERA5 naming — it is normalised via
-        :func:`pyradtran.era5.normalize_era5` before use.  When an
-        ozone profile (``o3``) is present it is written into the
-        radiosonde file and the config ``ozone_du`` scaling is skipped.
+        ERA5 dataset for the atmosphere files, in CDS or ARCO-ERA5
+        naming (normalised with :func:`pyradtran.era5.normalize_era5`).
+        An ozone profile (``o3``) is written into the radiosonde file
+        and the config ``ozone_du`` scaling is then skipped.
     era5_clouds : bool or dict, default ``False``
-        When truthy, additionally derive per-point ``wc_file`` /
-        ``ic_file`` cloud profiles from the ERA5 ``clwc`` / ``ciwc``
-        fields.  A dict is forwarded as keyword arguments to
-        :func:`pyradtran.era5.cloud_profiles` (e.g.
-        ``{"reff_water_um": 8.0}``).  Explicit cloud parameters
-        (``params`` or the ``cloud_*_var`` kwargs) take precedence for
-        points where both are present.  Requires *era5_atmosphere*.
+        Also derive per-point ``wc_file`` / ``ic_file`` cloud profiles
+        from the ERA5 ``clwc`` / ``ciwc`` fields.  A dict is passed as
+        keyword arguments to :func:`pyradtran.era5.cloud_profiles`
+        (e.g. ``{"reff_water_um": 8.0}``).  Explicit cloud parameters
+        (``params`` or ``cloud_*_var``) take precedence.  Requires
+        *era5_atmosphere*.
     parameter_overrides : dict, optional
-        Deprecated — use ``params`` instead.
+        Deprecated; use ``params``.
     progress_callback : callable, optional
-        ``callback(current, total)`` invoked after each simulation.
+        ``callback(current, total)`` called after each simulation.
     show_progress : bool, default ``True``
-        Show a ``tqdm`` progress bar.  Set to ``False`` to suppress it
-        (e.g. when running inside a rendered Jupyter notebook).
+        Show a ``tqdm`` progress bar.
     return_outcomes : bool, default ``False``
-        When ``True``, return the full list of :class:`PointOutcome`
-        (status codes + failure detail) instead of bare parsed outputs.
+        Return :class:`PointOutcome` objects (status and failure detail)
+        instead of parsed outputs.
     cloud_wc_var, cloud_ic_var : str, optional
         Dataset variables holding the liquid / ice water content
         (g m\ :sup:`-3`) of a single homogeneous cloud layer per point.
     cloud_reff_var, cloud_ic_reff_var : str, optional
         Effective-radius variables (µm) for liquid and ice. Missing or
-        NaN values fall back to 10 µm (liquid) and 20 µm (ice); without
-        *cloud_ic_reff_var* the ice phase reuses *cloud_reff_var*.
+        NaN values fall back to 10 µm (liquid) and 20 µm (ice). Without
+        *cloud_ic_reff_var* the ice phase uses *cloud_reff_var*.
     cloud_top_var, cloud_bottom_var : str, optional
-        Cloud-boundary variables (km).  Required when
-        *cloud_wc_var* or *cloud_ic_var* is set.
+        Cloud-boundary variables (km).  Required with *cloud_wc_var* or
+        *cloud_ic_var*.
 
     Returns
     -------
     list of ParsedOutput or None
         One entry per flattened input point, in stacking order
         (``input_ds.stack(sample=list(input_ds.sizes))``).  *None* for
-        failed or skipped points.  When *return_outcomes* is ``True``, a
-        list of :class:`PointOutcome` instead.
+        failed or skipped points.  With *return_outcomes*, a list of
+        :class:`PointOutcome` instead.
 
     Raises
     ------
     ValueError
         If *time_var* / *lat_var* / *lon_var* is not in *input_ds*, if
-        cloud variables are requested without both boundary variables or
-        name variables missing from the dataset, or if *era5_clouds* is
-        given without *era5_atmosphere*.
+        cloud variables lack a boundary variable or are missing from the
+        dataset, or if *era5_clouds* is given without *era5_atmosphere*.
     ValidationError
         If *params* contains an unknown option, an out-of-range literal,
         a :class:`~pyradtran.params.Var` pointing to a missing variable,
@@ -626,34 +589,33 @@ def execute_simulation_batch(
     --------
     PyRadtranAccessor.run : High-level entry point; returns a dataset.
     pyradtran.io.OutputToXarray.convert_batch : Turn the returned list
-        back into a dataset with the input dimensions.
+        into a dataset with the input dimensions.
     pyradtran.core.Simulation : What runs for each point.
 
     Notes
     -----
-    **Per-point handling.** Points whose time is missing/``NaT`` or whose
-    latitude/longitude is NaN are not run (status ``2``). A
+    **Per-point handling.** Points with missing/``NaT`` time or NaN
+    latitude/longitude are not run (status ``2``). A
     :class:`~pyradtran.params.Var` parameter whose dataset value is NaN
-    is *dropped for that point* — the configuration default then applies
-    and the point still runs.
+    is *dropped for that point*: the configuration default applies and
+    the point still runs.
 
     **Parallelism.** With ``execution.max_workers`` equal to 1, points run
     serially in the calling process. ``None`` (one worker per CPU) or a
-    value > 1 uses a :class:`concurrent.futures.ProcessPoolExecutor`;
-    every worker spawns its own ``uvspec`` subprocess, each limited by
+    value > 1 uses a :class:`concurrent.futures.ProcessPoolExecutor`.
+    Each ``uvspec`` subprocess is limited by
     ``execution.timeout_seconds``.
 
     **ERA5.** One atmosphere file per unique (time, latitude, longitude)
-    is written to ``<paths.working_dir>/era5_atmospheres/`` and reused by
-    all points sharing it (e.g. along a sweep dimension). If writing a
-    file fails, a warning is logged and that point runs with the standard
-    atmosphere from the configuration.
+    is written to ``<paths.working_dir>/era5_atmospheres/`` and shared by
+    all points with these values (e.g. along a sweep dimension). If
+    writing fails, a warning is logged and the point runs with the
+    configured standard atmosphere.
 
-    **Failures.** A ``failures_<YYYYmmdd_HHMMSS>.log`` file is written to
-    ``config.paths.working_dir`` whenever at least one point fails or is
-    skipped, with one block per point (point id, status, and
-    detail/stderr). The ``.inp`` file of a failed ``uvspec`` run is kept
-    for post-mortem.
+    **Failures.** When a point fails or is skipped, a
+    ``failures_<YYYYmmdd_HHMMSS>.log`` file in ``config.paths.working_dir``
+    lists point id, status and detail/stderr per point. The ``.inp``
+    file of a failed ``uvspec`` run is kept for post-mortem.
 
     Examples
     --------
@@ -676,7 +638,7 @@ def execute_simulation_batch(
     >>> outputs[0].data["edir"]  # doctest: +SKIP
     array([1046.489, 1029.557, 1019.107])
 
-    Ask for the full outcomes to see why points failed:
+    Status per point:
 
     >>> outcomes = execute_simulation_batch(  # doctest: +SKIP
     ...     config, ds, params={"wavelength": [500, 502]},
@@ -689,7 +651,7 @@ def execute_simulation_batch(
     if isinstance(input_ds, xr.DataArray):
         input_ds = input_ds.to_dataset()
 
-    # Core coordinate variables must exist — direct callers otherwise get
+    # Core coordinate variables must exist; otherwise direct callers get
     # cryptic per-point crashes deep inside the batch loop.
     for label, var in (
         ("time", time_var),
@@ -952,7 +914,7 @@ def _run_single_simulation_unified(
     config: SimulationConfig,
     point: SimPoint,
 ) -> PointOutcome:
-    """Execute a single ``uvspec`` run (called by the process pool, or in-process when max_workers == 1)."""
+    """Run one point and parse its output (in a worker or in-process)."""
     try:
         sim = Simulation(config)
         output_file = sim.run_simulation(
@@ -1015,9 +977,8 @@ class PyRadtranAccessor:
     """xarray accessor for running libRadtran simulations (``ds.pyradtran``).
 
     Registered on every :class:`xarray.Dataset` when :mod:`pyradtran` is
-    imported. The dataset describes *where and when* to simulate — one
-    ``uvspec`` run per point — and the accessor methods turn it into
-    results:
+    imported. The dataset describes *where and when* to simulate, one
+    ``uvspec`` run per point:
 
     .. autosummary::
 
@@ -1026,13 +987,13 @@ class PyRadtranAccessor:
        jacobian
        inspect_cloud_file
 
-    * :meth:`run` — run ``uvspec`` for every point and return the results
-      as a dataset with the same dimensions.
-    * :meth:`explain` — show the annotated ``uvspec`` input file for one
-      point without running anything.
-    * :meth:`jacobian` — finite-difference sensitivity to one scalar
+    * :meth:`run`: run ``uvspec`` for every point; results have the
+      same dimensions.
+    * :meth:`explain`: annotated ``uvspec`` input file for one point,
+      without running.
+    * :meth:`jacobian`: finite-difference sensitivity to one scalar
       parameter.
-    * :meth:`inspect_cloud_file` — preview the cloud-profile file built
+    * :meth:`inspect_cloud_file`: preview the cloud-profile file built
       from the ``cloud_*_var`` arguments.
 
     ``run_uvspec`` is a backwards-compatible alias of :meth:`run`.
@@ -1040,8 +1001,8 @@ class PyRadtranAccessor:
     Parameters
     ----------
     xarray_obj : xarray.Dataset
-        The dataset the accessor is attached to. Never constructed
-        directly — use ``ds.pyradtran``.
+        The dataset the accessor is attached to. Use ``ds.pyradtran``;
+        do not construct directly.
 
     See Also
     --------
@@ -1066,7 +1027,7 @@ class PyRadtranAccessor:
     >>> type(ds.pyradtran).__name__
     'PyRadtranAccessor'
 
-    Check what would be sent to ``uvspec``, then run it:
+    Preview the input file, then run:
 
     >>> print(ds.pyradtran.explain(config_path="config/quickstart.yaml"))  # doctest: +SKIP
     rte_solver twostr                                                   # config
@@ -1112,41 +1073,39 @@ class PyRadtranAccessor:
     ) -> Union[xr.Dataset, Path]:
         r"""Run ``uvspec`` for every point in the dataset.
 
-        Each point of the dataset — every combination of its dimensions —
-        becomes one ``uvspec`` simulation. The outputs are assembled into
-        a dataset with the same dimensions, plus ``wavelength`` and
-        ``altitude``.
+        Every combination of the dataset's dimensions is one ``uvspec``
+        simulation. The result has the same dimensions plus
+        ``wavelength`` and ``altitude``.
 
-        **Input dataset.** The dataset is the list of simulation points:
+        **Input dataset.**
 
         * ``time`` (UTC), ``latitude`` (degrees north) and ``longitude``
-          (degrees east) must be present; other names can be mapped with
+          (degrees east) are required; map other names with
           *time_var* / *lat_var* / *lon_var*. ``time`` must be a
-          coordinate; latitude and longitude may also be data variables.
-          For solar runs the solar zenith angle and day of year are
-          computed from them unless ``sza`` is set explicitly.
+          coordinate; latitude and longitude may be data variables.
+          Solar runs compute the solar zenith angle and day of year
+          from them unless ``sza`` is set.
         * **Every dimension is a simulation axis.** A ``time`` dimension
           with latitude/longitude along it is a track or time series; a
-          ``(time, latitude, longitude)`` grid runs every combination; any
-          extra dimension (``albedo``, ``sza``, ``cloud_top`` ...) is a
-          sweep axis. A dataset without dimensions (scalar ``time``,
-          ``latitude`` and ``longitude`` coordinates) is a single point;
-          its result has only the ``wavelength`` / ``altitude``
-          dimensions.
-        * Data variables and coordinates are per-point inputs: reference
-          them from *params* with :class:`~pyradtran.params.Var`, or from
-          the ``cloud_*_var`` arguments.
-        * ``altitude`` is special (always in km, always this name):
+          ``(time, latitude, longitude)`` grid runs every combination;
+          any extra dimension (``albedo``, ``sza``, ``cloud_top`` ...) is
+          a sweep axis. A dataset without dimensions (scalar ``time``,
+          ``latitude`` and ``longitude``) is one point; its result has
+          only ``wavelength`` / ``altitude``.
+        * Data variables and coordinates are per-point inputs for
+          :class:`~pyradtran.params.Var` in *params* and for the
+          ``cloud_*_var`` arguments.
+        * ``altitude`` (km, fixed name) is special:
 
-          - as a **coordinate**, its unique sorted values become the
-            ``zout`` output levels of *every* simulation, replacing
-            ``simulation_defaults.output_altitudes_km``. If it is a
-            dimension it is not iterated — one run returns all levels.
+          - as a **coordinate**, its unique sorted values are the
+            ``zout`` levels of *every* simulation, replacing
+            ``simulation_defaults.output_altitudes_km``. As a dimension
+            it is not iterated: one run returns all levels.
           - as a **data variable**, it is a per-point output altitude
-            (e.g. an aircraft track): shorthand for
+            (e.g. an aircraft track), short for
             ``params={"zout": Var("altitude")}``. An explicit ``"zout"``
-            in *params* takes precedence. The result reports the
-            altitude of each point in the variable ``zout``.
+            in *params* wins. The result holds each point's altitude in
+            the variable ``zout``.
 
         Parameters
         ----------
@@ -1157,66 +1116,65 @@ class PyRadtranAccessor:
             *config_path* nor *config*, those two layers are used alone.
         config : SimulationConfig, optional
             Pre-built configuration; takes precedence over *config_path*.
-            It is copied, so the caller's object is never modified.
+            It is copied, so the caller's object is not modified.
         params : dict, optional
-            Per-run parameters, layered on top of the configuration. Keys
-            are uvspec option names (``"albedo"``, ``"sza"``,
+            Per-run parameters on top of the configuration. Keys are
+            uvspec option names (``"albedo"``, ``"sza"``,
             ``"mol_modify O3"``, ``"aerosol_default"`` ...) or dotted
             config paths (``"simulation_defaults.wavelength_nm"``,
             ``"execution.max_workers"``). Values are
 
-            * a literal — applied to every point; lists/tuples are
+            * a literal, applied to every point; lists/tuples are
               space-joined (``{"wavelength": [400, 700]}``), ``""`` or
-              ``True`` emits a bare keyword;
-            * :class:`~pyradtran.params.Var` ``("name")`` — the value of
+              ``True`` gives a bare keyword;
+            * :class:`~pyradtran.params.Var` ``("name")``: the value of
               dataset variable or coordinate *name* at each point;
-            * :class:`~pyradtran.params.Raw` ``(value)`` — a literal
+            * :class:`~pyradtran.params.Raw` ``(value)``: a literal
               passed through without validation;
             * for ``"wc_file"`` / ``"ic_file"``, a dict
-              ``{"z": [...], "lwc" | "iwc": [...], "reff": [...]}`` that
-              is written to a cloud file (see
+              ``{"z": [...], "lwc" | "iwc": [...], "reff": [...]}``,
+              written to a cloud file (see
               :meth:`~pyradtran.core.Simulation.format_cloud_profile`).
 
             Literals are validated before anything runs (see
             :func:`pyradtran.describe`). Preferred over the deprecated
-            ``*_var`` and ``parameter_overrides`` arguments below.
+            ``*_var`` and ``parameter_overrides`` arguments.
         parameter_overrides : dict, optional
-            Deprecated — use ``params`` instead.
+            Deprecated; use ``params``.
         time_var, lat_var, lon_var : str
             Names of the time / latitude / longitude variables. Defaults
             ``"time"``, ``"latitude"``, ``"longitude"``.
         albedo_var : str, optional
-            Deprecated — use ``params={"albedo": Var(...)}``.
+            Deprecated; use ``params={"albedo": Var(...)}``.
         surface_temperature_var : str, optional
-            Deprecated — use ``params={"sur_temperature": Var(...)}``.
+            Deprecated; use ``params={"sur_temperature": Var(...)}``.
         surface_type_var : str, optional
-            Deprecated — use ``params={"brdf_rpv_type": Var(...)}``.
+            Deprecated; use ``params={"brdf_rpv_type": Var(...)}``.
         era5_atmosphere : xarray.Dataset, optional
             ERA5 pressure-level data (temperature and specific humidity,
             optionally ozone and cloud water) used as the atmosphere of
-            each point instead of scaling the standard profile. Raw CDS
-            or ARCO-ERA5 naming is accepted and normalised with
-            :func:`pyradtran.era5.normalize_era5`. For each point the
-            nearest column in time and space is written to a
-            radiosonde-format file. Gases present in that file are not
-            rescaled: the config ``h2o_mm`` is ignored, and so is
-            ``ozone_du`` when the dataset has an ``o3`` field.
+            each point instead of a scaled standard profile. CDS or
+            ARCO-ERA5 naming is normalised with
+            :func:`pyradtran.era5.normalize_era5`. The nearest column in
+            time and space is written to a radiosonde-format file per
+            point. Gases in that file are not rescaled: the config
+            ``h2o_mm`` is ignored, and so is ``ozone_du`` when the
+            dataset has an ``o3`` field.
         era5_clouds : bool or dict, default ``False``
             Also derive per-point cloud profiles (``wc_file`` /
             ``ic_file``) from the ERA5 ``clwc`` / ``ciwc`` fields.  A
-            dict (which may be empty) is forwarded to
+            dict (possibly empty) is passed to
             :func:`pyradtran.era5.cloud_profiles` (e.g.
-            ``{"reff_water_um": 8.0}``).  Explicit cloud settings via
-            ``params`` or ``cloud_*_var`` win over ERA5 clouds.
-            Requires *era5_atmosphere*.
+            ``{"reff_water_um": 8.0}``).  Cloud settings in ``params`` or
+            ``cloud_*_var`` win.  Requires *era5_atmosphere*.
         return_dataset : bool, default ``True``
-            Return the results dataset. With ``False`` the path of the
-            saved file is returned instead.
+            Return the results dataset; with ``False``, the path of the
+            saved file.
         save_to_file : bool, default ``True``
             Write the results to NetCDF.
         output_path : str or pathlib.Path, optional
-            Destination file; parent directories are created. When
-            *None*, ``<paths.output_dir>/<output.filename_prefix>_``
+            Destination file; parent directories are created. Default:
+            ``<paths.output_dir>/<output.filename_prefix>_``
             ``<YYYYmmdd_HHMMSS><output.filename_suffix>`` is used.
         progress_callback : callable, optional
             ``callback(completed, total)``, called in the main process
@@ -1226,8 +1184,8 @@ class PyRadtranAccessor:
             (g m\ :sup:`-3`) of one homogeneous cloud layer per point.
         cloud_reff_var, cloud_ic_reff_var : str, optional
             Effective-radius variables (µm) for liquid and ice. Missing
-            or NaN values fall back to 10 µm (liquid) / 20 µm (ice);
-            without *cloud_ic_reff_var* the ice phase uses
+            or NaN values fall back to 10 µm (liquid) / 20 µm (ice).
+            Without *cloud_ic_reff_var* the ice phase uses
             *cloud_reff_var*.
         cloud_top_var, cloud_bottom_var : str, optional
             Cloud top / base altitude variables (km). Required with
@@ -1235,14 +1193,12 @@ class PyRadtranAccessor:
             run cloud-free.
         show_progress : bool, default ``True``
             Show a ``tqdm`` progress bar (if ``tqdm`` is installed).
-            Pass ``False`` in rendered notebooks and scripts.
         channels : xarray.DataArray, optional
             Instrument spectral response functions, dims
-            ``(channel, wavelength)``.  When given and the result is
-            spectral, every spectral variable is SRF-averaged onto a
-            ``channel`` dimension via
-            :func:`~pyradtran.channels.convolve_channels`; the returned
-            (and saved) dataset is channel-space.
+            ``(channel, wavelength)``.  For spectral results, every
+            spectral variable is SRF-averaged onto a ``channel``
+            dimension with :func:`~pyradtran.channels.convolve_channels`;
+            the returned (and saved) dataset is in channel space.
         keep_spectral : bool, default ``False``
             With *channels*, also keep the original spectral variables
             under ``<name>_spectral``.
@@ -1252,33 +1208,32 @@ class PyRadtranAccessor:
         xarray.Dataset or pathlib.Path
             With ``return_dataset=True`` (default) the results dataset:
 
-            * **Dimensions** — the simulated dimensions of the input, in
-              input order, followed by ``wavelength`` (nm; absent for
+            * **Dimensions**: the simulated input dimensions, in input
+              order, then ``wavelength`` (nm; absent for
               wavelength-integrated output) and ``altitude`` (km; always
-              present). With *channels*, ``wavelength`` is replaced by
-              ``channel``.
-            * ``altitude`` **coordinate** — the output levels in km
-              (float): the ``zout`` levels of a multi-level run, or the
-              one level all points share (``0.0`` for the surface
-              default). With a per-point output level (``altitude`` data
-              variable, ``"zout": Var(...)``) there is no common value:
-              the coordinate is then the placeholder ``0.0`` — select
-              with ``isel(altitude=0)`` or ``squeeze("altitude")`` — and
-              the data variable ``zout`` (km, on the input dimensions)
-              holds the level of each point. The placeholder also
-              stands for a symbolic level (``"zout": "toa"``).
-            * **Data variables** — one per ``uvspec`` output column
+              present). With *channels*, ``channel`` replaces
+              ``wavelength``.
+            * ``altitude`` **coordinate**: output levels in km (float),
+              i.e. the ``zout`` levels of a multi-level run or the one
+              level all points share (``0.0`` for the surface default).
+              With a per-point output level (``altitude`` data variable,
+              ``"zout": Var(...)``) the coordinate is the placeholder
+              ``0.0`` (select with ``isel(altitude=0)`` or
+              ``squeeze("altitude")``) and the data variable ``zout``
+              (km, on the input dimensions) holds each point's level.
+              The placeholder also stands for a symbolic level
+              (``"zout": "toa"``).
+            * **Data variables**: one per ``uvspec`` output column
               (``simulation_defaults.output_columns``, e.g. ``edir``,
-              ``edn``, ``eup``), in the units ``uvspec`` writes them.
-              Points that failed or were skipped are NaN. A column
-              named like a coordinate of the input — typically a sweep
-              dimension such as ``sza`` or ``albedo`` — is returned as
-              ``<name>_out`` (``sza_out``), because the name belongs to
-              the coordinate; a warning is logged.
-            * ``status`` — integer flag on the input dimensions:
+              ``edn``, ``eup``), in ``uvspec``'s units. Failed or
+              skipped points are NaN. A column named like an input
+              coordinate, typically a sweep dimension such as ``sza`` or
+              ``albedo``, is returned as ``<name>_out`` (``sza_out``)
+              with a logged warning.
+            * ``status``: integer flag on the input dimensions:
               ``0`` ok, ``1`` failed (``uvspec`` error or timeout),
               ``2`` skipped (missing time or NaN latitude/longitude).
-            * **Attributes** — provenance: ``pyradtran_version``,
+            * **Attributes**: provenance, i.e. ``pyradtran_version``,
               ``history``, ``pyradtran_params`` (JSON), ``pyradtran_config``
               (the merged configuration as YAML),
               ``pyradtran_libradtran_bin``, ``pyradtran_input_example``
@@ -1286,8 +1241,8 @@ class PyRadtranAccessor:
               *channels*, ``pyradtran_channels`` /
               ``pyradtran_keep_spectral``.
 
-            With ``return_dataset=False`` the path of the written NetCDF
-            file, which holds the same dataset.
+            With ``return_dataset=False``, the path of the NetCDF file
+            holding the same dataset.
 
         Raises
         ------
@@ -1298,11 +1253,11 @@ class PyRadtranAccessor:
             fail, or both *return_dataset* and *save_to_file* are false.
         ValidationError
             If *params* has an unknown option, an invalid literal, a
-            ``Var`` naming a variable that is not in the dataset, or a
-            bare string that equals a dataset variable name (use ``Var``).
+            ``Var`` naming a variable not in the dataset, or a bare
+            string equal to a dataset variable name (use ``Var``).
         ValueError
-            If cloud variables are requested without both boundary
-            variables, or name variables missing from the dataset.
+            If cloud variables lack a boundary variable or are missing
+            from the dataset.
 
         Warns
         -----
@@ -1323,60 +1278,58 @@ class PyRadtranAccessor:
 
         Notes
         -----
-        **Layers.** The ``uvspec`` input file of each point is built from
-        three layers, later ones winning:
+        **Layers.** Each point's input file is built from three layers,
+        later ones winning:
 
-        1. the *configuration* — itself merged from package defaults,
-           the master config and *config_path* (see
+        1. the *configuration*, merged from package defaults, the master
+           config and *config_path* (see
            :func:`~pyradtran.config.load_config`);
-        2. *params* literals, identical for every point;
+        2. *params* literals, the same for every point;
         3. *params* :class:`~pyradtran.params.Var` references, resolved
            per point from the dataset.
 
-        :meth:`explain` shows the outcome, with every line tagged by the
-        layer it came from. Dotted keys in *params* edit layer 1 for this
-        call only.
+        :meth:`explain` shows the result with each line tagged by its
+        layer. Dotted keys in *params* edit layer 1 for this call only.
 
         **Missing values.** A point with missing time or NaN
-        latitude/longitude is skipped (``status == 2``). If a ``Var``
-        parameter is NaN at a point, that parameter is left out *for that
-        point* and the configuration value applies; the point still runs
-        and reports ``status == 0``. Mask such points yourself if a
-        fallback is not what you want.
+        latitude/longitude is skipped (``status == 2``). A ``Var``
+        parameter that is NaN at a point is dropped *for that point*: the
+        configuration value applies, the point runs and reports
+        ``status == 0``. Mask such points yourself if you do not want
+        the fallback.
 
-        **Failures.** A failing point never aborts the batch: its values
-        are NaN, ``status`` is 1, and the ``uvspec`` error message is
-        written to ``<paths.working_dir>/failures_<timestamp>.log``
-        together with the path of the kept ``.inp`` file. Only when
-        *every* point fails is :class:`~pyradtran.exceptions.PyRadtranError`
-        raised.
+        **Failures.** A failing point does not abort the batch: its
+        values are NaN, ``status`` is 1, and the ``uvspec`` error and the
+        path of the kept ``.inp`` file go to
+        ``<paths.working_dir>/failures_<timestamp>.log``.
+        :class:`~pyradtran.exceptions.PyRadtranError` is raised only when
+        *every* point fails.
 
         **Parallel execution.** ``execution.max_workers`` simulations run
-        concurrently, each in its own worker process (``None``: one per
-        CPU; ``1``: serially in the calling process, the simplest setting
-        for debugging). Change it per call with
-        ``params={"execution.max_workers": 8}``. A single ``uvspec`` run
-        is killed after ``execution.timeout_seconds``.
+        concurrently in worker processes (``None``: one per CPU; ``1``:
+        serially in the calling process, best for debugging). Change it
+        per call with ``params={"execution.max_workers": 8}``. A
+        ``uvspec`` run is killed after ``execution.timeout_seconds``.
 
         **Clouds.** The ``cloud_*_var`` arguments describe one vertically
         homogeneous layer per point, written as a two-level libRadtran
         cloud file (see :meth:`inspect_cloud_file`). For vertically
         resolved clouds pass a profile dict as ``params["wc_file"]`` /
         ``params["ic_file"]`` or use *era5_clouds*. The ``twostr`` solver
-        can return NaN for optically thick clouds — use
+        can return NaN for optically thick clouds; use
         ``"rte_solver": "disort"`` for cloudy runs.
 
         **Files.** Input, output and cloud files are written to
-        ``paths.working_dir`` (relative paths are relative to the current
-        directory) and removed after a successful run when
+        ``paths.working_dir`` (relative to the current directory if
+        relative) and removed after a successful run when
         ``execution.cleanup_temp_files`` is true. ERA5 atmosphere files
         are kept in its ``era5_atmospheres/`` subdirectory.
 
         Examples
         --------
-        The examples use ``config/quickstart.yaml`` from the Quickstart
-        (solar spectrum 350–2500 nm, ``edir`` / ``edn`` / ``eup`` at the
-        surface) and need a libRadtran installation.
+        These use ``config/quickstart.yaml`` from the Quickstart (solar
+        spectrum 350–2500 nm, ``edir`` / ``edn`` / ``eup`` at the
+        surface) and need libRadtran.
 
         >>> import numpy as np
         >>> import pandas as pd
@@ -1391,7 +1344,7 @@ class PyRadtranAccessor:
         ...     }
         ... )
 
-        **Minimal run** — one spectrum per time step:
+        **Minimal run**, one spectrum per time step:
 
         >>> result = ds.pyradtran.run(config_path="config/quickstart.yaml")  # doctest: +SKIP
         >>> result  # doctest: +SKIP
@@ -1418,9 +1371,7 @@ class PyRadtranAccessor:
         >>> result.edir.sel(wavelength=550).squeeze("altitude").round(1).values  # doctest: +SKIP
         array([1076.5, 1194.7,  565.9])
 
-        **Parameters: literals and per-point values.** Literals apply to
-        every point, :class:`~pyradtran.params.Var` picks the value from
-        the dataset:
+        **Literal and per-point parameters:**
 
         >>> ds_alb = ds.assign(snow_albedo=("time", [0.80, 0.85, 0.90]))
         >>> result = ds_alb.pyradtran.run(  # doctest: +SKIP
@@ -1442,9 +1393,7 @@ class PyRadtranAccessor:
         >>> result.attrs["pyradtran_params"]  # doctest: +SKIP
         '{"albedo": "Var(name=\'snow_albedo\')", "rte_solver": "disort", "wavelength": [400, 700], "aerosol_default": ""}'
 
-        **Parameter sweep.** Extra dimensions are sweep axes; reference
-        their coordinates with ``Var``. Here 3 albedos × 2 solar zenith
-        angles = 6 runs:
+        **Parameter sweep**, 3 albedos × 2 solar zenith angles = 6 runs:
 
         >>> noon = ds.isel(time=[1])
         >>> sweep = noon.expand_dims(albedo=[0.05, 0.5, 0.9], sza=[30.0, 60.0])
@@ -1475,8 +1424,8 @@ class PyRadtranAccessor:
             wavelength  float64 8B 550.0
             altitude    float64 8B 0.0
 
-        **Output altitudes.** An ``altitude`` *coordinate* gives every run
-        several output levels:
+        **Output altitudes.** An ``altitude`` *coordinate* sets the levels
+        of every run:
 
         >>> profile = noon.assign_coords(altitude=[0.0, 2.0, 10.0])
         >>> result = profile.pyradtran.run(  # doctest: +SKIP
@@ -1487,10 +1436,8 @@ class PyRadtranAccessor:
         >>> result.edn.sel(wavelength=550).squeeze("time").round(1).values  # doctest: +SKIP
         array([98.2, 79.1, 28.1])
 
-        An ``altitude`` *data variable* is one output level per point, as
-        along a flight track. The result then has a single ``altitude``
-        entry (the placeholder ``0.0``) and reports the level of each
-        point as ``zout``:
+        An ``altitude`` *data variable* sets one level per point (flight
+        track):
 
         >>> flight = ds.assign(altitude=("time", [0.0, 1.5, 3.0]))
         >>> result = flight.pyradtran.run(  # doctest: +SKIP
@@ -1503,9 +1450,7 @@ class PyRadtranAccessor:
         >>> result.edn.sel(wavelength=550).squeeze("altitude").round(1).values  # doctest: +SKIP
         array([95.9, 83.7, 61.1])
 
-        **ERA5 atmosphere.** Temperature and humidity profiles from a
-        reanalysis dataset (here the sample file shipped with the book;
-        raw ERA5 variable names are fine):
+        **ERA5 atmosphere** (sample file shipped with the book):
 
         >>> era5 = xr.open_dataset("data/era5_arctic_subset.nc")  # doctest: +SKIP
         >>> era5 = era5.sel(time="2019-06-21")  # doctest: +SKIP
@@ -1529,8 +1474,8 @@ class PyRadtranAccessor:
 
         Without ``era5_atmosphere`` the same call gives
         ``[272.5, 373.8, 221.2]`` (standard profile scaled to the config
-        ``h2o_mm``). If the ERA5 dataset also carries cloud liquid/ice
-        water (``clwc`` / ``ciwc``), add the clouds too:
+        ``h2o_mm``). With cloud liquid/ice water (``clwc`` / ``ciwc``) in
+        the ERA5 dataset, add the clouds:
 
         >>> result = arctic.pyradtran.run(  # doctest: +SKIP
         ...     config_path="config/quickstart.yaml",
@@ -1539,8 +1484,7 @@ class PyRadtranAccessor:
         ...     params={"rte_solver": "disort"},
         ... )
 
-        **Instrument channels.** Convolve the spectra with spectral
-        response functions; ``wavelength`` becomes ``channel``:
+        **Instrument channels** (``wavelength`` becomes ``channel``):
 
         >>> wl = np.arange(350.0, 2501.0)
         >>> centres = np.array([550.0, 865.0, 1610.0])
@@ -1563,8 +1507,7 @@ class PyRadtranAccessor:
         >>> result.attrs["pyradtran_channels"]  # doctest: +SKIP
         'VIS NIR SWIR'
 
-        **Clouds from dataset variables.** One homogeneous liquid layer
-        per point, thickening with time:
+        **Clouds from dataset variables**, one liquid layer per point:
 
         >>> cloudy = ds.assign(
         ...     lwc=("time", [0.05, 0.1, 0.3]),        # g m-3
@@ -1586,8 +1529,8 @@ class PyRadtranAccessor:
         array([783.5, 626.8, 300. ])
 
         **Saving.** By default the result is also written to an
-        auto-named file in ``paths.output_dir``. Choose the file, or get
-        just the path back:
+        auto-named file in ``paths.output_dir``. Choose the file and
+        return only the path:
 
         >>> path = ds.pyradtran.run(  # doctest: +SKIP
         ...     config_path="config/quickstart.yaml",
@@ -1599,9 +1542,8 @@ class PyRadtranAccessor:
         >>> xr.open_dataset(path).status.values  # doctest: +SKIP
         array([0, 0, 0])
 
-        **Failed and skipped points** are flagged, not fatal. Here the
-        second point fails in ``uvspec`` (sun below the horizon) and the
-        third has no latitude:
+        **Failed and skipped points** are flagged. The second point fails
+        in ``uvspec`` (sun below the horizon); the third has no latitude:
 
         >>> bad = ds.assign(sun=("time", [30.0, 95.0, 60.0]))
         >>> bad["latitude"] = ("time", [61.0, 61.0, np.nan])
@@ -1744,23 +1686,10 @@ class PyRadtranAccessor:
         return saved_path
 
     def _apply_altitude(self, config: SimulationConfig, params):
-        """Apply the dataset's ``altitude`` to *config* and *params*.
+        """Apply the ``altitude`` convention of :meth:`run`; return ``(params, ds)``.
 
-        The single definition of the altitude convention, used by
-        :meth:`run` and :meth:`explain` (and, through the values they
-        pass on, the provenance input example):
-
-        * ``altitude`` as a coordinate / dimension — its sorted unique
-          values replace ``config.simulation_defaults.output_altitudes_km``
-          (*config* is modified) and an ``altitude`` dimension is dropped
-          from the dataset to iterate: one run returns all levels.
-        * ``altitude`` as a data variable — per-point output level,
-          injected as ``params["zout"] = Var("altitude")`` unless *params*
-          already has ``"zout"``.
-
-        Returns
-        -------
-        (params, ds_to_execute)
+        A coordinate sets ``output_altitudes_km`` (*config* is modified) and
+        its dimension is dropped; a data variable becomes ``zout = Var``.
         """
         ds, alt_var = self._obj, "altitude"
         if alt_var in ds.data_vars:
@@ -1816,12 +1745,7 @@ class PyRadtranAccessor:
         lat_var: str = "latitude",
         lon_var: str = "longitude",
     ) -> Optional[str]:
-        """Annotated input file for the first point — provenance attr.
-
-        *ds* and *params* are the ones :meth:`_apply_altitude` returned.
-        Best effort: returns *None* instead of raising, a finished run
-        must never fail on metadata.
-        """
+        """Annotated input file of the first point, or *None* on any error."""
         try:
             return self._render_point(
                 self._config, ds, params, None, time_var, lat_var, lon_var
@@ -1836,7 +1760,7 @@ class PyRadtranAccessor:
         channels: xr.DataArray,
         keep_spectral: bool,
     ) -> xr.Dataset:
-        """SRF-convolve a spectral result; the status variable passes through."""
+        """SRF-convolve a spectral result; ``status`` passes through."""
         if "wavelength" not in result_ds.dims:
             logger.warning(
                 "channels= given but result has no wavelength dimension; "
@@ -1869,34 +1793,30 @@ class PyRadtranAccessor:
         cloud_top_var: Optional[str] = None,
         cloud_bottom_var: Optional[str] = None,
     ) -> str:
-        r"""Preview the cloud-profile file that would be generated.
+        r"""Preview the cloud-profile file :meth:`run` would write for a point.
 
-        Builds the cloud profile of one point exactly as :meth:`run`
-        would — from the ``cloud_*_var`` variables or from a dict-valued
-        ``wc_file`` / ``ic_file`` entry in *params* — and returns it as
-        text. Nothing is written and ``uvspec`` is not run.
+        The profile is built as in :meth:`run`, from the ``cloud_*_var``
+        variables or a dict-valued ``wc_file`` / ``ic_file`` in *params*.
+        Nothing is written and ``uvspec`` is not run.
 
         Parameters
         ----------
         selector : dict, optional
-            Passed to ``Dataset.sel(..., method="nearest")`` to pick a
-            single point, e.g. ``{"time": "2025-06-21T16:00"}``.
-            Defaults to the first element along every dimension.
+            Passed to ``Dataset.sel(..., method="nearest")`` to pick one
+            point, e.g. ``{"time": "2025-06-21T16:00"}``. Default: the
+            first element along every dimension.
         params : dict, optional
-            Unified parameter mapping (same as :meth:`run`). Only
-            dict-valued ``"wc_file"`` / ``"ic_file"`` entries matter
-            here; they replace the profile built from the
-            ``cloud_*_var`` variables for that phase.
-            :class:`~pyradtran.params.Var` entries resolve from the
+            Parameter mapping, as in :meth:`run`. Only dict-valued
+            ``"wc_file"`` / ``"ic_file"`` entries are used; they replace
+            the ``cloud_*_var`` profile of that phase.
+            :class:`~pyradtran.params.Var` entries resolve at the
             selected point.
         parameter_overrides : dict, optional
-            Deprecated — use ``params`` instead.
+            Deprecated; use ``params``.
         cloud_wc_var, cloud_ic_var : str, optional
             Liquid / ice water content variables (g m\ :sup:`-3`).
         cloud_reff_var, cloud_ic_reff_var : str, optional
-            Effective-radius variables (µm). Defaults when missing or
-            NaN: 10 µm (liquid), 20 µm (ice); without
-            *cloud_ic_reff_var* the ice phase uses *cloud_reff_var*.
+            Effective-radius variables (µm), as in :meth:`run`.
         cloud_top_var, cloud_bottom_var : str, optional
             Cloud top / base altitude variables (km).
 
@@ -1906,16 +1826,15 @@ class PyRadtranAccessor:
             One block per phase, headed ``# wc_file profile`` /
             ``# ic_file profile``, with the columns altitude (km), water
             content (g m\ :sup:`-3`) and effective radius (µm), top
-            level first. If no cloud can be constructed (no variables
-            given, or NaN boundaries / water content), the message
+            level first. Without a cloud (no variables given, or NaN
+            boundaries / water content), the message
             ``"No valid cloud profile generated for this point."``.
 
         Raises
         ------
         ValueError
-            As in :meth:`run`: if cloud variables are requested without
-            both boundary variables, or name variables missing from the
-            dataset.
+            If cloud variables lack a boundary variable or are missing
+            from the dataset.
 
         See Also
         --------
@@ -1939,8 +1858,8 @@ class PyRadtranAccessor:
         e.g. 0.3 g m\ :sup:`-3` over 0.5 km gives 150 g m\ :sup:`-2`.
         libRadtran reads the value at a level as the content of the layer
         *above* it, so only the base row carries the cloud; the top row
-        just closes the layer (its water content is ignored). ERA5
-        clouds (``era5_clouds``) are not previewed here.
+        closes the layer (its water content is ignored). ERA5 clouds
+        (``era5_clouds``) are not previewed.
 
         Examples
         --------
@@ -1967,7 +1886,7 @@ class PyRadtranAccessor:
         ...     cloud_bottom_var="cloud_base",
         ... )
 
-        The first point (default), then a chosen one:
+        First point (default), then a selected one:
 
         >>> print(cloudy.pyradtran.inspect_cloud_file(**cloud_vars))
         # wc_file profile
@@ -1984,7 +1903,7 @@ class PyRadtranAccessor:
         1.000000 0.300000 8.000000
         <BLANKLINE>
 
-        A vertically resolved profile passed through ``params``:
+        A vertically resolved profile from ``params``:
 
         >>> profile = {
         ...     "z": [2.0, 1.5, 1.0],
@@ -1998,7 +1917,7 @@ class PyRadtranAccessor:
         1.000000 0.100000 8.000000
         <BLANKLINE>
 
-        Without any cloud information:
+        No cloud information:
 
         >>> cloudy.pyradtran.inspect_cloud_file()
         'No valid cloud profile generated for this point.'
@@ -2033,7 +1952,7 @@ class PyRadtranAccessor:
                 v = point_ds[val.name].values
                 point_overrides[key] = v.item() if v.size == 1 else v
 
-        # Same construction the batch driver uses — preview cannot diverge
+        # Same construction as the batch driver, so the preview matches
         wc, ic = _point_cloud_profiles(
             lambda var: _scalar(point_ds, var),
             cloud_wc_var,
@@ -2071,27 +1990,23 @@ class PyRadtranAccessor:
     ) -> str:
         """Preview the annotated ``uvspec`` input file for one point.
 
-        Resolves the configuration and *params* for a single point of the
-        dataset and returns the input file that :meth:`run` would hand to
-        ``uvspec``, each line annotated with where its value came from.
-        No simulation is run, so this is the quickest way to check a
-        setup — and *params* are validated exactly as in :meth:`run`.
+        Returns the input file :meth:`run` would pass to ``uvspec`` for one
+        point, each line tagged with the origin of its value. *params* are
+        validated as in :meth:`run`; nothing is simulated.
 
         Parameters
         ----------
         point : dict, optional
             ``Dataset.sel(..., method="nearest")`` selector, e.g.
-            ``{"time": "2025-06-21T16:00"}``. Defaults to the first
-            element along every dimension. An ``altitude`` dimension is
-            not a simulation axis (see :meth:`run`) and cannot be
-            selected.
+            ``{"time": "2025-06-21T16:00"}``. Default: the first element
+            along every dimension. An ``altitude`` dimension is not a
+            simulation axis (see :meth:`run`) and cannot be selected.
         params : dict, optional
-            Same mapping accepted by :meth:`run`.
+            Parameter mapping, as in :meth:`run`.
         config_path : str or pathlib.Path, optional
             Simulation YAML, as in :meth:`run`.
         config : SimulationConfig, optional
-            Pre-built configuration; takes precedence over *config_path*.
-            It is copied, so the caller's object is never modified.
+            Pre-built configuration, as in :meth:`run` (copied).
         time_var, lat_var, lon_var : str
             Names of the time / latitude / longitude variables.
 
@@ -2103,48 +2018,43 @@ class PyRadtranAccessor:
 
             ``config``
                 From the merged configuration (package defaults, master
-                config, *config_path*), including values derived from
-                it and the point — e.g. ``sza`` and ``day_of_year``
-                computed from time and position.
+                config, *config_path*), including values derived from it
+                and the point, e.g. ``sza`` and ``day_of_year`` computed
+                from time and position.
             ``params-literal``
                 A literal from *params* that passed validation.
             ``dataset-var``
                 A :class:`~pyradtran.params.Var` reference, resolved
                 from the dataset at this point.
             ``unvalidated``
-                Passed through unchecked: a
-                :class:`~pyradtran.params.Raw` value, or an option
-                that could not be checked because no libRadtran option
-                schema is available.
+                Not checked: a :class:`~pyradtran.params.Raw` value, or
+                an option with no libRadtran option schema available.
 
         Raises
         ------
         ValidationError
             If *params* contains an unknown option or invalid value, or
-            a ``Var`` naming a variable that is not in the dataset.
+            a ``Var`` naming a variable not in the dataset.
 
         See Also
         --------
         run : Run the simulations.
         inspect_cloud_file : Preview a generated cloud file.
         pyradtran.describe : Documentation of a single uvspec option.
-        pyradtran.core.Simulation.dry_run : The renderer behind this
-            method.
+        pyradtran.core.Simulation.dry_run : The renderer.
 
         Notes
         -----
         The preview covers the configuration, *params* and the
-        ``altitude`` handling of :meth:`run` (an ``altitude`` coordinate
-        sets the ``zout`` levels, an ``altitude`` data variable the
-        per-point ``zout``). Not reflected are ``era5_atmosphere`` /
-        ``era5_clouds`` and the ``cloud_*_var`` arguments. A dict-valued
-        ``wc_file`` / ``ic_file`` — from *params* or from a
-        ``cloud_source: parametric`` configuration — is shown as
-        ``wc_file 1D <generated: 2 levels, 1-2 km>`` in place of the
-        path of the temporary file written at run time.
+        ``altitude`` handling of :meth:`run`. It does not reflect
+        ``era5_atmosphere`` / ``era5_clouds`` or the ``cloud_*_var``
+        arguments. A dict-valued ``wc_file`` / ``ic_file`` (from *params*
+        or a ``cloud_source: parametric`` configuration) appears as
+        ``wc_file 1D <generated: 2 levels, 1-2 km>`` instead of the path
+        of the temporary file written at run time.
 
-        The annotated input file of the first point of an actual run is
-        stored in ``result.attrs["pyradtran_input_example"]``.
+        A run stores the annotated input file of its first point in
+        ``result.attrs["pyradtran_input_example"]``.
 
         Examples
         --------
@@ -2161,10 +2071,7 @@ class PyRadtranAccessor:
         ...     },
         ... )
 
-        All four provenance tags in one file — everything from the YAML
-        is ``config``, the fixed solar zenith angle and the aerosol
-        switch are literals, the albedo comes from the dataset and the
-        ``Raw`` visibility skips validation:
+        All four provenance tags:
 
         >>> print(  # doctest: +SKIP
         ...     ds.pyradtran.explain(
@@ -2195,8 +2102,8 @@ class PyRadtranAccessor:
         albedo 0.8                                                          # dataset-var
         quiet                                                               # config
 
-        Without *params* the solar zenith angle is computed for the
-        selected point, and the albedo is the config value:
+        Without *params*, ``sza`` is computed for the selected point and
+        the albedo comes from the config:
 
         >>> text = ds.pyradtran.explain(  # doctest: +SKIP
         ...     point={"time": "2025-06-21T16:00"},
@@ -2206,7 +2113,7 @@ class PyRadtranAccessor:
         sza 65.59                                                           # config
         albedo 0.15                                                         # config
 
-        Mistakes are caught before any simulation is started:
+        Invalid parameters raise before anything runs:
 
         >>> ds.pyradtran.explain(  # doctest: +SKIP
         ...     config_path="config/quickstart.yaml", params={"albedo": 1.5}
@@ -2238,27 +2145,25 @@ class PyRadtranAccessor:
     ) -> xr.Dataset:
         r"""Finite-difference sensitivity kernel for one scalar parameter.
 
-        Runs the whole batch twice — once with the base value of *param*
-        and once with ``param + delta`` — and returns the difference
-        quotient of every output variable, on the same dimensions as
-        :meth:`run`.
+        Runs the batch twice, with the base value of *param* and with
+        ``param + delta``, and returns the difference quotient of every
+        output variable on the dimensions of :meth:`run`.
 
         Parameters
         ----------
         param : str
-            Parameter to perturb, as it would be written in *params*
-            (``"albedo"``, ``"sza"``, ``"mol_modify O3"`` ...). Its base
-            value must be a single number: a literal in *params*, or one
-            of the configuration defaults ``albedo``,
-            ``sur_temperature``, ``sza``, ``mol_modify O3`` and
-            ``mol_modify H2O``. A :class:`~pyradtran.params.Var` is not
-            allowed.
+            Parameter to perturb, as written in *params* (``"albedo"``,
+            ``"sza"``, ``"mol_modify O3"`` ...). Its base value must be a
+            single number: a literal in *params*, or one of the
+            configuration defaults ``albedo``, ``sur_temperature``,
+            ``sza``, ``mol_modify O3`` and ``mol_modify H2O``. A
+            :class:`~pyradtran.params.Var` is not allowed.
         delta : float
-            Perturbation :math:`\delta`, in the units of the parameter.
-            May be negative (backward difference).
+            Perturbation :math:`\delta` in the units of the parameter.
+            Negative values give a backward difference.
         params : dict, optional
-            Base parameter mapping (same as :meth:`run`). Other entries
-            may be ``Var`` references.
+            Base parameter mapping, as in :meth:`run`. Other entries may
+            be ``Var`` references.
         config_path : str or pathlib.Path, optional
             Simulation YAML, as in :meth:`run`.
         config : SimulationConfig, optional
@@ -2272,11 +2177,11 @@ class PyRadtranAccessor:
         Returns
         -------
         xarray.Dataset
-            Same variables and dimensions as a :meth:`run` result, each
-            holding the derivative with respect to *param* (output units
-            per unit of *param*). ``status`` is the worse (larger) status
-            of the two runs at each point; a point that failed in either
-            run is NaN. Attributes: ``jacobian_param``,
+            Variables and dimensions of a :meth:`run` result, holding
+            the derivative with respect to *param* (output units per unit
+            of *param*). ``status`` is the larger status of the two runs
+            per point; a point that failed in either run is NaN.
+            Attributes: ``jacobian_param``,
             ``jacobian_delta``, ``jacobian_base_value`` and the usual
             provenance of the base run.
 
@@ -2284,10 +2189,9 @@ class PyRadtranAccessor:
         ------
         ValidationError
             If *param* is a ``Var`` reference, has no base value in
-            *params* or the configuration (e.g. ``"sza"`` when the
-            configuration leaves it to be computed from time and
-            position), or has a non-numeric one (``"rte_solver"``); also
-            for ``return_dataset=False``.
+            *params* or the configuration (e.g. ``"sza"`` when it is
+            computed from time and position), or has a non-numeric one
+            (``"rte_solver"``); also for ``return_dataset=False``.
 
         See Also
         --------
@@ -2307,11 +2211,11 @@ class PyRadtranAccessor:
                 + \mathcal{O}(\delta^2)
 
         so the truncation error grows linearly with :math:`\delta`.
-        Making :math:`\delta` very small does not help either:
-        ``uvspec`` prints about seven significant digits, so the
-        difference of two outputs carries a round-off error of order
-        :math:`\varepsilon |F|` with :math:`\varepsilon \approx 10^{-7}`,
-        which the division amplifies to
+        A very small :math:`\delta` does not help: ``uvspec`` prints
+        about seven significant digits, so the difference of two outputs
+        has a round-off error of order :math:`\varepsilon |F|` with
+        :math:`\varepsilon \approx 10^{-7}`, which the division amplifies
+        to
 
         .. math::
 
@@ -2319,22 +2223,21 @@ class PyRadtranAccessor:
 
         Choose :math:`\delta` between the two regimes: large enough that
         the outputs change in their first four or five digits, small
-        enough that the response is still linear — typically about 1 % of
-        the parameter's natural range (0.01 for an albedo, 1 K for a
-        temperature, a few DU for ozone). Repeating the call with
-        :math:`\delta/2` or :math:`-\delta` is a cheap check: if the
-        kernel changes noticeably, the truncation term matters. Monte
-        Carlo solvers (``mystic``) add statistical noise to
-        :math:`\Delta K_\mathrm{round}` and need a correspondingly
-        larger :math:`\delta`.
+        enough that the response is linear. About 1 % of the parameter's
+        natural range usually works (0.01 for an albedo, 1 K for a
+        temperature, a few DU for ozone). To check, repeat with
+        :math:`\delta/2` or :math:`-\delta`: if the kernel changes
+        noticeably, the truncation term matters. Monte Carlo solvers
+        (``mystic``) add statistical noise to
+        :math:`\Delta K_\mathrm{round}` and need a larger :math:`\delta`.
 
-        The cost is two full batches. All other inputs — ``Var``
-        parameters, clouds, ERA5 profiles — are identical in both runs.
+        The cost is two full batches. All other inputs (``Var``
+        parameters, clouds, ERA5 profiles) are identical in both runs.
 
         Examples
         --------
-        Sensitivity of the surface irradiances to the surface albedo, at
-        local noon (base value 0.15 from the configuration):
+        Surface irradiances against surface albedo at local noon (base
+        value 0.15 from the configuration):
 
         >>> import pandas as pd
         >>> import xarray as xr
@@ -2358,9 +2261,9 @@ class PyRadtranAccessor:
         >>> {k: v for k, v in kernel.attrs.items() if k.startswith("jacobian")}  # doctest: +SKIP
         {'jacobian_param': 'albedo', 'jacobian_delta': 0.01, 'jacobian_base_value': 0.15}
 
-        The reflected irradiance responds strongly, the diffuse downward
-        irradiance through multiple reflection between surface and
-        atmosphere (more in the blue), the direct beam not at all:
+        ``eup`` responds strongly, ``edn`` through multiple reflection
+        between surface and atmosphere (more in the blue), ``edir`` not
+        at all:
 
         >>> sel = kernel.sel(wavelength=[450, 550, 650]).squeeze()  # doctest: +SKIP
         >>> sel.eup.round(1).values  # doctest: +SKIP
@@ -2370,8 +2273,8 @@ class PyRadtranAccessor:
         >>> sel.edir.round(1).values  # doctest: +SKIP
         array([0., 0., 0.])
 
-        The effect of the step size on ``d eup / d albedo`` at 550 nm:
-        round-off noise for a tiny step, a plateau, then curvature:
+        Step size and ``d eup / d albedo`` at 550 nm: round-off noise,
+        a plateau, then curvature:
 
         >>> for delta in (1e-6, 1e-4, 1e-2, 1e-1, 0.5):  # doctest: +SKIP
         ...     k = noon.pyradtran.jacobian(
@@ -2386,8 +2289,7 @@ class PyRadtranAccessor:
            1e-01    1317.4
            5e-01    1362.3
 
-        A parameter without a configuration default needs a base value in
-        *params*:
+        Without a configuration default, give the base value in *params*:
 
         >>> kernel = noon.pyradtran.jacobian(  # doctest: +SKIP
         ...     "sza",

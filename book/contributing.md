@@ -1,6 +1,6 @@
 # Contributing
 
-We welcome contributions to pyRadtran! Whether it's bug reports, documentation improvements, or new features — every contribution helps.
+Bug reports, documentation fixes and new features are welcome.
 
 ## Development Setup
 
@@ -10,15 +10,13 @@ We welcome contributions to pyRadtran! Whether it's bug reports, documentation i
    git clone https://github.com/YOUR-USERNAME/pyRadtran.git
    cd pyRadtran
    ```
-3. Install in development mode with dev dependencies:
+3. Install in development mode:
    ```bash
    pip install -e '.[dev]'
    ```
 4. Set up your `~/.pyradtran/config.yaml` (see {doc}`installation`)
 
 ## Running Tests
-
-pyRadtran uses pytest with markers to separate tests by type:
 
 ```bash
 # Everything except the slow network tests (IGRA2, ERA5 Zarr)
@@ -36,13 +34,8 @@ pytest -m "not slow" --cov=pyradtran
 
 ## Code Style
 
-We use the following tools for code formatting and linting:
-
-- **black** for code formatting (line length: 88)
-- **isort** for import sorting (black-compatible profile)
-- **flake8** for linting
-
-Before submitting a PR, run:
+black (line length 88), isort (black profile) and flake8. Before
+submitting a PR, run:
 
 ```bash
 black pyradtran/
@@ -52,16 +45,17 @@ flake8 pyradtran/
 
 ## Notebook Guidelines
 
-The Jupyter notebooks in `book/notebooks/` are the core of the documentation. When contributing or editing notebooks:
-
-1. **Always include a title** as the first markdown cell: `# Quickstart: Topic Name` or `# Advanced: Topic Name`
-2. **Add an introduction** — 1–3 sentences explaining what the notebook demonstrates
-3. **Use section headings** (`## Setup`, `## Configuration`, `## Running the Simulation`, `## Results`) to structure the notebook
-4. **Never hardcode absolute paths** — use `config_path=Path('config/...')` with configs in `book/notebooks/config/`
-5. **Use the canonical API**: `ds.pyradtran.run(config_path=...)` — not `run_uvspec()`
-6. **Add result interpretation cells** — explain what the reader should observe in the output/plots
-7. **Clear all cell outputs** before committing — the Jupyter Book build will re-execute them
-8. **Note required datasets** — if a notebook needs non-public data, add an admonition at the top
+1. First markdown cell: `# Title`, then 1–3 sentences on what the
+   notebook shows and what it needs (data, optional packages).
+2. Short section headings (`## Setup`, `## Run`, `## Results`).
+3. No absolute paths: `config_path=Path('config/...')`, configs in
+   `book/notebooks/config/`.
+4. Use `ds.pyradtran.run(config_path=..., params={...})`.
+5. Comment on a figure only when it shows something the reader would
+   not see unaided.
+6. Commit the executed outputs: the book build does not run notebooks.
+7. Add the notebook to `book/_toc.yml` and to its landing page under
+   `book/tutorials/` or `book/case_studies/`.
 
 ## Documentation
 
@@ -77,9 +71,8 @@ open book/_build/html/index.html
 ### Docstrings
 
 Docstrings follow the [numpydoc](https://numpydoc.readthedocs.io/en/latest/format.html)
-layout and are the single source of the API reference —
-`pyradtran/channels.py` is the model to copy. A public function should
-have:
+layout and are the source of the API reference;
+`pyradtran/channels.py` is the model to copy. A public function has:
 
 - a one-line summary and a short description of what it is *for*;
 - `Parameters` / `Returns` / `Raises` with types and **units**;
@@ -87,7 +80,7 @@ have:
   (`.. math::` or `` :math:`...` ``);
 - an `Examples` section a user could paste.
 
-Examples are doctests and are checked:
+Examples are doctests:
 
 ```bash
 pytest --doctest-modules pyradtran -p no:cacheprovider
@@ -95,11 +88,11 @@ pytest --doctest-modules pyradtran -p no:cacheprovider
 
 Anything that needs libRadtran, the network or user data gets a
 `# doctest: +SKIP` on each statement (the flag is hidden in the rendered
-page) — but paste real output, never invented numbers.
+page). Paste real output, never invented numbers.
 
-Figures in docstrings use the matplotlib `.. plot::` directive. They are
-executed on every documentation build, **without** libRadtran, so they
-must be pure numpy/matplotlib (`np`, `xr` and `plt` are pre-imported):
+Figures in docstrings use the matplotlib `.. plot::` directive. They run
+on every documentation build, **without** libRadtran, so they must be
+pure numpy/matplotlib (`np`, `xr` and `plt` are pre-imported):
 
 ```rst
 .. plot::
@@ -117,13 +110,12 @@ New public objects must also be listed in `book/api/index.md`.
 ### Guide figures
 
 Figures in the user guide that come from real simulations are produced
-by `book/img/make_guide_figures.py` and committed as PNG — rerun the
-script (needs libRadtran) when the underlying behaviour changes.
+by `book/img/make_guide_figures.py` and committed as PNG. Rerun the
+script (needs libRadtran) when the behaviour changes.
 
 ## Pull Requests
 
 1. Create a feature branch from `main`
-2. Make your changes with clear commit messages
-3. Ensure tests pass: `pytest -m "not slow"`
-4. Submit a pull request against the `main` branch
-5. Describe what your PR does and link any related issues
+2. Make sure the tests pass: `pytest -m "not slow"`
+3. Open a pull request against `main`, say what it does and link
+   related issues

@@ -1,9 +1,9 @@
 """
 Instrument-channel convolution and brightness temperature.
 
-Turn spectral ``uvspec`` output into what an instrument actually reports:
-band-averaged quantities weighted by the spectral response function (SRF)
-of each channel, and — for thermal channels — brightness temperatures.
+Turn spectral ``uvspec`` output into what an instrument reports:
+band averages weighted by the spectral response function (SRF) of each
+channel and, for thermal channels, brightness temperatures.
 
 .. autosummary::
 
@@ -20,8 +20,7 @@ dimension, ``srf`` has dims ``(channel, wavelength)``):
 ...     channel_ds["uu"], 10500.0, radiance_units="W m-2 nm-1 sr-1"
 ... )
 
-or let :meth:`~pyradtran.interface.PyRadtranAccessor.run` do the
-convolution in one go:
+Or let :meth:`~pyradtran.interface.PyRadtranAccessor.run` convolve:
 
 >>> channel_ds = ds.pyradtran.run(config_path=cfg, channels=srf)  # doctest: +SKIP
 
@@ -64,8 +63,8 @@ def convolve_channels(
     srf : xarray.DataArray
         Spectral response, dims ``(channel, wavelength)`` with
         ``wavelength`` in nm. Interpolated linearly onto the result's
-        wavelength grid; values outside the SRF's own grid are treated
-        as zero response. The SRF does not need to be normalised.
+        wavelength grid, with zero response outside the SRF's own grid.
+        Need not be normalised.
     keep_spectral : bool, default ``False``
         Keep the original spectral variables under ``<name>_spectral``.
 
@@ -87,13 +86,12 @@ def convolve_channels(
     --------
     brightness_temperature : Convert channel radiances to temperatures.
     pyradtran.interface.PyRadtranAccessor.run : ``channels=`` applies this
-        function directly to the simulation output.
+        function to the simulation output.
 
     Notes
     -----
     For a spectral quantity :math:`X(\lambda)` and the response
     :math:`\varphi_c(\lambda)` of channel :math:`c`, the channel value is
-    the normalised band average
 
     .. math::
 
@@ -102,20 +100,18 @@ def convolve_channels(
                     {\int \varphi_c(\lambda)\,\mathrm{d}\lambda}
 
     Both integrals use the trapezoidal rule on the *result's* wavelength
-    grid. The result therefore keeps the units of the input (a spectral
-    radiance in mW m\ :sup:`-2` nm\ :sup:`-1` sr\ :sup:`-1` stays a
-    band-mean spectral radiance), which is exactly what
-    :func:`brightness_temperature` expects.
+    grid. The output keeps the units of the input: a spectral radiance
+    in mW m\ :sup:`-2` nm\ :sup:`-1` sr\ :sup:`-1` stays a band-mean
+    spectral radiance, as :func:`brightness_temperature` expects.
 
-    The simulated grid must resolve the SRF: with a coarse
-    ``mol_abs_param`` (e.g. ``reptran coarse``) and a narrow channel only
-    a handful of grid points carry weight, and the band average becomes
-    noisy.
+    The simulated grid must resolve the SRF. With a coarse
+    ``mol_abs_param`` (e.g. ``reptran coarse``) and a narrow channel,
+    few grid points carry weight and the band average becomes noisy.
 
     Examples
     --------
-    A synthetic two-point "simulation" with a linear spectrum, convolved
-    with two Gaussian channels:
+    A linear spectrum at two time steps, convolved with three Gaussian
+    channels:
 
     >>> import numpy as np
     >>> import xarray as xr
@@ -135,21 +131,19 @@ def convolve_channels(
     array([[ 8.6, 10.8, 12. ],
            [17.2, 21.6, 24. ]])
 
-    Keep the full spectrum next to the channel values:
+    Keep the spectrum next to the channel values:
 
     >>> sorted(convolve_channels(result, srf, keep_spectral=True).data_vars)
     ['uu', 'uu_spectral']
 
-    A channel outside the simulated range is an error rather than a
-    silent ``NaN``:
+    A channel outside the simulated range raises:
 
     >>> convolve_channels(result, srf.assign_coords(wavelength=wl + 9000.0))
     Traceback (most recent call last):
         ...
     ValueError: SRF for channel(s) ['8.6um', '10.8um', '12.0um'] has no overlap with the result wavelength grid (8000.0–13000.0 nm); convolution would divide by zero
 
-    What the convolution does, for a clear-sky-like thermal spectrum and
-    three imager channels:
+    A thermal spectrum with an ozone-like band and three imager channels:
 
     .. plot::
 
@@ -208,10 +202,7 @@ def convolve_channels(
 
 
 def _interp_srf(srf: xr.DataArray, wl: xr.DataArray) -> xr.DataArray:
-    """Interpolate an SRF onto the result wavelength grid (numpy only).
-
-    Zero response outside the SRF's own wavelength grid.
-    """
+    """Interpolate an SRF onto the result wavelength grid, zero outside."""
     srf = srf.sortby("wavelength")
     srf_wl = srf["wavelength"].values.astype(float)
     target = wl.values.astype(float)
@@ -239,9 +230,9 @@ def brightness_temperature(
 ):
     r"""Convert spectral radiance to brightness temperature (K).
 
-    The brightness temperature is the temperature a blackbody would need
-    to emit the given radiance at the given wavelength — the inverse of
-    the Planck function.
+    The brightness temperature is the temperature at which a blackbody
+    emits the given radiance at the given wavelength (the inverse of the
+    Planck function).
 
     Parameters
     ----------
@@ -253,8 +244,8 @@ def brightness_temperature(
         channel-averaged radiances use the channel's central (or
         effective) wavelength.
     radiance_units : {"mW m-2 nm-1 sr-1", "W m-2 nm-1 sr-1"}
-        Units of *radiance*. The radiance must be *per nanometre*; see
-        the Notes for which uvspec settings produce which unit.
+        Units of *radiance*, which must be *per nanometre*. The Notes
+        list which uvspec settings produce which unit.
 
     Returns
     -------
@@ -275,8 +266,7 @@ def brightness_temperature(
 
     Notes
     -----
-    Planck's law for the spectral radiance of a blackbody at temperature
-    :math:`T` is
+    The spectral radiance of a blackbody at temperature :math:`T` is
 
     .. math::
 
@@ -284,7 +274,6 @@ def brightness_temperature(
                        \frac{1}{\exp\!\left(\dfrac{h c}{\lambda k_B T}\right) - 1}
 
     Solving :math:`B_\lambda(T_b) = L_\lambda` for the temperature gives
-    the brightness temperature
 
     .. math::
 
@@ -297,28 +286,27 @@ def brightness_temperature(
     stays accurate in the Rayleigh–Jeans limit
     (:math:`c_1 / \lambda^5 L_\lambda \ll 1`).
 
-    **Which unit does uvspec write?** That depends on the source:
+    The unit uvspec writes depends on the source:
 
-    * ``source thermal`` — by default uvspec reports thermal quantities
+    * ``source thermal``: by default uvspec reports thermal quantities
       *per spectral band* (1 cm\ :sup:`-1` wide unless changed), not per
       nanometre. Add ``params={"output_process": "per_nm"}`` to get
       W m\ :sup:`-2` nm\ :sup:`-1` sr\ :sup:`-1` and pass
       ``radiance_units="W m-2 nm-1 sr-1"``.
-    * ``source solar`` — the unit follows the solar spectrum file; the
+    * ``source solar``: the unit follows the solar spectrum file. The
       spectra shipped with libRadtran are in
       mW m\ :sup:`-2` nm\ :sup:`-1`, hence the default.
 
-    If all you need is the brightness temperature at the simulated
-    resolution, uvspec can do the inversion itself:
-    ``params={"output_quantity": "brightness"}`` makes every radiance and
-    irradiance column come back in kelvin. Use this function when you
-    want to post-process radiances first (channel convolution, window
-    corrections, noise) and convert afterwards.
+    For brightness temperatures at the simulated resolution, uvspec can
+    do the inversion itself: ``params={"output_quantity": "brightness"}``
+    returns every radiance and irradiance column in kelvin. Use this
+    function to post-process radiances first (channel convolution,
+    window corrections, noise) and convert afterwards.
 
-    The conversion is strictly monochromatic. Applied to a band-averaged
-    radiance with the channel's central wavelength it is a very good
-    approximation for narrow channels (width :math:`\lesssim 1` µm in the
-    thermal window); for broad channels use an effective wavelength or a
+    The conversion is monochromatic. Applied to a band-averaged radiance
+    with the channel's central wavelength, it is a good approximation
+    for narrow channels (width :math:`\lesssim 1` µm in the thermal
+    window). For broad channels use an effective wavelength or a
     band-correction fit.
 
     Examples
@@ -330,15 +318,14 @@ def brightness_temperature(
     >>> float(brightness_temperature(7.045267, 10500.0).round(2))
     280.0
 
-    Inputs broadcast, so one call handles several channels:
+    Several channels in one call:
 
     >>> brightness_temperature([5.0, 7.5, 10.0], [8600.0, 10800.0, 12000.0]).round(1)
     array([268.6, 283.9, 308.3])
 
-    Typical use after a thermal simulation with instrument channels.
-    ``output_process per_nm`` makes uvspec write radiances per nanometre
-    (in W), and ``channel_ds["uu"]`` has a ``channel`` dimension whose
-    central wavelengths are stored in ``center_nm``:
+    After a thermal simulation with instrument channels
+    (``output_process per_nm`` gives radiances in W per nanometre;
+    ``center_nm`` holds the central wavelength of each channel):
 
     >>> channel_ds = ds.pyradtran.run(  # doctest: +SKIP
     ...     config_path="config/thermal_spectral.yaml",
@@ -352,7 +339,7 @@ def brightness_temperature(
     ... )
     >>> tb.attrs["units"] = "K"  # doctest: +SKIP
 
-    The Planck curves being inverted, in uvspec's default radiance units:
+    The Planck curves being inverted, in the default radiance units:
 
     .. plot::
 

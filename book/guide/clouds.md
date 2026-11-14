@@ -2,23 +2,24 @@
 
 A cloud in libRadtran is a vertical profile of **water content** and
 **effective radius**, separately for liquid (`wc_file`) and ice
-(`ic_file`). pyRadtran gives you four ways to provide one — pick by
-where your cloud information comes from:
+(`ic_file`). There are four ways to provide one, depending on where the
+cloud information comes from:
 
 | You have… | Use | Per point? |
 |---|---|---|
 | a cloud profile file on disk | `params={"wc_file 1D": "cloud.dat"}` | same cloud everywhere |
 | a profile in Python (lists / arrays) | `params={"wc_file": {"z": …, "lwc": …, "reff": …}}` | same cloud everywhere |
-| cloud top / base / water content as dataset variables | `cloud_wc_var=…, cloud_top_var=…, cloud_bottom_var=…` | yes — sweep axes welcome |
-| ERA5 `clwc` / `ciwc` fields | `era5_atmosphere=era5, era5_clouds=True` | yes — from the reanalysis |
+| cloud top / base / water content as dataset variables | `cloud_wc_var=…, cloud_top_var=…, cloud_bottom_var=…` | yes |
+| ERA5 `clwc` / `ciwc` fields | `era5_atmosphere=era5, era5_clouds=True` | yes |
 
-All four end up as the same thing in the uvspec input: a
-`wc_file 1D <path>` and/or `ic_file 1D <path>` line.
+All four become a `wc_file 1D <path>` and/or `ic_file 1D <path>` line
+in the uvspec input.
 
 ```{warning}
 Use `rte_solver: disort` for cloudy runs. The fast `twostr` solver is
 numerically unstable for some optically thick layers and returns `NaN`
-at individual wavelengths, which poisons integrated (broadband) results.
+at individual wavelengths, which turns integrated (broadband) results
+into `NaN`.
 pyRadtran logs a warning when it detects this.
 ```
 
@@ -36,11 +37,10 @@ Three columns, **top of the atmosphere first**:
 libRadtran reads each row as a *level*; the water content on a row
 applies to the layer **between that level and the one above it**. The
 file above is therefore one homogeneous cloud layer from 1.0 to 1.5 km
-with 0.2 g m⁻³ — the value on the top row is not used. This is why
-pyRadtran-generated two-level files simply repeat the value on both
-rows.
+with 0.2 g m⁻³; the value on the top row is not used. Two-level files
+written by pyRadtran repeat the value on both rows.
 
-## Useful cloud physics
+## Water path and optical thickness
 
 The **liquid water path** is the vertical integral of the water content,
 
@@ -58,8 +58,7 @@ $$
 
 with the density of water $\rho_w = 10^6$ g m⁻³: LWP = 100 g m⁻² and
 $r_\mathrm{eff}$ = 10 µm give $\tau \approx 15$. This is a rule of thumb
-for choosing inputs — the simulation itself uses the full optical
-properties selected by `wc_properties` / `ic_properties`.
+for choosing inputs; the simulation uses the optical properties selected by `wc_properties` / `ic_properties`.
 
 ## 1. A file on disk
 
@@ -79,7 +78,7 @@ res = ds.pyradtran.run(
 )
 ```
 
-Mixed-phase clouds are simply both files at once:
+A mixed-phase cloud is both files at once:
 
 ```python
 params = {
@@ -90,8 +89,7 @@ params = {
 
 ## 2. A profile from Python
 
-Pass the profile as a dict — pyRadtran writes the temporary file for
-you:
+Pass the profile as a dict; pyRadtran writes the temporary file:
 
 ```python
 import numpy as np
@@ -110,9 +108,9 @@ For ice use `"ic_file": {"z": …, "iwc": …, "reff": …}`.
 Cloud altitudes are heights above sea level, as everywhere in
 libRadtran.
 
-To keep the cloud as a file — or to build it from named layers — use
+To keep the cloud as a file, or to build it from named layers, use
 {class}`~pyradtran.clouds.CloudLayer` and
-{class}`~pyradtran.clouds.CloudFileWriter`; the file is written at the
+{class}`~pyradtran.clouds.CloudFileWriter`. The file is written at the
 exact layer boundaries and is radiatively identical to the dict form:
 
 ```python
@@ -128,9 +126,8 @@ CloudFileWriter.write_ice_cloud_file(layers, "work/ic.dat")
 
 ## 3. Clouds as dataset variables
 
-The workhorse for sensitivity studies. Put the cloud properties in the
-dataset — on `time` for a case study, on their own dimensions for a
-parameter sweep — and name them:
+Put the cloud properties in the dataset (on `time` for a case study, on
+their own dimensions for a parameter sweep) and name them:
 
 ```python
 import numpy as np
@@ -169,18 +166,17 @@ thermal = ds.pyradtran.run(
 
 | Keyword | Dataset variable holds | Default if omitted |
 |---|---|---|
-| `cloud_top_var`, `cloud_bottom_var` | cloud top / base height (km) — **both required** | no cloud |
+| `cloud_top_var`, `cloud_bottom_var` | cloud top / base height (km); **both required** | no cloud |
 | `cloud_wc_var` | liquid water content (g m⁻³) | no liquid cloud |
 | `cloud_reff_var` | droplet effective radius (µm) | 10 µm |
 | `cloud_ic_var` | ice water content (g m⁻³) | no ice cloud |
 | `cloud_ic_reff_var` | ice effective radius (µm) | `cloud_reff_var`, else 20 µm |
 
 Each point gets a homogeneous layer between base and top. A point where
-top, base or the water content is NaN simply gets no cloud of that
-phase — handy for mixing clear and cloudy points in one dataset.
+top, base or the water content is NaN gets no cloud of that phase, so
+clear and cloudy points can share one dataset.
 
-The surface cloud radiative effect then is three lines
-(remember the {ref}`units <units>`):
+The surface cloud radiative effect (mind the {ref}`units <units>`):
 
 ```python
 net_sw = (solar.edir + solar.edn - solar.eup) / 1e3     # mW → W m-2
@@ -191,10 +187,9 @@ cre = (net_sw + net_lw) - (net_sw + net_lw).sel(lwp=0)
 ```{figure} ../img/guide_cloud_forcing.png
 :width: 95%
 
-The result of the code above for two surface albedos: over open ocean
-the shortwave cooling wins as soon as the cloud is optically thick,
-over sea ice the longwave warming dominates — the cloud warms the
-surface. Produced by `book/img/make_guide_figures.py`.
+The result of the code above for two surface albedos. Over open ocean
+the shortwave cooling wins once the cloud is optically thick; over sea
+ice the longwave warming dominates. Produced by `book/img/make_guide_figures.py`.
 ```
 
 Preview the cloud file a point would get, without running:
@@ -211,8 +206,8 @@ print(ds.pyradtran.inspect_cloud_file(selector={"lwp": 40}, **cloud))
 
 ## 4. Clouds from ERA5
 
-With an ERA5 dataset that contains `clwc` / `ciwc`, one switch converts
-the reanalysis cloud water into per-point profiles (see
+With an ERA5 dataset that contains `clwc` / `ciwc`, `era5_clouds=True`
+converts the cloud water into per-point profiles (see
 {doc}`atmosphere`):
 
 ```python
@@ -243,7 +238,7 @@ keywords → ERA5 clouds.
 ## Tuning a cloud: `wc_modify` / `ic_modify`
 
 Rescale an existing profile to a target optical property without
-touching the file — any number of modifications, as a list:
+changing the file. Several modifications go in a list:
 
 ```python
 params = {
@@ -261,8 +256,8 @@ print(pyradtran.describe("wc_modify"))
 # requires: wc_file
 ```
 
-Other options worth knowing — look them up with
-{func}`pyradtran.describe() <pyradtran.params.describe>`:
+Related options (details via
+{func}`pyradtran.describe() <pyradtran.params.describe>`):
 
 | Option | Purpose |
 |---|---|
@@ -271,9 +266,9 @@ Other options worth knowing — look them up with
 | `cloudcover wc` / `cloudcover ic` | fractional cover, independent-pixel approximation |
 | `interpret_as_level wc` | treat file rows as level values rather than layer values |
 
-## Where to go next
+## Notebooks
 
-- {doc}`/notebooks/water_cloud` — a water cloud step by step
-- {doc}`/notebooks/mixed_phase_cloud` — liquid + ice + ERA5 atmosphere
-- {doc}`/notebooks/arctic_cloud_experiment` — full LWP × albedo × SZA sweep
-- {doc}`/notebooks/shupe_and_intrieri_plot` — cloud forcing à la Shupe & Intrieri
+- {doc}`/notebooks/water_cloud` : a water cloud step by step
+- {doc}`/notebooks/mixed_phase_cloud` : liquid, ice and an ERA5 atmosphere
+- {doc}`/notebooks/arctic_cloud_experiment` : LWP × albedo × SZA sweep
+- {doc}`/notebooks/shupe_and_intrieri_plot` : cloud forcing after Shupe & Intrieri (2004)

@@ -2,10 +2,9 @@
 """
 Input / output layer for pyRadtran.
 
-Everything that crosses the boundary between Python and files lives here:
-reading the plain-text tables ``uvspec`` writes, turning them into labelled
-:mod:`xarray` objects, saving results as NetCDF, and preparing input
-tables and atmosphere files.
+Read the plain-text tables ``uvspec`` writes, convert them to labelled
+:mod:`xarray` objects, save results as NetCDF, and prepare input tables
+and atmosphere files.
 
 Reading ``uvspec`` output:
 
@@ -25,14 +24,13 @@ Preparing input:
    ERA5AtmosphereGenerator
    RadiosondeAtmosphereGenerator
 
-Most users never call these classes directly —
-:meth:`~pyradtran.interface.PyRadtranAccessor.run` chains them for every
-point of a dataset.  They are useful on their own to re-read ``.out``
-files kept in the working directory, or to build custom pipelines.
+:meth:`~pyradtran.interface.PyRadtranAccessor.run` chains these classes
+for every point of a dataset.  Use them directly to re-read ``.out``
+files kept in the working directory or to build custom pipelines.
 
 Notes
 -----
-The data flow of one batch is
+Data flow of one batch:
 
 .. code-block:: text
 
@@ -41,15 +39,15 @@ The data flow of one batch is
     xarray.Dataset --NetCDFSaver.save_results_to_netcdf--> .nc file
 
 ``uvspec`` output written with ``output_user`` is a headerless table with
-one row per (wavelength, output altitude) pair.  The parser gets the
-column names from the configuration (the same
-:func:`~pyradtran.input_builder.effective_output_columns` that wrote the
-``output_user`` line), so file and parser always agree.
+one row per (wavelength, output altitude) pair.  The parser takes the
+column names from
+:func:`~pyradtran.input_builder.effective_output_columns`, which also
+wrote the ``output_user`` line, so file and parser agree.
 
 Examples
 --------
-Parse an output file by hand and convert it (see
-:meth:`OutputParser.parse_output_file` for a runnable example):
+Parse and convert one output file
+(:meth:`OutputParser.parse_output_file` has a runnable example):
 
 >>> from pyradtran import OutputParser, OutputToXarray, load_config
 >>> cfg = load_config("config/my_simulation.yaml")  # doctest: +SKIP
@@ -84,9 +82,9 @@ logger = logging.getLogger(__name__)
 class OutputType(Enum):
     """Layout of a ``uvspec`` output table.
 
-    The four members encode two binary choices: spectrally integrated vs.
-    spectral, and one vs. several output altitudes.  The layout determines
-    how many rows the file has and which axis columns it carries:
+    The members combine two choices: spectrally integrated or spectral,
+    and one or several output altitudes.  The layout sets the number of
+    rows and the axis columns of the file:
 
     ==============================  ======================  =============
     Member                          Rows                    Axis columns
@@ -122,8 +120,8 @@ class ParsedOutput:
     """One parsed ``uvspec`` output file (one simulated point).
 
     Returned by :meth:`OutputParser.parse_output_file` and consumed by
-    :class:`OutputToXarray`.  The values are still in file layout — flat
-    columns — together with the axis information needed to reshape them.
+    :class:`OutputToXarray`.  The values are flat columns, as in the
+    file, with the axis information needed to reshape them.
 
     Parameters
     ----------
@@ -131,24 +129,24 @@ class ParsedOutput:
         Layout of the table (spectral or integrated, one or several
         altitudes).
     data : dict of str to numpy.ndarray
-        Column name → 1-D array with one entry per file row, i.e. of
-        length ``n_wl * n_alt``.  Includes the axis columns ``lambda`` /
+        Column name → 1-D array with one entry per file row (length
+        ``n_wl * n_alt``).  Includes the axis columns ``lambda`` /
         ``zout`` when the file has them.
     wavelengths : list of float, optional
         Sorted unique wavelengths (nm) of a spectral output; *None* for
         integrated output.
     altitudes : list of float, optional
         Sorted unique output altitudes (km) of a multi-altitude output;
-        *None* when there is a single output altitude.
+        *None* for a single output altitude.
     source_file : pathlib.Path, optional
-        The raw ``uvspec`` output file that was parsed.
+        The parsed ``uvspec`` output file.
     metadata : dict, optional
         Free-form metadata.  The parser stores the output level of a
         single-altitude run under ``zout``; the batch driver adds
-        ``point_id``, ``time``, ``latitude`` and ``longitude`` of the
-        point.  Defaults to an empty dict.
+        ``point_id``, ``time``, ``latitude`` and ``longitude``.
+        Defaults to an empty dict.
     is_brightness_temperature : bool, default ``False``
-        True when the run used ``output_quantity brightness``, i.e. the
+        True when the run used ``output_quantity brightness``: the
         radiance / irradiance columns hold brightness temperatures (K).
 
     See Also
@@ -158,7 +156,7 @@ class ParsedOutput:
 
     Examples
     --------
-    A spectral result at a single altitude, built by hand:
+    A spectral result at one altitude:
 
     >>> import numpy as np
     >>> from pyradtran import OutputType, ParsedOutput
@@ -183,7 +181,7 @@ class ParsedOutput:
     is_brightness_temperature: bool = False
 
     def __post_init__(self):
-        """Initialize metadata if not provided."""
+        """Default *metadata* to an empty dict."""
         if self.metadata is None:
             self.metadata = {}
 
@@ -191,10 +189,10 @@ class ParsedOutput:
 class InputDataLoader:
     """Load simulation input coordinates from CSV or NetCDF files.
 
-    The file must contain ``time``, ``latitude``, and ``longitude``
-    variables (in a CSV, ``datetime`` is accepted as an alias for
-    ``time``).  Additional columns are carried through as data variables
-    and can be referenced per point with :class:`~pyradtran.params.Var`.
+    The file must contain ``time``, ``latitude`` and ``longitude`` (in
+    a CSV, ``datetime`` is accepted for ``time``).  Other columns become
+    data variables that :class:`~pyradtran.params.Var` can reference per
+    point.
 
     See Also
     --------
@@ -215,21 +213,21 @@ class InputDataLoader:
         Returns
         -------
         xarray.Dataset
-            Dataset guaranteed to contain ``time``, ``latitude``, and
-            ``longitude`` (as dimension, coordinate or data variable).
+            Dataset containing ``time``, ``latitude`` and ``longitude``
+            (as dimension, coordinate or data variable).
 
             * CSV: the ``time`` column is parsed with
               :func:`pandas.to_datetime` and becomes the only dimension;
               every other column is a data variable along ``time``.
-            * NetCDF: opened as-is with :func:`xarray.open_dataset`
-              (lazily; the file stays open).
+            * NetCDF: opened lazily with :func:`xarray.open_dataset`
+              (the file stays open).
 
         Raises
         ------
         InputGenerationError
-            If the file does not exist, has an unsupported suffix, lacks a
-            ``time`` / ``datetime`` column (CSV) or one of the required
-            variables, or cannot be read (the original exception is
+            If the file does not exist, has an unsupported suffix, lacks
+            a ``time`` / ``datetime`` column (CSV) or a required
+            variable, or cannot be read (the original exception is
             chained).
 
         Examples
@@ -248,7 +246,7 @@ class InputDataLoader:
         >>> ds.albedo.values
         array([0.8, 0.7])
 
-        The extra ``albedo`` column can then drive the simulation:
+        Use the ``albedo`` column per point:
 
         >>> from pyradtran import Var
         >>> result = ds.pyradtran.run(params={"albedo": Var("albedo")})  # doctest: +SKIP
@@ -305,11 +303,11 @@ class InputDataLoader:
 class ERA5AtmosphereGenerator:
     """Create libRadtran-compatible atmosphere files from ERA5 data.
 
-    Thin, backward-compatible wrapper around
-    :func:`pyradtran.era5.era5_atmosphere_file`, which is the preferred
-    entry point in new code.  The output is a radiosonde-style ASCII file
-    (pressure, temperature, water vapour and — when the dataset has it —
-    ozone) for the ``radiosonde`` keyword of ``uvspec``.
+    Backward-compatible wrapper around
+    :func:`pyradtran.era5.era5_atmosphere_file`; use that function in
+    new code.  The output is a radiosonde-style ASCII file (pressure,
+    temperature, water vapour and, when the dataset has it, ozone) for
+    the ``radiosonde`` keyword of ``uvspec``.
 
     See Also
     --------
@@ -336,8 +334,8 @@ class ERA5AtmosphereGenerator:
         ----------
         era5_ds : xarray.Dataset
             ERA5 pressure-level dataset with temperature and specific
-            humidity (ozone is used when present); see
-            :func:`pyradtran.era5.normalize_era5` for the accepted
+            humidity (ozone is used when present).
+            :func:`pyradtran.era5.normalize_era5` lists the accepted
             variable and coordinate names.
         latitude, longitude : float
             Target location; the nearest grid point is used.
@@ -371,25 +369,25 @@ class ERA5AtmosphereGenerator:
 class RadiosondeAtmosphereGenerator:
     """Fetch and format radiosonde soundings for libRadtran.
 
-    Uses the Integrated Global Radiosonde Archive (IGRA 2, accessed
-    through the optional *siphon* package) to find the closest active
-    station and the sounding nearest in time, then writes the profile in
-    the three-column format expected by the ``radiosonde`` option of
-    ``uvspec`` (pressure, temperature, relative humidity).
+    Finds the closest active station and the sounding nearest in time
+    in the Integrated Global Radiosonde Archive (IGRA 2, through the
+    optional *siphon* package) and writes the profile in the
+    three-column format of the ``radiosonde`` option of ``uvspec``
+    (pressure, temperature, relative humidity).
 
     All methods are static and need network access.  Import the class
     from :mod:`pyradtran.io`.
 
     See Also
     --------
-    ERA5AtmosphereGenerator : Alternative model-based atmosphere.
+    ERA5AtmosphereGenerator : Atmosphere from reanalysis.
     pyradtran.utils.RadiosondeFinder : Look-up of files already on disk.
 
     Examples
     --------
-    Download the sounding closest to a measurement and store it where
-    :class:`~pyradtran.utils.RadiosondeFinder` will find it (the file name
-    encodes date and seconds of day):
+    Download the sounding closest to a measurement under a name
+    :class:`~pyradtran.utils.RadiosondeFinder` recognises (date and
+    seconds of day):
 
     >>> from datetime import datetime
     >>> from pyradtran.io import RadiosondeAtmosphereGenerator
@@ -408,9 +406,8 @@ class RadiosondeAtmosphereGenerator:
         Parameters
         ----------
         url : str, optional
-            Location of the fixed-width station list.  Defaults to the
-            NOAA NCEI file ``igra2-station-list.txt``; a local file path
-            works as well.
+            URL or local path of the fixed-width station list.  Defaults
+            to the NOAA NCEI file ``igra2-station-list.txt``.
 
         Returns
         -------
@@ -453,10 +450,10 @@ class RadiosondeAtmosphereGenerator:
     def find_closest_active_stations(
         stations_df: pd.DataFrame, lat: float, lon: float, n: int = 5
     ) -> pd.DataFrame:
-        r"""Return the *n* closest currently-active radiosonde stations.
+        r"""Return the *n* closest active radiosonde stations.
 
-        A station counts as active when its ``last_year`` is the current
-        (UTC) year or the year before.
+        A station is active when its ``last_year`` is the current (UTC)
+        year or the year before.
 
         Parameters
         ----------
@@ -477,8 +474,8 @@ class RadiosondeAtmosphereGenerator:
 
         Notes
         -----
-        Distances are great-circle distances from the haversine formula
-        on a sphere of radius :math:`R = 6371` km:
+        Distances are great-circle distances (haversine formula) on a
+        sphere of radius :math:`R = 6371` km:
 
         .. math::
 
@@ -540,8 +537,7 @@ class RadiosondeAtmosphereGenerator:
     ) -> tuple[Optional[pd.DataFrame], Optional[pd.DataFrame], Optional[str]]:
         """Retrieve the radiosonde sounding nearest in space and time.
 
-        Requires the **siphon** package for IGRA 2 access and a network
-        connection.
+        Requires the *siphon* package and network access.
 
         Parameters
         ----------
@@ -572,18 +568,18 @@ class RadiosondeAtmosphereGenerator:
 
         Notes
         -----
-        The search is station-first: the five closest active stations
+        The five closest active stations
         (:meth:`find_closest_active_stations`) are tried in order of
-        distance, and for each station the candidate times
+        distance.  For each station the candidate times
 
         * *target_dt* itself,
         * 00 and 12 UTC of the target day,
         * 12 and 00 UTC of the previous day
 
         are requested in order of increasing time difference.  The first
-        non-empty sounding wins, so a nearer station with a sounding up to
-        a day old is preferred over a more distant one with a better time
-        match.
+        non-empty sounding wins: a nearer station with a sounding up to
+        a day old is preferred over a more distant one with a better
+        time match.
 
         Examples
         --------
@@ -689,14 +685,14 @@ class RadiosondeAtmosphereGenerator:
 
         Notes
         -----
-        The file has three comment lines (the second one names station,
-        sounding time and distance) followed by one line per level with
-        pressure (hPa), temperature (K) and relative humidity (%), ordered
-        by increasing pressure, i.e. top of the sounding first.  Levels
-        with missing values and duplicate pressure levels are dropped,
-        since libRadtran requires a strictly monotonic pressure grid.
+        The file has three comment lines (the second names station,
+        sounding time and distance), then one line per level with
+        pressure (hPa), temperature (K) and relative humidity (%), top
+        of the sounding first.  Levels with missing values and duplicate
+        pressure levels are dropped: libRadtran requires a strictly
+        monotonic pressure grid.
 
-        Relative humidity over liquid water is computed from temperature
+        Relative humidity over liquid water follows from temperature
         :math:`T` and dewpoint :math:`T_d` (both in °C) with the Magnus
         form of Bolton (1980) [1]_ for the saturation vapour pressure:
 
@@ -720,8 +716,7 @@ class RadiosondeAtmosphereGenerator:
         ...     datetime(2022, 3, 28, 12, 0), 78.92, 11.93, "radiosonde/20220328_43200SOD.dat"
         ... )
 
-        The humidity conversion for a level at −10 °C with a dewpoint of
-        −15 °C:
+        Humidity conversion for −10 °C with a dewpoint of −15 °C:
 
         >>> import numpy as np
         >>> e_s = lambda t: 6.112 * np.exp(17.67 * t / (t + 243.5))
@@ -750,7 +745,7 @@ class RadiosondeAtmosphereGenerator:
         temp_k = df["temperature"] + 273.15
         pressure_hpa = df["pressure"]
 
-        # TOA first (ascending pressure); drop duplicate levels —
+        # TOA first (ascending pressure); drop duplicate levels, since
         # libRadtran requires a strictly monotonic pressure grid
         sorted_idx = np.argsort(pressure_hpa.values)
         p_sorted = pressure_hpa.values[sorted_idx]
@@ -777,35 +772,32 @@ class OutputParser:
     r"""Parse raw ``uvspec`` output files into :class:`ParsedOutput`.
 
     ``uvspec`` writes a headerless, whitespace-delimited table.  The
-    parser therefore needs to know how the run was set up: it derives the
-    column names, the output altitudes and the table layout from the same
-    configuration (and per-run overrides) that produced the input file.
+    parser derives column names, output altitudes and table layout from
+    the configuration (and per-run overrides) that produced the input
+    file.
 
     Parameters
     ----------
     config : SimulationConfig
-        Configuration that was used for the simulation.  Only its
-        ``simulation_defaults`` section is read (``output_columns``,
-        ``output_altitudes_km``, ``wavelength_nm``,
-        ``integrate_wavelength``).
+        Configuration of the simulation.  Only ``simulation_defaults``
+        is read (``output_columns``, ``output_altitudes_km``,
+        ``wavelength_nm``, ``integrate_wavelength``).
     parameter_overrides : dict, optional
-        The ``uvspec`` options that were overridden for this run, as
-        ``{keyword: value}``.  Three keys matter here: ``output_user``
-        (replaces the column list), ``zout`` (replaces the output
-        altitudes) and ``output_quantity`` (``"brightness"`` marks the
-        result as brightness temperatures and drops the ``albedo``
-        column).
+        ``uvspec`` options overridden for this run, as
+        ``{keyword: value}``.  Only ``output_user`` (replaces the column
+        list), ``zout`` (replaces the output altitudes) and
+        ``output_quantity`` (``"brightness"`` marks the result as
+        brightness temperatures and drops the ``albedo`` column) are
+        read.
     output_altitudes : list of float, optional
-        Explicit output altitudes in km.  Takes precedence over both
+        Explicit output altitudes in km.  Takes precedence over
         *parameter_overrides* and the configuration.
 
     Attributes
     ----------
     output_columns : list of str
-        Column names in file order, as returned by
-        :func:`~pyradtran.input_builder.effective_output_columns`: the
-        configured (or overridden) columns, with ``lambda`` prepended for
-        spectral runs and ``zout`` prepended for multi-altitude runs.
+        Column names in file order, from
+        :func:`~pyradtran.input_builder.effective_output_columns`.
     output_altitudes : list of float
         Output altitudes (km) of the run.
     is_integrated : bool
@@ -823,8 +815,8 @@ class OutputParser:
 
     Notes
     -----
-    **How the output type is decided.**  The :class:`OutputType` follows
-    from the configuration alone, not from the file contents:
+    **Output type.**  The :class:`OutputType` follows from the
+    configuration, not from the file contents:
 
     ====================  ==========================  ==========================
     ..                    one output altitude         several output altitudes
@@ -848,8 +840,8 @@ class OutputParser:
 
         r = i\,N_z + j ,
 
-    and ``column.reshape(n_wl, n_alt)`` recovers the 2-D field — this is
-    what :class:`OutputToXarray` does.
+    and ``column.reshape(n_wl, n_alt)`` (as in :class:`OutputToXarray`)
+    recovers the 2-D field.
 
     ==========================  ====================  ===========  =========
     Output type                 ``data[...]`` length  wavelengths  altitudes
@@ -862,9 +854,8 @@ class OutputParser:
 
     Examples
     --------
-    The parser only reads ``config.simulation_defaults``, so for a
-    self-contained demonstration a stand-in object is enough (normally
-    you pass the :class:`~pyradtran.config.SimulationConfig` of the run):
+    Only ``config.simulation_defaults`` is read, so a stand-in for the
+    run's :class:`~pyradtran.config.SimulationConfig` is enough:
 
     >>> from types import SimpleNamespace
     >>> from pyradtran import OutputParser, SimulationDefaults
@@ -880,7 +871,7 @@ class OutputParser:
     >>> parser.output_altitudes
     [0.0, 5.0]
 
-    Per-run overrides change what the parser expects:
+    Per-run overrides:
 
     >>> OutputParser(config, {"output_user": "lambda eglo", "zout": 2.0}).output_columns
     ['lambda', 'eglo']
@@ -899,9 +890,7 @@ class OutputParser:
             self.parameter_overrides.get("output_quantity") == "brightness"
         )
 
-        # Same column list the input builder wrote into output_user
-        # (per-run output_user override, injected lambda/zout, and the
-        # brightness albedo filter all included).
+        # Same column list the input builder wrote into output_user.
         self.output_columns = effective_output_columns(config, self.parameter_overrides)
 
         # explicit per-run altitudes win over overrides and config
@@ -921,7 +910,7 @@ class OutputParser:
     def parse_output_file(self, output_file: Path) -> ParsedOutput:
         r"""Parse a single ``uvspec`` output file.
 
-        The file is read with :func:`numpy.loadtxt`; its columns are named
+        Reads the file with :func:`numpy.loadtxt` and names its columns
         after :attr:`output_columns` by position.
 
         Parameters
@@ -936,8 +925,8 @@ class OutputParser:
             per file row.  ``wavelengths`` holds the sorted unique values
             of the ``lambda`` column (spectral output only) and
             ``altitudes`` those of the ``zout`` column (multi-altitude
-            output only); both are *None* otherwise.  For a single
-            output altitude, ``metadata["zout"]`` holds that level (km as
+            output only); both are *None* otherwise.  For one output
+            altitude, ``metadata["zout"]`` holds that level (km as
             float, or a symbolic level such as ``"toa"`` as string).
 
         Raises
@@ -948,16 +937,14 @@ class OutputParser:
 
         Notes
         -----
-        Columns are matched purely by position.  If the file has fewer
-        columns than names, the surplus names are dropped; surplus file
-        columns are ignored.  No error is raised in either case, so the
-        parser must be constructed with the settings of the run that
-        produced the file.
+        Columns are matched by position only.  Surplus names and
+        surplus file columns are dropped without error, so construct
+        the parser with the settings of the run that wrote the file.
 
         Examples
         --------
-        A spectral run with three wavelengths and two output altitudes —
-        six rows, wavelength varying slowest:
+        Three wavelengths and two output altitudes (six rows, wavelength
+        varying slowest):
 
         >>> import pathlib, tempfile
         >>> from types import SimpleNamespace
@@ -987,14 +974,14 @@ class OutputParser:
         >>> parsed.data["edn"]
         array([150., 100., 152., 101., 154., 102.])
 
-        Reshaping to ``(wavelength, altitude)`` separates the two levels:
+        Reshaped to ``(wavelength, altitude)``:
 
         >>> parsed.data["edn"].reshape(3, 2)
         array([[150., 100.],
                [152., 101.],
                [154., 102.]])
 
-        A spectrally integrated run at one altitude is a single row:
+        A spectrally integrated run at one altitude is one row:
 
         >>> out_file = out_file.with_name("point_1.out")
         >>> _ = out_file.write_text("55.3 420.1 357.1 0.85\n")
@@ -1005,7 +992,7 @@ class OutputParser:
         >>> {name: float(col[0]) for name, col in parsed.data.items()}
         {'sza': 55.3, 'eglo': 420.1, 'eup': 357.1, 'albedo': 0.85}
 
-        Problems surface as :class:`~pyradtran.exceptions.OutputParsingError`:
+        Errors raise :class:`~pyradtran.exceptions.OutputParsingError`:
 
         >>> OutputParser(config).parse_output_file(pathlib.Path("missing.out"))
         Traceback (most recent call last):
@@ -1075,16 +1062,13 @@ class OutputParser:
 class OutputToXarray:
     """Convert :class:`ParsedOutput` objects to :class:`xarray.Dataset`.
 
-    Provides :meth:`convert` for a single output and
-    :meth:`convert_batch` for a list (matching the flattened input
-    order produced by
-    :func:`~pyradtran.interface.execute_simulation_batch`).  Both are
-    static methods.
-
-    Both turn every ``output_user`` column into a data variable and the
-    axis columns ``lambda`` / ``zout`` into ``wavelength`` (nm) /
-    ``altitude`` (km) coordinates.  :meth:`convert_batch` is the one used
-    by :meth:`~pyradtran.interface.PyRadtranAccessor.run`.
+    Static methods: :meth:`convert` for one output, :meth:`convert_batch`
+    for a list in the flattened input order of
+    :func:`~pyradtran.interface.execute_simulation_batch` (used by
+    :meth:`~pyradtran.interface.PyRadtranAccessor.run`).  Each
+    ``output_user`` column becomes a data variable; the axis columns
+    ``lambda`` / ``zout`` become ``wavelength`` (nm) / ``altitude`` (km)
+    coordinates.
 
     See Also
     --------
@@ -1099,7 +1083,7 @@ class OutputToXarray:
         lat_var: str = "latitude",
         lon_var: str = "longitude",
     ) -> xr.Dataset:
-        """Convert a single :class:`ParsedOutput` to an xarray Dataset.
+        """Convert one :class:`ParsedOutput` to an xarray Dataset.
 
         Parameters
         ----------
@@ -1119,15 +1103,15 @@ class OutputToXarray:
             One data variable per output column (the axis columns
             ``lambda`` and ``zout`` excluded) with dimensions
 
-            * ``(time,)`` — integrated, single altitude,
-            * ``(time, altitude)`` — integrated, several altitudes,
-            * ``(time, wavelength)`` — spectral, single altitude,
-            * ``(time, wavelength, altitude)`` — spectral, several
+            * ``(time,)``: integrated, one altitude,
+            * ``(time, altitude)``: integrated, several altitudes,
+            * ``(time, wavelength)``: spectral, one altitude,
+            * ``(time, wavelength, altitude)``: spectral, several
               altitudes,
 
             and the coordinates ``wavelength`` (nm) and ``altitude`` (km)
-            where the dimension exists.  A single output altitude recorded
-            by the parser (``metadata["zout"]``, numeric) is attached as a
+            where the dimension exists.  A single numeric output altitude
+            recorded by the parser (``metadata["zout"]``) becomes a
             scalar ``altitude`` coordinate.
 
         See Also
@@ -1202,14 +1186,12 @@ class OutputToXarray:
         lat_var: str = "latitude",
         lon_var: str = "longitude",
     ) -> xr.Dataset:
-        r"""Convert a batch of :class:`ParsedOutput` objects to a single Dataset.
+        r"""Convert a batch of :class:`ParsedOutput` objects to one Dataset.
 
-        The points of a simulation batch are the input dataset with all
-        its dimensions stacked into one.  This method fills one array per
-        output column in that stacked order and unstacks it again, so the
-        result has the layout of the input plus the spectral and vertical
-        axes of the simulation.  Failed simulations (*None* entries)
-        produce NaN values.
+        The points of a batch are the input dataset with all dimensions
+        stacked into one.  One array per output column is filled in that
+        order and unstacked, so the result has the input layout plus the
+        spectral and vertical axes.  Failed points (*None*) give NaN.
 
         Parameters
         ----------
@@ -1219,11 +1201,11 @@ class OutputToXarray:
             dimension varies fastest).  *None* marks a failed or skipped
             point.
         input_ds : xarray.Dataset or xarray.DataArray
-            Original input dataset; its dimensions and their coordinates
-            are restored on the result.  A dataset without dimensions
-            (scalar coordinates only) is a single point: the result then
-            has only the ``wavelength`` / ``altitude`` dimensions and the
-            scalar coordinates of the input.
+            Original input dataset; its dimensions and coordinates are
+            restored on the result.  A dataset without dimensions
+            (scalar coordinates only) is one point: the result has only
+            the ``wavelength`` / ``altitude`` dimensions and the scalar
+            coordinates of the input.
         time_var, lat_var, lon_var : str
             Accepted for symmetry with :meth:`convert`; not used.
 
@@ -1239,21 +1221,20 @@ class OutputToXarray:
               for spectral output.
             * ``altitude`` (km, float, ``units`` attribute set) is
               **always** present.  For multi-altitude output it holds the
-              ``zout`` values.  For a single output altitude it has
-              length 1 and holds that altitude when all points share it
-              (as recorded by the parser in ``metadata["zout"]``).
-            * ``zout`` (km, on the input dimensions) — only when the
-              single output altitude differs from point to point
+              ``zout`` values.  For one output altitude it has length 1
+              and holds that altitude when all points share it (from
+              ``metadata["zout"]``).
+            * ``zout`` (km, on the input dimensions): only when the
+              single output altitude differs between points
               (``params={"zout": Var(...)}``, e.g. a flight track).  The
               length-1 ``altitude`` coordinate is then the placeholder
-              ``0.0`` and ``zout`` holds the altitude of each point (NaN
-              for failed points).  Not added if the input already has a
+              ``0.0`` and ``zout`` holds each point's altitude (NaN for
+              failed points).  Not added if the input already has a
               ``zout`` coordinate.  The placeholder is also used when
               the level is unknown or symbolic (``toa``).
             * An output column named like a coordinate of *input_ds*
               (e.g. ``sza`` when sweeping over an ``sza`` dimension) is
-              stored as ``<name>_out``, since the name is taken by the
-              coordinate; a warning is logged.
+              stored as ``<name>_out``, with a logged warning.
             * The dataset attributes are the ``metadata`` of the first
               successful point, minus per-point entries (``point_id``,
               ``time``, ``latitude``, ``longitude``, …).
@@ -1271,17 +1252,17 @@ class OutputToXarray:
 
         Notes
         -----
-        The axes are taken from the first successful point; every other
-        point must have the same number of wavelengths and altitudes.  A
-        point whose column cannot be reshaped to
-        :math:`(N_\lambda, N_z)` is left as NaN and a warning is logged.
-        A mismatch between ``len(parsed_outputs)`` and the number of input
-        points is only logged as a warning as well.
+        The axes come from the first successful point; all other points
+        must have the same number of wavelengths and altitudes.  A point
+        whose column cannot be reshaped to :math:`(N_\lambda, N_z)` is
+        left as NaN with a logged warning.  A mismatch between
+        ``len(parsed_outputs)`` and the number of input points is also
+        only logged.
 
         Examples
         --------
-        Two time steps, three wavelengths, two altitudes; the second point
-        failed:
+        Two time steps, three wavelengths, two altitudes; the second
+        point failed:
 
         >>> import numpy as np
         >>> import pandas as pd
@@ -1309,9 +1290,8 @@ class OutputToXarray:
         array([[100., 101., 102.],
                [ nan,  nan,  nan]])
 
-        Integrated single-altitude output still gets a length-1
-        ``altitude`` dimension, labelled with the output level the parser
-        recorded:
+        Integrated single-altitude output gets a length-1 ``altitude``
+        dimension labelled with the recorded output level:
 
         >>> broadband = ParsedOutput(
         ...     output_type=OutputType.INTEGRATED_SINGLE_ALTITUDE,
@@ -1324,8 +1304,8 @@ class OutputToXarray:
         >>> ds.altitude.values
         array([2.])
 
-        With a different level per point the coordinate is a placeholder
-        and the levels come back as ``zout``:
+        A different level per point gives a placeholder coordinate and
+        a ``zout`` variable:
 
         >>> higher = ParsedOutput(
         ...     output_type=OutputType.INTEGRATED_SINGLE_ALTITUDE,
@@ -1336,8 +1316,8 @@ class OutputToXarray:
         >>> ds.altitude.values, ds.zout.values
         (array([0.]), array([2. , 3.5]))
 
-        A gridded input keeps its layout — here ``(latitude, longitude)``
-        with the points in row-major order:
+        Gridded input keeps its ``(latitude, longitude)`` layout (points
+        in row-major order):
 
         >>> grid = xr.Dataset(coords={"latitude": [78.0, 79.0], "longitude": [10.0, 12.0, 14.0]})
         >>> points = [
@@ -1442,7 +1422,7 @@ class OutputToXarray:
 
             # An output column named like an input coordinate (a sweep
             # over "sza" that also requests the sza column) cannot keep
-            # its name — the coordinate owns it.
+            # its name: the coordinate owns it.
             out_name = var_name
             if var_name in input_ds.coords:
                 out_name = f"{var_name}_out"
@@ -1470,8 +1450,8 @@ class OutputToXarray:
             result_ds["wavelength"].attrs["units"] = "nm"
         result_ds["altitude"].attrs["units"] = "km"
 
-        # Add attributes (skip per-point fields — they only describe the
-        # template point, not the whole batch)
+        # Add attributes (skip per-point fields: they describe only the
+        # template point, not the batch)
         _POINT_KEYS = {
             "point_id",
             "time",
@@ -1496,7 +1476,7 @@ class OutputToXarray:
 
 
 class NetCDFSaver:
-    """Persist simulation results as NetCDF files with provenance attributes.
+    """Save simulation results as NetCDF with provenance attributes.
 
     See Also
     --------
@@ -1516,23 +1496,23 @@ class NetCDFSaver:
         Parameters
         ----------
         data : xarray.Dataset or dict
-            Simulation results.  A dataset is written as it is (plus the
-            attributes below).  A dict is converted in a basic way: every
-            entry whose key does not start with ``"_"`` becomes a variable
-            along a ``time`` dimension.
+            Simulation results.  A dataset is written as is (plus the
+            attributes below).  In a dict, every entry whose key does
+            not start with ``"_"`` becomes a variable along a ``time``
+            dimension.
         output_path : pathlib.Path
-            Destination file.  Parent directories are created; an existing
-            file is overwritten.
+            Destination file.  Parent directories are created; an
+            existing file is overwritten.
         input_ds : xarray.Dataset
-            Input dataset of the run.  Currently not used.
+            Input dataset of the run.  Unused.
         config : SimulationConfig
-            Configuration used for the run; the source of the ``config_*``
+            Configuration of the run; source of the ``config_*``
             attributes and of the encoding
             (:attr:`~pyradtran.config.OutputConfig.netcdf_encoding`,
             applied to every data variable).
         simulation_params : dict, optional
-            Per-run parameters; stored as their ``str()`` representation
-            in the ``simulation_parameters`` attribute.
+            Per-run parameters, stored as ``str()`` in the
+            ``simulation_parameters`` attribute.
 
         Returns
         -------
@@ -1552,8 +1532,8 @@ class NetCDFSaver:
 
         Notes
         -----
-        The following global attributes are added to the written file
-        (*data* itself is not modified):
+        Global attributes added to the written file (*data* itself is
+        not modified):
 
         ================================  ==================================
         Attribute                         Content
@@ -1578,13 +1558,12 @@ class NetCDFSaver:
         ``config_timeout_seconds``        per-call timeout (s)
         ================================  ==================================
 
-        Attributes whose value is *None* are removed before writing,
-        because NetCDF cannot store them.  The albedo is not recorded
-        here.  Datasets returned by
-        :meth:`~pyradtran.interface.PyRadtranAccessor.run` additionally
-        carry their own, more complete provenance (``pyradtran_config``,
+        Attributes with value *None* are dropped (NetCDF cannot store
+        them).  The albedo is not recorded here.  Datasets from
+        :meth:`~pyradtran.interface.PyRadtranAccessor.run` carry their
+        own, fuller provenance (``pyradtran_config``,
         ``pyradtran_params``, ``pyradtran_input_example``, …), which is
-        written along unchanged.
+        written unchanged.
 
         Examples
         --------
@@ -1645,10 +1624,10 @@ class NetCDFSaver:
 
     @staticmethod
     def _serialize_for_netcdf(value):
-        """Convert a value to a NetCDF-compatible attribute type.
+        """Convert a value to a NetCDF attribute type.
 
         ``bool`` → ``int``; ``int`` / ``float`` / ``str`` unchanged;
-        everything else (lists, tuples, *None*, …) → ``str(value)``.
+        anything else → ``str(value)``.
 
         Examples
         --------
@@ -1665,10 +1644,7 @@ class NetCDFSaver:
 
     @staticmethod
     def _add_config_to_attrs(ds: xr.Dataset, config: SimulationConfig) -> None:
-        """Add the ``config_*`` provenance attributes to *ds* in place.
-
-        See :meth:`save_results_to_netcdf` for the list of attributes.
-        """
+        """Add the ``config_*`` attributes to *ds* in place (see the save method)."""
         sd = config.simulation_defaults
         attrs = ds.attrs
         serialize = NetCDFSaver._serialize_for_netcdf

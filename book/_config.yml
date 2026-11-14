@@ -52,7 +52,6 @@ html:
   use_repository_button: true
   use_edit_page_button: true
   navbar_number_sections: false
-  announcement: "🚧 This documentation is under active development. 🚧"
 
 # Sphinx configuration
 sphinx:

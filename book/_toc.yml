@@ -102,5 +102,4 @@ parts:
     - file: api/index
     - file: notebooks/config/index
       title: Example config files
-    - file: changelog
     - file: contributing

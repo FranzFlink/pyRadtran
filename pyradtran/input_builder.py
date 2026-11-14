@@ -4,8 +4,8 @@ uvspec input-file generation with per-line provenance.
 :class:`InputFileBuilder` turns a :class:`~pyradtran.config.SimulationConfig`
 plus a resolved parameter mapping (from
 :class:`~pyradtran.params.ParamResolver`) into an ordered list of
-:class:`InputLine` objects. Each line knows which layer produced it, which
-powers :meth:`~pyradtran.interface.PyRadtranAccessor.explain`.
+:class:`InputLine` objects. Each line records which layer produced it;
+:meth:`~pyradtran.interface.PyRadtranAccessor.explain` shows this.
 
 .. autosummary::
 
@@ -16,17 +16,15 @@ powers :meth:`~pyradtran.interface.PyRadtranAccessor.explain`.
    effective_output_altitudes
    parametric_cloud_profiles
 
-The module also holds the two helpers that decide what a run *reports*:
 :func:`effective_output_columns` and :func:`effective_output_altitudes`
-are shared by the builder (which writes the ``output_user`` / ``zout``
-lines) and the output parser (which reads the resulting file), so the
-two cannot drift apart.
+decide what a run reports. The builder (which writes the ``output_user``
+/ ``zout`` lines) and the output parser (which reads the file) share
+them, so the two cannot disagree.
 
 Examples
 --------
-The usual way to look at a generated input file is the accessor
-(``ds`` has ``time``, ``latitude``, ``longitude`` and an ``albedo_sw``
-variable):
+Preview a generated input file through the accessor (``ds`` has
+``time``, ``latitude``, ``longitude`` and an ``albedo_sw`` variable):
 
 >>> from pyradtran import Var
 >>> print(ds.pyradtran.explain(params={"albedo": Var("albedo_sw")}))  # doctest: +SKIP
@@ -99,16 +97,16 @@ def calculate_solar_zenith_angle(
 ) -> float:
     r"""Solar zenith angle (degrees) from time and location.
 
-    A fast, dependency-free estimate used by :class:`InputFileBuilder`
-    for solar runs when neither the configuration nor ``params`` supplies
-    ``sza``. Declination and equation of time follow Spencer's (1971)
-    Fourier series; the result is good to about 0.3° (see Notes).
+    :class:`InputFileBuilder` uses this estimate for solar runs when
+    neither the configuration nor ``params`` supplies ``sza``.
+    Declination and equation of time follow Spencer's (1971) Fourier
+    series; the result is good to about 0.2° (see Notes).
 
     Parameters
     ----------
     dt : datetime.datetime
-        Time of the observation. A naive datetime is taken as **UTC**; a
-        timezone-aware one is converted to UTC.
+        Time of the observation. Naive datetimes are taken as **UTC**;
+        aware ones are converted to UTC.
     latitude : float
         Geographic latitude :math:`\varphi` in degrees, north positive.
     longitude : float
@@ -118,8 +116,7 @@ def calculate_solar_zenith_angle(
     -------
     float
         Solar zenith angle in degrees, in :math:`[0, 180]`, rounded to
-        two decimals. Values above 90° mean the sun is below the
-        horizon.
+        two decimals. Above 90° the sun is below the horizon.
 
     See Also
     --------
@@ -130,10 +127,9 @@ def calculate_solar_zenith_angle(
     -----
     Spencer's series are functions of the fractional-year angle
     :math:`\gamma = 2\pi (N - 1)/365` with :math:`N` the day of the
-    year. To keep the phase right in every year of the leap cycle (the
-    plain day number drifts by up to a day, i.e. up to
-    :math:`0.4^\circ` in declination near the equinoxes), the angle is
-    computed here from continuous time and the tropical year,
+    year. The plain day number drifts by up to a day over the leap
+    cycle (up to :math:`0.4^\circ` in declination near the equinoxes),
+    so the angle is computed from continuous time and the tropical year,
 
     .. math::
 
@@ -165,8 +161,7 @@ def calculate_solar_zenith_angle(
         h = 15^\circ\,\mathrm{h}^{-1}\,(t_\mathrm{UTC} - 12\,\mathrm{h})
             + \lambda + \frac{E}{4\,\mathrm{min}/^\circ}
 
-    and the zenith angle :math:`\theta_0` from the standard spherical
-    triangle
+    and the zenith angle :math:`\theta_0` from
 
     .. math::
 
@@ -176,21 +171,19 @@ def calculate_solar_zenith_angle(
     (:math:`\cos\theta_0` is clipped to :math:`[-1, 1]` before taking
     the arc cosine).
 
-    **Accuracy.** Compared with the algorithm of the NOAA Solar
-    Calculator (Meeus' *Astronomical Algorithms*), evaluated hourly
-    over the years 1990–2050 for latitudes 80° S – 80° N, the result
-    deviates by at most 0.2° (declination within :math:`0.05^\circ`,
-    equation of time within 0.7 min). The angle is geometric — no
-    atmospheric refraction, no parallax — and refers to the centre of
-    the solar disc.
+    **Accuracy.** Against the algorithm of the NOAA Solar Calculator
+    (Meeus' *Astronomical Algorithms*), evaluated hourly over 1990–2050
+    for latitudes 80° S – 80° N, the result deviates by at most 0.2°
+    (declination within :math:`0.05^\circ`, equation of time within
+    0.7 min). The angle is geometric (no refraction, no parallax) and
+    refers to the centre of the solar disc.
 
-    The relative error in :math:`\cos\theta_0` — and hence in the direct
-    irradiance — is largest for a low sun. If that matters, compute the
-    zenith angle with a dedicated ephemeris and pass it per point,
+    The relative error in :math:`\cos\theta_0`, and hence in the direct
+    irradiance, is largest for a low sun. If that matters, compute the
+    zenith angle with an ephemeris and pass it per point,
     ``params={"sza": Var("sza")}``.
 
-    The function is scalar-only (array arguments raise
-    :class:`TypeError`).
+    Scalar arguments only; arrays raise :class:`TypeError`.
 
     References
     ----------
@@ -199,8 +192,8 @@ def calculate_solar_zenith_angle(
 
     Examples
     --------
-    At the June solstice the sun is nearly overhead at 23.44° N around
-    noon UTC on the Greenwich meridian (true solar noon is at 12:02):
+    At the June solstice the sun is nearly overhead at 23.44° N at
+    12 UTC on the Greenwich meridian (true solar noon is at 12:02):
 
     >>> from datetime import datetime
     >>> from pyradtran.input_builder import calculate_solar_zenith_angle
@@ -225,16 +218,14 @@ def calculate_solar_zenith_angle(
     >>> calculate_solar_zenith_angle(datetime(2024, 3, 20, 12), 51.5, 0.0)
     51.34
 
-    Timezone-aware datetimes are converted to UTC — 14:00 CEST is
-    12:00 UTC:
+    Aware datetimes are converted to UTC (14:00 CEST is 12:00 UTC):
 
     >>> from datetime import timedelta, timezone
     >>> cest = timezone(timedelta(hours=2))
     >>> calculate_solar_zenith_angle(datetime(2024, 6, 21, 14, tzinfo=cest), 0.0, 0.0)
     23.46
 
-    The diurnal cycle at the June solstice for several latitudes (the
-    dashed line marks the horizon):
+    Diurnal cycle at the June solstice (dashed: horizon):
 
     .. plot::
 
@@ -296,26 +287,26 @@ def calculate_solar_zenith_angle(
 def effective_output_altitudes(
     config, overrides: Optional[Dict[str, Any]] = None
 ) -> List[float]:
-    """Altitudes this run reports at: per-run ``zout`` override, else config.
+    """Output altitudes of a run: the ``zout`` override, else the config.
 
     Parameters
     ----------
     config : SimulationConfig
         Only ``config.simulation_defaults.output_altitudes_km`` is read.
     overrides : dict, optional
-        Plain ``{key: value}`` parameters of the run (values without
-        their provenance tag). A ``"zout"`` entry — number, sequence, or
-        space-separated string — replaces the config altitudes.
+        Plain ``{key: value}`` parameters of the run (no provenance
+        tags). A ``"zout"`` entry (number, sequence or space-separated
+        string) replaces the config altitudes.
 
     Returns
     -------
     list
-        Numeric levels in km as sorted, de-duplicated floats — matching
-        the ``zout`` line the builder writes (uvspec rejects unsorted or
+        Levels in km as sorted, de-duplicated floats, matching the
+        ``zout`` line the builder writes (uvspec rejects unsorted or
         repeated levels). If any level is symbolic (``toa``, ``sur``,
-        ``cpt``) nothing can be ordered and all tokens come back as
-        strings in their original order. An empty or missing config list
-        yields ``[0.0]`` (the surface, uvspec's default).
+        ``cpt``), all tokens are returned as strings in their original
+        order. An empty or missing config list gives ``[0.0]`` (the
+        surface, uvspec's default).
 
     See Also
     --------
@@ -323,8 +314,8 @@ def effective_output_altitudes(
 
     Examples
     --------
-    Only ``simulation_defaults`` is consulted, so a light stand-in for a
-    full :class:`~pyradtran.config.SimulationConfig` is enough here:
+    Only ``simulation_defaults`` is read, so a stand-in for
+    :class:`~pyradtran.config.SimulationConfig` is enough:
 
     >>> from types import SimpleNamespace
     >>> from pyradtran.config import SimulationDefaults
@@ -333,7 +324,7 @@ def effective_output_altitudes(
     >>> effective_output_altitudes(config)
     [0.0]
 
-    A ``zout`` override wins, and is sorted and de-duplicated:
+    A ``zout`` override is sorted and de-duplicated:
 
     >>> effective_output_altitudes(config, {"zout": [10, 0, 2, 2]})
     [0.0, 2.0, 10.0]
@@ -356,11 +347,10 @@ def effective_output_columns(
     """Columns the ``output_user`` line requests, in file order.
 
     A per-run ``output_user`` override replaces the config columns.
-    Spectral runs get ``lambda`` injected and multi-altitude runs get
-    ``zout``, so the output file can always be mapped back onto its
-    wavelength/altitude axes — without them the batch converter cannot
-    reshape the rows and every value ends up NaN. The
-    :class:`~pyradtran.io.OutputParser` uses this same function, so the
+    Spectral runs get ``lambda`` and multi-altitude runs get ``zout``;
+    without them the batch converter cannot reshape the rows onto the
+    wavelength/altitude axes and every value becomes NaN.
+    :class:`~pyradtran.io.OutputParser` uses the same function, so the
     file and the parser cannot disagree.
 
     Parameters
@@ -369,22 +359,20 @@ def effective_output_columns(
         ``simulation_defaults.output_columns``, ``integrate_wavelength``
         and ``output_altitudes_km`` are read.
     overrides : dict, optional
-        Plain ``{key: value}`` parameters of the run (values without
-        their provenance tag). The keys that matter are ``"output_user"``
-        (string or sequence of column names), ``"zout"`` and
-        ``"output_quantity"``.
+        Plain ``{key: value}`` parameters of the run (no provenance
+        tags). Only ``"output_user"`` (string or sequence of column
+        names), ``"zout"`` and ``"output_quantity"`` are read.
 
     Returns
     -------
     list of str
-        Column names in the order uvspec writes them. The rules, applied
-        in this order:
+        Column names in the order uvspec writes them. Rules, in order:
 
         1. ``overrides["output_user"]`` if given, else the config's
-           ``output_columns``. An empty list is returned as is — it
-           means "no ``output_user`` line, uvspec's default output".
+           ``output_columns``. An empty list is returned as is: no
+           ``output_user`` line, uvspec's default output.
         2. With ``output_quantity brightness`` the ``albedo`` column is
-           dropped (it is meaningless for brightness temperatures).
+           dropped (meaningless for brightness temperatures).
         3. Unless ``integrate_wavelength`` is set, ``lambda`` is put
            first if missing.
         4. With more than one output altitude
@@ -398,9 +386,7 @@ def effective_output_columns(
 
     Examples
     --------
-    Only ``simulation_defaults`` is consulted, so a light stand-in for a
-    full :class:`~pyradtran.config.SimulationConfig` is enough here. The
-    default configuration is spectral with a single output level:
+    The default configuration is spectral with one output level:
 
     >>> from types import SimpleNamespace
     >>> from pyradtran.config import SimulationDefaults
@@ -414,8 +400,8 @@ def effective_output_columns(
     >>> effective_output_columns(config, {"zout": [0, 5, 10]})
     ['zout', 'lambda', 'sza', 'eglo', 'eup', 'albedo']
 
-    A per-run ``output_user`` replaces the configured columns (``lambda``
-    is still injected):
+    A per-run ``output_user`` replaces the configured columns;
+    ``lambda`` is still added:
 
     >>> effective_output_columns(config, {"output_user": "edir edn eup"})
     ['lambda', 'edir', 'edn', 'eup']
@@ -441,10 +427,10 @@ def effective_output_columns(
     else:
         cols = list(sd.output_columns or [])
     if not cols:
-        return cols  # empty means uvspec's default output — leave untouched
+        return cols  # empty means uvspec's default output
     if str(overrides.get("output_quantity", "")).strip() == "brightness":
         # albedo is meaningless for brightness temperatures; filtering it
-        # here keeps the output_user line and the parser in lock-step
+        # here keeps the output_user line and the parser consistent
         cols = [c for c in cols if c != "albedo"]
     if not getattr(sd, "integrate_wavelength", False) and "lambda" not in cols:
         cols.insert(0, "lambda")
@@ -454,12 +440,12 @@ def effective_output_columns(
 
 
 def parametric_cloud_profiles(config) -> Dict[str, Dict[str, List[float]]]:
-    """Cloud profiles of a ``cloud_source: parametric`` configuration.
+    r"""Cloud profiles of a ``cloud_source: parametric`` configuration.
 
-    ``uvspec`` has no option for a parametric cloud layer, so the layer
-    described by ``simulation_defaults.clouds`` is expressed as a
-    dict-valued ``wc_file`` / ``ic_file`` parameter — the same form
-    ``params={"wc_file": {...}}`` takes — which
+    ``uvspec`` has no option for a parametric cloud layer. The layer in
+    ``simulation_defaults.clouds`` is therefore expressed as a
+    dict-valued ``wc_file`` / ``ic_file`` parameter, as in
+    ``params={"wc_file": {...}}``, which
     :meth:`~pyradtran.core.Simulation.run_simulation` writes to a
     temporary cloud file.
 
@@ -472,7 +458,7 @@ def parametric_cloud_profiles(config) -> Dict[str, Dict[str, List[float]]]:
     -------
     dict
         ``{"wc_file": profile}`` and/or ``{"ic_file": profile}``
-        depending on ``cloud_type`` (``wc``, ``ic``, ``mixed``); empty
+        depending on ``cloud_type`` (``wc``, ``ic``, ``mixed``). Empty
         unless clouds are enabled with ``cloud_source: parametric``.
         Each profile is a homogeneous layer in two rows, top first:
         ``{"z": [top, bottom], "lwc" | "iwc": [w, w], "reff": [r, r]}``
@@ -515,11 +501,10 @@ def parametric_cloud_profiles(config) -> Dict[str, Dict[str, List[float]]]:
 class InputFileBuilder:
     """Build provenance-tagged uvspec input lines.
 
-    The builder is the last stage of the parameter pipeline: the merged
-    configuration provides the baseline input file, the resolved
-    ``params`` of one point (from
+    The merged configuration provides the baseline input file. The
+    resolved ``params`` of one point (from
     :meth:`~pyradtran.params.ParamResolver.resolve_point`) replace or
-    extend it, and every resulting line remembers where it came from.
+    extend it. Every line records its origin.
 
     Parameters
     ----------
@@ -540,8 +525,8 @@ class InputFileBuilder:
 
     Examples
     --------
-    Build and print the input file for one point (needs a configuration
-    with valid libRadtran paths; output from libRadtran 2.0.6):
+    The input file for one point (needs valid libRadtran paths; output
+    from libRadtran 2.0.6):
 
     >>> from datetime import datetime
     >>> from pyradtran import ParamResolver, load_config
@@ -579,8 +564,8 @@ class InputFileBuilder:
     quiet                                                               # config
     <BLANKLINE>
 
-    Note how ``"mol_modify O3": False`` removed the config's ozone line,
-    and how the ``sza`` line was computed from time and position.
+    ``"mol_modify O3": False`` removed the config's ozone line; ``sza``
+    was computed from time and position.
     """
 
     def __init__(self, config):
@@ -603,18 +588,18 @@ class InputFileBuilder:
             Time of the point (UTC). Sets ``day_of_year`` and, when no
             ``sza`` is configured, the solar zenith angle.
         latitude, longitude : float
-            Position in degrees (north / east positive); only used for
+            Position in degrees (north / east positive). Used only for
             the computed solar zenith angle.
         resolved : dict, optional
             ``{key: (value, provenance)}`` as returned by
             :meth:`~pyradtran.params.ParamResolver.resolve_point`. Not
             modified.
         radiosonde_path : pathlib.Path, optional
-            Radiosonde file; used (as ``radiosonde <path> H2O RH``) only
+            Radiosonde file. Used (as ``radiosonde <path> H2O RH``) only
             when the config has ``h2o_source: radiosonde`` and no ERA5
             file is given.
         era5_atmosphere_file : pathlib.Path, optional
-            Atmosphere file written by :mod:`pyradtran.era5`; takes
+            Atmosphere file written by :mod:`pyradtran.era5`. Takes
             precedence over *radiosonde_path*. Its gas columns are read
             from the file header.
 
@@ -637,7 +622,7 @@ class InputFileBuilder:
            ``atmosphere_file``;
         2. ``radiosonde`` (ERA5 or radiosonde profile, if any);
         3. ``mol_modify O3 ... DU`` / ``mol_modify H2O ... MM`` from
-           ``ozone_du`` / ``h2o_mm`` — skipped for a gas whose profile
+           ``ozone_du`` / ``h2o_mm``, skipped for a gas whose profile
            comes from the radiosonde/ERA5 file, so a measured column is
            never rescaled by the config scalar;
         4. ``source``; for solar runs ``sza`` (config value, else
@@ -655,44 +640,42 @@ class InputFileBuilder:
         :func:`~pyradtran.config.list_solar_spectra`) are resolved to
         files in ``paths.libradtran_data`` on the ``atmosphere_file`` and
         ``source solar <file>`` lines, whether they come from the
-        configuration or from *resolved*; anything else is taken as a
+        configuration or from *resolved*. Anything else is taken as a
         path and written unchanged.
 
         A ``cloud_source: parametric`` configuration is added to
         *resolved* as a dict-valued ``wc_file`` / ``ic_file`` (see
         :func:`parametric_cloud_profiles`) unless *resolved* already has
         that key. A dict-valued ``wc_file`` / ``ic_file`` is rendered as
-        the placeholder ``wc_file 1D <generated: 2 levels, 1-2 km>``:
-        the cloud file itself is only written by
-        :meth:`~pyradtran.core.Simulation.run_simulation`, which passes
-        its path here instead of the dict.
+        the placeholder ``wc_file 1D <generated: 2 levels, 1-2 km>``.
+        Only :meth:`~pyradtran.core.Simulation.run_simulation` writes
+        the cloud file, and it passes the path here instead of the dict.
 
-        The *resolved* parameters are applied afterwards, in mapping
-        order. Each one first **removes every existing line with the
-        same keyword**, then appends its own line(s) at the end:
+        The *resolved* parameters are then applied in mapping order.
+        Each one **removes every existing line with the same keyword**
+        and appends its own line(s) at the end:
 
-        * ``False`` — remove only (switch a config-supplied option off);
-        * a ``list`` — one line per element (repeatable options such as
+        * ``False``: remove only (switch a config-supplied option off);
+        * a ``list``: one line per element (repeatable options such as
           ``wc_modify``);
-        * a key of :data:`~pyradtran.params.REGISTRY` — formatted by its
+        * a key of :data:`~pyradtran.params.REGISTRY`: formatted by its
           :meth:`~pyradtran.params.ParamSpec.format_line`
           (``mol_modify O3 320 DU``);
-        * ``True``, ``None`` or ``""`` on any other key — the bare
+        * ``True``, ``None`` or ``""`` on any other key: the bare
           keyword (flag options such as ``aerosol_default``);
-        * anything else — ``"<key> <value>"``.
+        * anything else: ``"<key> <value>"``.
 
         Special cases: ``sza``, ``sur_temperature``, ``albedo`` and
-        ``zout`` in *resolved* suppress the corresponding config line
-        from the start; ``output_user`` is merged through
+        ``zout`` in *resolved* suppress the corresponding config line;
+        ``output_user`` is merged through
         :func:`effective_output_columns`; ``brdf_rpv_type`` drops any
         ``albedo`` line (config or resolved) and adds
         ``brdf_rpv_library IGBP``. The file always ends with ``quiet``.
 
         Examples
         --------
-        See the class docstring of :class:`InputFileBuilder` for a
-        complete, annotated input file. Per-point values arrive with the
-        ``dataset-var`` tag:
+        :class:`InputFileBuilder` shows a complete annotated input file.
+        Per-point values carry the ``dataset-var`` tag:
 
         >>> lines = builder.build(  # doctest: +SKIP
         ...     datetime(2024, 6, 21, 12), 78.9, 11.9,
@@ -739,10 +722,10 @@ class InputFileBuilder:
             radiosonde_columns = "H2O RH"
             add("radiosonde", f"radiosonde {radiosonde_path} {radiosonde_columns}")
 
-        # Molecular columns, when configured.  A gas whose
-        # profile comes from the radiosonde file must not additionally be
-        # rescaled by mol_modify — that would silently overwrite the
-        # measured/reanalysis column with the config scalar.
+        # Molecular columns, when configured. A gas whose profile comes
+        # from the radiosonde file must not also be rescaled by
+        # mol_modify: that would overwrite the measured/reanalysis column
+        # with the config scalar.
         profile_gases = (
             set(radiosonde_columns.split()[::2]) if radiosonde_columns else set()
         )
@@ -809,7 +792,7 @@ class InputFileBuilder:
                 output_user_override[1] if output_user_override else PROV_CONFIG,
             )
 
-        # Output altitudes (sorted+deduped — uvspec rejects unsorted zout)
+        # Output altitudes (sorted+deduped: uvspec rejects unsorted zout)
         if "zout" not in resolved and sd.output_altitudes_km:
             alt_str = " ".join(
                 f"{alt:.4f}" for alt in effective_output_altitudes(self.config)
@@ -845,7 +828,7 @@ class InputFileBuilder:
             keyword = spec.keyword if spec is not None else key
             lines = [ln for ln in lines if ln.keyword != keyword]
             if value is False:
-                continue  # flag explicitly switched off — emit nothing
+                continue  # flag switched off: emit nothing
             if isinstance(value, list):
                 # Repeatable option (non_unique): one line per entry
                 for item in value:
@@ -890,7 +873,7 @@ class InputFileBuilder:
 
     @staticmethod
     def render(lines: List[InputLine]) -> str:
-        """Render lines to the plain uvspec input file content.
+        """Render lines as plain uvspec input file content.
 
         Parameters
         ----------
@@ -900,8 +883,8 @@ class InputFileBuilder:
         Returns
         -------
         str
-            One ``text`` per line, terminated by a newline — exactly what
-            is written to the ``.inp`` file passed to ``uvspec``.
+            One ``text`` per line, newline-terminated: the content of
+            the ``.inp`` file passed to ``uvspec``.
 
         Examples
         --------
@@ -922,9 +905,8 @@ class InputFileBuilder:
     def render_annotated(lines: List[InputLine]) -> str:
         """Render lines with aligned ``# <provenance>`` annotations.
 
-        This is the text returned by
-        :meth:`~pyradtran.interface.PyRadtranAccessor.explain`. It is
-        meant for reading, not for feeding to ``uvspec``.
+        :meth:`~pyradtran.interface.PyRadtranAccessor.explain` returns
+        this text. It is for reading, not for ``uvspec``.
 
         Parameters
         ----------
@@ -935,8 +917,8 @@ class InputFileBuilder:
         -------
         str
             Each line padded to a common width and followed by
-            ``# <provenance>``; newline-terminated. An empty string for
-            an empty list.
+            ``# <provenance>``, newline-terminated. Empty for an empty
+            list.
 
         Examples
         --------
@@ -960,10 +942,9 @@ class InputFileBuilder:
 def _sniff_radiosonde_columns(era5_abs_path: Path) -> str:
     """Read the gas-column spec from an atmosphere file header.
 
-    Files written by :mod:`pyradtran.era5` carry a machine-readable
-    ``# columns: H2O MMR O3 MMR`` header line.  Older files without it
-    fall back to the historical H2O-only sniff (``%`` in the header
-    means RH, otherwise MMR).
+    Uses the ``# columns: H2O MMR O3 MMR`` line written by
+    :mod:`pyradtran.era5`; without it, ``%`` in the header means
+    ``H2O RH``, otherwise ``H2O MMR``.
     """
     try:
         with open(era5_abs_path, "r") as f:

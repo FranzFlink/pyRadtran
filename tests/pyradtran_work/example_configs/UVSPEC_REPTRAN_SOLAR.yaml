@@ -1,8 +1,0 @@
-simulation_defaults:
-  rte_solver: twostr
-execution:
-  cleanup_temp_files: true
-parameter_overrides:
-  source: solar
-  wavelength: 300 3000
-  quiet: ''

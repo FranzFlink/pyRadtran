@@ -2,15 +2,15 @@
 r"""
 Cloud layers and libRadtran cloud files.
 
-This module builds 1D cloud input files (``wc_file 1D`` / ``ic_file 1D``)
-from a list of homogeneous slabs:
+Builds 1D cloud input files (``wc_file 1D`` / ``ic_file 1D``) from a
+list of homogeneous slabs:
 
-1. Describe the cloud as :class:`CloudLayer` objects — from a few numbers
+1. Describe the cloud as :class:`CloudLayer` objects, from a few numbers
    (:meth:`CloudGenerator.from_simple_parameters`) or from an ERA5 dataset
    (:meth:`CloudGenerator.from_era5_dataset`).
-2. Write them to disk with :class:`CloudFileWriter`, which puts the file
-   rows at the layer boundaries so that uvspec sees exactly these slabs.
-3. Hand the file to uvspec through the ``wc_file`` / ``ic_file`` parameter
+2. Write them with :class:`CloudFileWriter`, which puts the file rows at
+   the layer boundaries so that uvspec sees exactly these slabs.
+3. Pass the file to uvspec through the ``wc_file`` / ``ic_file`` parameter
    of :meth:`~pyradtran.interface.PyRadtranAccessor.run`.
 
 .. autosummary::
@@ -24,10 +24,10 @@ from a list of homogeneous slabs:
 
    This is the file-based cloud path.  A cloud profile can also be
    passed to :meth:`~pyradtran.interface.PyRadtranAccessor.run` directly
-   as a dict (``params={"wc_file": {"z": ..., "lwc": ..., "reff": ...}}``),
-   and :func:`pyradtran.era5.cloud_profiles` builds such dicts from ERA5.
-   Both routes describe the same cloud: the ERA5 functions here are thin
-   wrappers around :mod:`pyradtran.era5`.
+   as a dict (``params={"wc_file": {"z": ..., "lwc": ..., "reff": ...}}``);
+   :func:`pyradtran.era5.cloud_profiles` builds such dicts from ERA5.
+   Both routes describe the same cloud: the ERA5 functions here wrap
+   :mod:`pyradtran.era5`.
 
 Examples
 --------
@@ -49,8 +49,7 @@ A 500 m thick stratus deck, written to a file:
   1.000000   0.300000    8.000
 >>> tmp.cleanup()
 
-Use the file in a simulation (the ``1D`` keyword is part of the uvspec
-option value):
+Use the file in a simulation (``1D`` is part of the option value):
 
 >>> result = ds.pyradtran.run(  # doctest: +SKIP
 ...     config_path=cfg, params={"wc_file": f"1D {path}"}
@@ -79,11 +78,10 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class CloudLayer:
-    r"""A single cloud layer with vertical extent and microphysical properties.
+    r"""A homogeneous cloud slab between two altitudes.
 
-    ``CloudLayer`` is a validated data container: a homogeneous slab
-    between two altitudes.  It is not written to disk directly — pass a
-    list of layers to :class:`CloudFileWriter` instead.
+    A validated data container; write lists of layers with
+    :class:`CloudFileWriter`.
 
     Parameters
     ----------
@@ -98,13 +96,12 @@ class CloudLayer:
         Ice water content in g m\ :sup:`-3`.
     r_eff_um : float, default ``10.0``
         Effective droplet / crystal radius in µm.  A layer has a single
-        radius; it is used for the liquid *and* the ice file when the
-        layer contains both phases.
+        radius, used for the liquid and the ice file when the layer
+        contains both phases.
     cloud_fraction : float, default ``1.0``
-        Cloud fraction (0–1).  Informational only: the value is
-        validated and stored, but nothing in pyRadtran reads it —
-        :class:`CloudFileWriter` writes the water content as given and
-        no cloud-overlap option is set.
+        Cloud fraction (0–1).  Validated and stored, but nothing in
+        pyRadtran reads it: :class:`CloudFileWriter` writes the water
+        content as given and no cloud-overlap option is set.
 
     Raises
     ------
@@ -121,11 +118,10 @@ class CloudLayer:
 
     Notes
     -----
-    Validation runs once, when the object is created.  The dataclass is
-    mutable, and attributes changed afterwards are not re-checked.  No
-    upper limits are enforced; whether a given effective radius is
-    usable depends on the cloud parameterisation selected in uvspec
-    (``wc_properties`` / ``ic_properties``).
+    Validation runs once, at construction; attributes changed afterwards
+    are not re-checked.  No upper limits are enforced; whether an
+    effective radius is usable depends on the cloud parameterisation
+    selected in uvspec (``wc_properties`` / ``ic_properties``).
 
     Examples
     --------
@@ -136,11 +132,6 @@ class CloudLayer:
     >>> layer.z_top_km - layer.z_bottom_km
     1.0
 
-    A cirrus layer with larger particles:
-
-    >>> cirrus = CloudLayer(8.0, 9.5, iwc_g_m3=0.02, r_eff_um=30.0)
-    >>> cirrus.iwc_g_m3, cirrus.lwc_g_m3
-    (0.02, 0.0)
 
     Unphysical layers are rejected:
 
@@ -186,11 +177,10 @@ class CloudLayer:
 class CloudGenerator:
     """Factory for :class:`CloudLayer` sequences.
 
-    All methods are static — no instantiation needed.  Choose a source
-    method according to your input data:
+    All methods are static:
 
-    * :meth:`from_simple_parameters` — uniform slab from a few numbers.
-    * :meth:`from_era5_dataset` — one layer per cloudy ERA5 level.
+    * :meth:`from_simple_parameters`: uniform slab from a few numbers;
+    * :meth:`from_era5_dataset`: one layer per cloudy ERA5 level.
 
     See Also
     --------
@@ -223,13 +213,12 @@ class CloudGenerator:
     ) -> List[CloudLayer]:
         r"""Extract cloud layers from an ERA5 :class:`xarray.Dataset`.
 
-        A thin wrapper around :mod:`pyradtran.era5`: the dataset is
-        normalised (:func:`~pyradtran.era5.normalize_era5`), one column
-        is selected (:func:`~pyradtran.era5.select_profile`) and
-        converted with :func:`~pyradtran.era5.cloud_profiles`; the
-        resulting profiles are returned as :class:`CloudLayer` objects
-        whose boundaries lie midway between the ERA5 levels, so that the
-        layers tile the cloudy part of the column.
+        Normalises the dataset (:func:`~pyradtran.era5.normalize_era5`),
+        selects one column (:func:`~pyradtran.era5.select_profile`),
+        converts it with :func:`~pyradtran.era5.cloud_profiles` and
+        returns the profiles as :class:`CloudLayer` objects.  Layer
+        boundaries lie midway between the ERA5 levels, so the layers tile
+        the cloudy part of the column.
 
         Parameters
         ----------
@@ -289,38 +278,29 @@ class CloudGenerator:
         See Also
         --------
         generate_cloud_file_from_era5 : One-step convenience wrapper.
-        pyradtran.era5.cloud_profiles : The conversion used here —
-            water content, altitudes and layer boundaries are described
-            in its Notes.
+        pyradtran.era5.cloud_profiles : The conversion used here; its
+            Notes describe water content, altitudes and layer boundaries.
 
         Notes
         -----
-        * **One layer per phase.**  A level that holds liquid *and* ice
-          yields two layers with the same boundaries, one per phase,
-          each with its own effective radius.
+        * **One layer per phase.**  A level with liquid and ice yields
+          two layers with the same boundaries, each with its own
+          effective radius.
         * Within each phase the layers are contiguous from the lowest to
           the highest level above the threshold; levels in between keep
           their own (sub-threshold) content, and levels with exactly
           zero content are left out.
-        * The water contents are grid-box means; they are not divided
-          by the cloud cover.  ``cloud_fraction`` of the returned layers
-          is always 1: the ERA5 cloud cover ``cc`` is not read.
+        * The water contents are grid-box means, not divided by the
+          cloud cover.  ``cloud_fraction`` of the returned layers is
+          always 1; the ERA5 cloud cover ``cc`` is not read.
         * Without a geopotential variable (and without
           *altitude_levels_km*) the altitudes are a rough estimate from
           pressure with a constant 7 km scale height.
 
-        .. versionchanged:: 0.2
-           Layers used to be 50 m slabs at the level altitudes, with a
-           far too small water path.  A missing position now raises
-           instead of averaging over the domain, a missing temperature
-           raises instead of guessing a density, and the defaults for
-           the thresholds (``1e-6``) and the ice radius (30 µm) follow
-           :func:`pyradtran.era5.cloud_profiles`.
-
         Examples
         --------
-        A synthetic ERA5 cube with a single column: liquid water at 850
-        and 925 hPa, a little ice at 500 hPa.
+        A synthetic single-column ERA5 cube: liquid water at 850 and
+        925 hPa, a little ice at 500 hPa.
 
         >>> import numpy as np
         >>> import xarray as xr
@@ -356,7 +336,7 @@ class CloudGenerator:
 
         The 925 hPa level sits at 7500 / 9.80665 = 765 m; its layer
         reaches from the midpoint to the 1000 hPa level (433 m) to the
-        midpoint to the 850 hPa level (1122 m).  With a real file:
+        midpoint to the 850 hPa level (1122 m).  A real file:
 
         >>> ds = xr.open_dataset("era5_cloud.nc")  # doctest: +SKIP
         >>> layers = CloudGenerator.from_era5_dataset(  # doctest: +SKIP
@@ -431,9 +411,8 @@ class CloudGenerator:
     ) -> List[CloudLayer]:
         r"""Create uniform cloud layers from basic parameters.
 
-        The altitude range *z_base_km* … *z_top_km* is split into
-        *n_layers* sub-layers of equal thickness, each receiving the same
-        microphysical values.
+        Splits *z_base_km* … *z_top_km* into *n_layers* sub-layers of
+        equal thickness with the same microphysical values.
 
         Parameters
         ----------
@@ -442,15 +421,15 @@ class CloudGenerator:
         z_top_km : float
             Cloud top altitude (km above sea level).
         lwc_g_m3 : float, default ``0.1``
-            Liquid water content (g m\ :sup:`-3`).  Note the non-zero
-            default: pass ``lwc_g_m3=0.0`` for a pure ice cloud.
+            Liquid water content (g m\ :sup:`-3`).  The default is
+            non-zero: pass ``lwc_g_m3=0.0`` for a pure ice cloud.
         iwc_g_m3 : float, default ``0.0``
             Ice water content (g m\ :sup:`-3`).
         r_eff_um : float, default ``10.0``
             Effective droplet / crystal radius (µm).
         cloud_fraction : float, default ``1.0``
-            Cloud fraction (0–1); informational, stored on the layers
-            but not used by :class:`CloudFileWriter`.
+            Cloud fraction (0–1); stored on the layers but not used by
+            :class:`CloudFileWriter`.
         n_layers : int, default ``1``
             Number of sub-layers to create.
 
@@ -474,13 +453,12 @@ class CloudGenerator:
 
         Notes
         -----
-        Because all sub-layers are identical, *n_layers* changes neither
-        the cloud uvspec sees (the file :class:`CloudFileWriter` writes
-        merely gains one row per internal boundary); it is useful mainly
-        as a starting point for editing individual layers.
+        The sub-layers are identical, so *n_layers* does not change the
+        cloud uvspec sees (the file only gains one row per internal
+        boundary); it is a starting point for editing single layers.
 
-        For orientation — none of this is computed by pyRadtran — the
-        liquid water path of the cloud is
+        For orientation (pyRadtran computes none of this), the liquid
+        water path of the cloud is
 
         .. math::
 
@@ -524,14 +502,6 @@ class CloudGenerator:
         ...     for layer in layers
         ... )
         300.0
-
-        An ice cloud needs the liquid default switched off:
-
-        >>> cirrus = CloudGenerator.from_simple_parameters(
-        ...     8.0, 9.5, lwc_g_m3=0.0, iwc_g_m3=0.02, r_eff_um=30.0
-        ... )
-        >>> cirrus[0].lwc_g_m3, cirrus[0].iwc_g_m3
-        (0.0, 0.02)
 
         Invalid input:
 
@@ -603,12 +573,9 @@ class CloudGenerator:
 
 
 def _write_cloud_file(cloud_layers, output_path, attr, label, filler_reff) -> Path:
-    """Write the layers with ``attr > 0`` as an exact libRadtran 1D cloud file.
+    """Write the layers with ``attr > 0`` as an exact libRadtran 1D file.
 
-    Rows run from the top down at the layer boundaries: a zero row at each
-    layer top (unless the layer above ends there) and a row at each layer
-    base carrying the layer's content, which libRadtran applies up to the
-    next row above.  Boundaries are compared at the file resolution (1e-6 km).
+    See :meth:`CloudFileWriter.write_water_cloud_file` for the row layout.
     """
     layers = sorted(
         (layer for layer in cloud_layers if getattr(layer, attr) > 0),
@@ -645,17 +612,15 @@ def _write_cloud_file(cloud_layers, output_path, attr, label, filler_reff) -> Pa
 class CloudFileWriter:
     r"""Persist :class:`CloudLayer` sequences as libRadtran ``.dat`` files.
 
-    Two static methods are provided — one per cloud phase:
+    One static method per phase:
 
     * :meth:`write_water_cloud_file` → ``wc_file 1D``
     * :meth:`write_ice_cloud_file`   → ``ic_file 1D``
 
-    The output format is a three-column ASCII table (altitude in km,
-    water content in g m\ :sup:`-3`, effective radius in µm), ordered
-    from the top down, as understood by libRadtran's ``wc_file 1D`` /
-    ``ic_file 1D`` input options.  The rows sit at the layer boundaries,
-    so uvspec sees exactly the given layers; the format is described in
-    :meth:`write_water_cloud_file`.
+    Both write a three-column ASCII table (altitude in km, water content
+    in g m\ :sup:`-3`, effective radius in µm), top down, with rows at
+    the layer boundaries so that uvspec sees exactly the given layers.
+    The format is described in :meth:`write_water_cloud_file`.
 
     See Also
     --------
@@ -673,9 +638,9 @@ class CloudFileWriter:
     ) -> Path:
         r"""Write a water-cloud ``.dat`` file for libRadtran.
 
-        The liquid layers are written as three columns — altitude (km),
-        liquid water content (g m\ :sup:`-3`) and effective radius (µm)
-        — from the top down, with rows at the layer boundaries.
+        Three columns, altitude (km), liquid water content
+        (g m\ :sup:`-3`) and effective radius (µm), top down, with rows
+        at the layer boundaries.
 
         Parameters
         ----------
@@ -683,13 +648,12 @@ class CloudFileWriter:
             Layers to write, in any order.  Only layers with
             ``lwc_g_m3 > 0`` are used.
         output_path : str or pathlib.Path
-            Destination file.  Parent directories are created
-            automatically; an existing file is overwritten.
+            Destination file.  Parent directories are created; an
+            existing file is overwritten.
         include_zero_layers : bool, default ``True``
             Ignored; accepted for backwards compatibility.
         altitude_resolution_km : float, default ``0.1``
-            Ignored; accepted for backwards compatibility.  The layers
-            are no longer resampled onto a regular grid.
+            Ignored; accepted for backwards compatibility.
 
         Returns
         -------
@@ -722,12 +686,12 @@ class CloudFileWriter:
         **Rows.**  libRadtran reads the value in a ``wc_file 1D`` row as
         the property of the layer between that altitude and the next row
         above; the value in the topmost row is not used.  Going through
-        the layers from the top down, the writer therefore emits
+        the layers top down, the writer emits
 
-        * a row with zero LWC at the layer top — unless the layer above
-          ends exactly there — and
-        * a row at the layer base carrying the layer's LWC and
-          effective radius.
+        * a row with zero LWC at the layer top, unless the layer above
+          ends exactly there, and
+        * a row at the layer base with the layer's LWC and effective
+          radius.
 
         uvspec then sees exactly the :class:`CloudLayer` list: no cloud
         above the highest top, in the gaps, or below the lowest base.
@@ -738,12 +702,6 @@ class CloudFileWriter:
         ``cloud_fraction`` is not used.  When no layer contains liquid
         water, a warning is logged and a cloud-free placeholder (two
         zero rows at 1 and 0 km) is written.
-
-        .. versionchanged:: 0.2
-           The layers used to be sampled on a regular grid of
-           *altitude_resolution_km*, which could shift the cloud
-           boundaries by up to one grid step and drop thin layers, and
-           water contents were written with three decimals only.
 
         Examples
         --------
@@ -761,9 +719,8 @@ class CloudFileWriter:
           1.500000   0.000000    8.000
           1.000000   0.300000    8.000
 
-        libRadtran reads this as 0.3 g m\ :sup:`-3` from 1.0 to 1.5 km:
-        the row at 1.0 km fills the layer up to the next row.  Two
-        separate decks, the lower one made of two touching layers:
+        libRadtran reads this as 0.3 g m\ :sup:`-3` from 1.0 to 1.5 km.
+        Two separate decks, the lower one made of two touching layers:
 
         >>> from pyradtran.clouds import CloudLayer
         >>> decks = [
@@ -810,9 +767,8 @@ class CloudFileWriter:
     ) -> Path:
         r"""Write an ice-cloud ``.dat`` file for libRadtran.
 
-        Identical to :meth:`write_water_cloud_file` — same format, same
-        rows at the layer boundaries — but for the ice phase: it uses
-        the layers with ``iwc_g_m3 > 0`` and writes ``iwc_g_m3``.
+        Same format and row layout as :meth:`write_water_cloud_file`,
+        for the layers with ``iwc_g_m3 > 0``.
 
         Parameters
         ----------
@@ -820,8 +776,8 @@ class CloudFileWriter:
             Layers to write, in any order.  Only layers with
             ``iwc_g_m3 > 0`` are used.
         output_path : str or pathlib.Path
-            Destination file.  Parent directories are created
-            automatically; an existing file is overwritten.
+            Destination file.  Parent directories are created; an
+            existing file is overwritten.
         include_zero_layers : bool, default ``True``
             Ignored; accepted for backwards compatibility.
         altitude_resolution_km : float, default ``0.1``
@@ -843,14 +799,14 @@ class CloudFileWriter:
 
         Notes
         -----
-        Columns are altitude (km), ice water content (g m\ :sup:`-3`)
-        and effective radius (µm), highest altitude first, formatted as
+        Columns: altitude (km), ice water content (g m\ :sup:`-3`) and
+        effective radius (µm), highest altitude first, formatted as
         ``%10.6f %10.6f %8.3f``.
 
-        The effective radius is the single ``r_eff_um`` of each layer;
-        whether it is valid depends on the ice parameterisation chosen
-        with ``ic_properties`` in uvspec.  When no layer contains ice, a
-        cloud-free placeholder (two zero rows at 1 and 0 km) is written.
+        Whether the effective radius of each layer is valid depends on
+        the ice parameterisation chosen with ``ic_properties``.  When no
+        layer contains ice, a cloud-free placeholder (two zero rows at 1
+        and 0 km) is written.
 
         Examples
         --------
@@ -891,14 +847,14 @@ def generate_cloud_file_from_era5(
     lon: Optional[float] = None,
     **kwargs,
 ) -> Path:
-    """One-step cloud-file generation from an ERA5 dataset.
+    """Write a cloud file from an ERA5 dataset in one call.
 
-    Combines :meth:`CloudGenerator.from_era5_dataset` and the
-    appropriate :class:`CloudFileWriter` method into a single call.  The
-    file holds the same cloud as the ``wc_file`` / ``ic_file`` dict of
-    :func:`pyradtran.era5.cloud_profiles` (which ``era5_clouds=True`` in
-    :meth:`~pyradtran.interface.PyRadtranAccessor.run` uses directly,
-    without a file).
+    Combines :meth:`CloudGenerator.from_era5_dataset` and the matching
+    :class:`CloudFileWriter` method.  The file holds the same cloud as
+    the dict of :func:`pyradtran.era5.cloud_profiles`, which
+    ``era5_clouds=True`` in
+    :meth:`~pyradtran.interface.PyRadtranAccessor.run` uses without a
+    file.
 
     Parameters
     ----------
@@ -943,8 +899,8 @@ def generate_cloud_file_from_era5(
 
     Examples
     --------
-    A single synthetic column with liquid water at 925 hPa (765 m) and
-    850 hPa (1479 m):
+    A synthetic column with liquid water at 925 hPa (765 m) and 850 hPa
+    (1479 m):
 
     >>> import pathlib, tempfile
     >>> import numpy as np

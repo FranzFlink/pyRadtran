@@ -2,35 +2,33 @@
 """
 Simulation engine for pyRadtran.
 
-This module contains the :class:`Simulation` class, the low-level
-workhorse behind every ``uvspec`` invocation: one instance, one
-configuration, one simulation point per call.
+:class:`Simulation` is the low-level class behind every ``uvspec``
+call: one instance per configuration, one simulation point per call.
 
 .. autosummary::
 
    Simulation
 
-It is responsible for:
+It
 
-* Generating a complete ``uvspec`` input file from a
+* builds the ``uvspec`` input file from a
   :class:`~pyradtran.config.SimulationConfig` and the per-point resolved
   parameters (:meth:`Simulation.build_input_lines`,
-  :meth:`Simulation.dry_run`).
-* Writing dict-valued cloud profiles to temporary cloud files
-  (:meth:`Simulation.format_cloud_profile`).
-* Spawning the ``uvspec`` subprocess and capturing its stdout / stderr
-  (:meth:`Simulation.run_simulation`).
-* Cleaning up temporary files.
+  :meth:`Simulation.dry_run`),
+* writes dict-valued cloud profiles to temporary cloud files
+  (:meth:`Simulation.format_cloud_profile`),
+* runs the ``uvspec`` subprocess and captures stdout / stderr
+  (:meth:`Simulation.run_simulation`),
+* removes temporary files.
 
-Most users should interact with the higher-level
-:class:`~pyradtran.interface.PyRadtranAccessor` (``ds.pyradtran.run()``)
-rather than calling :class:`Simulation` directly; it adds the loop over
-points, parameter resolution, output parsing and the conversion to
+For most work use :class:`~pyradtran.interface.PyRadtranAccessor`
+(``ds.pyradtran.run()``), which adds the loop over points, parameter
+resolution, output parsing and the conversion to
 :class:`xarray.Dataset`.
 
 Examples
 --------
-Render the input file of a single point without running ``uvspec``:
+Render the input file of one point without running ``uvspec``:
 
 >>> from datetime import datetime
 >>> from pyradtran import Simulation, load_config
@@ -75,12 +73,11 @@ logger = logging.getLogger(__name__)
 class Simulation:
     """Low-level wrapper around a single ``uvspec`` execution.
 
-    A :class:`Simulation` binds a configuration; each call to
-    :meth:`run_simulation` then writes one input file, runs ``uvspec`` on
-    it and returns the path of the raw output file. :meth:`dry_run` and
-    :meth:`build_input_lines` build the same input without running
-    anything. Instances hold no per-point state apart from the failure
-    diagnostics below, so one instance can be reused for many points.
+    Each :meth:`run_simulation` call writes one input file, runs
+    ``uvspec`` on it and returns the path of the raw output file.
+    :meth:`dry_run` and :meth:`build_input_lines` build the same input
+    without running it. The only per-point state is the failure
+    diagnostics below, so one instance can serve many points.
 
     Parameters
     ----------
@@ -120,9 +117,9 @@ class Simulation:
     and *provenance* one of ``"config"``, ``"params-literal"``,
     ``"dataset-var"``, ``"unvalidated"`` (the ``PROV_*`` constants in
     :mod:`pyradtran.params`). :class:`~pyradtran.params.ParamResolver`
-    produces this mapping from a user ``params`` dict; values given here
-    are **not** validated again. A resolved parameter replaces the line
-    the configuration would have produced for the same option.
+    produces this mapping from a user ``params`` dict. Values given here
+    are **not** validated again. A resolved parameter replaces the
+    configuration's line for the same option.
 
     Examples
     --------
@@ -130,7 +127,7 @@ class Simulation:
     >>> from pyradtran import Simulation, load_config
     >>> sim = Simulation(load_config("config/quickstart.yaml"))  # doctest: +SKIP
 
-    Inspect the input file, then run it and read the raw output:
+    Preview the input file, run it and read the raw output:
 
     >>> noon = datetime(2025, 6, 21, 12)
     >>> params = {"wavelength": ("500 502", "params-literal")}
@@ -143,8 +140,7 @@ class Simulation:
       501.000  1.146696e+03  1.416279e+02  2.231443e+02
       502.000  1.134968e+03  1.389458e+02  2.206483e+02
 
-    A failing run returns *None* and leaves the diagnostics on the
-    instance:
+    A failing run returns *None* and keeps the diagnostics:
 
     >>> bad = {"rte_solver": ("nonsense", "unvalidated")}
     >>> sim.run_simulation(noon, 61.0, 22.0, resolved_params=bad) is None  # doctest: +SKIP
@@ -177,14 +173,10 @@ class Simulation:
         override_surface_type=None,
         parameter_overrides=None,
     ):
-        """Merge deprecated kwargs (and config-level overrides) into a resolved-params dict.
+        """Merge deprecated kwargs and config overrides into resolved params.
 
-        Layering, later wins:
-
-        1. ``config.simulation_defaults.parameter_overrides`` (PROV_CONFIG)
-        2. legacy ``override_*`` kwargs (PROV_LITERAL)
-        3. runtime ``parameter_overrides`` dict (PROV_UNVALIDATED)
-        4. explicit *resolved_params* (caller-supplied provenance) — wins over all
+        Later wins: config ``parameter_overrides``, ``override_*`` kwargs,
+        runtime ``parameter_overrides``, explicit *resolved_params*.
         """
         legacy = {
             "albedo": override_albedo,
@@ -218,7 +210,7 @@ class Simulation:
         for key, value in (parameter_overrides or {}).items():
             resolved[key] = (value, PROV_UNVALIDATED)
 
-        # Layer 4: explicit resolved_params — new API always wins.
+        # Layer 4: explicit resolved_params always win.
         resolved.update(resolved_params or {})
 
         return resolved
@@ -238,10 +230,9 @@ class Simulation:
     ):
         """Build the provenance-tagged input lines for one point.
 
-        The structured form of the input file: one
-        :class:`~pyradtran.input_builder.InputLine` (``keyword``,
-        ``text``, ``provenance``) per uvspec option, in file order.
-        :meth:`dry_run` and :meth:`run_simulation` are built on it.
+        Returns one :class:`~pyradtran.input_builder.InputLine`
+        (``keyword``, ``text``, ``provenance``) per uvspec option, in
+        file order. :meth:`dry_run` and :meth:`run_simulation` use it.
 
         Parameters
         ----------
@@ -257,16 +248,16 @@ class Simulation:
             over the configuration and over the deprecated arguments.
         era5_atmosphere_file : pathlib.Path, optional
             Radiosonde-format atmosphere file (see
-            :func:`pyradtran.era5.write_atmosphere_file`); takes
+            :func:`pyradtran.era5.write_atmosphere_file`). Takes
             precedence over a radiosonde lookup.
         override_albedo, override_surface_temperature : float, optional
-            Deprecated — use *resolved_params*.
+            Deprecated; use *resolved_params*.
         override_altitude_km : float, optional
-            Deprecated — use *resolved_params*.
+            Deprecated; use *resolved_params*.
         override_surface_type : int, optional
-            Deprecated — use *resolved_params*.
+            Deprecated; use *resolved_params*.
         parameter_overrides : dict, optional
-            Deprecated — use *resolved_params*.
+            Deprecated; use *resolved_params*.
 
         Returns
         -------
@@ -286,12 +277,12 @@ class Simulation:
 
         Notes
         -----
-        Entries of ``simulation_defaults.parameter_overrides`` in the
+        ``simulation_defaults.parameter_overrides`` from the
         configuration are applied first (provenance ``config``), then
         the deprecated arguments, then *resolved_params*. With
         ``h2o_source: radiosonde`` and a configured
         ``paths.radiosonde_base``, the radiosonde file closest in time
-        to *dt* is looked up and included.
+        to *dt* is included.
 
         Examples
         --------
@@ -340,7 +331,7 @@ class Simulation:
         resolved_params=None,
         era5_atmosphere_file: Optional[Path] = None,
     ) -> str:
-        """Render the annotated input file for one point without running uvspec.
+        """Return the annotated input file for one point without running it.
 
         Parameters
         ----------
@@ -364,18 +355,17 @@ class Simulation:
         See Also
         --------
         pyradtran.interface.PyRadtranAccessor.explain : The same preview
-            for a point of a dataset, starting from a user ``params``
-            mapping.
-        build_input_lines : The underlying structured lines.
+            for a point of a dataset, from a user ``params`` mapping.
+        build_input_lines : The same lines as objects.
 
         Notes
         -----
-        Nothing is written to disk. Consequently a dict-valued
-        ``wc_file`` / ``ic_file`` — from *resolved_params* or from a
-        ``cloud_source: parametric`` configuration — appears as a
-        placeholder such as ``wc_file 1D <generated: 2 levels, 1-2 km>``,
-        whereas :meth:`run_simulation` first writes it to a temporary
-        file and puts ``1D <path>`` on the line.
+        Nothing is written to disk. A dict-valued ``wc_file`` /
+        ``ic_file`` (from *resolved_params* or a
+        ``cloud_source: parametric`` configuration) therefore appears as
+        a placeholder such as ``wc_file 1D <generated: 2 levels, 1-2 km>``.
+        :meth:`run_simulation` writes it to a temporary file and puts
+        ``1D <path>`` on the line.
 
         Examples
         --------
@@ -428,10 +418,9 @@ class Simulation:
     ) -> Optional[Path]:
         """Run a single ``uvspec`` simulation.
 
-        Builds the input file for one point, writes it to
-        ``paths.working_dir``, pipes it into the ``uvspec`` binary
-        (``paths.libradtran_bin``) and stores stdout next to it as
-        ``<name>.out``.
+        Writes the input file for one point to ``paths.working_dir``,
+        pipes it into ``uvspec`` (``paths.libradtran_bin``) and stores
+        stdout next to it as ``<name>.out``.
 
         Parameters
         ----------
@@ -452,13 +441,13 @@ class Simulation:
         era5_atmosphere_file : pathlib.Path, optional
             Custom ERA5 atmosphere file (radiosonde format).
         override_albedo, override_surface_temperature : float, optional
-            Deprecated — use *resolved_params*.
+            Deprecated; use *resolved_params*.
         override_altitude_km : float, optional
-            Deprecated — use *resolved_params*.
+            Deprecated; use *resolved_params*.
         override_surface_type : int, optional
-            Deprecated — use *resolved_params*.
+            Deprecated; use *resolved_params*.
         parameter_overrides : dict, optional
-            Deprecated — use *resolved_params*.
+            Deprecated; use *resolved_params*.
 
         Returns
         -------
@@ -473,7 +462,7 @@ class Simulation:
         ------
         UvspecExecutionError
             If the input file cannot be built or written (e.g. an
-            invalid cloud-profile dict); the original exception is
+            invalid cloud-profile dict). The original exception is
             chained. A failing ``uvspec`` does *not* raise.
 
         Warns
@@ -492,11 +481,10 @@ class Simulation:
 
         Notes
         -----
-        With ``execution.cleanup_temp_files`` enabled, the input file and
-        temporary cloud files are deleted after a successful run; the
+        With ``execution.cleanup_temp_files``, the input file and
+        temporary cloud files are deleted after a successful run. The
         output file is left for the caller to parse and remove. After a
-        failure, the input file and the cloud files it references are
-        always kept.
+        failure, the input file and its cloud files are always kept.
 
         Examples
         --------
@@ -580,8 +568,8 @@ class Simulation:
             raise UvspecExecutionError(f"Simulation failed: {e}") from e
 
         finally:
-            # On failure the kept input file references these cloud files —
-            # deleting them would break the promised post-mortem.
+            # The kept input file of a failed run references these cloud
+            # files; keep them for the post-mortem.
             keep_for_postmortem = self.last_failed_input is not None
             if self.config.execution.cleanup_temp_files and not keep_for_postmortem:
                 for p in temp_cloud_files:
@@ -595,10 +583,10 @@ class Simulation:
     def format_cloud_profile(data: Dict[str, Any]) -> str:
         r"""Format a cloud-profile dict as a libRadtran column file.
 
-        Produces the three-column text expected by the ``wc_file 1D`` /
-        ``ic_file 1D`` options: altitude, water content, effective
-        radius. This is what a dict-valued ``wc_file`` / ``ic_file``
-        parameter is turned into before ``uvspec`` runs.
+        Returns the three-column text (altitude, water content,
+        effective radius) that ``wc_file 1D`` / ``ic_file 1D`` expect. A
+        dict-valued ``wc_file`` / ``ic_file`` parameter is converted this
+        way before ``uvspec`` runs.
 
         Parameters
         ----------
@@ -618,8 +606,8 @@ class Simulation:
         -------
         str
             One line per level, ``z content reff`` with six decimals,
-            newline-terminated. Rows are written in the order given; no
-            sorting or validation of the values takes place.
+            newline-terminated. Rows keep the given order; values are
+            neither sorted nor validated.
 
         Raises
         ------
@@ -637,10 +625,10 @@ class Simulation:
 
         Notes
         -----
-        libRadtran interprets the value at level :math:`z_i` as the
-        (constant) content of the layer between :math:`z_i` and the next
-        level above, :math:`z_{i-1}`. The topmost row therefore only
-        closes the grid — give it zero content. The water path of a
+        libRadtran takes the value at level :math:`z_i` as the constant
+        content of the layer between :math:`z_i` and the next level
+        above, :math:`z_{i-1}`. The topmost row only closes the grid:
+        give it zero content. The water path of a
         profile with levels :math:`z_0 > z_1 > \dots > z_n` is
 
         .. math::
@@ -665,7 +653,7 @@ class Simulation:
         1.000000 0.300000 10.000000
         <BLANKLINE>
 
-        A two-layer ice cloud; NumPy arrays work as well as lists:
+        A two-layer ice cloud from NumPy arrays:
 
         >>> import numpy as np
         >>> text = Simulation.format_cloud_profile(
@@ -736,11 +724,7 @@ class Simulation:
         era5_atmosphere_file: Optional[Path] = None,
         parameter_overrides: Dict[str, Any] = None,
     ) -> str:
-        """Deprecated shim: render the input file via :class:`InputFileBuilder`.
-
-        Kept for backwards compatibility with callers of the old private
-        API; use :meth:`build_input_lines` instead.
-        """
+        """Deprecated: render the input file; use :meth:`build_input_lines`."""
         warnings.warn(
             "_generate_input_content is deprecated; use build_input_lines",
             DeprecationWarning,
@@ -767,7 +751,7 @@ class Simulation:
         return self.builder.render(lines)
 
     def _run_uvspec(self, input_path: Path, output_path: Path) -> bool:
-        """Spawn ``uvspec``, piping *input_path* to stdin and writing stdout to *output_path*."""
+        """Run ``uvspec`` with *input_path* on stdin, stdout to *output_path*."""
         try:
             cmd = [str(self.config.paths.libradtran_bin)]
             logger.debug(f"Running LibRadtran: {cmd[0]} < {input_path} > {output_path}")

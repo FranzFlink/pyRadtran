@@ -2,9 +2,8 @@
 """
 Utility helpers for pyRadtran.
 
-Currently provides :class:`RadiosondeFinder`, which scans a directory tree
-for radiosonde ``.dat`` files and returns the one closest in time to a
-given target datetime.
+:class:`RadiosondeFinder` scans a directory tree for radiosonde ``.dat``
+files and returns the one closest in time to a target datetime.
 
 .. autosummary::
 
@@ -12,8 +11,7 @@ given target datetime.
 
 Notes
 -----
-The finder is what connects a local radiosonde archive to a simulation.
-With
+The finder connects a local radiosonde archive to a simulation.  With
 
 .. code-block:: yaml
 
@@ -23,7 +21,7 @@ With
       h2o_source: radiosonde
 
 every simulated point gets the line ``radiosonde <closest file> H2O RH`` in
-its ``uvspec`` input, i.e. the pressure, temperature and relative-humidity
+its ``uvspec`` input: the pressure, temperature and relative-humidity
 profile of the sounding nearest in time replaces the lower part of the
 background atmosphere.
 
@@ -47,12 +45,11 @@ logger = logging.getLogger(__name__)
 class RadiosondeFinder:
     r"""Locate the radiosonde file closest in time to a target datetime.
 
-    On construction the *base_path* directory tree is scanned recursively
-    for files named ``YYYYMMDD_SSSSSSOD.dat`` — the launch date followed
-    by the five-digit seconds of day (UTC), e.g.
-    ``20220328_43200SOD.dat`` for a sounding at 12:00 UTC on 28 March
-    2022.  Subsequent calls to :meth:`find_closest` perform a binary
-    search on the time-sorted file list.
+    The constructor scans *base_path* recursively for files named
+    ``YYYYMMDD_SSSSSSOD.dat``: the launch date followed by the five-digit
+    seconds of day (UTC), e.g. ``20220328_43200SOD.dat`` for a sounding
+    at 12:00 UTC on 28 March 2022.  :meth:`find_closest` then does a
+    binary search on the time-sorted file list.
 
     Parameters
     ----------
@@ -78,23 +75,22 @@ class RadiosondeFinder:
 
     .. math::
 
-        t = d\ 	ext{00:00 UTC} + s\ \mathrm{seconds},
+        t = d\ \text{00:00 UTC} + s\ \mathrm{seconds},
         \qquad 0 \le s \le 99999 .
 
-    Files that end in ``.dat`` but do not match the pattern are ignored,
-    as are files whose date part is not a valid calendar date (a warning
-    is logged for the latter).  Only the name is used; the file contents
-    are never read here.  The index is built once — files added later are
-    not seen until a new finder is created.
+    ``.dat`` files that do not match the pattern are ignored, as are
+    files whose date part is not a valid calendar date (with a logged
+    warning).  Only the file name is used; the contents are never read
+    here.  The index is built once: files added later are not seen until
+    a new finder is created.
 
-    The files themselves are plain three-column tables (pressure in hPa,
-    temperature in K, relative humidity in %), ordered from the top of the
-    sounding downwards, as ``uvspec``'s ``radiosonde ... H2O RH`` option
-    expects.
+    The files are three-column tables (pressure in hPa, temperature in
+    K, relative humidity in %), ordered from the top of the sounding
+    downwards, as ``uvspec``'s ``radiosonde ... H2O RH`` option expects.
 
     Examples
     --------
-    A small archive with one directory per flight:
+    An archive with one directory per flight:
 
     >>> import tempfile
     >>> from datetime import datetime
@@ -111,9 +107,8 @@ class RadiosondeFinder:
     ...     (root / name).touch()
     >>> finder = RadiosondeFinder(root)
 
-    37218 s is 10:20 UTC and 45046 s is 12:31 UTC, so a measurement at
-    11:00 UTC is matched to the first sounding and one at 12:00 UTC to
-    the second:
+    37218 s is 10:20 UTC and 45046 s is 12:31 UTC, so 11:00 UTC matches
+    the first sounding and 12:00 UTC the second:
 
     >>> finder.find_closest(datetime(2022, 3, 28, 11, 0)).name
     '20220328_37218SOD.dat'
@@ -144,8 +139,8 @@ class RadiosondeFinder:
     def _scan_sondes(self):
         """Index all ``YYYYMMDD_SSSSSSOD.dat`` files below *base_path*.
 
-        Fills ``_sonde_data`` with ``(UTC datetime, path)`` tuples sorted
-        by time.  Does nothing if *base_path* is not a directory.
+        Fills ``_sonde_data`` with time-sorted ``(UTC datetime, path)``
+        tuples.  Does nothing if *base_path* is not a directory.
         """
         if not self.base_path.is_dir():
             logger.debug(
@@ -185,28 +180,27 @@ class RadiosondeFinder:
         Parameters
         ----------
         target_dt : datetime.datetime
-            Target time.  A timezone-naive value is taken as UTC; an
-            aware value is converted to UTC.
+            Target time.  Naive values are taken as UTC; aware values
+            are converted to UTC.
         max_hours : float, optional
-            Largest accepted time difference in hours.  When the closest
-            sounding is farther away, *None* is returned.  By default
-            there is no limit.
+            Largest accepted time difference in hours.  Default: no
+            limit.
 
         Returns
         -------
         pathlib.Path or None
-            Path of the best-matching file (below *base_path*, absolute
-            if *base_path* is), or *None* when no files have been indexed
-            or the closest one is more than *max_hours* away.
+            Path of the closest file (below *base_path*, absolute if
+            *base_path* is), or *None* when no files are indexed or the
+            closest one is more than *max_hours* away.
 
         Notes
         -----
         The result minimises :math:`|t_i - t|` over all indexed sounding
-        times :math:`t_i`.  Without *max_hours* a target before the first
-        (after the last) sounding returns the first (last) file, however
-        far away; a warning is logged whenever the returned sounding is
-        more than 12 h from the target.  If the target lies exactly
-        halfway between two soundings the earlier one is returned.
+        times :math:`t_i`.  Without *max_hours*, a target before the
+        first (after the last) sounding returns the first (last) file,
+        however far away.  A warning is logged when the returned sounding
+        is more than 12 h from the target.  Exactly halfway between two
+        soundings, the earlier one is returned.
 
         Examples
         --------
@@ -221,20 +215,19 @@ class RadiosondeFinder:
         >>> finder.find_closest(datetime(2022, 3, 28, 10, 30)).name
         '20220328_36000SOD.dat'
 
-        Exactly halfway (11:00 UTC between 10:00 and 12:00) the earlier
-        sounding wins:
+        Halfway (11:00 UTC between 10:00 and 12:00), the earlier sounding
+        wins:
 
         >>> finder.find_closest(datetime(2022, 3, 28, 11, 0)).name
         '20220328_36000SOD.dat'
 
-        Aware datetimes are converted — 13:30 at UTC+2 is 11:30 UTC:
+        Aware datetimes are converted (13:30 at UTC+2 is 11:30 UTC):
 
         >>> cest = timezone(timedelta(hours=2))
         >>> finder.find_closest(datetime(2022, 3, 28, 13, 30, tzinfo=cest)).name
         '20220328_43200SOD.dat'
 
-        A sounding months away is still returned (with a logged warning)
-        unless a limit is given:
+        Without a limit, a sounding months away is still returned:
 
         >>> finder.find_closest(datetime(2022, 9, 1)).name
         '20220328_43200SOD.dat'
@@ -277,17 +270,16 @@ class RadiosondeFinder:
     ) -> Optional[Path]:
         """Find the radiosonde file closest in time to *dt*.
 
-        This is the method the simulation engine calls for every point
-        when ``simulation_defaults.h2o_source`` is ``"radiosonde"``.  It
-        currently delegates to :meth:`find_closest`; the position is
-        ignored.
+        The simulation engine calls this for every point when
+        ``simulation_defaults.h2o_source`` is ``"radiosonde"``.  It
+        delegates to :meth:`find_closest`; the position is ignored.
 
         Parameters
         ----------
         dt : datetime.datetime
             Target time (UTC if timezone-naive).
         latitude, longitude : float
-            Reserved for future spatial matching; currently unused.
+            Unused; reserved for spatial matching.
 
         Returns
         -------

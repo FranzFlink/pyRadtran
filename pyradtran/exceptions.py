@@ -26,11 +26,9 @@ one ``except`` clause handles any pyRadtran failure::
 
 All of them are importable from the package top level.
 
-:class:`ConfigurationError` additionally derives from
-:class:`FileNotFoundError` and :class:`ValueError` — the built-in
-exceptions :mod:`pyradtran.config` raised for these problems before —
-so existing ``except FileNotFoundError`` / ``except ValueError`` code
-keeps working.
+:class:`ConfigurationError` also derives from :class:`FileNotFoundError`
+and :class:`ValueError`, so ``except FileNotFoundError`` /
+``except ValueError`` code keeps working.
 
 Examples
 --------
@@ -54,17 +52,17 @@ pyradtran.io : I/O layer (raises :class:`OutputParsingError`,
 class PyRadtranError(Exception):
     """Base exception for all pyRadtran errors.
 
-    Besides being the common base class, it is raised directly by
+    Also raised directly by
     :meth:`~pyradtran.interface.PyRadtranAccessor.run` when the run as a
     whole cannot produce a result: the time / latitude / longitude
     variable is missing from the dataset, an option combination is
-    inconsistent, or *every* point failed. A partially failed batch does
-    not raise — failed points are flagged in the ``status`` variable of
-    the result instead.
+    inconsistent, or every point failed. A partially failed batch does
+    not raise; failed points are flagged in the ``status`` variable of
+    the result.
 
     Examples
     --------
-    Every other exception of the package is caught by it:
+    It catches every other exception of the package:
 
     >>> from pyradtran.exceptions import PyRadtranError
     >>> from pyradtran.params import REGISTRY
@@ -95,15 +93,11 @@ class ConfigurationError(PyRadtranError, FileNotFoundError, ValueError):
     * the simulation YAML file is missing, unreadable or not valid YAML;
     * ``paths.libradtran_bin``, ``paths.libradtran_data`` or the solar
       spectrum file do not exist (e.g. no master config has been written
-      yet — see :func:`~pyradtran.config.save_master_config`);
+      yet; see :func:`~pyradtran.config.save_master_config`);
     * a value fails the
       :class:`~pyradtran.config.SimulationDefaults` validation.
 
-    Notes
-    -----
-    These problems used to surface as :class:`FileNotFoundError` and
-    :class:`ValueError`. The class derives from both, so code catching
-    the built-in exceptions keeps working.
+    Also a :class:`FileNotFoundError` and a :class:`ValueError`.
 
     Examples
     --------
@@ -147,14 +141,14 @@ class UvspecExecutionError(PyRadtranError):
     Raised by :class:`~pyradtran.core.Simulation` when building the
     input file, preparing cloud files or launching ``uvspec`` fails with
     an unexpected error; the original exception is chained as
-    ``__cause__``. A ``uvspec`` run that merely exits with a non-zero
-    code does not raise — the simulation returns ``None`` and keeps the
-    input file for inspection.
+    ``__cause__``. A ``uvspec`` run that only exits with a non-zero code
+    does not raise: the simulation returns ``None`` and keeps the input
+    file for inspection.
 
     In a batch run
     (:meth:`~pyradtran.interface.PyRadtranAccessor.run`) the error is
-    caught per point: the point gets ``status == 1`` in the result and
-    the remaining points still run.
+    caught per point: the point gets ``status == 1`` and the remaining
+    points still run.
 
     Examples
     --------
@@ -174,8 +168,8 @@ class OutputParsingError(PyRadtranError):
 
     Raised by :mod:`pyradtran.io` when a ``uvspec`` output file is
     missing, empty or cannot be parsed into the expected columns, and
-    when saving the result dataset to NetCDF fails. The offending file
-    path is part of the message so the file can be inspected manually.
+    when saving the result dataset to NetCDF fails. The message contains
+    the file path.
 
     Examples
     --------
@@ -191,7 +185,7 @@ class OutputParsingError(PyRadtranError):
 class RadiosondeError(PyRadtranError):
     """Reserved for radiosonde file discovery and parsing errors.
 
-    Not currently raised by pyRadtran itself: radiosonde retrieval
+    Not raised by pyRadtran itself: radiosonde retrieval
     problems surface as :class:`InputGenerationError`, and
     :class:`~pyradtran.utils.RadiosondeFinder` returns *None* when it
     finds no (close enough) sounding.
@@ -209,10 +203,10 @@ class RadiosondeError(PyRadtranError):
 class ValidationError(PyRadtranError):
     """Raised when a user-supplied parameter value fails validation.
 
-    Raised by :class:`~pyradtran.params.ParamResolver` — and therefore by
+    Raised by :class:`~pyradtran.params.ParamResolver`, and so by
     :meth:`~pyradtran.interface.PyRadtranAccessor.run` and
-    :meth:`~pyradtran.interface.PyRadtranAccessor.explain` *before* any
-    ``uvspec`` process starts — when a ``params`` entry
+    :meth:`~pyradtran.interface.PyRadtranAccessor.explain` before any
+    ``uvspec`` process starts, when a ``params`` entry
 
     * is outside the valid range or not one of the allowed choices,
     * names an option the local libRadtran install does not know,

@@ -1,6 +1,6 @@
 # Basics
 
-First simulations: one concept per notebook, a few seconds of run time each. Start here after the {doc}`/notebooks/quickstart`.
+One concept per notebook, a few seconds of run time each. Start here after the {doc}`/notebooks/quickstart`.
 
 | Notebook | What it shows |
 |---|---|

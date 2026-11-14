@@ -1,6 +1,6 @@
 # Atmospheres
 
-Replace the standard atmosphere by measured or reanalysis profiles. Background: {doc}`/guide/atmosphere`.
+Measured and reanalysis profiles instead of the standard atmosphere. Background: {doc}`/guide/atmosphere`.
 
 | Notebook | What it shows |
 |---|---|

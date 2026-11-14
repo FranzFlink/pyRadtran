@@ -3,9 +3,9 @@ libRadtran option-schema extraction.
 
 libRadtran ships a machine-readable description of every ``uvspec``
 option in ``<root>/src_py/*_options.py`` (used by its GUI). This module
-extracts that description from the *locally installed* libRadtran — so
-validation always matches the exact binary being run — and caches it as
-JSON under ``~/.pyradtran/``.
+extracts that description from the locally installed libRadtran, so
+validation matches the binary being run, and caches it as JSON under
+``~/.pyradtran/``.
 
 .. autosummary::
 
@@ -13,27 +13,25 @@ JSON under ``~/.pyradtran/``.
    extract_schema
    find_libradtran_root
 
-Most users never call this module directly: the schema is what makes
+Most users never call this module directly. The schema is what makes
 ``params={"wc_modfy": ...}`` fail with a "did you mean ``wc_modify``?"
 before any simulation starts, and what
 :func:`~pyradtran.params.describe` and
 :func:`~pyradtran.params.search_options` print.
 
 The extraction runs in a subprocess to keep libRadtran's GUI modules out
-of the pyradtran process. Nothing from libRadtran is redistributed with
-pyradtran; the schema is generated on the user's machine from their own
-installation.
+of the pyradtran process. Nothing from libRadtran is redistributed; the
+schema is generated on the user's machine from their own installation.
 
 Notes
 -----
 **Cache.** The schema is stored as
 ``~/.pyradtran/option_schema_<fingerprint>.json`` (:data:`CACHE_DIR`).
 The fingerprint is a hash of the ``src_py`` path and the name, size and
-modification time of every ``*_options.py`` file, so pointing pyradtran
-at another libRadtran install — or patching the current one —
-regenerates the schema automatically. Only the file for the current
-fingerprint is kept. Deleting the file is always safe; it is regenerated on
-the next use.
+modification time of every ``*_options.py`` file, so switching to
+another libRadtran install, or patching the current one, regenerates
+the schema. Only the file for the current fingerprint is kept. Deleting
+it is safe; it is regenerated on the next use.
 
 **Structure.** The schema is a ``dict`` mapping each option name to one
 entry. A real entry from libRadtran 2.0.6 (``doc`` shortened)::
@@ -80,9 +78,9 @@ entry. A real entry from libRadtran 2.0.6 (``doc`` shortened)::
     The values the user supplies after the keyword, in order. A
     ``"choice"`` token lists the allowed ``choices``
     (``file_allowed`` means a file name is accepted as well); a
-    ``"value"`` token has a ``datatype`` — ``float``, ``int``, ``str``,
+    ``"value"`` token has a ``datatype`` (``float``, ``int``, ``str``,
     ``file`` or one of the variable-length types ``floats``, ``ints``,
-    ``files``, ``lines`` — and, for numbers, an inclusive
+    ``files``, ``lines``) and, for numbers, an inclusive
     ``valid_range`` or ``null``. ``optional`` tokens may be left out.
     An empty list is a flag option such as ``aerosol_default``.
 
@@ -240,8 +238,8 @@ def find_libradtran_root(config) -> Optional[Path]:
 
     Examples
     --------
-    A minimal fake installation tree (any object with a ``paths``
-    attribute works as *config*):
+    A fake installation tree (any object with a ``paths`` attribute
+    works as *config*):
 
     >>> import tempfile
     >>> from pathlib import Path
@@ -364,17 +362,16 @@ def extract_schema(root: Path) -> Dict[str, Any]:
 def load_schema(config=None, root: Optional[Path] = None) -> Optional[Dict[str, Any]]:
     """Return the option schema for the local libRadtran install, cached.
 
-    The first call for a given installation runs
-    :func:`extract_schema` and writes the result to
-    ``~/.pyradtran/option_schema_<fingerprint>.json``; later calls (in
-    any process) read that file. The fingerprint covers the ``src_py``
-    path and the name, size and modification time of its
-    ``*_options.py`` files, so a changed installation is re-extracted
-    automatically and the stale cache file is removed.
+    The first call for an installation runs :func:`extract_schema` and
+    writes ``~/.pyradtran/option_schema_<fingerprint>.json``; later calls
+    (in any process) read that file. A changed installation is
+    re-extracted and the stale cache file removed (see the cache note in
+    :mod:`pyradtran.schema`).
 
-    This function never raises for a missing or broken installation: it
-    logs a warning and returns ``None``, and parameter validation falls
-    back to the curated :data:`~pyradtran.params.REGISTRY` only.
+    A missing or broken installation never raises. The function returns
+    ``None`` (with a logged warning if the extraction fails) and
+    parameter validation falls back to the curated
+    :data:`~pyradtran.params.REGISTRY`.
 
     Parameters
     ----------
@@ -407,7 +404,7 @@ def load_schema(config=None, root: Optional[Path] = None) -> Optional[Dict[str, 
 
     Examples
     --------
-    Nothing to locate, nothing returned:
+    Without an installation:
 
     >>> from pyradtran.schema import load_schema
     >>> print(load_schema())
@@ -452,7 +449,7 @@ def load_schema(config=None, root: Optional[Path] = None) -> Optional[Dict[str, 
     try:
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
         cache_file.write_text(json.dumps(options))
-        # keep only the current fingerprint — stale caches never expire
+        # keep only the current fingerprint; stale caches never expire
         # on their own
         for old in CACHE_DIR.glob("option_schema_*.json"):
             if old != cache_file:

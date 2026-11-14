@@ -1,18 +1,18 @@
 # pyradtran/__init__.py
 """
-pyRadtran — radiative transfer with libRadtran, driven from xarray.
+pyRadtran: radiative transfer with libRadtran, driven from xarray.
 
-pyRadtran wraps the ``uvspec`` program of libRadtran.  You describe *where
-and when* to simulate as an :class:`xarray.Dataset`, describe *how* in a
-small YAML configuration, and get the simulated irradiances, radiances or
-brightness temperatures back as an :class:`xarray.Dataset` on the same
+pyRadtran wraps the ``uvspec`` program of libRadtran.  Describe where and
+when to simulate as an :class:`xarray.Dataset` and how in a small YAML
+configuration; the simulated irradiances, radiances or brightness
+temperatures come back as an :class:`xarray.Dataset` on the same
 dimensions.  pyRadtran writes the ``uvspec`` input file for every point,
-runs the points in parallel, parses the output and records how each result
-was produced.
+runs the points in parallel, parses the output and records how each
+result was produced.
 
 Examples
 --------
-The canonical workflow has three steps.
+Three steps:
 
 1. Prepare a dataset with ``time``, ``latitude`` and ``longitude``; any
    further variable (here a measured surface albedo) can be fed into the
@@ -61,52 +61,51 @@ Attributes:
 >>> result.eup.sel(wavelength=550).squeeze().values.round(1)  # doctest: +SKIP
 array([287. , 277.1,  14.7])
 
-Before the first run, tell pyRadtran once where libRadtran is installed
-(:func:`~pyradtran.config.save_master_config`).  Use
-``ds.pyradtran.explain()`` to preview the ``uvspec`` input file without
-running anything, and ``pyradtran.quick_start()`` for a printed reminder of
-these steps.
+Before the first run, store the libRadtran paths once with
+:func:`~pyradtran.config.save_master_config`.
+``ds.pyradtran.explain()`` previews the ``uvspec`` input file without
+running anything; ``pyradtran.quick_start()`` prints these steps.
 
 Notes
 -----
-The public API, grouped by task.  Everything listed here can be imported
-directly from ``pyradtran``.
+The public API, grouped by task.  Everything listed here is importable
+from ``pyradtran``.
 
 **Running simulations**
 
-* :class:`~pyradtran.interface.PyRadtranAccessor` — the ``ds.pyradtran``
+* :class:`~pyradtran.interface.PyRadtranAccessor`: the ``ds.pyradtran``
   accessor (``run``, ``explain``, …).
-* :func:`~pyradtran.interface.run_pyradtran_simulation` — file-to-file
+* :func:`~pyradtran.interface.run_pyradtran_simulation`: file-to-file
   pipeline (CSV / NetCDF in, NetCDF out).
-* :func:`~pyradtran.interface.execute_simulation_batch` — low-level
+* :func:`~pyradtran.interface.execute_simulation_batch`: low-level
   parallel batch driver.
-* :class:`~pyradtran.core.Simulation` — one ``uvspec`` call for one point.
+* :class:`~pyradtran.core.Simulation`: one ``uvspec`` call for one point.
 
-**Configuration** — three YAML layers, later wins: package defaults,
-``~/.pyradtran/config.yaml``, simulation YAML.
+**Configuration**: three YAML layers, later wins (see
+:func:`~pyradtran.config.load_config`).
 
-* :func:`~pyradtran.config.load_config` — load and merge the three layers.
-* :func:`~pyradtran.config.save_master_config` — store machine-specific
+* :func:`~pyradtran.config.load_config`: load and merge the three layers.
+* :func:`~pyradtran.config.save_master_config`: store machine-specific
   paths once.
-* :class:`~pyradtran.config.SimulationConfig` — the merged configuration,
+* :class:`~pyradtran.config.SimulationConfig`: the merged configuration,
   with its sections :class:`~pyradtran.config.PathsConfig` and
   :class:`~pyradtran.config.SimulationDefaults`.
 * :func:`~pyradtran.config.list_atmosphere_profiles`,
-  :func:`~pyradtran.config.list_solar_spectra` — short names for standard
+  :func:`~pyradtran.config.list_solar_spectra`: short names for standard
   atmospheres and solar spectra (``ATMOSPHERE_PROFILES``,
   ``SOLAR_SPECTRA``).
-* :func:`~pyradtran.config.create_example_config` — write a template YAML.
+* :func:`~pyradtran.config.create_example_config`: write a template YAML.
 
-**Parameters** — any ``uvspec`` option, per run or per point.
+**Parameters**: any ``uvspec`` option, per run or per point.
 
-* :class:`~pyradtran.params.Var` — take an option's value from a dataset
+* :class:`~pyradtran.params.Var`: take an option's value from a dataset
   variable, point by point.
-* :class:`~pyradtran.params.Raw` — pass a value through unvalidated.
+* :class:`~pyradtran.params.Raw`: pass a value through unvalidated.
 * :func:`~pyradtran.params.describe`,
-  :func:`~pyradtran.params.search_options` — look up and search libRadtran
+  :func:`~pyradtran.params.search_options`: look up and search libRadtran
   options.
 * ``REGISTRY``, :class:`~pyradtran.params.ParamSpec`,
-  :class:`~pyradtran.params.ParamResolver` — the curated option registry
+  :class:`~pyradtran.params.ParamResolver`: the curated option registry
   and its resolution machinery.
 
 **Atmosphere and clouds**
@@ -114,36 +113,36 @@ directly from ``pyradtran``.
 * :func:`~pyradtran.era5.normalize_era5`,
   :func:`~pyradtran.era5.era5_atmosphere_file`,
   :func:`~pyradtran.era5.cloud_profiles`,
-  :func:`~pyradtran.era5.recommend_atmosphere` — ERA5 profiles as
+  :func:`~pyradtran.era5.recommend_atmosphere`: ERA5 profiles as
   atmosphere and cloud input, and a matching background atmosphere.
 * :class:`~pyradtran.clouds.CloudLayer`,
   :class:`~pyradtran.clouds.CloudGenerator`,
   :class:`~pyradtran.clouds.CloudFileWriter`,
-  :func:`~pyradtran.clouds.generate_cloud_file_from_era5` — build
+  :func:`~pyradtran.clouds.generate_cloud_file_from_era5`: build
   libRadtran cloud files.
-* :class:`~pyradtran.utils.RadiosondeFinder` — pick the local sounding
+* :class:`~pyradtran.utils.RadiosondeFinder`: pick the local sounding
   closest in time.
-* :class:`~pyradtran.io.ERA5AtmosphereGenerator` — legacy wrapper for ERA5
+* :class:`~pyradtran.io.ERA5AtmosphereGenerator`: legacy wrapper for ERA5
   atmosphere files.
 
 **Instrument channels**
 
-* :func:`~pyradtran.channels.convolve_channels` — average spectra over
+* :func:`~pyradtran.channels.convolve_channels`: average spectra over
   spectral response functions.
-* :func:`~pyradtran.channels.brightness_temperature` — radiance to
+* :func:`~pyradtran.channels.brightness_temperature`: radiance to
   brightness temperature.
 
 **Output handling**
 
 * :class:`~pyradtran.io.OutputParser`, :class:`~pyradtran.io.ParsedOutput`,
-  :class:`~pyradtran.io.OutputType` — read ``uvspec`` output tables.
-* :class:`~pyradtran.io.OutputToXarray` — reshape parsed output into
+  :class:`~pyradtran.io.OutputType`: read ``uvspec`` output tables.
+* :class:`~pyradtran.io.OutputToXarray`: reshape parsed output into
   datasets.
-* :class:`~pyradtran.io.NetCDFSaver` — write results with provenance.
-* :class:`~pyradtran.io.InputDataLoader` — read input points from CSV /
+* :class:`~pyradtran.io.NetCDFSaver`: write results with provenance.
+* :class:`~pyradtran.io.InputDataLoader`: read input points from CSV /
   NetCDF.
 
-**Exceptions** — all derive from
+**Exceptions**: all derive from
 :class:`~pyradtran.exceptions.PyRadtranError`:
 :class:`~pyradtran.exceptions.ConfigurationError`,
 :class:`~pyradtran.exceptions.InputGenerationError`,
@@ -163,7 +162,7 @@ __version__ = "0.2.0"
 
 import logging
 
-# Configure basic logging for the package
+# Package logger without output; handlers belong to the application
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 from .channels import brightness_temperature, convolve_channels  # noqa: E402
@@ -174,7 +173,6 @@ from .clouds import (  # noqa: E402
     generate_cloud_file_from_era5,
 )
 
-# Import cleaned components
 from .config import (  # noqa: E402
     ATMOSPHERE_PROFILES,
     SOLAR_SPECTRA,
@@ -290,7 +288,7 @@ __all__ = [
 
 
 def get_version():
-    """Return the package version string.
+    """Return the package version string (``pyradtran.__version__``).
 
     Returns
     -------
@@ -312,10 +310,8 @@ def get_info():
     Returns
     -------
     dict
-        ``version`` (str), ``has_clouds`` (bool; whether
-        :mod:`pyradtran.clouds` could be imported, i.e. whether
-        ``CloudGenerator`` and friends are available from the top-level
-        package) and ``description`` (str).
+        ``version`` (str), ``has_clouds`` (bool, always ``True``) and
+        ``description`` (str).
 
     Examples
     --------
@@ -336,11 +332,10 @@ def get_info():
 def quick_start():
     """Print a short getting-started guide to stdout.
 
-    The guide lists the three steps of a first simulation as code that
-    can be copied: store the libRadtran paths with
-    :func:`save_master_config`, build and save a configuration with
-    :func:`load_config` / :meth:`SimulationConfig.to_yaml`, and run it with
-    ``ds.pyradtran.run(config_path=...)``.
+    Lists the steps of a first simulation as copyable code: store the
+    libRadtran paths with :func:`save_master_config`, build and save a
+    configuration with :func:`load_config` / :meth:`SimulationConfig.to_yaml`,
+    and run it with ``ds.pyradtran.run(config_path=...)``.
 
     Examples
     --------

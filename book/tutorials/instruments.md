@@ -1,6 +1,6 @@
 # Instruments & special geometries
 
-Beyond fluxes: forward models for specific sensors and set-ups.
+Forward models for specific sensors and set-ups.
 
 | Notebook | What it shows |
 |---|---|

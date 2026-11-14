@@ -32,7 +32,7 @@ Attributes:
     pyradtran_input_example:   rte_solver twostr                             ...
 ```
 
-From here it is plain xarray:
+The result is a plain xarray dataset:
 
 ```python
 ds_sim.edir.sel(wavelength=550, method="nearest").plot()   # diurnal cycle
@@ -47,25 +47,24 @@ ds_sim.where(ds_sim.status == 0)                           # successful points o
 | `altitude` | always | km |
 
 ```{note}
-`altitude` always carries the simulated level(s) in km. The one
-exception is a per-point level (`altitude` as a data variable, an
+`altitude` carries the simulated level(s) in km, except for a per-point
+level (`altitude` as a data variable, an
 aircraft track): the dimension then has length 1 with placeholder `0.0`,
 and the level of each point is returned in the data variable `zout`.
 ```
 
-Which variables appear is set by `output_columns` in your config (the
-uvspec `output_user` line). You never need to list `lambda` or `zout`
-yourself — pyRadtran adds them for spectral and multi-altitude runs so
-the wavelength/altitude axes can always be reconstructed.
+The variables are set by `output_columns` in the config (the uvspec
+`output_user` line). `lambda` and `zout` are added automatically for
+spectral and multi-altitude runs.
 
 With `save_to_file=True` (default) the dataset is also written to a
-CF-style NetCDF file with the full configuration embedded as metadata;
+NetCDF file with the configuration embedded as metadata;
 `output_path=` chooses the file, otherwise it is
 `<output_dir>/<prefix>_<timestamp><suffix>`.
 
-## What the output columns mean
+## Output columns
 
-The most common `output_columns`, with the definitions used by uvspec.
+The most common `output_columns` as defined by uvspec.
 $I(\mu, \phi)$ is the diffuse radiance, $\mu$ the cosine of the zenith
 angle, $\mu_0 = \cos\theta_0$ the cosine of the solar zenith angle, and
 $E_0$ the extraterrestrial irradiance attenuated along the direct beam
@@ -85,27 +84,27 @@ by the optical depth $\tau$:
 | `heat` | heating rate | K day⁻¹ |
 | `sza` | solar zenith angle used | degrees |
 
-Any other `output_user` column your libRadtran supports works too —
+Any other `output_user` column of your libRadtran works as well;
 `pyradtran.describe("output_user")` lists them.
 
 ```{figure} ../img/guide_spectrum.png
 :width: 90%
 
 Spectral global (solid) and diffuse (dotted) surface irradiance for
-three solar zenith angles — `output_columns: [edir, edn]`, a `sza` sweep
-dimension, `mol_abs_param: reptran coarse`. Produced by
+three solar zenith angles (`output_columns: [edir, edn]`, a `sza` sweep
+dimension, `mol_abs_param: reptran coarse`). Produced by
 `book/img/make_guide_figures.py`.
 ```
 
 (units)=
 ## Units
 
-uvspec does not attach units to its output, and neither can pyRadtran:
-they follow from the source and the options you chose.
+uvspec output has no unit metadata. Units follow from the source and
+the options:
 
 | Run | Spectral output | With `integrate_wavelength: true` |
 |---|---|---|
-| `source: solar` with a libRadtran solar spectrum (`NewGuey2003`, `kurudz_*`, `atlas_plus_modtran`, …) | mW m⁻² nm⁻¹ | **mW m⁻²** — divide by 1000 for W m⁻² |
+| `source: solar` with a libRadtran solar spectrum (`NewGuey2003`, `kurudz_*`, `atlas_plus_modtran`, …) | mW m⁻² nm⁻¹ | **mW m⁻²** (divide by 1000 for W m⁻²) |
 | `source: thermal` | W m⁻² per spectral band (1 cm⁻¹ unless changed) | W m⁻² |
 | `source: thermal` + `params={"output_process": "per_nm"}` | W m⁻² nm⁻¹ | — |
 | any + `params={"output_quantity": "brightness"}` | K (brightness temperature) | K |
@@ -114,16 +113,13 @@ they follow from the source and the options you chose.
 Radiances (`uu`) carry an additional sr⁻¹.
 
 ```{warning}
-The solar/thermal mismatch is the classic trap when adding shortwave and
-longwave budgets: broadband solar results are in **mW m⁻²**, thermal
-results in **W m⁻²**.
+Broadband solar results are in **mW m⁻²**, thermal results in
+**W m⁻²**. Convert before adding shortwave and longwave budgets:
 
     net = ds_solar.enet / 1e3 + ds_thermal.enet     # W m⁻²
 ```
 
 ## Derived quantities
-
-A few one-liners that come up in almost every analysis.
 
 **Surface albedo and transmittance**
 
@@ -138,8 +134,8 @@ sfc = res.sel(altitude=0)
 albedo = sfc.eup / (sfc.edir + sfc.edn)
 ```
 
-**Cloud radiative effect** — the difference in net irradiance between a
-cloudy and a clear run of the same scene:
+**Cloud radiative effect**: the difference in net irradiance between a
+cloudy and a clear run of the same scene.
 
 $$
 \mathrm{CRE} = E_\mathrm{net}^\mathrm{cloud} - E_\mathrm{net}^\mathrm{clear}
@@ -153,7 +149,7 @@ net_lw = thermal.edn - thermal.eup
 cre = (net_sw + net_lw) - (net_sw + net_lw).sel(lwp=0)  # lwp=0 is the clear run
 ```
 
-See {doc}`clouds` for the full example behind this figure:
+{doc}`clouds` has the full example behind this figure:
 
 ```{figure} ../img/guide_cloud_forcing.png
 :width: 95%
@@ -162,7 +158,7 @@ Surface cloud radiative effect of a 500 m thick liquid cloud at
 Ny-Ålesund (21 June, noon) over a dark and a bright surface.
 ```
 
-**Heating rates from net-flux divergence** — with a multi-level
+**Heating rates** from the net-flux divergence, with a multi-level
 `altitude` coordinate:
 
 $$
@@ -175,12 +171,12 @@ dEdz = res.enet.differentiate("altitude") / 1e3         # W m⁻² per m (altitu
 heating = -dEdz / (rho * 1004.0) * 86400                # K day⁻¹; rho(z) in kg m⁻³
 ```
 
-(or simply request the `heat` column and let uvspec do it).
+Alternatively request the `heat` column from uvspec.
 
 ## Instrument channels
 
 Convolve spectral results with instrument spectral response functions
-(SRFs) — either directly in `run()` or as post-processing with
+(SRFs), either in `run()` or afterwards with
 {func}`~pyradtran.channels.convolve_channels`:
 
 $$
@@ -245,11 +241,11 @@ and the water-vapour and CO₂ wings do not.
 ```
 
 ```{tip}
-If you only need brightness temperatures at the simulated resolution,
-let uvspec convert: `params={"output_quantity": "brightness"}` returns
-every radiance/irradiance column in kelvin. Use
-`brightness_temperature()` when you post-process radiances first —
-channel convolution, window corrections, noise.
+For brightness temperatures at the simulated resolution, let uvspec
+convert: `params={"output_quantity": "brightness"}` returns every
+radiance/irradiance column in kelvin. Use `brightness_temperature()`
+when radiances are post-processed first (channel convolution, window
+corrections, noise).
 ```
 
 In libRadtran the surface emissivity is set through the albedo:
@@ -272,23 +268,22 @@ jac["eup"]    # d(eup)/d(albedo), same dims as a normal result
 ```
 
 The perturbed parameter must be a scalar (a `params` literal or config
-default) — perturbing a per-point `Var` is rejected. Choose $\Delta x$
+default); perturbing a per-point `Var` is rejected. Choose $\Delta x$
 small against the scale on which the response is non-linear but large
-against solver noise: 1 % of the parameter's range is a good start. The
-`status` variable is not differentiated: the kernel carries the worst
-status of the two runs per point.
+against solver noise; 1 % of the parameter's range is a good start. The
+kernel carries the worst `status` of the two runs per point.
 
-## Provenance: know what you did
+## Provenance
 
-Every result records exactly what produced it, in its attrs (and thus in
-the saved NetCDF):
+Every result records what produced it in its attrs, and so does the
+saved NetCDF:
 
 | attr | contents |
 |---|---|
 | `pyradtran_version`, `history` | package version, CF-style history line |
 | `pyradtran_params` | the `params` mapping as JSON (`Var`/`Raw` as their repr) |
 | `pyradtran_config` | the full merged configuration as YAML |
-| `pyradtran_input_example` | the annotated uvspec input of the first point — the `explain()` view, frozen into the result |
+| `pyradtran_input_example` | the annotated uvspec input of the first point (the `explain()` view) |
 | `pyradtran_libradtran_bin` | which uvspec binary ran |
 | `pyradtran_channels` | channel names, when `channels=` was used |
 
@@ -303,15 +298,13 @@ cfg_used = yaml.safe_load(res.attrs["pyradtran_config"])
 params_used = json.loads(res.attrs["pyradtran_params"])
 ```
 
-Six months later, the NetCDF alone tells you the solver, spectral range,
-parameter sources, and the exact input file shape — no lab notebook
-required. The `wavelength` coordinate carries its unit (nm);
-`jacobian()` results additionally record `jacobian_param`,
+The `wavelength` coordinate carries its unit (nm); `jacobian()` results
+also record `jacobian_param`,
 `jacobian_delta`, and `jacobian_base_value`.
 
 ## Status codes & failure logs
 
-Every result carries a per-point `status` variable:
+Every result has a per-point `status` variable:
 
 | value | meaning |
 |-------|---------|
@@ -325,8 +318,8 @@ good = res.where(res.status == 0, drop=True)
 ```
 
 When at least one point fails, a `failures_<timestamp>.log` with the
-captured stderr is written to the working directory, and the failing
-`.inp` file is kept for post-mortem (see {doc}`debugging`).
+captured stderr is written to the working directory and the failing
+`.inp` file is kept (see {doc}`debugging`).
 
 In the dataset at the top of this page the night-time points have
 `status == 1`: the `twostr` solver rejects a sun below the horizon

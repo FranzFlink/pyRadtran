@@ -1,17 +1,16 @@
 # Atmosphere & ERA5
 
 Every simulation needs a vertical profile of pressure, temperature and
-trace gases. pyRadtran gives you three sources, which combine rather
-than compete:
+trace gases. Three sources combine:
 
-1. **Background profile** (`atmosphere_file`) — one of the AFGL
-   climatological standard atmospheres shipped with libRadtran.
+1. **Background profile** (`atmosphere_file`): one of the AFGL
+   standard atmospheres shipped with libRadtran.
    Always present.
-2. **Measured / reanalysis profile** (`radiosonde`) — a real p/T/H2O
-   (and optionally O3) column, from an ERA5 dataset or an IGRA2
+2. **Measured / reanalysis profile** (`radiosonde`): a p/T/H2O
+   (and optionally O3) column from an ERA5 dataset or an IGRA2
    radiosonde. Overlays the background.
 3. **Scalar column scalings** (`ozone_du`, `h2o_mm` /
-   `mol_modify …`) — rescale a gas column to a total value.
+   `mol_modify …`): rescale a gas column to a total value.
 
 ## How the layers combine
 
@@ -22,9 +21,9 @@ that, and for every gas the profile does not contain, the background
 profile fills in (shifted so the two match at the transition). A `-1`
 value at any profile level also falls back to the background.
 
-That means the background still matters when you use ERA5 or a
-radiosonde: pick one that matches the season and latitude so the
-stratosphere and the unmeasured gases stay consistent.
+The background therefore still matters with ERA5 or a radiosonde: pick
+one that matches season and latitude, so the stratosphere and the
+unmeasured gases stay consistent.
 
 ```python
 import pyradtran
@@ -34,8 +33,8 @@ pyradtran.recommend_atmosphere(latitude=78.0, time="2022-03-15")
 ```
 
 Set it in your YAML config (`paths.atmosphere_profile: afglsw`) or per
-run via `params={"atmosphere_file": "afglsw"}` — a short name or a full
-path.
+run via `params={"atmosphere_file": "afglsw"}`, as a short name or a
+full path.
 
 | Short name | Atmosphere | Use for |
 |---|---|---|
@@ -57,9 +56,9 @@ z = \frac{\Phi}{g_0}, \qquad
 $$
 
 with $g_0 = 9.80665$ m s⁻², $R_d = 287.058$ J kg⁻¹ K⁻¹. The last
-expression is handy for checking a profile against the `h2o_mm` value
-you would otherwise have set: for $q$ in kg kg⁻¹ and $p$ in Pa it gives
-the precipitable water in metres. Details and file format:
+expression checks a profile against the `h2o_mm` value you would
+otherwise set: for $q$ in kg kg⁻¹ and $p$ in Pa it gives the
+precipitable water in metres. Details and file format:
 {func}`~pyradtran.era5.write_atmosphere_file`.
 
 ## When to use which source
@@ -71,13 +70,13 @@ the precipitable water in metres. Details and file format:
 | Case study with reanalysis data | `era5_atmosphere=` (ERA5 profile) |
 | Co-located sounding available | radiosonde file |
 
-## ERA5 datasets are accepted as-is
+## ERA5
 
-`era5_atmosphere=` takes a raw ERA5 dataset — CDS NetCDF short names
+`era5_atmosphere=` takes a raw ERA5 dataset with CDS NetCDF short names
 (`t`, `q`, `o3`, `pressure_level`, …) or ARCO-ERA5 Zarr long names
 (`temperature`, `specific_humidity`, `level`, …). Names, coordinate
-conventions and pressure units are normalised automatically
-(`pyradtran.normalize_era5`), so this works directly:
+conventions and pressure units are normalised
+(`pyradtran.normalize_era5`):
 
 ```python
 import gcsfs
@@ -91,8 +90,8 @@ era5 = xr.open_zarr(
     chunks="auto",
     consolidated=True,
 )
-# Subset (and .load()) your region/time first — per-point access into
-# the full global archive is slow.
+# Subset and .load() region and time first: per-point access into the
+# global archive is slow.
 era5 = era5.sel(
     time=slice("2022-03-01", "2022-03-31"),
     latitude=slice(80, 75),
@@ -105,21 +104,21 @@ result = ds.pyradtran.run(
 )
 ```
 
-One atmosphere file is written per unique (time, lat, lon) in your
-input dataset, selected nearest-neighbour from the ERA5 data.
+One atmosphere file is written per unique (time, lat, lon) of the input
+dataset, selected nearest-neighbour from the ERA5 data.
 
 ### Ozone
 
 If the ERA5 dataset contains an ozone field (`o3` /
 `ozone_mass_mixing_ratio`), the ozone profile is written into the
 atmosphere file alongside humidity. In that case the config
-`ozone_du` scaling is **not** applied — the profile wins, and rescaling
-it with a scalar would silently discard the reanalysis information.
+`ozone_du` scaling is **not** applied, because rescaling the profile
+would discard the reanalysis information.
 Without an ozone field, `ozone_du` scales the background ozone column
 as usual. The same rule applies to water vapour: a radiosonde/ERA5
 profile disables the `h2o_mm` scaling.
 
-To *vary* ozone as an experiment axis, drop `o3` from the ERA5 dataset
+To vary ozone as an experiment axis, drop `o3` from the ERA5 dataset
 and use `params={"mol_modify O3": Var("ozone_du")}` instead.
 
 ### Clouds from ERA5
@@ -140,23 +139,22 @@ result = ds.pyradtran.run(
 ERA5 carries no droplet sizes; effective radii default to 10 µm
 (liquid) and 20 µm (ice) and can be set via the dict form.
 
-Anything more explicit wins over ERA5 clouds for the points where both
-exist: a `wc_file`/`ic_file` in `params`, or the `cloud_*_var`
-variation-axis kwargs (see below).
+A `wc_file`/`ic_file` in `params` or the `cloud_*_var` kwargs (see
+below) take precedence over ERA5 clouds at the points where both exist.
+All cloud inputs are described in {doc}`clouds`.
 
 ```{warning}
 For cloudy runs use `rte_solver: disort`. The fast `twostr` solver is
 numerically unstable for some optically thick cloud layers and returns
-`NaN` at individual wavelengths, which poisons integrated (broadband)
-results. pyRadtran logs a warning when it detects this.
+`NaN` at individual wavelengths, which turns integrated (broadband)
+results into `NaN`. pyRadtran logs a warning when it detects this.
 ```
 
-## Keeping a variation axis (Shupe & Intrieri-style studies)
+## Synthetic clouds in an ERA5 atmosphere
 
-Parameter-space studies — e.g. mapping cloud radiative effect over LWP
-× albedo × SZA — keep working exactly as before: put the cloud
-parameters on their own dataset dimensions and reference them with the
-`cloud_*_var` kwargs (or `params` + `Var`):
+For parameter-space studies (e.g. cloud radiative effect over LWP ×
+albedo × SZA) put the cloud parameters on their own dataset dimensions
+and reference them with the `cloud_*_var` kwargs:
 
 ```python
 ds = xr.Dataset(
@@ -176,15 +174,15 @@ result = ds.pyradtran.run(
 )
 ```
 
-You can combine both: `era5_atmosphere=` for a realistic atmosphere
-*plus* a synthetic cloud grid for the experiment — the explicit cloud
-kwargs override the ERA5 clouds, and with `era5_clouds` unset the ERA5
-data only supplies the gas/temperature profiles.
+Add `era5_atmosphere=` for a realistic atmosphere under the synthetic
+cloud grid. The explicit cloud kwargs override ERA5 clouds; with
+`era5_clouds` unset the ERA5 data supplies only the gas and temperature
+profiles.
 
 ## Radiosondes (IGRA2)
 
 `RadiosondeAtmosphereGenerator` finds the closest active IGRA2 station
 and sounding in time and writes the same file format
-(`H2O RH` columns). Files produced by either path carry a
-machine-readable `# columns:` header, so the input builder always emits
-a matching `radiosonde` option line — no unit mismatch possible.
+(`H2O RH` columns). Files from both sources carry a `# columns:`
+header, from which the input builder writes the matching `radiosonde`
+option line.

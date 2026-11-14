@@ -2,23 +2,20 @@
 """
 Configuration system for pyRadtran.
 
-Everything a ``uvspec`` run needs that is *not* per-point data lives in a
-:class:`SimulationConfig`: where libRadtran is installed, which solver and
-spectral range to use, how many processes to start and how results are
-written. The configuration is assembled by :func:`load_config` from up to
-three YAML layers, each overriding the previous one key by key:
+A :class:`SimulationConfig` holds everything a ``uvspec`` run needs that is
+not per-point data: the libRadtran installation, solver and spectral
+range, the number of processes and the output files. :func:`load_config`
+assembles it from three YAML layers, each overriding the previous one key
+by key:
 
-1. **Package defaults** — ``pyradtran/defaults.yaml`` shipped with
-   pyRadtran.
-2. **User master config** — ``~/.pyradtran/config.yaml`` (machine-specific
-   paths to libRadtran, preferred solver, …), written once with
-   :func:`save_master_config`.
-3. **Simulation config** — the YAML file passed to :func:`load_config` or
-   to ``ds.pyradtran.run(config_path=...)``.
+1. package defaults (``pyradtran/defaults.yaml``),
+2. user master config (``~/.pyradtran/config.yaml``, written once with
+   :func:`save_master_config`),
+3. simulation config (the file passed to :func:`load_config` or to
+   ``ds.pyradtran.run(config_path=...)``).
 
-All settings are represented as :mod:`dataclasses`, so they are accessed
-as typed attributes (``cfg.simulation_defaults.albedo_value``) and
-validated on construction.
+The settings are :mod:`dataclasses`: typed attributes
+(``cfg.simulation_defaults.albedo_value``), validated on construction.
 
 .. autosummary::
 
@@ -36,11 +33,8 @@ validated on construction.
 
 Notes
 -----
-A simulation YAML mirrors the dataclass structure: four top-level sections
-(``paths``, ``simulation_defaults``, ``execution``, ``output``). Every key
-is optional — anything left out falls through to the master config and
-then to the package defaults — so a typical file only lists what differs
-from the defaults:
+A simulation YAML mirrors the dataclass structure. Every key is optional,
+so a file lists only what differs from the lower layers:
 
 .. code-block:: yaml
 
@@ -81,8 +75,7 @@ from the defaults:
 
 Examples
 --------
-Load the merged configuration (package defaults + master config) and
-inspect it:
+Load the merged configuration:
 
 >>> from pyradtran import load_config
 >>> cfg = load_config()  # doctest: +SKIP
@@ -91,7 +84,7 @@ PosixPath('/opt/libRadtran-2.0.6/bin/uvspec')
 >>> cfg.simulation_defaults.wavelength_nm  # doctest: +SKIP
 [400, 3600]
 
-Adjust it in Python, save it for later and use it for a run:
+Adjust, save and run:
 
 >>> cfg.simulation_defaults.rte_solver = "disort"  # doctest: +SKIP
 >>> cfg.simulation_defaults.wavelength_nm = [500, 600]  # doctest: +SKIP
@@ -172,36 +165,11 @@ def _resolve_libradtran_shortname(
     data_root: Path,
     catalog: Dict[str, Tuple[str, str]],
 ) -> Optional[Path]:
-    """Resolve a catalog short name or a literal path to a :class:`~pathlib.Path`.
+    """Resolve a catalog short name or a literal path to a ``Path``.
 
-    If *value* is exactly a key of *catalog*, the corresponding file inside
-    *data_root* is returned.  Anything else is interpreted as a literal
-    path: ``~`` is expanded, a relative path stays relative (to the current
-    working directory).  Existence is not checked here.
-
-    Parameters
-    ----------
-    value : str or Path, optional
-        Short name (e.g. ``"kurudz_1.0nm"``) or explicit file path.
-    data_root : Path
-        The libRadtran ``data/`` directory used as the base for catalog
-        resolutions.
-    catalog : dict
-        One of :data:`SOLAR_SPECTRA` or :data:`ATMOSPHERE_PROFILES`.
-
-    Returns
-    -------
-    Path or None
-        *None* when *value* is *None*.
-
-    Examples
-    --------
-    >>> from pathlib import Path
-    >>> data = Path("/opt/libRadtran/data")
-    >>> _resolve_libradtran_shortname("afglsw", data, ATMOSPHERE_PROFILES)
-    PosixPath('/opt/libRadtran/data/atmmod/afglsw.dat')
-    >>> _resolve_libradtran_shortname("my/profile.dat", data, ATMOSPHERE_PROFILES)
-    PosixPath('my/profile.dat')
+    An exact *catalog* key maps to the file under *data_root*; anything
+    else is a literal path (``~`` expanded, existence not checked).
+    *None* passes through.
     """
     if value is None:
         return None
@@ -221,15 +189,12 @@ def _print_catalog(catalog: Dict[str, Tuple[str, str]], width: int) -> None:
 def list_solar_spectra() -> None:
     """Print a table of available solar spectrum short names.
 
-    Each short name can be used as ``paths.solar_spectrum`` in a YAML
-    config (or as the *solar_spectrum* argument of
-    :class:`PathsConfig` / :func:`save_master_config`) instead of a full
-    path.  It is resolved to a file below ``<libradtran_data>/solar_flux/``
-    and ends up on the ``source solar <file>`` line of the ``uvspec``
-    input.  The catalog itself is the module-level dict
-    ``SOLAR_SPECTRA`` (short name → ``(relative path, description)``).
-
-    When no solar spectrum is configured at all, ``kurudz_1.0nm`` is used.
+    A short name can replace a full path in ``paths.solar_spectrum`` (YAML,
+    :class:`PathsConfig`, :func:`save_master_config`).  It resolves to a
+    file below ``<libradtran_data>/solar_flux/`` and is written as
+    ``source solar <file>``.  The default is ``kurudz_1.0nm``.  The catalog
+    is the module-level dict ``SOLAR_SPECTRA`` (short name →
+    ``(relative path, description)``).
 
     See Also
     --------
@@ -238,11 +203,10 @@ def list_solar_spectra() -> None:
 
     Notes
     -----
-    The extraterrestrial spectrum sets the spectral resolution that makes
-    sense for a run: a 1 nm spectrum combined with a band parameterisation
-    such as ``mol_abs_param lowtran`` or ``reptran coarse`` is the usual
-    choice; the 0.1 nm spectrum only pays off with a correspondingly fine
-    ``wavelength`` grid.
+    Match the spectrum to the spectral resolution of the run.  A 1 nm
+    spectrum suits a band parameterisation such as
+    ``mol_abs_param lowtran`` or ``reptran coarse``; the 0.1 nm spectrum
+    only pays off with a correspondingly fine ``wavelength`` grid.
 
     Examples
     --------
@@ -255,7 +219,7 @@ def list_solar_spectra() -> None:
       NewGuey2003         Gueymard (2003) high-resolution solar spectrum
       Thekaekara          Thekaekara (1974) solar spectrum
 
-    The catalog is a plain dict, so it can be inspected programmatically:
+    The catalog as a dict:
 
     >>> from pyradtran import SOLAR_SPECTRA
     >>> SOLAR_SPECTRA["NewGuey2003"][0]
@@ -267,15 +231,12 @@ def list_solar_spectra() -> None:
 def list_atmosphere_profiles() -> None:
     r"""Print a table of available atmosphere profile short names.
 
-    Each short name can be used as ``paths.atmosphere_profile`` in a YAML
-    config (or as the *atmosphere_profile* argument of
-    :class:`PathsConfig` / :func:`save_master_config`) instead of a full
-    path.  It is resolved to a file below ``<libradtran_data>/atmmod/`` and
-    ends up on the ``atmosphere_file`` line of the ``uvspec`` input.  The
-    catalog itself is the module-level dict ``ATMOSPHERE_PROFILES``
-    (short name → ``(relative path, description)``).
-
-    When no profile is configured at all, ``afglus`` is used.
+    A short name can replace a full path in ``paths.atmosphere_profile``
+    (YAML, :class:`PathsConfig`, :func:`save_master_config`).  It resolves
+    to a file below ``<libradtran_data>/atmmod/`` and is written as
+    ``atmosphere_file``.  The default is ``afglus``.  The catalog is the
+    module-level dict ``ATMOSPHERE_PROFILES`` (short name →
+    ``(relative path, description)``).
 
     See Also
     --------
@@ -286,8 +247,8 @@ def list_atmosphere_profiles() -> None:
 
     Notes
     -----
-    The six AFGL reference atmospheres (Anderson et al., 1986) [1]_ are the
-    standard background profiles of libRadtran.  They provide pressure,
+    The six AFGL reference atmospheres (Anderson et al., 1986) [1]_ are
+    libRadtran's standard background profiles.  They give pressure,
     temperature, air density and the O\ :sub:`3`, O\ :sub:`2`,
     H\ :sub:`2`\ O, CO\ :sub:`2` and NO\ :sub:`2` profiles from the
     surface to 120 km:
@@ -303,11 +264,11 @@ def list_atmosphere_profiles() -> None:
     ``afglsw``  ``afglsw.dat``        Sub-arctic Winter
     ==========  ====================  ===========================
 
-    The background profile matters even when a radiosonde or ERA5 profile
-    is supplied: libRadtran uses it above the top of the measured profile
-    and for every gas the measured profile does not contain.  Total
-    columns of ozone and water vapour are rescaled afterwards by
-    ``ozone_du`` / ``h2o_mm`` of :class:`SimulationDefaults`.
+    The background profile matters even with a radiosonde or ERA5 profile:
+    libRadtran uses it above the top of the measured profile and for every
+    gas the measured profile lacks.  ``ozone_du`` / ``h2o_mm`` of
+    :class:`SimulationDefaults` rescale the total ozone and water vapour
+    columns afterwards.
 
     References
     ----------
@@ -336,25 +297,19 @@ def list_atmosphere_profiles() -> None:
       afglus_n2_vmr         US Standard – N2 VMR profile
       afglus_no2            US Standard – NO2 profile
 
-    The catalog is a plain dict, so it can be inspected programmatically:
+    The catalog as a dict:
 
     >>> from pyradtran import ATMOSPHERE_PROFILES
     >>> ATMOSPHERE_PROFILES["afglsw"]
     ('atmmod/afglsw.dat', 'Sub-arctic Winter')
 
-    Select the sub-arctic winter profile for one configuration:
+    Select the sub-arctic winter profile in a simulation YAML
+    (``paths: {atmosphere_profile: afglsw}``):
 
     >>> from pyradtran import load_config
     >>> cfg = load_config("config/arctic.yaml")  # doctest: +SKIP
     >>> cfg.paths.atmosphere_profile  # doctest: +SKIP
     PosixPath('/opt/libRadtran-2.0.6/data/atmmod/afglsw.dat')
-
-    where ``config/arctic.yaml`` contains
-
-    .. code-block:: yaml
-
-        paths:
-          atmosphere_profile: afglsw
     """
     _print_catalog(ATMOSPHERE_PROFILES, 20)
 
@@ -364,8 +319,7 @@ class PathsConfig:
     """File-system paths required by libRadtran (YAML section ``paths``).
 
     Construction validates the libRadtran installation, resolves short
-    names and creates the output and working directories, so an instance
-    that exists is known to point at a usable ``uvspec``.
+    names and creates the output and working directories.
 
     Parameters
     ----------
@@ -409,25 +363,20 @@ class PathsConfig:
 
     Notes
     -----
-    A missing *atmosphere_profile* file is only logged as a warning, not
-    raised.
+    A missing *atmosphere_profile* file is only logged as a warning.
 
+    After construction every field is a :class:`pathlib.Path` (*None* for
+    an unset *radiosonde_base*) with ``~`` expanded.  Relative paths stay
+    relative to the working directory of the Python process; the default
+    ``pyradtran_output`` / ``pyradtran_work`` directories are created
+    there.
 
-    After construction every field holds a :class:`pathlib.Path` (or
-    *None* for an unset *radiosonde_base*): strings are converted and
-    ``~`` is expanded.  Relative paths are **not** made absolute — they
-    stay relative to the working directory of the Python process, which
-    is also where the default ``pyradtran_output`` / ``pyradtran_work``
-    directories are created.
-
-    A value for *atmosphere_profile* or *solar_spectrum* is treated as a
-    short name only if it matches a catalog key exactly; anything else is
-    taken as a literal path.
+    *atmosphere_profile* and *solar_spectrum* count as short names only on
+    an exact catalog match; anything else is a literal path.
 
     Examples
     --------
-    Usually the instance is created by :func:`load_config`; direct
-    construction looks like this:
+    Direct construction (normally done by :func:`load_config`):
 
     >>> from pyradtran import PathsConfig
     >>> paths = PathsConfig(  # doctest: +SKIP
@@ -510,23 +459,22 @@ class PathsConfig:
 class CloudParameters:
     """Static cloud settings (YAML section ``simulation_defaults.clouds``).
 
-    These settings describe one cloud that is the same for every
-    simulated point.  Nothing is written to the ``uvspec`` input unless
-    *enabled* is true.  What is written then depends on *cloud_source*:
+    One cloud, the same for every simulated point.  Nothing is written to
+    the ``uvspec`` input unless *enabled* is true; what is written depends
+    on *cloud_source*:
 
     ``"file"``
         Existing libRadtran cloud files: ``wc_file <wc_file>`` for
         *cloud_type* ``"wc"`` / ``"mixed"`` and ``ic_file <ic_file>`` for
-        ``"ic"`` / ``"mixed"`` (each only if the path is set).  This is
-        the mode that works with libRadtran 2.0.6.
+        ``"ic"`` / ``"mixed"`` (each only if the path is set).
     ``"parametric"``
-        A single homogeneous slab between *layer_bottom_km* and
-        *layer_top_km*.  It is passed to ``uvspec`` as a generated two-row
-        ``wc_file 1D`` / ``ic_file 1D`` profile, the same route a
-        dict-valued ``wc_file`` in ``params`` takes.
+        A homogeneous slab between *layer_bottom_km* and *layer_top_km*,
+        passed to ``uvspec`` as a generated two-row ``wc_file 1D`` /
+        ``ic_file 1D`` profile (the route a dict-valued ``wc_file`` in
+        ``params`` takes).
     ``"era5"``
-        Accepted, but currently ignored when the input file is built — no
-        cloud line is written.  Use ``era5_clouds=True`` of
+        Accepted, but ignored when the input file is built: no cloud line
+        is written.  Use ``era5_clouds=True`` of
         :meth:`~pyradtran.interface.PyRadtranAccessor.run` instead.
 
     Parameters
@@ -555,15 +503,15 @@ class CloudParameters:
     ic_file : pathlib.Path, optional
         Ice-cloud file for ``cloud_source="file"``.
     era5_dataset : any, optional
-        Placeholder for an ERA5 dataset.  Never written to YAML and
-        shared by reference in :meth:`SimulationConfig.copy`.  Not used
-        when the input file is built.
+        Placeholder for an ERA5 dataset.  Never written to YAML, shared by
+        reference in :meth:`SimulationConfig.copy`, and not used when the
+        input file is built.
     era5_time : str, optional
-        Reserved for the ``"era5"`` source; currently unused.
+        Reserved for the ``"era5"`` source; unused.
     era5_lat : float, optional
-        Reserved for the ``"era5"`` source; currently unused.
+        Reserved for the ``"era5"`` source; unused.
     era5_lon : float, optional
-        Reserved for the ``"era5"`` source; currently unused.
+        Reserved for the ``"era5"`` source; unused.
 
     See Also
     --------
@@ -577,8 +525,8 @@ class CloudParameters:
     -----
     No value is range-checked.  With ``enabled=True`` and
     ``cloud_source="file"`` a non-existent *wc_file* / *ic_file* is logged
-    as a warning.  *wc_file* / *ic_file* may be given as strings; they
-    are converted to :class:`pathlib.Path` (with ``~`` expanded).
+    as a warning.  String values of *wc_file* / *ic_file* become
+    :class:`pathlib.Path` (``~`` expanded).
 
     Examples
     --------
@@ -587,7 +535,7 @@ class CloudParameters:
     >>> clouds.cloud_type, clouds.cloud_source, clouds.effective_radius_um
     ('wc', 'parametric', 10.0)
 
-    In YAML, a cloud read from an existing libRadtran cloud file:
+    A cloud from an existing libRadtran cloud file, in YAML:
 
     .. code-block:: yaml
 
@@ -649,9 +597,9 @@ class SimulationDefaults:
 
     Each field maps onto one line of the ``uvspec`` input file that
     :class:`~pyradtran.input_builder.InputFileBuilder` writes for every
-    simulated point.  The values are *defaults*: anything given in the
-    ``params`` mapping of :meth:`~pyradtran.interface.PyRadtranAccessor.run`
-    replaces the corresponding line for that run.
+    simulated point.  The values are defaults: the ``params`` mapping of
+    :meth:`~pyradtran.interface.PyRadtranAccessor.run` replaces the
+    corresponding lines for one run.
 
     Parameters
     ----------
@@ -676,9 +624,8 @@ class SimulationDefaults:
         is accepted and converted to the list form.
     integrate_wavelength : bool, default ``False``
         If true, ``output_process integrate`` is written and (solar
-        source) ``per_nm`` is appended to the ``source`` line, so each
-        output quantity is one spectrally integrated number per altitude
-        instead of a spectrum.
+        source) ``per_nm`` is appended to the ``source`` line.  Each output
+        quantity is then one spectrally integrated number per altitude.
     output_columns : list of str, default ``["sza", "eglo", "eup", "albedo"]``
         Quantities requested with ``output_user``, in file order (e.g.
         ``edir``, ``edn``, ``eup``, ``eglo``, ``enet``, ``uu``).  Each
@@ -726,11 +673,11 @@ class SimulationDefaults:
         and position by
         :func:`~pyradtran.input_builder.calculate_solar_zenith_angle`.
     parameter_overrides : dict, optional
-        Escape hatch for any other libRadtran option:
-        ``{keyword: value}`` pairs applied to every run.  A keyword that
-        the typed fields above already wrote replaces that line; ``True``
-        writes a bare flag (``aerosol_default``), ``False`` removes the
-        line, a list writes one line per entry.
+        Any other libRadtran option, as ``{keyword: value}`` pairs applied
+        to every run.  A keyword that the typed fields above already wrote
+        replaces that line; ``True`` writes a bare flag
+        (``aerosol_default``), ``False`` removes the line, a list writes
+        one line per entry.
 
     Raises
     ------
@@ -749,12 +696,11 @@ class SimulationDefaults:
 
     Notes
     -----
-    The checks and the altitude sorting are done by :meth:`validate`,
-    which runs at construction (and therefore in :func:`load_config`).
-    Assigning to an attribute afterwards (``sd.albedo_value = 2.0``) is
-    not checked at that moment; call :meth:`validate` again to re-check
-    and re-sort after such changes.  ``run()``, ``explain()`` and
-    ``jacobian()`` of the accessor do so before anything is simulated.
+    :meth:`validate` does the checks and the altitude sorting.  It runs at
+    construction (and so in :func:`load_config`).  Later attribute
+    assignments (``sd.albedo_value = 2.0``) are not checked until
+    :meth:`validate` is called again; ``run()``, ``explain()`` and
+    ``jacobian()`` of the accessor call it before simulating.
 
     The total ozone column is given in Dobson units,
 
@@ -771,9 +717,9 @@ class SimulationDefaults:
         \mathrm{PW} = \frac{1}{\rho_w} \int_0^\infty \rho_v(z)\,\mathrm{d}z,
         \qquad 1\ \mathrm{mm} \mathrel{\widehat{=}} 1\ \mathrm{kg\ m^{-2}} .
 
-    ``mol_modify`` rescales the whole profile of the background atmosphere
-    so that its vertical integral matches the requested column; the shape
-    of the profile is kept.
+    ``mol_modify`` rescales the profile of the background atmosphere so
+    that its vertical integral matches the requested column; the profile
+    shape is kept.
 
     With *integrate_wavelength* the output is the band integral
 
@@ -787,7 +733,7 @@ class SimulationDefaults:
 
     Examples
     --------
-    The defaults, as used when a YAML file does not mention a key:
+    Defaults:
 
     >>> from pyradtran import SimulationDefaults
     >>> sd = SimulationDefaults()
@@ -796,8 +742,8 @@ class SimulationDefaults:
     >>> sd.wavelength_nm, sd.output_columns
     ([400, 3600], ['sza', 'eglo', 'eup', 'albedo'])
 
-    Altitudes are sorted and de-duplicated, and the mapping form of the
-    wavelength range is normalised:
+    Altitudes are sorted and de-duplicated; the mapping form of the
+    wavelength range becomes a list:
 
     >>> sd = SimulationDefaults(
     ...     source="thermal",
@@ -814,30 +760,9 @@ class SimulationDefaults:
         ...
     pyradtran.exceptions.ConfigurationError: albedo_value must be between 0 and 1, got 1.5
 
-    The same settings in a YAML file, annotated with the ``uvspec`` line
-    each one produces:
-
-    .. code-block:: yaml
-
-        simulation_defaults:
-          rte_solver: twostr              # rte_solver twostr
-          mol_abs_param: lowtran per_nm   # mol_abs_param lowtran per_nm
-          source: solar                   # source solar <solar_spectrum>
-          wavelength_nm: [500, 502]       # wavelength 500 502
-          integrate_wavelength: false     # true: output_process integrate
-          output_columns: [sza, eglo, eup, albedo]  # output_user lambda sza ...
-          output_altitudes_km: [0.0]      # zout 0.0000
-          albedo_value: 0.85              # albedo 0.85
-          surface_temperature_k: 273.15   # sur_temperature 273.15 (thermal)
-          ozone_du: 300.0                 # mol_modify O3 300.0 DU
-          h2o_mm: 2.0                     # mol_modify H2O 2.0 MM
-          h2o_source: fixed               # radiosonde: radiosonde <file> H2O RH
-          viewing_geometry: nadir         # umu 1.0
-          sza: null                       # sza <computed>, day_of_year <doy>
-          parameter_overrides: {}         # e.g. {aerosol_default: true}
-
-    :meth:`~pyradtran.interface.PyRadtranAccessor.explain` shows the
-    result for a concrete point (here 28 March 2022, 12 UTC, Ny-Ålesund):
+    The ``uvspec`` input the settings produce for a concrete point (28
+    March 2022, 12 UTC, Ny-Ålesund).  The annotated YAML form is in
+    :mod:`pyradtran.config`.
 
     >>> cfg = load_config()  # doctest: +SKIP
     >>> cfg.simulation_defaults.wavelength_nm = [500, 502]  # doctest: +SKIP
@@ -907,10 +832,10 @@ class SimulationDefaults:
     def validate(self) -> None:
         """Check the settings and normalise them in place.
 
-        Called at construction. Call it again after assigning to
-        attributes: it normalises the mapping form of *wavelength_nm*,
-        checks *wavelength_nm*, *source* and *albedo_value*, and sorts
-        and de-duplicates *output_altitudes_km*.
+        Runs at construction; call it again after assigning to attributes.
+        It converts the mapping form of *wavelength_nm* to a list, checks
+        *wavelength_nm*, *source* and *albedo_value*, and sorts and
+        de-duplicates *output_altitudes_km*.
 
         Raises
         ------
@@ -966,16 +891,15 @@ class ExecutionConfig:
     Parameters
     ----------
     max_workers : int, optional
-        Number of ``uvspec`` processes run in parallel.  The dataclass
-        default is ``min(8, os.cpu_count())``, evaluated when the module
-        is imported; the package default YAML (and therefore
-        :func:`load_config`) sets ``4``.  With ``1`` all points run
-        serially inside the calling process (no process pool); *None*
-        lets :class:`concurrent.futures.ProcessPoolExecutor` choose.
+        Number of parallel ``uvspec`` processes.  The dataclass default is
+        ``min(8, os.cpu_count())``, evaluated at import; the package
+        default YAML (and so :func:`load_config`) sets ``4``.  With ``1``
+        all points run serially in the calling process (no process pool);
+        *None* lets :class:`concurrent.futures.ProcessPoolExecutor` choose.
     cleanup_temp_files : bool, default ``False``
         Delete the ``uvspec`` input/output files and temporary cloud
-        files in ``paths.working_dir`` after each *successful* point.
-        Files of failed points are always kept for inspection.
+        files in ``paths.working_dir`` after each successful point.
+        Files of failed points are always kept.
     debug_mode : bool, default ``False``
         When true, :func:`load_config` sets the ``"pyradtran"`` logger to
         ``DEBUG``.  Handlers are left to the application.
@@ -994,8 +918,7 @@ class ExecutionConfig:
     >>> ExecutionConfig(max_workers=1).timeout_seconds
     300
 
-    Serial execution is convenient for debugging and inside notebooks
-    that are rendered in CI:
+    Run serially (debugging, notebooks rendered in CI):
 
     >>> cfg = load_config()  # doctest: +SKIP
     >>> cfg.execution.max_workers = 1  # doctest: +SKIP
@@ -1028,12 +951,11 @@ class OutputConfig:
 
     Notes
     -----
-    When a run saves its result and no explicit ``output_path`` is given,
-    the file is written to
+    Without an explicit ``output_path`` a saved result goes to
 
     ``<paths.output_dir>/<filename_prefix>_<YYYYmmdd_HHMMSS><filename_suffix>``
 
-    with the local time at which the run was started.
+    with the local start time of the run.
 
     Examples
     --------
@@ -1056,10 +978,9 @@ class OutputConfig:
 class SimulationConfig:
     """Top-level configuration container.
 
-    Composed of four sections that mirror the top-level keys of the YAML
-    file.  Use :func:`load_config` (three merged layers) or
-    :meth:`from_yaml` (one self-contained file) to construct an instance
-    from disk.
+    Four sections that mirror the top-level keys of the YAML file.  Build
+    an instance with :func:`load_config` (three merged layers) or
+    :meth:`from_yaml` (one self-contained file).
 
     Parameters
     ----------
@@ -1081,11 +1002,10 @@ class SimulationConfig:
 
     Notes
     -----
-    The object is a plain mutable dataclass: change a setting by assigning
-    to the attribute.  ``ds.pyradtran.run(config=cfg)`` works on a
-    :meth:`copy`, so the per-run adjustments it makes (dataset-derived
-    output altitudes, dotted keys in ``params``) never leak back into
-    *cfg*.
+    A plain mutable dataclass: change a setting by assigning to the
+    attribute.  ``ds.pyradtran.run(config=cfg)`` works on a :meth:`copy`,
+    so its per-run adjustments (dataset-derived output altitudes, dotted
+    keys in ``params``) never leak back into *cfg*.
 
     Examples
     --------
@@ -1111,11 +1031,10 @@ class SimulationConfig:
         """Load configuration from a single, self-contained YAML file.
 
         Unlike :func:`load_config` nothing is merged: neither the package
-        defaults nor ``~/.pyradtran/config.yaml`` are read.  Keys missing
-        from the file take the dataclass defaults, so the file must at
-        least contain ``paths`` (with ``libradtran_bin`` and
-        ``libradtran_data``) and ``simulation_defaults`` (which may be
-        empty, ``{}``).
+        defaults nor ``~/.pyradtran/config.yaml`` are read.  Missing keys
+        take the dataclass defaults, so the file needs at least ``paths``
+        (with ``libradtran_bin`` and ``libradtran_data``) and
+        ``simulation_defaults`` (which may be empty, ``{}``).
 
         Parameters
         ----------
@@ -1146,13 +1065,13 @@ class SimulationConfig:
         -----
         Unknown keys are ignored with a logged warning.  Scalars are
         coerced to the annotated field type where possible (``"0.2"``
-        becomes ``0.2`` for a float field) and path strings become
-        :class:`pathlib.Path` objects with ``~`` expanded.
+        becomes ``0.2`` for a float field); path strings become
+        :class:`pathlib.Path` with ``~`` expanded.
 
         Examples
         --------
-        Round-trip a configuration exactly as saved, independent of the
-        master config of the current machine:
+        Load a configuration exactly as saved, independent of the master
+        config of the current machine:
 
         >>> from pyradtran import SimulationConfig
         >>> cfg = SimulationConfig.from_yaml("config/my_simulation.yaml")  # doctest: +SKIP
@@ -1170,21 +1089,10 @@ class SimulationConfig:
 
     @classmethod
     def _dict_to_dataclass(cls, data: Dict[str, Any], dataclass_type: type) -> Any:
-        """Recursively convert a nested dictionary to dataclass instances.
+        """Recursively convert a nested dict to dataclass instances.
 
-        Unknown keys are skipped with a warning; ``Optional[X]`` fields are
-        coerced with ``X(value)`` (falling back to the raw value if that
-        fails), ``Path`` fields get ``expanduser()``, and nested mappings
-        become the nested dataclass.
-
-        Examples
-        --------
-        >>> sd = SimulationConfig._dict_to_dataclass(
-        ...     {"albedo_value": "0.2", "clouds": {"enabled": True}},
-        ...     SimulationDefaults,
-        ... )
-        >>> sd.albedo_value, sd.clouds.enabled, sd.rte_solver
-        (0.2, True, 'twostr')
+        Unknown keys are skipped with a warning; ``Optional[X]`` values are
+        coerced with ``X(value)`` and ``Path`` fields get ``expanduser()``.
         """
         field_types = {f.name: f.type for f in fields(dataclass_type)}
         init_args = {}
@@ -1228,12 +1136,10 @@ class SimulationConfig:
     def copy(self) -> "SimulationConfig":
         """Return an independent deep copy of this configuration.
 
-        The one exception is ``clouds.era5_dataset`` (potentially a large
-        xarray Dataset), which is carried over by reference.
-
-        Used by the accessor so that per-run adjustments (dataset-derived
-        ``zout`` levels, dotted config overrides in ``params``) never
-        mutate a caller-owned config object.
+        Only ``clouds.era5_dataset`` (potentially a large xarray Dataset)
+        is shared by reference.  The accessor runs on a copy, so per-run
+        adjustments (dataset-derived ``zout`` levels, dotted config
+        overrides in ``params``) never mutate the caller's object.
 
         Returns
         -------
@@ -1241,7 +1147,7 @@ class SimulationConfig:
 
         Examples
         --------
-        Derive variants of one base configuration for a sensitivity study:
+        Derive a variant of a base configuration for a sensitivity study:
 
         >>> base = load_config()  # doctest: +SKIP
         >>> dark = base.copy()  # doctest: +SKIP
@@ -1256,9 +1162,9 @@ class SimulationConfig:
     def to_dict(self) -> Dict[str, Any]:
         """Serialise the full configuration to a plain nested dict.
 
-        All :class:`~pathlib.Path` objects are converted to strings so
-        the result is immediately YAML-serialisable.  The non-serialisable
-        ``clouds.era5_dataset`` entry is dropped.
+        :class:`~pathlib.Path` objects become strings and the
+        non-serialisable ``clouds.era5_dataset`` entry is dropped, so the
+        result can be written to YAML.
 
         Returns
         -------
@@ -1305,15 +1211,15 @@ class SimulationConfig:
     def to_yaml(self, path: Union[str, Path]) -> Path:
         """Write the configuration to a YAML file.
 
-        The file contains *every* setting (the output of :meth:`to_dict`,
+        The file contains every setting (the output of :meth:`to_dict`,
         keys sorted alphabetically), so it documents a run completely and
         can be read back with :func:`load_config` or :meth:`from_yaml`.
 
         Parameters
         ----------
         path : str or pathlib.Path
-            Destination file.  Parent directories are created
-            automatically; an existing file is overwritten.
+            Destination file.  Parent directories are created; an existing
+            file is overwritten.
 
         Returns
         -------
@@ -1327,15 +1233,14 @@ class SimulationConfig:
 
         Notes
         -----
-        Because the file is complete it also pins the machine-specific
-        ``paths`` section (already resolved to full file names) and
-        thereby overrides the master config wherever it is loaded.  Delete
-        the ``paths`` block from the file to make it portable between
-        machines.
+        The complete file also pins the resolved, machine-specific
+        ``paths`` section, which overrides the master config wherever the
+        file is loaded.  Delete the ``paths`` block to make the file
+        portable between machines.
 
         Examples
         --------
-        Start from the defaults, change what matters and persist it:
+        Change the defaults and save:
 
         >>> from pyradtran import load_config
         >>> cfg = load_config()  # doctest: +SKIP
@@ -1384,10 +1289,10 @@ class SimulationConfig:
     def get_used_parameters(self) -> Dict[str, Any]:
         """Return a nested summary dict of the active parameters.
 
-        Useful for logging.  The result has the same four sections as
-        :meth:`to_dict` with all paths as strings, but is a hand-picked
-        subset: ``simulation_defaults.parameter_overrides`` and the
-        ``clouds.era5_*`` entries are not included.
+        For logging.  The four sections of :meth:`to_dict` with all paths
+        as strings, but without
+        ``simulation_defaults.parameter_overrides`` and the
+        ``clouds.era5_*`` entries.
 
         Returns
         -------
@@ -1444,14 +1349,8 @@ _DEFAULT_CONFIG_PATH = Path(__file__).parent / "defaults.yaml"
 def _recursive_update(base: Dict, update: Dict) -> Dict:
     """Recursively merge *update* into *base* (mutates and returns *base*).
 
-    Nested mappings are merged key by key; every other value (scalars and
-    lists alike) replaces the one in *base*.
-
-    Examples
-    --------
-    >>> base = {"paths": {"a": 1, "b": 2}, "cols": ["eglo", "eup"]}
-    >>> _recursive_update(base, {"paths": {"b": 3}, "cols": ["edir"]})
-    {'paths': {'a': 1, 'b': 3}, 'cols': ['edir']}
+    Nested mappings merge key by key; any other value, lists included,
+    replaces the one in *base*.
     """
     for key, value in update.items():
         if isinstance(value, dict) and key in base and isinstance(base[key], dict):
@@ -1464,46 +1363,38 @@ def _recursive_update(base: Dict, update: Dict) -> Dict:
 def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationConfig:
     """Load and merge the three-layer configuration.
 
-    This is the standard way to obtain a :class:`SimulationConfig`.  Three
-    YAML sources are read in turn and merged key by key, later layers
-    winning:
+    Three YAML sources are merged key by key, later layers winning:
 
-    1. **Package defaults** — ``pyradtran/defaults.yaml`` in the
-       pyRadtran installation.  Provides a value for every setting, but
-       only placeholder libRadtran paths.
-    2. **User master config** — ``~/.pyradtran/config.yaml``.  The place
-       for machine-specific paths (see :func:`save_master_config`).
-    3. **Simulation config** — *config_path*, describing one experiment.
+    1. **Package defaults**: ``pyradtran/defaults.yaml``.  Provides a
+       value for every setting, but only placeholder libRadtran paths.
+    2. **User master config**: ``~/.pyradtran/config.yaml``, for
+       machine-specific paths (see :func:`save_master_config`).
+    3. **Simulation config**: *config_path*, describing one experiment.
 
-    The merged mapping is then converted to dataclasses, which validates
-    it (see :class:`PathsConfig` and :class:`SimulationDefaults`).
+    Converting the merged mapping to dataclasses validates it (see
+    :class:`PathsConfig` and :class:`SimulationDefaults`).
 
     Parameters
     ----------
     config_path : str or pathlib.Path, optional
-        Simulation-specific YAML file.  It only needs to contain the keys
-        that differ from layers 1 and 2.  When *None*, only layers 1 and 2
-        are used.
+        Simulation YAML file; it needs only the keys that differ from
+        layers 1 and 2.  *None* uses layers 1 and 2 alone.
 
     Returns
     -------
     SimulationConfig
-        The merged, validated configuration.  A new object on every call;
-        modifying it does not affect later calls.
+        The merged, validated configuration.  A new object on every call.
 
     Raises
     ------
     ConfigurationError
-        If *config_path* is given but cannot be read or is not valid
-        YAML; if, after merging, ``paths.libradtran_bin``,
-        ``paths.libradtran_data`` or the solar spectrum file do not exist
-        (typically because no master config has been written yet and the
-        package placeholders are still in effect — the message then says
-        how to set the paths); or if a merged value fails the
-        :class:`SimulationDefaults` validation.
-        :class:`~pyradtran.exceptions.ConfigurationError` is also a
-        :class:`FileNotFoundError` and a :class:`ValueError`, so code
-        catching those keeps working.
+        If *config_path* cannot be read or is not valid YAML; if the
+        merged ``paths.libradtran_bin``, ``paths.libradtran_data`` or solar
+        spectrum file do not exist (typically no master config has been
+        written yet and the package placeholders are in effect; the
+        message says how to set the paths); or if a merged value fails the
+        :class:`SimulationDefaults` validation.  The exception is also a
+        :class:`FileNotFoundError` and a :class:`ValueError`.
     TypeError
         If a required section is missing from all layers.
 
@@ -1518,8 +1409,8 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
 
     Notes
     -----
-    **Precedence.**  Merging is recursive for mappings and wholesale for
-    everything else: a simulation YAML containing only
+    **Precedence.**  Mappings merge recursively; every other value is
+    replaced as a whole.  A simulation YAML containing only
 
     .. code-block:: yaml
 
@@ -1527,22 +1418,17 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
           source: thermal
           wavelength_nm: [8000, 13000]
 
-    changes these two settings and inherits every other key of
-    ``simulation_defaults`` — and the complete ``paths``, ``execution`` and
-    ``output`` sections — from the master config and the package defaults.
-    A list (``wavelength_nm``, ``output_columns``, …) is always replaced as
-    a whole, never concatenated.  On top of the three file layers, the
-    ``params`` argument of
-    :meth:`~pyradtran.interface.PyRadtranAccessor.run` overrides settings
-    for a single run without touching any file.
+    changes these two settings and inherits everything else from the
+    master config and the package defaults.  A list (``wavelength_nm``,
+    ``output_columns``, …) is replaced, never concatenated.
 
     **Short names.**  ``paths.atmosphere_profile`` and
-    ``paths.solar_spectrum`` may be given as short names (``afglsw``,
+    ``paths.solar_spectrum`` accept short names (``afglsw``,
     ``kurudz_1.0nm``; see :func:`list_atmosphere_profiles` and
-    :func:`list_solar_spectra`).  They are resolved against the *merged*
-    ``paths.libradtran_data``, so a short name in the simulation YAML
-    works with whatever installation the master config points to.  The
-    returned object always holds full paths.
+    :func:`list_solar_spectra`).  They are resolved against the merged
+    ``paths.libradtran_data``, so a short name works with whatever
+    installation the master config points to.  The returned object holds
+    full paths.
 
     **Missing files.**  A missing master config is skipped silently, and
     one that cannot be read or parsed is skipped with a logged warning.
@@ -1551,24 +1437,23 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
 
     **Unknown keys** in any layer are ignored with a logged warning naming
     the key, so a typo such as ``albedo`` instead of ``albedo_value`` does
-    not raise — check the log (or the returned object) when a setting
+    not raise.  Check the log (or the returned object) when a setting
     seems to have no effect.
 
     **Side effects.**  ``paths.output_dir`` and ``paths.working_dir`` are
-    created if they do not exist; relative paths are taken relative to the
-    current working directory.  With ``execution.debug_mode: true`` the
-    ``"pyradtran"`` logger is set to ``DEBUG``.
+    created if missing (relative paths: relative to the current working
+    directory).  ``execution.debug_mode: true`` sets the ``"pyradtran"``
+    logger to ``DEBUG``.
 
-    The package defaults differ in a few places from the bare dataclass
-    defaults of :class:`SimulationDefaults` and :class:`ExecutionConfig`:
-    ``albedo_value: 0.85``, ``surface_temperature_k: 273.15`` and
-    ``max_workers: 4``.
+    **Package vs dataclass defaults.**  The package defaults differ from
+    the bare defaults of :class:`SimulationDefaults` and
+    :class:`ExecutionConfig` in ``albedo_value: 0.85``,
+    ``surface_temperature_k: 273.15`` and ``max_workers: 4``.
 
     Examples
     --------
-    Without an argument the package defaults and the master config are
-    combined — here the master config supplies the libRadtran paths and
-    the short names ``afglus`` / ``NewGuey2003``:
+    Package defaults plus master config.  Here the master config supplies
+    the libRadtran paths and the short names ``afglus`` / ``NewGuey2003``:
 
     >>> from pyradtran import load_config
     >>> cfg = load_config()  # doctest: +SKIP
@@ -1584,8 +1469,7 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
     >>> sd.output_columns  # doctest: +SKIP
     ['sza', 'eglo', 'eup', 'albedo']
 
-    Add a simulation YAML as the third layer.  ``thermal.yaml`` holds just
-    the lines that matter for the experiment:
+    A simulation YAML as the third layer.  ``thermal.yaml``:
 
     .. code-block:: yaml
 
@@ -1602,20 +1486,8 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
     >>> cfg.paths.atmosphere_profile  # doctest: +SKIP
     PosixPath('/opt/libRadtran-2.0.6/data/atmmod/afglsw.dat')
 
-    Modify fields in Python and save the result as a new simulation YAML:
-
-    >>> cfg = load_config()  # doctest: +SKIP
-    >>> cfg.simulation_defaults.albedo_value = 0.2  # doctest: +SKIP
-    >>> cfg.simulation_defaults.wavelength_nm = [500, 600]  # doctest: +SKIP
-    >>> cfg.simulation_defaults.rte_solver = "disort"  # doctest: +SKIP
-    >>> cfg.to_yaml("config/my_simulation.yaml")  # doctest: +SKIP
-    PosixPath('config/my_simulation.yaml')
-    >>> load_config("config/my_simulation.yaml").simulation_defaults.rte_solver  # doctest: +SKIP
-    'disort'
-
     Override settings for a single run.  ``params`` accepts ``uvspec``
-    options (``sza``) as well as dotted config paths; the configuration
-    object itself stays untouched:
+    options (``sza``) and dotted config paths; *cfg* stays untouched:
 
     >>> import pandas as pd
     >>> import xarray as xr
@@ -1649,8 +1521,7 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
     pyradtran.exceptions.ConfigurationError: Cannot read configuration file does_not_exist.yaml: [Errno 2] No such file or directory: 'does_not_exist.yaml'
     """
 
-    # 1. Start with the default configuration as the base
-    # This ensures we have all required fields (like simulation_defaults)
+    # 1. Package defaults: a value for every required field
     try:
         with open(_DEFAULT_CONFIG_PATH, "r") as f:
             final_config_dict = yaml.safe_load(f) or {}
@@ -1658,12 +1529,10 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
         logger.error(
             f"Failed to load default configuration from {_DEFAULT_CONFIG_PATH}: {e}"
         )
-        # Fallback to empty dict ? No, this will likely fail later.
-        # But let's proceed to try master.
+        # an empty base will most likely fail in the dataclass conversion
         final_config_dict = {}
 
-    # 2. Update with master configuration (User preferences)
-    # This overrides defaults (e.g. paths) with user-specific settings
+    # 2. Master configuration: user settings such as paths
     master_config_path = Path.home() / ".pyradtran" / "config.yaml"
     if master_config_path.is_file():
         logger.debug(f"Loading master configuration from: {master_config_path}")
@@ -1674,8 +1543,7 @@ def load_config(config_path: Optional[Union[str, Path]] = None) -> SimulationCon
         except Exception as e:
             logger.warning(f"Failed to load master configuration: {e}")
 
-    # 3. Update with specific configuration if provided
-    # This overrides everything else for this specific run
+    # 3. Simulation configuration, if provided
     if config_path is not None:
         config_path = Path(config_path)
         logger.debug(f"Loading specific configuration from: {config_path}")
@@ -1720,11 +1588,11 @@ def save_master_config(
 ) -> Path:
     """Write (or update) the user master config ``~/.pyradtran/config.yaml``.
 
-    The master config is **layer 2** of the three-layer cascade read by
-    :func:`load_config`.  It is the place to store machine-specific paths
-    (libRadtran installation, radiosonde archive, …) once, so that every
-    simulation YAML can stay minimal and portable.  This is the one-time
-    setup step after installing pyRadtran.
+    The master config is layer 2 of the cascade read by
+    :func:`load_config`.  Store machine-specific paths (libRadtran
+    installation, radiosonde archive, …) there once, so that simulation
+    YAMLs stay minimal and portable.  Run this once after installing
+    pyRadtran.
 
     Parameters
     ----------
@@ -1734,27 +1602,24 @@ def save_master_config(
         Absolute path to the libRadtran ``data/`` directory.
     atmosphere_profile : str or pathlib.Path, optional
         Default atmosphere profile: a short name from
-        :func:`list_atmosphere_profiles` or a file path.  Left as it is
-        in the file when *None*.
+        :func:`list_atmosphere_profiles` or a file path.  *None* keeps the
+        value in the file.
     solar_spectrum : str or pathlib.Path, optional
         Default solar spectrum: a short name from
-        :func:`list_solar_spectra` or a file path.  Left as it is in the
-        file when *None*.
+        :func:`list_solar_spectra` or a file path.  *None* keeps the value
+        in the file.
     radiosonde_base : str or pathlib.Path, optional
-        Root directory for local radiosonde files.  Left as it is in the
-        file when *None*.
+        Root directory for local radiosonde files.  *None* keeps the value
+        in the file.
     output_dir : str or pathlib.Path, optional
-        Directory for NetCDF results.  When *None*, the value already in
-        the file is kept, or ``"./pyradtran_output"`` is written if there
-        is none.
+        Directory for NetCDF results.  *None* keeps the value in the file,
+        or writes ``"./pyradtran_output"`` if there is none.
     working_dir : str or pathlib.Path, optional
-        Scratch directory for ``uvspec`` files.  When *None*, the value
-        already in the file is kept, or ``"./pyradtran_work"`` is written
-        if there is none.
+        Scratch directory for ``uvspec`` files.  *None* keeps the value in
+        the file, or writes ``"./pyradtran_work"`` if there is none.
     max_workers : int, optional
         Number of parallel ``uvspec`` processes
-        (``execution.max_workers``).  Left as it is in the file when
-        *None*.
+        (``execution.max_workers``).  *None* keeps the value in the file.
     extra : dict, optional
         Additional sections / keys merged into the file content, e.g.
         ``{"simulation_defaults": {"rte_solver": "disort"}}``.  Wins over
@@ -1772,18 +1637,17 @@ def save_master_config(
 
     Notes
     -----
-    An existing master config is **updated**, not replaced: only the
-    settings passed in this call change, everything else in the file
-    (including hand-written sections) is kept.  An existing file that is
-    not valid YAML is replaced, with a logged warning.  The values are
-    written as given — no existence check, no short-name resolution, no
-    ``~`` expansion; all of that happens when :func:`load_config` reads
-    the file.  The directory ``~/.pyradtran`` is created if necessary and
-    a confirmation line is printed.
+    An existing master config is updated, not replaced: only the settings
+    passed in this call change; everything else, hand-written sections
+    included, is kept.  An existing file that is not valid YAML is
+    replaced, with a logged warning.  Values are written as given, without
+    existence check, short-name resolution or ``~`` expansion;
+    :func:`load_config` does that when it reads the file.  ``~/.pyradtran``
+    is created if necessary and a confirmation line is printed.
 
-    Relative *output_dir* / *working_dir* values stay relative in the
-    file and are therefore resolved against the working directory of each
-    later Python session.
+    Relative *output_dir* / *working_dir* values stay relative in the file
+    and are resolved against the working directory of each later Python
+    session.
 
     Examples
     --------
@@ -1877,16 +1741,15 @@ def create_example_config(output_path: Union[str, Path]):
     The file lists every setting of the four sections (``paths``,
     ``simulation_defaults``, ``execution``, ``output``) with its default
     value and placeholder libRadtran paths (``/path/to/libradtran/...``).
-    It is a template to edit by hand; the YAML carries no comments — see
-    the module documentation of :mod:`pyradtran.config` for an annotated
-    version.  The package default layer of :func:`load_config` is exactly
-    this file.
+    It is a template to edit by hand and carries no comments; see
+    :mod:`pyradtran.config` for an annotated version.  It is identical to
+    the package default layer of :func:`load_config`.
 
     Parameters
     ----------
     output_path : str or pathlib.Path
-        Destination file.  Parent directories are created automatically;
-        an existing file is overwritten.
+        Destination file.  Parent directories are created; an existing
+        file is overwritten.
 
     Returns
     -------
@@ -1900,10 +1763,10 @@ def create_example_config(output_path: Union[str, Path]):
 
     Notes
     -----
-    Because of the placeholder paths the file cannot be loaded with
-    :meth:`SimulationConfig.from_yaml` until ``paths`` has been edited.
-    :func:`load_config` reads it as-is only if you remove the ``paths``
-    block (so that the master config supplies it).
+    Edit the placeholder ``paths`` before loading the file with
+    :meth:`SimulationConfig.from_yaml`.  :func:`load_config` reads it
+    unedited only if you remove the ``paths`` block, so that the master
+    config supplies it.
 
     Examples
     --------

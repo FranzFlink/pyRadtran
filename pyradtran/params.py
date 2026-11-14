@@ -3,9 +3,9 @@ The ``params`` system: registry, markers, validation and discovery.
 
 Every per-run setting of
 :meth:`~pyradtran.interface.PyRadtranAccessor.run` travels through one
-mapping, ``params={key: value}``. This module defines what the keys and
-values may be, validates them *before* any ``uvspec`` process starts,
-and tells you which options exist:
+mapping, ``params={key: value}``. This module defines the allowed keys
+and values, validates them before any ``uvspec`` process starts, and
+lists the options that exist:
 
 .. autosummary::
 
@@ -22,7 +22,7 @@ Notes
 -----
 .. rubric:: Keys
 
-A key selects *what* is set. There are three kinds:
+A key selects what is set:
 
 ``"albedo"``, ``"aerosol_default"``, ...
     A uvspec option name. Any option of the local libRadtran install is
@@ -30,21 +30,20 @@ A key selects *what* is set. There are three kinds:
     misspelt name is rejected with a "did you mean ...?" hint.
 ``"mol_modify O3"``, ``"wc_modify tau550 set"``, ...
     A multi-word key: the option name followed by its leading
-    arguments; the value supplies the remaining ones. This is how
-    several lines of a repeatable option can be set — and replaced —
-    independently.
+    arguments; the value supplies the remaining ones. Several lines of a
+    repeatable option can be set, and replaced, independently this way.
 ``"simulation_defaults.rte_solver"``, ...
     A dotted configuration path ``<section>.<field>`` (a ``.`` and no
     space in the key). The value is written into the
     :class:`~pyradtran.config.SimulationConfig` of the run and the entry
     is consumed; it never reaches the input file directly. Use it for
-    settings that change how the input file is *built* (``source``,
+    settings that change how the input file is built (``source``,
     ``integrate_wavelength``, ``output_altitudes_km``, ...). An unknown
     path is rejected with a "did you mean ...?" hint.
 
 .. rubric:: Values
 
-A value selects *how* the option is set:
+A value selects how the option is set:
 
 literal number or string
     Written after the keyword: ``{"albedo": 0.85}`` → ``albedo 0.85``.
@@ -65,8 +64,8 @@ literal number or string
     ``wc_modify``, ``crs_model``) one input line per element; on any
     other option space-joined like a tuple.
 
-A plain string that happens to be the name of a dataset variable is
-rejected as ambiguous — write ``Var("name")`` if the variable is meant.
+A plain string that is also the name of a dataset variable is rejected
+as ambiguous; write ``Var("name")`` if the variable is meant.
 
 .. rubric:: Provenance
 
@@ -160,8 +159,8 @@ A typical mapping (``ds`` has the variables ``albedo_sw`` and ``cod``):
 ... }
 >>> result = ds.pyradtran.run(params=params)  # doctest: +SKIP
 
-Look before you run — which options exist, what do they take, and what
-will the input file be?
+Check before you run: which options exist, what they take and what the
+input file will be.
 
 >>> from pyradtran import describe, search_options
 >>> search_options("visibility")  # doctest: +SKIP
@@ -217,10 +216,10 @@ PROV_UNVALIDATED = "unvalidated"
 class Var:
     """Per-point reference to a variable of the input dataset.
 
-    Used as a *value* in the ``params`` mapping of
-    :meth:`~pyradtran.interface.PyRadtranAccessor.run`: instead of one
-    literal for the whole run, the parameter takes — at every simulation
-    point — the value the named variable has at that point.
+    Used as a value in the ``params`` mapping of
+    :meth:`~pyradtran.interface.PyRadtranAccessor.run`: the parameter
+    takes, at every simulation point, the value of the named variable at
+    that point.
 
     Parameters
     ----------
@@ -246,7 +245,7 @@ class Var:
       parameter is omitted for that point: the configuration's line for
       that option is used if there is one, otherwise uvspec's default.
       The point is still simulated.
-    * **Strings are literals.** ``{"albedo": "albedo_sw"}`` is *not* a
+    * **Strings are literals.** ``{"albedo": "albedo_sw"}`` is not a
       reference; a bare string that matches a dataset variable name is
       rejected as ambiguous.
     * Lines produced by a reference are tagged ``dataset-var``
@@ -270,10 +269,9 @@ class Var:
     ...     },
     ... )
 
-    What happens per point, shown with the resolver that ``run`` uses
-    (``schema=None`` keeps the example independent of libRadtran; the
-    stand-in ``config`` is normally a
-    :class:`~pyradtran.config.SimulationConfig`):
+    Per point, shown with the resolver that ``run`` uses (``schema=None``
+    keeps the example independent of libRadtran; the stand-in ``config``
+    is normally a :class:`~pyradtran.config.SimulationConfig`):
 
     >>> import numpy as np
     >>> import xarray as xr
@@ -291,7 +289,7 @@ class Var:
     >>> resolver.resolve_point(ds.isel(time=1))
     ({}, ['albedo'])
 
-    An invalid value is caught before uvspec ever sees it:
+    An invalid value is caught before uvspec sees it:
 
     >>> resolver.resolve_point(ds.isel(time=2))
     Traceback (most recent call last):
@@ -334,10 +332,10 @@ class Var:
 class Raw:
     """Pass a ``params`` value through without any validation.
 
-    Escape hatch for options — or option values — that validation
-    rejects although your ``uvspec`` accepts them: an option the local
-    libRadtran schema does not know (e.g. a patched build), or a value
-    outside the range of the curated :data:`REGISTRY`. The value reaches the input file verbatim,
+    For options, or option values, that validation rejects although your
+    ``uvspec`` accepts them: an option the local libRadtran schema does
+    not know (e.g. a patched build), or a value outside the range of the
+    curated :data:`REGISTRY`. The value reaches the input file verbatim,
     tagged ``unvalidated`` (:data:`PROV_UNVALIDATED`).
 
     Parameters
@@ -354,7 +352,7 @@ class Raw:
 
     Notes
     -----
-    ``Raw`` switches off the typo protection too: a misspelt option name
+    ``Raw`` also switches off the typo protection: a misspelt option name
     is written to the input file as is, and only uvspec will complain.
     A ``Raw`` value is the same for every point; it cannot wrap a
     :class:`Var`.
@@ -368,8 +366,8 @@ class Raw:
     ... }
     >>> result = ds.pyradtran.run(params=params)  # doctest: +SKIP
 
-    With a tiny stand-in schema that only knows ``albedo``, an unknown
-    option name is rejected — unless wrapped in ``Raw``:
+    With a stand-in schema that only knows ``albedo``, an unknown option
+    name is rejected unless wrapped in ``Raw``:
 
     >>> from types import SimpleNamespace
     >>> from pyradtran.params import ParamResolver
@@ -411,7 +409,7 @@ class ParamSpec:
         match).
     applicability : {"both", "solar", "thermal"}
         Which source modes the parameter applies to. Informational
-        only — not enforced.
+        only; not enforced.
     formatter : callable, optional
         ``value -> full input line``. Defaults to ``"{keyword} {value}"``.
     doc : str, default ``""``
@@ -455,7 +453,7 @@ class ParamSpec:
     doc: str = ""
 
     def validate(self, value: Any) -> None:
-        """Raise :class:`~pyradtran.exceptions.ValidationError` if *value* is out of spec.
+        """Raise ``ValidationError`` if *value* is out of spec.
 
         Parameters
         ----------
@@ -480,10 +478,10 @@ class ParamSpec:
         The checks, in order:
 
         1. A spec with ``choices`` accepts exactly those values.
-        2. Otherwise a ``str`` is accepted as is — an escape hatch for
-           raw uvspec syntax such as ``"0 toa"`` for ``zout``.
-           (:class:`ParamResolver` additionally checks such strings
-           against the libRadtran option schema when one is available.)
+        2. Otherwise a ``str`` is accepted as is, which allows raw uvspec
+           syntax such as ``"0 toa"`` for ``zout``.
+           (:class:`ParamResolver` also checks such strings against the
+           libRadtran option schema when one is available.)
         3. Otherwise a ``float`` / ``int`` spec rejects ``True`` /
            ``False`` (a boolean is a flag, not a number).
         4. Otherwise, for ``float`` / ``int`` specs with a
@@ -763,7 +761,7 @@ def get_schema(config) -> Optional[Dict[str, Any]]:
         libRadtran source tree (a directory with ``src_py``) is
         available or the extraction failed. Validation then falls back
         to the curated :data:`REGISTRY` only. The same object is
-        returned on every call — treat it as read-only.
+        returned on every call; treat it as read-only.
 
     See Also
     --------
@@ -873,9 +871,9 @@ def validate_against_schema(entry: Dict[str, Any], key: str, value: Any):
 
     Options flagged ``unmodeled`` (signature unknown to the schema, e.g.
     ``radiosonde``) are accepted with any arguments. Only the syntax of
-    a single line is checked — not whether the option makes sense in
-    combination with others (``parents`` are not enforced), and not
-    whether a file exists.
+    a single line is checked: neither whether the option makes sense in
+    combination with others (``parents`` are not enforced) nor whether a
+    file exists.
 
     Examples
     --------
@@ -892,8 +890,7 @@ def validate_against_schema(entry: Dict[str, Any], key: str, value: Any):
     ...     ],
     ... }
 
-    These three spellings are equivalent and valid (nothing is
-    returned):
+    Three equivalent, valid spellings (nothing is returned):
 
     >>> validate_against_schema(entry, "wc_modify", "tau550 set 12")
     >>> validate_against_schema(entry, "wc_modify", ["tau550", "set", 12])
@@ -995,7 +992,7 @@ def _unknown_option_error(base: str, key: str, schema: Dict[str, Any]) -> str:
 
 
 def _unknown_config_key_error(key: str, config) -> str:
-    """Message for a dotted key that names no ``<section>.<field>`` of *config*."""
+    """Message for a dotted key matching no ``<section>.<field>``."""
     section_name, _, field_name = key.partition(".")
     section = getattr(config, section_name, None)
     if hasattr(section, "__dict__"):  # known section: suggest its fields
@@ -1030,7 +1027,7 @@ def _clean_latex(text: str) -> str:
 
 
 def _signature(entry: Dict[str, Any]) -> str:
-    """Render a usage signature like ``wc_modify <gg|ssa|tau|tau550> <set|scale> <float>``."""
+    """Render a usage signature such as ``albedo <float in [0.0, 1.0]>``."""
     parts = [entry["name"]]
     for t in entry.get("tokens", []):
         if t["kind"] == "choice":
@@ -1071,9 +1068,9 @@ def _resolve_schema_arg(schema, config):
 def describe(name: str, config=None, schema: Optional[Dict[str, Any]] = None) -> str:
     """Return usage, help, and documentation for one uvspec option.
 
-    The text comes from the *locally installed* libRadtran, so it always
-    describes the ``uvspec`` binary you are actually running. Use it to
-    find out what to write as the value of a ``params`` entry.
+    The text comes from the locally installed libRadtran, so it describes
+    the ``uvspec`` binary you run. Use it to find out what to write as
+    the value of a ``params`` entry.
 
     Parameters
     ----------
@@ -1092,14 +1089,14 @@ def describe(name: str, config=None, schema: Optional[Dict[str, Any]] = None) ->
     str
         Multi-line text, meant to be printed:
 
-        * line 1 — the usage signature: ``<a|b>`` is a required choice,
+        * line 1: the usage signature. ``<a|b>`` is a required choice,
           ``<float>`` a required value (with its valid range, if any),
           ``[...]`` an optional token, ``|<file>`` marks a choice that
           also accepts a file name, and a trailing ``<...>`` means the
-          arguments are not described by the schema;
-        * line 2 — the option group, plus ``(repeatable)`` if the option
+          schema does not describe the arguments;
+        * line 2: the option group, plus ``(repeatable)`` if the option
           may be given several times (pass a ``list`` in ``params``);
-        * ``requires: ...`` — options this one depends on, if any;
+        * ``requires: ...``: options this one depends on, if any;
         * the one-line help and the long documentation from the
           libRadtran manual (LaTeX markup lightly cleaned up).
 
@@ -1119,7 +1116,7 @@ def describe(name: str, config=None, schema: Optional[Dict[str, Any]] = None) ->
 
     Examples
     --------
-    What does ``wc_modify`` take? (libRadtran 2.0.6; output shortened)
+    The arguments of ``wc_modify`` (libRadtran 2.0.6; output shortened):
 
     >>> from pyradtran import describe
     >>> print(describe("wc_modify"))  # doctest: +SKIP
@@ -1142,9 +1139,9 @@ def describe(name: str, config=None, schema: Optional[Dict[str, Any]] = None) ->
         wavelength interval defined by `wavelength` does contain 550nm.
     ...
 
-    So a cloud optical thickness of 12 at 550 nm is
-    ``params={"wc_modify": "tau550 set 12"}`` — or, because the option
-    is repeatable, a list such as
+    A cloud optical thickness of 12 at 550 nm is therefore
+    ``params={"wc_modify": "tau550 set 12"}`` or, because the option is
+    repeatable, a list such as
     ``{"wc_modify": ["tau550 set 12", "gg set 0.85"]}``.
 
     A simple numeric option shows its valid range:
@@ -1170,8 +1167,7 @@ def describe(name: str, config=None, schema: Optional[Dict[str, Any]] = None) ->
         ...
     KeyError: "Unknown uvspec option 'wc_modfy'; close matches: wc_modify, ic_modify, mol_modify"
 
-    The same function on a hand-written schema (runs without
-    libRadtran):
+    On a hand-written schema (runs without libRadtran):
 
     >>> schema = {
     ...     "wc_modify": {
@@ -1258,9 +1254,9 @@ def search_options(
 
     Notes
     -----
-    Because the long documentation is searched too, an option is also
-    found when it is merely *mentioned* in the text of another one;
-    short search terms can therefore return many hits.
+    The long documentation is searched too, so an option is also returned
+    when its text only mentions the term in passing. Short search terms
+    can return many hits.
 
     Examples
     --------
@@ -1304,18 +1300,17 @@ def search_options(
 class ParamResolver:
     """Resolve a user ``params`` mapping into validated per-point values.
 
-    This is the engine behind the ``params`` argument of
+    The engine behind the ``params`` argument of
     :meth:`~pyradtran.interface.PyRadtranAccessor.run` and
-    :meth:`~pyradtran.interface.PyRadtranAccessor.explain`.
-    Responsibilities:
+    :meth:`~pyradtran.interface.PyRadtranAccessor.explain`. It
 
-    * Apply and **consume** dotted config overrides
-      (``"simulation_defaults.albedo_value"``) onto *config* — they never
-      reach the uvspec input file directly.
-    * Split remaining entries into literals (validated immediately, in
-      the constructor) and :class:`Var` references (validated per point,
-      in :meth:`resolve_point`).
-    * Tag every value with its provenance (``PROV_*`` constants).
+    * applies and consumes dotted config overrides
+      (``"simulation_defaults.albedo_value"``) on *config*; they never
+      reach the uvspec input file directly;
+    * splits the remaining entries into literals (validated in the
+      constructor) and :class:`Var` references (validated per point, in
+      :meth:`resolve_point`);
+    * tags every value with its provenance (``PROV_*`` constants).
 
     Parameters
     ----------
@@ -1328,7 +1323,7 @@ class ParamResolver:
         libRadtran option schema used to validate keys outside the
         curated :data:`REGISTRY`. ``"auto"`` discovers it from *config*
         (:func:`get_schema`); ``None`` disables schema validation
-        (registry only — unknown keys pass through as ``unvalidated``);
+        (registry only; unknown keys pass through as ``unvalidated``);
         a ``dict`` is used as given (tests).
 
     Attributes
@@ -1380,16 +1375,15 @@ class ParamResolver:
     (:meth:`SimulationDefaults.validate
     <pyradtran.config.SimulationDefaults.validate>`), so an invalid
     value set through a dotted key or by attribute assignment is
-    reported here as well. ``rte_solver``
-    is checked against the schema; without one, against the solver list
-    of libRadtran 2.0.6.
+    reported here too. ``rte_solver`` is checked against the schema;
+    without one, against the solver list of libRadtran 2.0.6.
 
     Examples
     --------
-    The examples use ``schema=None`` and a light stand-in for the
-    configuration so that they run without libRadtran; normally *config*
-    comes from :func:`~pyradtran.config.load_config` and the schema is
-    discovered automatically.
+    The examples use ``schema=None`` and a stand-in configuration so
+    that they run without libRadtran; normally *config* comes from
+    :func:`~pyradtran.config.load_config` and the schema is discovered
+    automatically.
 
     >>> from types import SimpleNamespace
     >>> from pyradtran import ParamResolver, Raw, Var
@@ -1454,7 +1448,7 @@ class ParamResolver:
         ...
     pyradtran.exceptions.ValidationError: Invalid parameter value(s): 'wc_modfy' is not a known uvspec option of the local libRadtran install; did you mean wc_modify / mol_modify? (wrap the value in Raw(...) to bypass validation)
 
-    A misspelt configuration path is an error as well:
+    A misspelt configuration path is also an error:
 
     >>> ParamResolver(config, {"simulation_defaults.rte_solvr": "disort"}, schema=None)
     Traceback (most recent call last):
@@ -1527,21 +1521,12 @@ class ParamResolver:
     def _validate_key_value(self, key: str, value: Any):
         """Validate and normalise one literal entry.
 
-        Curated :data:`REGISTRY` entries win; otherwise the libRadtran
-        schema (when available) validates tokens and rejects unknown
-        option names. Without a schema, unknown keys pass through
-        unvalidated (legacy behaviour). Tuples become space-joined
-        strings; a list on a repeatable (``non_unique``) option becomes
-        a list of line strings (the builder emits one line each), while
-        a list on a single-line option is space-joined.
-
-        Returns
-        -------
-        (value, provenance)
-
-        Raises
-        ------
-        ValidationError
+        :data:`REGISTRY` entries win; otherwise the schema, when
+        available, validates tokens and rejects unknown option names.
+        Without a schema, unknown keys pass through unvalidated. Tuples
+        are space-joined; a list on a repeatable (``non_unique``) option
+        becomes a list of line strings, any other list is space-joined.
+        Returns ``(value, provenance)``.
         """
         spec = REGISTRY.get(key)
         if spec is not None:
@@ -1595,7 +1580,7 @@ class ParamResolver:
             ``params-literal``, :class:`Raw` values (and, without a
             schema, non-registry keys) tagged ``unvalidated``, and
             ``False`` for options to omit. :class:`Var` references are
-            not included — see :meth:`resolve_point`.
+            not included; see :meth:`resolve_point`.
 
         Examples
         --------
@@ -1612,11 +1597,10 @@ class ParamResolver:
         return dict(self._static)
 
     def validate_var_targets(self, ds) -> None:
-        """Check every :class:`Var` target (and hijack-suspects) against *ds*.
+        """Check :class:`Var` targets and ambiguous strings against *ds*.
 
         Called once per run, before any point is resolved, so that a
-        misspelt variable name fails fast instead of after hours of
-        simulation.
+        misspelt variable name fails before any simulation starts.
 
         Parameters
         ----------
@@ -1627,7 +1611,7 @@ class ParamResolver:
         ------
         ValidationError
             If a ``Var`` names a variable missing from *ds*, or if a bare
-            string literal matches a dataset variable name (ambiguous —
+            string literal matches a dataset variable name (ambiguous;
             the user almost certainly meant ``Var``). All problems are
             reported in one exception.
 
@@ -1642,7 +1626,7 @@ class ParamResolver:
         ...     config, {"sur_temperature": Var("tsurf")}, schema=None
         ... ).validate_var_targets(ds)
 
-        A forgotten ``Var`` — the string would otherwise be written to
+        A forgotten ``Var``; the string would otherwise be written to
         the input file literally:
 
         >>> ParamResolver(
