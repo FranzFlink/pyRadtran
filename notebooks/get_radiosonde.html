@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Radiosonde Atmosphere Generator &#8212; PyRadtran</title>
+    <title>Radiosonde atmosphere generator &#8212; PyRadtran</title>
   
   
   
@@ -34,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -61,8 +62,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Advanced: Multi-Dimensional Cloud Experiment" href="arctic_cloud_experiment.html" />
-    <link rel="prev" title="Advanced: Mixed-Phase Clouds (+ ERA5 data)" href="mixed_phase_cloud.html" />
+    <link rel="next" title="Lapse-rate feedback in a single column" href="lapse_rate_feedback.html" />
+    <link rel="prev" title="ERA5 atmosphere" href="era5_atmosphere.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -175,152 +176,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials/atmosphere.html">Atmospheres</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -459,7 +457,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Radiosonde Atmosphere Generator</h1>
+    <h1>Radiosonde atmosphere generator</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -469,15 +467,15 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How It Works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How it works</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-one-step-atmosphere-file-generation">Example 1: One-Step Atmosphere File Generation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-generated-file">Inspect the Generated File</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-one-step-file-generation">Example 1: one-step file generation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-generated-file">Inspect the generated file</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-step-by-step-station-search-and-data-retrieval">Example 2: Step-by-Step — Station Search and Data Retrieval</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-atmosphere-file-with-pyradtran">Using the Atmosphere File with PyRadtran</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api-reference">API Reference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-station-search-and-retrieval-step-by-step">Example 2: station search and retrieval step by step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-the-atmosphere-file-in-a-simulation">Use the atmosphere file in a simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api-reference">API reference</a></li>
 </ul>
             </nav>
         </div>
@@ -490,26 +488,26 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="radiosonde-atmosphere-generator">
-<h1>Radiosonde Atmosphere Generator<a class="headerlink" href="#radiosonde-atmosphere-generator" title="Link to this heading">#</a></h1>
-<p>In this notebook, we’ll use pyRadtran’s <code class="docutils literal notranslate"><span class="pre">RadiosondeAtmosphereGenerator</span></code> to download radiosonde profiles from the IGRA database and convert them into atmosphere files compatible with libRadtran. This allows us to run simulations with realistic, observation-based atmospheric profiles.</p>
+<h1>Radiosonde atmosphere generator<a class="headerlink" href="#radiosonde-atmosphere-generator" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">RadiosondeAtmosphereGenerator</span></code> downloads a radiosonde profile from the IGRA archive and writes it as a libRadtran atmosphere file. It needs the optional <code class="docutils literal notranslate"><span class="pre">siphon</span></code> package and network access.</p>
 <section id="how-it-works">
-<h2>How It Works<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
+<h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
 <p>The generator:</p>
 <ol class="arabic simple">
 <li><p>Downloads the global <a class="reference external" href="https://www.ncei.noaa.gov/products/weather-balloon/integrated-global-radiosonde-archive">IGRA v2</a> station list from NOAA/NCEI</p></li>
-<li><p>Finds the closest <strong>active</strong> radiosonde stations to your target location using the Haversine formula</p></li>
+<li><p>Finds the closest active radiosonde stations to your target location using the Haversine formula</p></li>
 <li><p>Queries the IGRA database (via the <a class="reference external" href="https://unidata.github.io/siphon/">Siphon</a> library) for the nearest available sounding in time</p></li>
 <li><p>Converts the sounding (pressure, temperature, dewpoint) into a libRadtran <code class="docutils literal notranslate"><span class="pre">radiosonde</span></code> atmosphere file</p></li>
 </ol>
-<p>The output file contains columns: <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">(hPa)</span></code>, <code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">(K)</span></code>, <code class="docutils literal notranslate"><span class="pre">H₂O</span> <span class="pre">(RH</span> <span class="pre">%)</span></code>, sorted from top-of-atmosphere to surface.</p>
+<p>The output file has the columns <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">(hPa)</span></code>, <code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">(K)</span></code>, <code class="docutils literal notranslate"><span class="pre">H₂O</span> <span class="pre">(RH</span> <span class="pre">%)</span></code>, sorted from top of atmosphere to surface.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Retrieving radiosonde data from the IGRA database can take 3–5 minutes. IGRA data availability typically lags by a few weeks to months. If you get an <code class="docutils literal notranslate"><span class="pre">InputGenerationError</span></code> saying no data was found, try an older date.</p>
+<p>Retrieving data from IGRA can take a few minutes when the archive is slow. IGRA data typically lag by a few weeks to months. If an <code class="docutils literal notranslate"><span class="pre">InputGenerationError</span></code> says no data was found, try an older date.</p>
 </div>
 </section>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
-<p>The radiosonde generator requires the <strong>siphon</strong> package, which is an <strong>optional</strong> dependency of pyRadtran:</p>
+<p>Install <code class="docutils literal notranslate"><span class="pre">siphon</span></code>, an optional dependency of pyRadtran:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>siphon
 <span class="c1"># or</span>
 conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>siphon
@@ -543,9 +541,9 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
 </div>
 </div>
 </section>
-<section id="example-1-one-step-atmosphere-file-generation">
-<h2>Example 1: One-Step Atmosphere File Generation<a class="headerlink" href="#example-1-one-step-atmosphere-file-generation" title="Link to this heading">#</a></h2>
-<p>The simplest way to get a radiosonde atmosphere file is with <code class="docutils literal notranslate"><span class="pre">RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file()</span></code>. You provide a target time and location — the generator finds the closest station and sounding automatically.</p>
+<section id="example-1-one-step-file-generation">
+<h2>Example 1: one-step file generation<a class="headerlink" href="#example-1-one-step-file-generation" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file()</span></code> takes a target time and location, finds the closest station and sounding, and writes the file.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
@@ -568,7 +566,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:pyradtran.io:Found sounding for BJORNOYA at 2024-06-07 12:00:00 UTC with distance 521.61 km
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:pyradtran.io:Found sounding for NY-ALESUND II at 2024-06-07 11:00 UTC with distance 0.19 km
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:pyradtran.io:Created radiosonde atmosphere file: work/sonde_nya.dat
@@ -580,147 +578,45 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
 </div>
 </div>
 <section id="inspect-the-generated-file">
-<h3>Inspect the Generated File<a class="headerlink" href="#inspect-the-generated-file" title="Link to this heading">#</a></h3>
-<p>The output is a simple text file that libRadtran reads directly via the <code class="docutils literal notranslate"><span class="pre">radiosonde</span></code> input option. Each row is one pressure level with pressure (hPa), temperature (K) and relative humidity (%).</p>
+<h3>Inspect the generated file<a class="headerlink" href="#inspect-the-generated-file" title="Link to this heading">#</a></h3>
+<p>libRadtran reads this text file through the <code class="docutils literal notranslate"><span class="pre">radiosonde</span></code> input option. Each row is one pressure level with pressure (hPa), temperature (K) and relative humidity (%), from the top down.</p>
+<p>The header names the station, the launch time and the distance from the target; check it before you use a profile. Here it is the Ny-Ålesund sounding launched at 11 UTC, 0.19 km from the target. The search accepts launches off the nominal 00/12 UTC times, so a station that launches at 11 UTC is not skipped in favour of one farther away.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inspect the generated atmosphere file</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;work/sonde_nya.dat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Header and the lowest levels of the generated file</span>
+<span class="n">lines</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;work/sonde_nya.dat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+<span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">l</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">header</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;... </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> levels; lowest ten:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">:]))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span># Radiosonde atmosphere profile
-# BJORNOYA at 2024-06-07 12:00 UTC with distance 521.61 km
+# NY-ALESUND II at 2024-06-07 11:00 UTC with distance 0.19 km
 # p(hPa)  T(K)  h2o(RH%)
-10.49  238.75  0.471
-10.60  238.15  0.469
-11.34  236.95  0.466
-11.51  236.55  0.463
-11.93  235.35  0.460
-12.64  233.75  0.461
-12.85  233.65  0.465
-13.44  233.45  0.460
-14.17  232.75  0.463
-16.15  231.25  0.483
-17.15  230.75  0.518
-17.63  231.05  0.502
-18.76  230.05  0.481
-19.18  229.25  0.533
-20.00  228.75  0.517
-22.65  226.85  0.606
-24.97  228.25  0.565
-27.51  227.55  0.561
-29.17  226.55  0.616
-30.00  226.65  0.609
-31.98  226.35  0.651
-34.20  226.65  0.619
-37.73  226.75  0.633
-40.72  226.15  0.633
-42.60  225.35  0.669
-43.85  225.65  0.681
-44.95  226.45  0.666
-47.76  226.55  0.659
-50.00  226.65  0.640
-54.17  225.85  0.666
-56.99  224.95  0.688
-58.42  224.45  0.741
-59.70  224.65  0.749
-67.49  225.45  0.720
-68.85  225.45  0.720
-70.00  225.05  0.704
-71.29  224.25  0.771
-71.89  224.05  0.775
-78.13  224.85  0.783
-81.60  225.85  0.761
-86.94  226.15  0.700
-96.62  226.75  0.700
-100.00  226.05  0.732
-100.12  226.05  0.732
-102.44  225.35  0.779
-110.70  226.45  0.761
-114.75  226.95  0.744
-120.21  227.05  0.761
-123.71  226.65  0.757
-133.34  227.95  0.749
-138.63  228.25  0.761
-141.34  228.95  0.729
-141.52  228.95  0.729
-146.75  228.15  0.808
-150.00  228.65  0.804
-154.38  228.05  0.858
-168.46  228.05  1.008
-184.20  227.05  1.090
-191.46  225.35  1.317
-193.98  223.75  1.710
-198.40  223.85  2.248
-200.00  223.35  2.418
-203.04  223.25  2.770
-203.35  223.05  2.834
-210.61  218.15  14.506
-220.68  220.25  14.743
-231.34  219.85  18.254
-233.33  218.65  27.658
-236.23  218.05  47.792
-248.14  218.35  59.508
-250.00  218.65  62.681
-253.73  219.35  60.590
-263.79  220.65  63.300
-280.74  223.45  63.384
-300.00  227.25  59.513
-309.82  229.05  54.847
-310.95  229.25  54.914
-324.39  231.35  64.235
-340.48  234.05  68.565
-353.98  236.15  82.408
-400.00  243.55  57.085
-422.16  246.75  47.779
-432.97  247.75  62.353
-437.45  248.15  42.081
-445.20  249.15  67.592
-453.16  250.15  33.178
-459.13  250.65  38.983
-495.38  253.75  81.947
-500.00  254.45  79.935
-515.02  256.45  72.378
-522.52  257.35  69.509
-528.28  257.55  75.776
-539.37  257.35  100.000
-542.07  257.75  100.000
-596.59  263.85  22.065
-605.65  264.95  14.603
-629.40  266.65  35.168
-678.38  269.75  37.065
-681.53  269.85  22.628
-697.09  270.85  7.935
-700.00  270.85  18.904
-720.90  272.05  50.437
-738.72  273.65  28.066
-755.93  274.95  13.304
-762.70  275.55  9.122
-767.00  275.75  5.617
-780.44  275.35  52.178
-835.80  278.65  58.471
-842.91  279.15  17.948
-850.00  279.35  24.786
-888.20  279.45  82.262
-909.02  280.15  63.282
-925.00  281.05  50.687
-927.70  281.15  48.881
-961.94  279.45  58.247
-968.07  276.95  74.579
-979.73  273.35  100.000
-1000.00  274.45  100.000
-1011.60  275.95  94.466
+... 154 levels; lowest ten:
+896.74  274.55  37.348
+925.00  275.65  42.412
+964.51  277.75  48.637
+981.79  277.25  63.059
+988.62  277.55  62.667
+1000.00  278.05  66.577
+1004.40  277.45  89.965
+1016.42  278.55  89.419
+1018.11  280.05  84.090
+1018.68  279.05  81.631
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 </section>
-<section id="example-2-step-by-step-station-search-and-data-retrieval">
-<h2>Example 2: Step-by-Step — Station Search and Data Retrieval<a class="headerlink" href="#example-2-step-by-step-station-search-and-data-retrieval" title="Link to this heading">#</a></h2>
-<p>If you need more control, you can use the individual static methods to find stations and retrieve soundings separately.</p>
+<section id="example-2-station-search-and-retrieval-step-by-step">
+<h2>Example 2: station search and retrieval step by step<a class="headerlink" href="#example-2-station-search-and-retrieval-step-by-step" title="Link to this heading">#</a></h2>
+<p>For more control, use the individual static methods to find stations and retrieve soundings separately.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Get the global IGRA station list</span>
@@ -731,7 +627,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total IGRA stations: 2923
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total IGRA stations: 2932
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -786,7 +682,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
       <td>ABU DHABI INTERNATIONAL AIRPOR</td>
       <td>1983</td>
       <td>2026</td>
-      <td>41254</td>
+      <td>41297</td>
     </tr>
     <tr>
       <th>2</th>
@@ -805,7 +701,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
       <td>AFM00040911</td>
       <td>36.7000</td>
       <td>67.2000</td>
-      <td>378.0</td>
+      <td>-999.9</td>
       <td>NaN</td>
       <td>MAZAR-I-SHARIF</td>
       <td>2010</td>
@@ -817,7 +713,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
       <td>AFM00040913</td>
       <td>36.6667</td>
       <td>68.9167</td>
-      <td>433.0</td>
+      <td>-999.9</td>
       <td>NaN</td>
       <td>KUNDUZ</td>
       <td>2010</td>
@@ -864,7 +760,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
   </thead>
   <tbody>
     <tr>
-      <th>1993</th>
+      <th>1999</th>
       <td>SVM00001004</td>
       <td>NY-ALESUND II</td>
       <td>78.9233</td>
@@ -872,7 +768,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
       <td>0.189080</td>
     </tr>
     <tr>
-      <th>1994</th>
+      <th>2000</th>
       <td>SVM00001028</td>
       <td>BJORNOYA</td>
       <td>74.5167</td>
@@ -880,7 +776,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
       <td>521.610006</td>
     </tr>
     <tr>
-      <th>860</th>
+      <th>863</th>
       <td>GLM00004320</td>
       <td>DANMARKSHAVN</td>
       <td>76.7694</td>
@@ -888,7 +784,7 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
       <td>744.833867</td>
     </tr>
     <tr>
-      <th>1725</th>
+      <th>1730</th>
       <td>RSM00020046</td>
       <td>POLARGMO IM. E.T. KRENKELJA</td>
       <td>80.6264</td>
@@ -896,12 +792,12 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
       <td>903.903991</td>
     </tr>
     <tr>
-      <th>1241</th>
+      <th>1244</th>
       <td>JNM00001001</td>
-      <td>JAN MAYEN</td>
-      <td>70.9331</td>
-      <td>-8.6667</td>
-      <td>1056.578900</td>
+      <td>JAN MAYEN (1001-1)</td>
+      <td>70.9397</td>
+      <td>-8.6678</td>
+      <td>1055.925665</td>
     </tr>
   </tbody>
 </table>
@@ -926,38 +822,14 @@ micromamba<span class="w"> </span>install<span class="w"> </span>siphon
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:Trying station NY-ALESUND II (SVM00001004) at 2024-06-07 12:00:00
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:Trying station NY-ALESUND II (SVM00001004)
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:No data for NY-ALESUND II at 2024-06-07 12:00:00: No dates match selection. This selection has data from 1992-10-06 12:00:00 to 1992-10-06 12:00:00.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:pyradtran.io:Found sounding for NY-ALESUND II at 2024-06-07 11:00 UTC with distance 0.19 km
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:Trying station NY-ALESUND II (SVM00001004) at 2024-06-07 00:00:00
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:No data for NY-ALESUND II at 2024-06-07 00:00:00: No dates match selection. This selection has data from 1992-10-06 12:00:00 to 1992-10-06 12:00:00.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:Trying station NY-ALESUND II (SVM00001004) at 2024-06-06 12:00:00
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:No data for NY-ALESUND II at 2024-06-06 12:00:00: No dates match selection. This selection has data from 1992-10-06 12:00:00 to 1992-10-06 12:00:00.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:Trying station NY-ALESUND II (SVM00001004) at 2024-06-06 00:00:00
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:No data for NY-ALESUND II at 2024-06-06 00:00:00: No dates match selection. This selection has data from 1992-10-06 12:00:00 to 1992-10-06 12:00:00.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEBUG:pyradtran.io:Trying station BJORNOYA (SVM00001028) at 2024-06-07 12:00:00
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:pyradtran.io:Found sounding for BJORNOYA at 2024-06-07 12:00:00 UTC with distance 521.61 km
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Station: BJORNOYA at 2024-06-07 12:00 UTC with distance 521.61 km
-Sounding levels: 119
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Station: NY-ALESUND II at 2024-06-07 11:00 UTC with distance 0.19 km
+Sounding levels: 154
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -1002,190 +874,190 @@ Sounding levels: 119
       <td>2</td>
       <td>1</td>
       <td>0</td>
-      <td>1011.60</td>
+      <td>1018.68</td>
       <td>2</td>
-      <td>20</td>
+      <td>17</td>
       <td>0</td>
-      <td>2.8</td>
+      <td>5.9</td>
       <td>2</td>
       <td>NaN</td>
-      <td>82</td>
-      <td>10.0</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-9.9</td>
-      <td>-1.4</td>
-      <td>2.0</td>
+      <td>285</td>
+      <td>0.7</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>0.7</td>
+      <td>-0.2</td>
+      <td>3.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1</td>
-      <td>0</td>
-      <td>16</td>
-      <td>1000.00</td>
-      <td>0</td>
-      <td>113</td>
       <td>2</td>
-      <td>1.3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1018.11</td>
+      <td>2</td>
+      <td>22</td>
+      <td>2</td>
+      <td>6.9</td>
       <td>2</td>
       <td>NaN</td>
-      <td>86</td>
-      <td>11.9</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-11.9</td>
-      <td>-0.8</td>
-      <td>1.3</td>
+      <td>330</td>
+      <td>0.3</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>0.2</td>
+      <td>-0.3</td>
+      <td>4.4</td>
     </tr>
     <tr>
       <th>2</th>
       <td>2</td>
       <td>0</td>
-      <td>52</td>
-      <td>979.73</td>
-      <td>0</td>
-      <td>278</td>
+      <td>3</td>
+      <td>1016.42</td>
       <td>2</td>
-      <td>0.2</td>
+      <td>36</td>
+      <td>2</td>
+      <td>5.4</td>
       <td>2</td>
       <td>NaN</td>
-      <td>98</td>
-      <td>17.7</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-17.5</td>
-      <td>2.5</td>
-      <td>0.2</td>
+      <td>334</td>
+      <td>0.3</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>0.1</td>
+      <td>-0.3</td>
+      <td>3.8</td>
     </tr>
     <tr>
       <th>3</th>
       <td>2</td>
       <td>0</td>
-      <td>78</td>
-      <td>968.07</td>
+      <td>24</td>
+      <td>1004.40</td>
       <td>0</td>
-      <td>374</td>
+      <td>133</td>
       <td>2</td>
-      <td>3.8</td>
+      <td>4.3</td>
       <td>2</td>
       <td>NaN</td>
-      <td>114</td>
-      <td>18.6</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-17.0</td>
-      <td>7.6</td>
-      <td>-0.3</td>
+      <td>272</td>
+      <td>1.3</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>1.3</td>
+      <td>-0.0</td>
+      <td>2.8</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>2</td>
+      <td>1</td>
       <td>0</td>
-      <td>92</td>
-      <td>961.94</td>
+      <td>32</td>
+      <td>1000.00</td>
       <td>0</td>
-      <td>426</td>
+      <td>169</td>
       <td>2</td>
-      <td>6.3</td>
+      <td>4.9</td>
       <td>2</td>
       <td>NaN</td>
-      <td>111</td>
-      <td>17.9</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-16.7</td>
-      <td>6.4</td>
-      <td>-1.3</td>
+      <td>273</td>
+      <td>1.0</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>1.0</td>
+      <td>-0.1</td>
+      <td>-0.8</td>
     </tr>
     <tr>
       <th>5</th>
       <td>2</td>
       <td>0</td>
-      <td>174</td>
-      <td>927.70</td>
+      <td>52</td>
+      <td>988.62</td>
       <td>0</td>
-      <td>725</td>
+      <td>262</td>
       <td>2</td>
-      <td>8.0</td>
+      <td>4.4</td>
       <td>2</td>
       <td>NaN</td>
-      <td>105</td>
-      <td>17.1</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-16.5</td>
-      <td>4.4</td>
+      <td>47</td>
+      <td>0.1</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>-0.1</td>
+      <td>-0.1</td>
       <td>-2.1</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>1</td>
-      <td>0</td>
-      <td>181</td>
-      <td>925.00</td>
-      <td>0</td>
-      <td>749</td>
       <td>2</td>
-      <td>7.9</td>
+      <td>0</td>
+      <td>65</td>
+      <td>981.79</td>
+      <td>0</td>
+      <td>318</td>
+      <td>2</td>
+      <td>4.1</td>
       <td>2</td>
       <td>NaN</td>
-      <td>104</td>
-      <td>17.4</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-16.9</td>
-      <td>4.2</td>
-      <td>-1.7</td>
+      <td>127</td>
+      <td>1.2</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>-1.0</td>
+      <td>0.7</td>
+      <td>-2.3</td>
     </tr>
     <tr>
       <th>7</th>
       <td>2</td>
       <td>0</td>
-      <td>214</td>
-      <td>909.02</td>
+      <td>98</td>
+      <td>964.51</td>
       <td>0</td>
-      <td>892</td>
+      <td>463</td>
       <td>2</td>
-      <td>7.0</td>
+      <td>4.6</td>
       <td>2</td>
       <td>NaN</td>
-      <td>101</td>
-      <td>17.0</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-16.7</td>
-      <td>3.2</td>
-      <td>0.5</td>
+      <td>106</td>
+      <td>3.9</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>-3.7</td>
+      <td>1.1</td>
+      <td>-5.3</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>2</td>
+      <td>1</td>
       <td>0</td>
-      <td>262</td>
-      <td>888.20</td>
+      <td>178</td>
+      <td>925.00</td>
       <td>0</td>
-      <td>1082</td>
+      <td>802</td>
       <td>2</td>
-      <td>6.3</td>
+      <td>2.5</td>
       <td>2</td>
       <td>NaN</td>
-      <td>107</td>
-      <td>15.2</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-14.5</td>
-      <td>4.4</td>
-      <td>3.5</td>
+      <td>89</td>
+      <td>4.9</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>-4.9</td>
+      <td>-0.1</td>
+      <td>-9.0</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>1</td>
-      <td>0</td>
-      <td>352</td>
-      <td>850.00</td>
-      <td>0</td>
-      <td>1443</td>
       <td>2</td>
-      <td>6.2</td>
+      <td>0</td>
+      <td>229</td>
+      <td>896.74</td>
+      <td>0</td>
+      <td>1052</td>
+      <td>2</td>
+      <td>1.4</td>
       <td>2</td>
       <td>NaN</td>
-      <td>109</td>
-      <td>10.6</td>
-      <td>2024-06-07 12:00:00</td>
-      <td>-10.0</td>
-      <td>3.5</td>
-      <td>-12.5</td>
+      <td>87</td>
+      <td>4.1</td>
+      <td>2024-06-07 11:00:00</td>
+      <td>-4.1</td>
+      <td>-0.2</td>
+      <td>-11.6</td>
     </tr>
   </tbody>
 </table>
@@ -1216,13 +1088,13 @@ Sounding levels: 119
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3681ec410623befb245969dec53c7034780a02b005c966ba6295c36a5f02336b.png" src="../_images/3681ec410623befb245969dec53c7034780a02b005c966ba6295c36a5f02336b.png" />
+<img alt="../_images/30ffae52a7f6ee81848ab06ae479b82ac44bd60ef556cf8b2e2db58a886572b8.png" src="../_images/30ffae52a7f6ee81848ab06ae479b82ac44bd60ef556cf8b2e2db58a886572b8.png" />
 </div>
 </div>
 </section>
-<section id="using-the-atmosphere-file-with-pyradtran">
-<h2>Using the Atmosphere File with PyRadtran<a class="headerlink" href="#using-the-atmosphere-file-with-pyradtran" title="Link to this heading">#</a></h2>
-<p>Once you have the atmosphere file, pass it to a simulation via <code class="docutils literal notranslate"><span class="pre">params</span></code>:</p>
+<section id="use-the-atmosphere-file-in-a-simulation">
+<h2>Use the atmosphere file in a simulation<a class="headerlink" href="#use-the-atmosphere-file-in-a-simulation" title="Link to this heading">#</a></h2>
+<p>Pass the file to a simulation via <code class="docutils literal notranslate"><span class="pre">params</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_sim</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
     <span class="n">config_path</span><span class="o">=</span><span class="s2">&quot;config/my_config.yaml&quot;</span><span class="p">,</span>
     <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1230,10 +1102,10 @@ Sounding levels: 119
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">H2O</span> <span class="pre">RH</span></code> suffix tells libRadtran that the water vapour column is in relative humidity (%). See the <a class="reference external" href="http://www.libradtran.org/doku.php">libRadtran documentation</a> for other supported formats (e.g., <code class="docutils literal notranslate"><span class="pre">H2O</span> <span class="pre">VMR</span></code> for volume mixing ratio).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">H2O</span> <span class="pre">RH</span></code> suffix tells libRadtran that the water vapour column is in relative humidity (%). See the <a class="reference external" href="http://www.libradtran.org/doku.php">libRadtran documentation</a> for other supported formats (e.g. <code class="docutils literal notranslate"><span class="pre">H2O</span> <span class="pre">VMR</span></code> for volume mixing ratio), and <a class="reference internal" href="../guide/atmosphere.html"><span class="doc">Atmosphere &amp; ERA5</span></a> for when to use which atmosphere source.</p>
 </section>
 <section id="api-reference">
-<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
+<h2>API reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Method</p></th>
@@ -1290,20 +1162,20 @@ Sounding levels: 119
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="mixed_phase_cloud.html"
+       href="era5_atmosphere.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Advanced: Mixed-Phase Clouds (+ ERA5 data)</p>
+        <p class="prev-next-title">ERA5 atmosphere</p>
       </div>
     </a>
     <a class="right-next"
-       href="arctic_cloud_experiment.html"
+       href="lapse_rate_feedback.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Advanced: Multi-Dimensional Cloud Experiment</p>
+        <p class="prev-next-title">Lapse-rate feedback in a single column</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1323,15 +1195,15 @@ Sounding levels: 119
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How It Works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How it works</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#requirements">Requirements</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-one-step-atmosphere-file-generation">Example 1: One-Step Atmosphere File Generation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-generated-file">Inspect the Generated File</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1-one-step-file-generation">Example 1: one-step file generation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-the-generated-file">Inspect the generated file</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-step-by-step-station-search-and-data-retrieval">Example 2: Step-by-Step — Station Search and Data Retrieval</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-atmosphere-file-with-pyradtran">Using the Atmosphere File with PyRadtran</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api-reference">API Reference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2-station-search-and-retrieval-step-by-step">Example 2: station search and retrieval step by step</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-the-atmosphere-file-in-a-simulation">Use the atmosphere file in a simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api-reference">API reference</a></li>
 </ul>
   </nav></div>
 

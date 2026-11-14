@@ -1,0 +1,904 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Lapse-rate feedback in a single column &#8212; PyRadtran</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/lapse_rate_feedback';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Clouds" href="../tutorials/clouds.html" />
+    <link rel="prev" title="Radiosonde atmosphere generator" href="get_radiosonde.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="PyRadtran - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="PyRadtran - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/concepts.html">How pyRadtran works</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/clouds.html">Clouds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/outputs.html">Results &amp; Post-Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Cookbook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials/atmosphere.html">Atmospheres</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">Example config files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/lapse_rate_feedback.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Lapse-rate feedback in a single column</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#warming-patterns">Warming patterns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-and-diagnose">Run and diagnose</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretation">Interpretation</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="lapse-rate-feedback-in-a-single-column">
+<h1>Lapse-rate feedback in a single column<a class="headerlink" href="#lapse-rate-feedback-in-a-single-column" title="Link to this heading">#</a></h1>
+<p>The increase of outgoing longwave radiation (OLR) for a given surface warming depends on where in the column the atmosphere warms. Two clear-sky columns, the AFGL tropical (<code class="docutils literal notranslate"><span class="pre">afglt</span></code>) and sub-arctic winter (<code class="docutils literal notranslate"><span class="pre">afglsw</span></code>) atmospheres, get three thermal runs each:</p>
+<ol class="arabic simple">
+<li><p><strong>base</strong>: the unperturbed profile;</p></li>
+<li><p><strong>Planck</strong>: surface and every level warmed by <span class="math notranslate nohighlight">\(\Delta T_s = 1\)</span> K;</p></li>
+<li><p><strong>lapse rate</strong>: the same 1 K surface warming with a region-typical vertical pattern.</p></li>
+</ol>
+<p>Specific humidity and all other gas mixing ratios stay fixed; heights are recomputed hydrostatically, so each layer keeps its gas mass. Sign convention: a positive feedback amplifies warming.</p>
+<div class="math notranslate nohighlight">
+\[
+\lambda_\mathrm{P} = -\frac{\Delta\mathrm{OLR}_\mathrm{P}}{\Delta T_s}, \qquad
+\lambda_\mathrm{LR} = -\frac{\Delta\mathrm{OLR}_\mathrm{LR} - \Delta\mathrm{OLR}_\mathrm{P}}{\Delta T_s}.
+\]</div>
+<p>Atmosphere files: <a class="reference internal" href="../guide/atmosphere.html"><span class="doc">Atmosphere &amp; ERA5</span></a>. The moist adiabat needs <code class="docutils literal notranslate"><span class="pre">metpy</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">metpy.calc</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpcalc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">metpy.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">units</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyradtran</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran</span><span class="w"> </span><span class="kn">import</span> <span class="n">Var</span><span class="p">,</span> <span class="n">load_config</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pyradtran&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
+
+<span class="n">CONFIG</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;config/lapse_rate_feedback_thermal.yaml&quot;</span><span class="p">)</span>  <span class="c1"># disort, reptran coarse, 3-100 um, integrated</span>
+<span class="n">ATMMOD</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">load_config</span><span class="p">(</span><span class="n">CONFIG</span><span class="p">)</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;atmmod&quot;</span>
+<span class="n">WORK</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;pyradtran_work/lapse_rate&quot;</span><span class="p">)</span>
+<span class="n">WORK</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">RD</span><span class="p">,</span> <span class="n">G0</span> <span class="o">=</span> <span class="mf">287.058</span><span class="p">,</span> <span class="mf">9.80665</span>  <span class="c1"># J kg-1 K-1, m s-2</span>
+<span class="n">DTS</span> <span class="o">=</span> <span class="mf">1.0</span>                  <span class="c1"># surface warming (K)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_afgl</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;AFGL profile, rows top-down: z (km), p (hPa), T (K), air, O3, O2, H2O, CO2, NO2 (cm-3).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">ATMMOD</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.dat&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">write_profile</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write `base` warmed by dT at fixed pressure and fixed mixing ratios; return (z, T).&quot;&quot;&quot;</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">base</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">base</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dT</span>
+    <span class="n">dens</span> <span class="o">=</span> <span class="n">base</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">*</span> <span class="p">(</span><span class="n">base</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">T</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># n = p / kT, mixing ratios unchanged</span>
+    <span class="n">dz</span> <span class="o">=</span> <span class="n">RD</span> <span class="o">/</span> <span class="n">G0</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">T</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="n">p</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1e3</span>  <span class="c1"># hypsometric, km</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">base</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">dz</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]])</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">z</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">dens</span><span class="p">]),</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%12.5g</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">T</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="warming-patterns">
+<h2>Warming patterns<a class="headerlink" href="#warming-patterns" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Tropics</strong>: convection keeps the troposphere near a moist adiabat. The warming is the difference of two pseudo-adiabats from a saturated surface parcel at <span class="math notranslate nohighlight">\(T_s\)</span> and <span class="math notranslate nohighlight">\(T_s + 1\)</span> K, up to 100 hPa (≈ 16 km); it peaks at ≈ 3.2 K near 180 hPa.</p></li>
+<li><p><strong>Arctic</strong>: a stable boundary layer keeps the warming near the surface: 1 K at the surface, falling linearly to 0.5 K at 3 km, 0.5 K up to the tropopause (9 km).</p></li>
+</ul>
+<p>Above the tropopause both warmed runs use +1 K.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">tropical_pattern</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">p_top</span><span class="o">=</span><span class="mf">100.0</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">base</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">hPa</span>
+    <span class="n">trop</span> <span class="o">=</span> <span class="n">base</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">p_top</span>
+    <span class="n">T0</span> <span class="o">=</span> <span class="n">base</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">K</span>
+    <span class="n">moist</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">mpcalc</span><span class="o">.</span><span class="n">moist_lapse</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">trop</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">t</span><span class="p">,</span> <span class="n">reference_pressure</span><span class="o">=</span><span class="n">p</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">dT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">DTS</span><span class="p">)</span>
+    <span class="n">dT</span><span class="p">[</span><span class="n">trop</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">moist</span><span class="p">(</span><span class="n">T0</span> <span class="o">+</span> <span class="n">DTS</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">K</span><span class="p">)</span> <span class="o">-</span> <span class="n">moist</span><span class="p">(</span><span class="n">T0</span><span class="p">))</span><span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">dT</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">arctic_pattern</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">z_trop</span><span class="o">=</span><span class="mf">9.0</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">base</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">base</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">dT</span> <span class="o">=</span> <span class="n">DTS</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z</span> <span class="o">/</span> <span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">z</span> <span class="o">&gt;</span> <span class="n">z_trop</span><span class="p">,</span> <span class="n">DTS</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
+
+
+<span class="n">regions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tropics&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;afglt&quot;</span><span class="p">,</span> <span class="n">tropical_pattern</span><span class="p">),</span> <span class="s2">&quot;arctic&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;afglsw&quot;</span><span class="p">,</span> <span class="n">arctic_pattern</span><span class="p">)}</span>
+<span class="n">runs</span><span class="p">,</span> <span class="n">profiles</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">region</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span> <span class="ow">in</span> <span class="n">regions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">read_afgl</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">case</span><span class="p">,</span> <span class="n">dT</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">base</span><span class="p">)),</span> <span class="s2">&quot;planck&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">base</span><span class="p">),</span> <span class="n">DTS</span><span class="p">),</span>
+                     <span class="s2">&quot;lapse_rate&quot;</span><span class="p">:</span> <span class="n">pattern</span><span class="p">(</span><span class="n">base</span><span class="p">)}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">WORK</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">case</span><span class="si">}</span><span class="s2">.dat&quot;</span>
+        <span class="n">profiles</span><span class="p">[</span><span class="n">region</span><span class="p">,</span> <span class="n">case</span><span class="p">]</span> <span class="o">=</span> <span class="n">write_profile</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">dT</span><span class="p">,)</span>
+        <span class="n">runs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;region&quot;</span><span class="p">:</span> <span class="n">region</span><span class="p">,</span> <span class="s2">&quot;case&quot;</span><span class="p">:</span> <span class="n">case</span><span class="p">,</span> <span class="s2">&quot;atm&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()),</span>
+                     <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="n">base</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dT</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]})</span>
+<span class="n">runs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+<span class="n">runs</span><span class="p">[[</span><span class="s2">&quot;region&quot;</span><span class="p">,</span> <span class="s2">&quot;case&quot;</span><span class="p">,</span> <span class="s2">&quot;ts&quot;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>region</th>
+      <th>case</th>
+      <th>ts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>tropics</td>
+      <td>base</td>
+      <td>299.7</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>tropics</td>
+      <td>planck</td>
+      <td>300.7</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>tropics</td>
+      <td>lapse_rate</td>
+      <td>300.7</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>arctic</td>
+      <td>base</td>
+      <td>257.2</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>arctic</td>
+      <td>planck</td>
+      <td>258.2</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>arctic</td>
+      <td>lapse_rate</td>
+      <td>258.2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="run-and-diagnose">
+<h2>Run and diagnose<a class="headerlink" href="#run-and-diagnose" title="Link to this heading">#</a></h2>
+<p>One run per row, with atmosphere file and surface temperature taken from the dataset via <code class="docutils literal notranslate"><span class="pre">Var</span></code>. The surface is a blackbody (<code class="docutils literal notranslate"><span class="pre">albedo</span> <span class="pre">0</span></code>) at the lowest-level air temperature.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;atm&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">runs</span><span class="p">[</span><span class="s2">&quot;atm&quot;</span><span class="p">]),</span> <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">runs</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">])},</span>
+    <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s2">&quot;2000-01-01&quot;</span><span class="p">))),</span>
+            <span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span> <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">))},</span>
+<span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">config_path</span><span class="o">=</span><span class="n">CONFIG</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;atmosphere_file&quot;</span><span class="p">:</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;atm&quot;</span><span class="p">),</span> <span class="s2">&quot;sur_temperature&quot;</span><span class="p">:</span> <span class="n">Var</span><span class="p">(</span><span class="s2">&quot;ts&quot;</span><span class="p">),</span> <span class="s2">&quot;zout&quot;</span><span class="p">:</span> <span class="s2">&quot;toa&quot;</span><span class="p">},</span>
+    <span class="n">save_to_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">runs</span><span class="p">[</span><span class="s2">&quot;olr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;eup&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="s2">&quot;altitude&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>  <span class="c1"># W m-2</span>
+
+<span class="n">olr</span> <span class="o">=</span> <span class="n">runs</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;region&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;case&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;olr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[[</span><span class="s2">&quot;tropics&quot;</span><span class="p">,</span> <span class="s2">&quot;arctic&quot;</span><span class="p">]]</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;OLR base (W m-2)&quot;</span><span class="p">:</span> <span class="n">olr</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;dOLR Planck (W m-2)&quot;</span><span class="p">:</span> <span class="n">olr</span><span class="p">[</span><span class="s2">&quot;planck&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">olr</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;dOLR lapse rate (W m-2)&quot;</span><span class="p">:</span> <span class="n">olr</span><span class="p">[</span><span class="s2">&quot;lapse_rate&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">olr</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;lambda_P (W m-2 K-1)&quot;</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="n">olr</span><span class="p">[</span><span class="s2">&quot;planck&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">olr</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">DTS</span><span class="p">,</span>
+    <span class="s2">&quot;lambda_LR (W m-2 K-1)&quot;</span><span class="p">:</span> <span class="o">-</span><span class="p">(</span><span class="n">olr</span><span class="p">[</span><span class="s2">&quot;lapse_rate&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">olr</span><span class="p">[</span><span class="s2">&quot;planck&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">DTS</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="n">summary</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OLR base (W m-2)</th>
+      <th>dOLR Planck (W m-2)</th>
+      <th>dOLR lapse rate (W m-2)</th>
+      <th>lambda_P (W m-2 K-1)</th>
+      <th>lambda_LR (W m-2 K-1)</th>
+    </tr>
+    <tr>
+      <th>region</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>tropics</th>
+      <td>284.72</td>
+      <td>4.21</td>
+      <td>6.07</td>
+      <td>-4.21</td>
+      <td>-1.86</td>
+    </tr>
+    <tr>
+      <th>arctic</th>
+      <td>196.90</td>
+      <td>3.21</td>
+      <td>2.64</td>
+      <td>-3.21</td>
+      <td>0.57</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tropics&quot;</span><span class="p">:</span> <span class="s2">&quot;#c0392b&quot;</span><span class="p">,</span> <span class="s2">&quot;arctic&quot;</span><span class="p">:</span> <span class="s2">&quot;#2c6fbb&quot;</span><span class="p">}</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">),</span> <span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">region</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">profiles</span><span class="p">[</span><span class="n">region</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">]</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">regions</span><span class="p">[</span><span class="n">region</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">profiles</span><span class="p">[</span><span class="n">region</span><span class="p">,</span> <span class="s2">&quot;lapse_rate&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">profiles</span><span class="p">[</span><span class="n">region</span><span class="p">,</span> <span class="s2">&quot;lapse_rate&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">region</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">310</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">DTS</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.4&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Planck (uniform)&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">ax1</span><span class="p">,</span> <span class="s2">&quot;Temperature (K)&quot;</span><span class="p">,</span> <span class="s2">&quot;Base profiles&quot;</span><span class="p">),</span>
+                          <span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="s2">&quot;Warming ΔT (K)&quot;</span><span class="p">,</span> <span class="s2">&quot;Warming patterns&quot;</span><span class="p">)]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Altitude (km)&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;dOLR Planck (W m-2)&quot;</span><span class="p">],</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;0.6&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Planck&quot;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;dOLR lapse rate (W m-2)&quot;</span><span class="p">],</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">summary</span><span class="o">.</span><span class="n">index</span><span class="p">],</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;lapse-rate pattern&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">lam</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="s2">&quot;lambda_LR (W m-2 K-1)&quot;</span><span class="p">]):</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">summary</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.15</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">lambda_</span><span class="se">{{</span><span class="s2">LR</span><span class="se">}}</span><span class="s2">$ = </span><span class="si">{</span><span class="n">lam</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> W m$^</span><span class="se">{{</span><span class="s2">-2</span><span class="se">}}</span><span class="s2">$ K$^</span><span class="se">{{</span><span class="s2">-1</span><span class="se">}}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xticks</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">summary</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;ΔOLR (W m$^{-2}$)&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;TOA OLR change for ΔT$_s$ = </span><span class="si">{</span><span class="n">DTS</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2"> K&quot;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">summary</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/50413646b78cfe1a668d48db40d95a355cdc7d8e34b1804afa874e5c62216d67.png" src="../_images/50413646b78cfe1a668d48db40d95a355cdc7d8e34b1804afa874e5c62216d67.png" />
+</div>
+</div>
+</section>
+<section id="interpretation">
+<h2>Interpretation<a class="headerlink" href="#interpretation" title="Link to this heading">#</a></h2>
+<p>Uniform warming raises the OLR by 4.2 W m⁻² (tropics) and 3.2 W m⁻² (Arctic), i.e. <span class="math notranslate nohighlight">\(\lambda_\mathrm{P}\)</span> = −4.2 and −3.2 W m⁻² K⁻¹; the colder column emits less per kelvin.</p>
+<ul class="simple">
+<li><p><strong>Tropics</strong>: the upper troposphere, which emits most of the OLR, warms 2–3 times more than the surface. The OLR rises 1.9 W m⁻² more than under uniform warming: <span class="math notranslate nohighlight">\(\lambda_\mathrm{LR} = -1.9\)</span> W m⁻² K⁻¹, a <strong>negative</strong> feedback.</p></li>
+<li><p><strong>Arctic</strong>: the free troposphere warms half as much as the surface. The OLR rises 0.6 W m⁻² less than under uniform warming: <span class="math notranslate nohighlight">\(\lambda_\mathrm{LR} = +0.6\)</span> W m⁻² K⁻¹, a <strong>positive</strong> feedback that contributes to Arctic amplification (Pithan and Mauritsen, 2014).</p></li>
+</ul>
+<p>Both signs match the standard result. The magnitudes follow from the imposed patterns; the tropical value is at the strong end because the column follows a saturated pseudo-adiabat up to 100 hPa. <code class="docutils literal notranslate"><span class="pre">reptran</span> <span class="pre">medium</span></code> gives the same feedbacks within 0.01 W m⁻² K⁻¹.</p>
+<p><strong>Caveats.</strong> Single clear-sky column, idealised warming patterns, fixed specific humidity (no water-vapour feedback, which partly offsets the tropical lapse-rate feedback), uniform stratospheric warming without adjustment, longwave only. Climate-model analyses use radiative kernels on 3-D fields (Soden and Held, 2006).</p>
+<p><strong>References.</strong> Pithan, F. and Mauritsen, T. (2014): Arctic amplification dominated by temperature feedbacks in contemporary climate models, <em>Nat. Geosci.</em>, 7, 181–184, doi:10.1038/ngeo2071. Soden, B. J. and Held, I. M. (2006): An assessment of climate feedbacks in coupled ocean–atmosphere models, <em>J. Climate</em>, 19, 3354–3360, doi:10.1175/JCLI3799.1.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="get_radiosonde.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Radiosonde atmosphere generator</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../tutorials/clouds.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Clouds</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#warming-patterns">Warming patterns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-and-diagnose">Run and diagnose</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretation">Interpretation</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PyRadtran Developers
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

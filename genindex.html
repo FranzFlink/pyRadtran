@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -174,152 +175,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -455,46 +453,44 @@ document.write(`
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.__init__">__init__() (pyradtran.clouds.CloudLayer method)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.__init__">__init__() (CloudLayer method)</a>
 
       <ul>
-        <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.__init__">(pyradtran.config.CloudParameters method)</a>
+        <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.__init__">(CloudParameters method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.__init__">(pyradtran.config.ExecutionConfig method)</a>
+        <li><a href="api/generated/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.__init__">(ExecutionConfig method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig.__init__">(pyradtran.config.OutputConfig method)</a>
+        <li><a href="api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.__init__">(InputFileBuilder method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.__init__">(pyradtran.config.PathsConfig method)</a>
+        <li><a href="api/generated/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine.__init__">(InputLine method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.__init__">(pyradtran.config.SimulationConfig method)</a>
+        <li><a href="api/generated/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig.__init__">(OutputConfig method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.__init__">(pyradtran.config.SimulationDefaults method)</a>
+        <li><a href="api/generated/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.__init__">(OutputParser method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.core.Simulation.html#pyradtran.core.Simulation.__init__">(pyradtran.core.Simulation method)</a>
+        <li><a href="api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.__init__">(ParamResolver method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.__init__">(pyradtran.input_builder.InputFileBuilder method)</a>
+        <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.__init__">(ParamSpec method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine.__init__">(pyradtran.input_builder.InputLine method)</a>
+        <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.__init__">(ParsedOutput method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.__init__">(pyradtran.interface.PointOutcome method)</a>
+        <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.__init__">(PathsConfig method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.interface.PyRadtranAccessor.html#pyradtran.interface.PyRadtranAccessor.__init__">(pyradtran.interface.PyRadtranAccessor method)</a>
+        <li><a href="api/generated/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.__init__">(PointOutcome method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.__init__">(pyradtran.interface.SimPoint method)</a>
+        <li><a href="api/generated/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder.__init__">(RadiosondeFinder method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.__init__">(pyradtran.io.OutputParser method)</a>
+        <li><a href="api/generated/pyradtran.params.Raw.html#pyradtran.params.Raw.__init__">(Raw method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.__init__">(pyradtran.io.ParsedOutput method)</a>
+        <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.__init__">(SimPoint method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.__init__">(pyradtran.params.ParamResolver method)</a>
+        <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.__init__">(Simulation method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.__init__">(pyradtran.params.ParamSpec method)</a>
+        <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.__init__">(SimulationConfig method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.params.Raw.html#pyradtran.params.Raw.__init__">(pyradtran.params.Raw method)</a>
+        <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.__init__">(SimulationDefaults method)</a>
 </li>
-        <li><a href="api/_autosummary/pyradtran.params.Var.html#pyradtran.params.Var.__init__">(pyradtran.params.Var method)</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder.__init__">(pyradtran.utils.RadiosondeFinder method)</a>
+        <li><a href="api/generated/pyradtran.params.Var.html#pyradtran.params.Var.__init__">(Var method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -503,15 +499,15 @@ document.write(`
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.albedo_value">albedo_value (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.albedo_value">albedo_value (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.altitudes">altitudes (pyradtran.io.ParsedOutput attribute)</a>
+      <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.altitudes">altitudes (ParsedOutput attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.applicability">applicability (pyradtran.params.ParamSpec attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.applicability">applicability (ParamSpec attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.atmosphere_profile">atmosphere_profile (pyradtran.config.PathsConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.atmosphere_profile">atmosphere_profile (PathsConfig attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -519,13 +515,17 @@ document.write(`
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.channels.brightness_temperature.html#pyradtran.channels.brightness_temperature">brightness_temperature() (in module pyradtran.channels)</a>
+      <li><a href="api/generated/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder.base_path">base_path (RadiosondeFinder attribute)</a>
+</li>
+      <li><a href="api/generated/pyradtran.channels.brightness_temperature.html#pyradtran.channels.brightness_temperature">brightness_temperature() (in module pyradtran.channels)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.build">build() (pyradtran.input_builder.InputFileBuilder method)</a>
+      <li><a href="api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.build">build() (InputFileBuilder method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.core.Simulation.html#pyradtran.core.Simulation.build_input_lines">build_input_lines() (pyradtran.core.Simulation method)</a>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.build_input_lines">build_input_lines() (Simulation method)</a>
+</li>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.builder">builder (Simulation attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -533,51 +533,59 @@ document.write(`
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html#pyradtran.input_builder.calculate_solar_zenith_angle">calculate_solar_zenith_angle() (in module pyradtran.input_builder)</a>
+      <li><a href="api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html#pyradtran.input_builder.calculate_solar_zenith_angle">calculate_solar_zenith_angle() (in module pyradtran.input_builder)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.choices">choices (pyradtran.params.ParamSpec attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.choices">choices (ParamSpec attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.cleanup_temp_files">cleanup_temp_files (pyradtran.config.ExecutionConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.cleanup_temp_files">cleanup_temp_files (ExecutionConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.cloud_fraction">cloud_fraction (pyradtran.clouds.CloudLayer attribute)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.cloud_fraction">cloud_fraction (CloudLayer attribute)</a>
 
       <ul>
-        <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_fraction">(pyradtran.config.CloudParameters attribute)</a>
+        <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_fraction">(CloudParameters attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api/_autosummary/pyradtran.era5.cloud_profiles.html#pyradtran.era5.cloud_profiles">cloud_profiles() (in module pyradtran.era5)</a>
+      <li><a href="api/generated/pyradtran.era5.cloud_profiles.html#pyradtran.era5.cloud_profiles">cloud_profiles() (in module pyradtran.era5)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_source">cloud_source (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_source">cloud_source (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_type">cloud_type (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.cloud_type">cloud_type (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter">CloudFileWriter (class in pyradtran.clouds)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter">CloudFileWriter (class in pyradtran.clouds)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator">CloudGenerator (class in pyradtran.clouds)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator">CloudGenerator (class in pyradtran.clouds)</a>
+</li>
+      <li><a href="api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer">CloudLayer (class in pyradtran.clouds)</a>
+</li>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters">CloudParameters (class in pyradtran.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer">CloudLayer (class in pyradtran.clouds)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.clouds">clouds (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters">CloudParameters (class in pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.config">config (InputFileBuilder attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.config">(ParamResolver attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.clouds">clouds (pyradtran.config.SimulationDefaults attribute)</a>
+        <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.config">(Simulation attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.exceptions.ConfigurationError.html#pyradtran.exceptions.ConfigurationError">ConfigurationError</a>
+      </ul></li>
+      <li><a href="api/generated/pyradtran.exceptions.ConfigurationError.html#pyradtran.exceptions.ConfigurationError">ConfigurationError</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputToXarray.html#pyradtran.io.OutputToXarray.convert">convert() (pyradtran.io.OutputToXarray static method)</a>
+      <li><a href="api/generated/pyradtran.io.OutputToXarray.html#pyradtran.io.OutputToXarray.convert">convert() (OutputToXarray static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputToXarray.html#pyradtran.io.OutputToXarray.convert_batch">convert_batch() (pyradtran.io.OutputToXarray static method)</a>
+      <li><a href="api/generated/pyradtran.io.OutputToXarray.html#pyradtran.io.OutputToXarray.convert_batch">convert_batch() (OutputToXarray static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.channels.convolve_channels.html#pyradtran.channels.convolve_channels">convolve_channels() (in module pyradtran.channels)</a>
+      <li><a href="api/generated/pyradtran.channels.convolve_channels.html#pyradtran.channels.convolve_channels">convolve_channels() (in module pyradtran.channels)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.copy">copy() (pyradtran.config.SimulationConfig method)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.copy">copy() (SimulationConfig method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html#pyradtran.io.ERA5AtmosphereGenerator.create_era5_atmosphere_file">create_era5_atmosphere_file() (pyradtran.io.ERA5AtmosphereGenerator static method)</a>
+      <li><a href="api/generated/pyradtran.io.ERA5AtmosphereGenerator.html#pyradtran.io.ERA5AtmosphereGenerator.create_era5_atmosphere_file">create_era5_atmosphere_file() (ERA5AtmosphereGenerator static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.create_example_config.html#pyradtran.config.create_example_config">create_example_config() (in module pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.create_example_config.html#pyradtran.config.create_example_config">create_example_config() (in module pyradtran.config)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file">create_radiosonde_atmosphere_file() (pyradtran.io.RadiosondeAtmosphereGenerator static method)</a>
+      <li><a href="api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator.create_radiosonde_atmosphere_file">create_radiosonde_atmosphere_file() (RadiosondeAtmosphereGenerator static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -585,21 +593,21 @@ document.write(`
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.data">data (pyradtran.io.ParsedOutput attribute)</a>
+      <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.data">data (ParsedOutput attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.debug_mode">debug_mode (pyradtran.config.ExecutionConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.debug_mode">debug_mode (ExecutionConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.describe.html#pyradtran.params.describe">describe() (in module pyradtran.params)</a>
+      <li><a href="api/generated/pyradtran.params.describe.html#pyradtran.params.describe">describe() (in module pyradtran.params)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.detail">detail (pyradtran.interface.PointOutcome attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.detail">detail (PointOutcome attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.doc">doc (pyradtran.params.ParamSpec attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.doc">doc (ParamSpec attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.core.Simulation.html#pyradtran.core.Simulation.dry_run">dry_run() (pyradtran.core.Simulation method)</a>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.dry_run">dry_run() (Simulation method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.dtype">dtype (pyradtran.params.ParamSpec attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.dtype">dtype (ParamSpec attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -607,39 +615,39 @@ document.write(`
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html#pyradtran.input_builder.effective_output_altitudes">effective_output_altitudes() (in module pyradtran.input_builder)</a>
+      <li><a href="api/generated/pyradtran.input_builder.effective_output_altitudes.html#pyradtran.input_builder.effective_output_altitudes">effective_output_altitudes() (in module pyradtran.input_builder)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.input_builder.effective_output_columns.html#pyradtran.input_builder.effective_output_columns">effective_output_columns() (in module pyradtran.input_builder)</a>
+      <li><a href="api/generated/pyradtran.input_builder.effective_output_columns.html#pyradtran.input_builder.effective_output_columns">effective_output_columns() (in module pyradtran.input_builder)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.effective_radius_um">effective_radius_um (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.effective_radius_um">effective_radius_um (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.enabled">enabled (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.enabled">enabled (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.era5.era5_atmosphere_file.html#pyradtran.era5.era5_atmosphere_file">era5_atmosphere_file() (in module pyradtran.era5)</a>
+      <li><a href="api/generated/pyradtran.era5.era5_atmosphere_file.html#pyradtran.era5.era5_atmosphere_file">era5_atmosphere_file() (in module pyradtran.era5)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_dataset">era5_dataset (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_dataset">era5_dataset (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.era5_file">era5_file (pyradtran.interface.SimPoint attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.era5_file">era5_file (SimPoint attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_lat">era5_lat (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_lat">era5_lat (CloudParameters attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_lon">era5_lon (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_lon">era5_lon (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_time">era5_time (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.era5_time">era5_time (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html#pyradtran.io.ERA5AtmosphereGenerator">ERA5AtmosphereGenerator (class in pyradtran.io)</a>
+      <li><a href="api/generated/pyradtran.io.ERA5AtmosphereGenerator.html#pyradtran.io.ERA5AtmosphereGenerator">ERA5AtmosphereGenerator (class in pyradtran.io)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.execute_simulation_batch.html#pyradtran.interface.execute_simulation_batch">execute_simulation_batch() (in module pyradtran.interface)</a>
+      <li><a href="api/generated/pyradtran.interface.execute_simulation_batch.html#pyradtran.interface.execute_simulation_batch">execute_simulation_batch() (in module pyradtran.interface)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.execution">execution (pyradtran.config.SimulationConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.execution">execution (SimulationConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig">ExecutionConfig (class in pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig">ExecutionConfig (class in pyradtran.config)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.PyRadtranAccessor.html#pyradtran.interface.PyRadtranAccessor.explain">explain() (pyradtran.interface.PyRadtranAccessor method)</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.explain.html#pyradtran.interface.PyRadtranAccessor.explain">explain() (PyRadtranAccessor method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.schema.extract_schema.html#pyradtran.schema.extract_schema">extract_schema() (in module pyradtran.schema)</a>
+      <li><a href="api/generated/pyradtran.schema.extract_schema.html#pyradtran.schema.extract_schema">extract_schema() (in module pyradtran.schema)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -647,31 +655,31 @@ document.write(`
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig.filename_prefix">filename_prefix (pyradtran.config.OutputConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig.filename_prefix">filename_prefix (OutputConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig.filename_suffix">filename_suffix (pyradtran.config.OutputConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig.filename_suffix">filename_suffix (OutputConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder.find_closest">find_closest() (pyradtran.utils.RadiosondeFinder method)</a>
+      <li><a href="api/generated/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder.find_closest">find_closest() (RadiosondeFinder method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator.find_closest_active_stations">find_closest_active_stations() (pyradtran.io.RadiosondeAtmosphereGenerator static method)</a>
+      <li><a href="api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator.find_closest_active_stations">find_closest_active_stations() (RadiosondeAtmosphereGenerator static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.schema.find_libradtran_root.html#pyradtran.schema.find_libradtran_root">find_libradtran_root() (in module pyradtran.schema)</a>
+      <li><a href="api/generated/pyradtran.schema.find_libradtran_root.html#pyradtran.schema.find_libradtran_root">find_libradtran_root() (in module pyradtran.schema)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder.find_radiosonde_file">find_radiosonde_file() (pyradtran.utils.RadiosondeFinder method)</a>
+      <li><a href="api/generated/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder.find_radiosonde_file">find_radiosonde_file() (RadiosondeFinder method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.core.Simulation.html#pyradtran.core.Simulation.format_cloud_profile">format_cloud_profile() (pyradtran.core.Simulation static method)</a>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.format_cloud_profile">format_cloud_profile() (Simulation static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.format_line">format_line() (pyradtran.params.ParamSpec method)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.format_line">format_line() (ParamSpec method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.formatter">formatter (pyradtran.params.ParamSpec attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.formatter">formatter (ParamSpec attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator.from_era5_dataset">from_era5_dataset() (pyradtran.clouds.CloudGenerator static method)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator.from_era5_dataset">from_era5_dataset() (CloudGenerator static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator.from_simple_parameters">from_simple_parameters() (pyradtran.clouds.CloudGenerator static method)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator.from_simple_parameters">from_simple_parameters() (CloudGenerator static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.from_yaml">from_yaml() (pyradtran.config.SimulationConfig class method)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.from_yaml">from_yaml() (SimulationConfig class method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -679,17 +687,19 @@ document.write(`
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html#pyradtran.clouds.generate_cloud_file_from_era5">generate_cloud_file_from_era5() (in module pyradtran.clouds)</a>
+      <li><a href="api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html#pyradtran.clouds.generate_cloud_file_from_era5">generate_cloud_file_from_era5() (in module pyradtran.clouds)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator.get_closest_sounding">get_closest_sounding() (pyradtran.io.RadiosondeAtmosphereGenerator static method)</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.PyRadtranAccessor.generation_date">generation_date (PyRadtranAccessor attribute)</a>
+</li>
+      <li><a href="api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator.get_closest_sounding">get_closest_sounding() (RadiosondeAtmosphereGenerator static method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.params.get_schema.html#pyradtran.params.get_schema">get_schema() (in module pyradtran.params)</a>
+      <li><a href="api/generated/pyradtran.params.get_schema.html#pyradtran.params.get_schema">get_schema() (in module pyradtran.params)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator.get_station_list">get_station_list() (pyradtran.io.RadiosondeAtmosphereGenerator static method)</a>
+      <li><a href="api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator.get_station_list">get_station_list() (RadiosondeAtmosphereGenerator static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.get_used_parameters">get_used_parameters() (pyradtran.config.SimulationConfig method)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.get_used_parameters">get_used_parameters() (SimulationConfig method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -697,11 +707,13 @@ document.write(`
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.h2o_mm">h2o_mm (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.h2o_mm">h2o_mm (SimulationDefaults attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.h2o_source">h2o_source (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.h2o_source">h2o_source (SimulationDefaults attribute)</a>
+</li>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.history">history (in module pyradtran.interface)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -709,33 +721,37 @@ document.write(`
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.ic_file">ic_file (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.ic_file">ic_file (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.ice_content_g_m3">ice_content_g_m3 (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.ice_content_g_m3">ice_content_g_m3 (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.index">index (pyradtran.interface.SimPoint attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.index">index (SimPoint attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.InputDataLoader.html#pyradtran.io.InputDataLoader">InputDataLoader (class in pyradtran.io)</a>
+      <li><a href="api/generated/pyradtran.io.InputDataLoader.html#pyradtran.io.InputDataLoader">InputDataLoader (class in pyradtran.io)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder">InputFileBuilder (class in pyradtran.input_builder)</a>
+      <li><a href="api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder">InputFileBuilder (class in pyradtran.input_builder)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.exceptions.InputGenerationError.html#pyradtran.exceptions.InputGenerationError">InputGenerationError</a>
+      <li><a href="api/generated/pyradtran.exceptions.InputGenerationError.html#pyradtran.exceptions.InputGenerationError">InputGenerationError</a>
+</li>
+      <li><a href="api/generated/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine">InputLine (class in pyradtran.input_builder)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine">InputLine (class in pyradtran.input_builder)</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html#pyradtran.interface.PyRadtranAccessor.inspect_cloud_file">inspect_cloud_file() (PyRadtranAccessor method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.PyRadtranAccessor.html#pyradtran.interface.PyRadtranAccessor.inspect_cloud_file">inspect_cloud_file() (pyradtran.interface.PyRadtranAccessor method)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.integrate_wavelength">integrate_wavelength (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.integrate_wavelength">integrate_wavelength (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputType.html#pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE">INTEGRATED_MULTI_ALTITUDE (OutputType attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputType.html#pyradtran.io.OutputType.INTEGRATED_MULTI_ALTITUDE">INTEGRATED_MULTI_ALTITUDE (pyradtran.io.OutputType attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputType.html#pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE">INTEGRATED_SINGLE_ALTITUDE (OutputType attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputType.html#pyradtran.io.OutputType.INTEGRATED_SINGLE_ALTITUDE">INTEGRATED_SINGLE_ALTITUDE (pyradtran.io.OutputType attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.is_brightness_output">is_brightness_output (OutputParser attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.is_brightness_temperature">is_brightness_temperature (pyradtran.io.ParsedOutput attribute)</a>
+      <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.is_brightness_temperature">is_brightness_temperature (ParsedOutput attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.iwc_g_m3">iwc_g_m3 (pyradtran.clouds.CloudLayer attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.is_integrated">is_integrated (OutputParser attribute)</a>
+</li>
+      <li><a href="api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.iwc_g_m3">iwc_g_m3 (CloudLayer attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -743,7 +759,7 @@ document.write(`
 <h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.interface.PyRadtranAccessor.html#pyradtran.interface.PyRadtranAccessor.jacobian">jacobian() (pyradtran.interface.PyRadtranAccessor method)</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html#pyradtran.interface.PyRadtranAccessor.jacobian">jacobian() (PyRadtranAccessor method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -751,10 +767,10 @@ document.write(`
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine.keyword">keyword (pyradtran.input_builder.InputLine attribute)</a>
+      <li><a href="api/generated/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine.keyword">keyword (InputLine attribute)</a>
 
       <ul>
-        <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.keyword">(pyradtran.params.ParamSpec attribute)</a>
+        <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.keyword">(ParamSpec attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -763,31 +779,35 @@ document.write(`
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.latitude">latitude (pyradtran.interface.SimPoint attribute)</a>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.last_failed_input">last_failed_input (Simulation attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_bottom_km">layer_bottom_km (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.last_stderr">last_stderr (Simulation attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_top_km">layer_top_km (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.latitude">latitude (SimPoint attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.libradtran_bin">libradtran_bin (pyradtran.config.PathsConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_bottom_km">layer_bottom_km (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.libradtran_data">libradtran_data (pyradtran.config.PathsConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.layer_top_km">layer_top_km (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.list_atmosphere_profiles.html#pyradtran.config.list_atmosphere_profiles">list_atmosphere_profiles() (in module pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.libradtran_bin">libradtran_bin (PathsConfig attribute)</a>
+</li>
+      <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.libradtran_data">libradtran_data (PathsConfig attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.list_solar_spectra.html#pyradtran.config.list_solar_spectra">list_solar_spectra() (in module pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.list_atmosphere_profiles.html#pyradtran.config.list_atmosphere_profiles">list_atmosphere_profiles() (in module pyradtran.config)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.load_config.html#pyradtran.config.load_config">load_config() (in module pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.list_solar_spectra.html#pyradtran.config.list_solar_spectra">list_solar_spectra() (in module pyradtran.config)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.schema.load_schema.html#pyradtran.schema.load_schema">load_schema() (in module pyradtran.schema)</a>
+      <li><a href="api/generated/pyradtran.config.load_config.html#pyradtran.config.load_config">load_config() (in module pyradtran.config)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.InputDataLoader.html#pyradtran.io.InputDataLoader.load_simulation_input_data">load_simulation_input_data() (pyradtran.io.InputDataLoader static method)</a>
+      <li><a href="api/generated/pyradtran.schema.load_schema.html#pyradtran.schema.load_schema">load_schema() (in module pyradtran.schema)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.longitude">longitude (pyradtran.interface.SimPoint attribute)</a>
+      <li><a href="api/generated/pyradtran.io.InputDataLoader.html#pyradtran.io.InputDataLoader.load_simulation_input_data">load_simulation_input_data() (InputDataLoader static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.lwc_g_m3">lwc_g_m3 (pyradtran.clouds.CloudLayer attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.longitude">longitude (SimPoint attribute)</a>
+</li>
+      <li><a href="api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.lwc_g_m3">lwc_g_m3 (CloudLayer attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -795,42 +815,13 @@ document.write(`
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.max_workers">max_workers (pyradtran.config.ExecutionConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.max_workers">max_workers (ExecutionConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.metadata">metadata (pyradtran.io.ParsedOutput attribute)</a>
-</li>
-      <li>
-    module
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.channels.html#module-pyradtran.channels">pyradtran.channels</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.clouds.html#module-pyradtran.clouds">pyradtran.clouds</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.config.html#module-pyradtran.config">pyradtran.config</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.core.html#module-pyradtran.core">pyradtran.core</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.era5.html#module-pyradtran.era5">pyradtran.era5</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.exceptions.html#module-pyradtran.exceptions">pyradtran.exceptions</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.input_builder.html#module-pyradtran.input_builder">pyradtran.input_builder</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.interface.html#module-pyradtran.interface">pyradtran.interface</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.io.html#module-pyradtran.io">pyradtran.io</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.params.html#module-pyradtran.params">pyradtran.params</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.schema.html#module-pyradtran.schema">pyradtran.schema</a>
-</li>
-        <li><a href="api/_autosummary/pyradtran.utils.html#module-pyradtran.utils">pyradtran.utils</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.mol_abs_param">mol_abs_param (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.metadata">metadata (ParsedOutput attribute)</a>
+</li>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.mol_abs_param">mol_abs_param (SimulationDefaults attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -838,15 +829,15 @@ document.write(`
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.params.Var.html#pyradtran.params.Var.name">name (pyradtran.params.Var attribute)</a>
+      <li><a href="api/generated/pyradtran.params.Var.html#pyradtran.params.Var.name">name (Var attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig.netcdf_encoding">netcdf_encoding (pyradtran.config.OutputConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig.netcdf_encoding">netcdf_encoding (OutputConfig attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.io.NetCDFSaver.html#pyradtran.io.NetCDFSaver">NetCDFSaver (class in pyradtran.io)</a>
+      <li><a href="api/generated/pyradtran.io.NetCDFSaver.html#pyradtran.io.NetCDFSaver">NetCDFSaver (class in pyradtran.io)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.era5.normalize_era5.html#pyradtran.era5.normalize_era5">normalize_era5() (in module pyradtran.era5)</a>
+      <li><a href="api/generated/pyradtran.era5.normalize_era5.html#pyradtran.era5.normalize_era5">normalize_era5() (in module pyradtran.era5)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -854,29 +845,35 @@ document.write(`
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.output">output (pyradtran.config.SimulationConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.output">output (SimulationConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.output_altitudes_km">output_altitudes_km (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.output_altitudes">output_altitudes (OutputParser attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.output_columns">output_columns (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.output_altitudes_km">output_altitudes_km (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.output_dir">output_dir (pyradtran.config.PathsConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.output_columns">output_columns (OutputParser attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.output_columns">(SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.output_type">output_type (pyradtran.io.ParsedOutput attribute)</a>
+      </ul></li>
+      <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.output_dir">output_dir (PathsConfig attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig">OutputConfig (class in pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.output_type">output_type (ParsedOutput attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser">OutputParser (class in pyradtran.io)</a>
+      <li><a href="api/generated/pyradtran.config.OutputConfig.html#pyradtran.config.OutputConfig">OutputConfig (class in pyradtran.config)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.exceptions.OutputParsingError.html#pyradtran.exceptions.OutputParsingError">OutputParsingError</a>
+      <li><a href="api/generated/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser">OutputParser (class in pyradtran.io)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputToXarray.html#pyradtran.io.OutputToXarray">OutputToXarray (class in pyradtran.io)</a>
+      <li><a href="api/generated/pyradtran.exceptions.OutputParsingError.html#pyradtran.exceptions.OutputParsingError">OutputParsingError</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputType.html#pyradtran.io.OutputType">OutputType (class in pyradtran.io)</a>
+      <li><a href="api/generated/pyradtran.io.OutputToXarray.html#pyradtran.io.OutputToXarray">OutputToXarray (class in pyradtran.io)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.ozone_du">ozone_du (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputType.html#pyradtran.io.OutputType">OutputType (class in pyradtran.io)</a>
+</li>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.ozone_du">ozone_du (SimulationDefaults attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -884,121 +881,47 @@ document.write(`
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.parameter_overrides">parameter_overrides (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.parameter_overrides">parameter_overrides (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver">ParamResolver (class in pyradtran.params)</a>
+      <li><a href="api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver">ParamResolver (class in pyradtran.params)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec">ParamSpec (class in pyradtran.params)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec">ParamSpec (class in pyradtran.params)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.parse_output_file">parse_output_file() (pyradtran.io.OutputParser method)</a>
+      <li><a href="api/generated/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.parse_output_file">parse_output_file() (OutputParser method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.parsed">parsed (pyradtran.interface.PointOutcome attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.parsed">parsed (PointOutcome attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput">ParsedOutput (class in pyradtran.io)</a>
+      <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput">ParsedOutput (class in pyradtran.io)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.paths">paths (pyradtran.config.SimulationConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.paths">paths (SimulationConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig">PathsConfig (class in pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig">PathsConfig (class in pyradtran.config)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.point_id">point_id (pyradtran.interface.PointOutcome attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.point_id">point_id (PointOutcome attribute)</a>
 
       <ul>
-        <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.point_id">(pyradtran.interface.SimPoint attribute)</a>
-</li>
-      </ul></li>
-      <li><a href="api/_autosummary/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome">PointOutcome (class in pyradtran.interface)</a>
-</li>
-      <li><a href="api/_autosummary/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine.provenance">provenance (pyradtran.input_builder.InputLine attribute)</a>
-</li>
-      <li>
-    pyradtran.channels
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.channels.html#module-pyradtran.channels">module</a>
-</li>
-      </ul></li>
-      <li>
-    pyradtran.clouds
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.clouds.html#module-pyradtran.clouds">module</a>
-</li>
-      </ul></li>
-      <li>
-    pyradtran.config
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.config.html#module-pyradtran.config">module</a>
-</li>
-      </ul></li>
-      <li>
-    pyradtran.core
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.core.html#module-pyradtran.core">module</a>
+        <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.point_id">(SimPoint attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    pyradtran.era5
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.era5.html#module-pyradtran.era5">module</a>
+      <li><a href="api/generated/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome">PointOutcome (class in pyradtran.interface)</a>
 </li>
-      </ul></li>
-      <li>
-    pyradtran.exceptions
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.exceptions.html#module-pyradtran.exceptions">module</a>
+      <li><a href="api/generated/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine.provenance">provenance (InputLine attribute)</a>
 </li>
-      </ul></li>
-      <li>
-    pyradtran.input_builder
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.input_builder.html#module-pyradtran.input_builder">module</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.pyradtran_config">pyradtran_config (in module pyradtran.interface)</a>
 </li>
-      </ul></li>
-      <li>
-    pyradtran.interface
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.interface.html#module-pyradtran.interface">module</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.pyradtran_input_example">pyradtran_input_example (in module pyradtran.interface)</a>
 </li>
-      </ul></li>
-      <li>
-    pyradtran.io
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.io.html#module-pyradtran.io">module</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.pyradtran_libradtran_bin">pyradtran_libradtran_bin (in module pyradtran.interface)</a>
 </li>
-      </ul></li>
-      <li>
-    pyradtran.params
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.params.html#module-pyradtran.params">module</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.pyradtran_params">pyradtran_params (in module pyradtran.interface)</a>
 </li>
-      </ul></li>
-      <li>
-    pyradtran.schema
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.schema.html#module-pyradtran.schema">module</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.pyradtran_version">pyradtran_version (in module pyradtran.interface)</a>
 </li>
-      </ul></li>
-      <li>
-    pyradtran.utils
-
-      <ul>
-        <li><a href="api/_autosummary/pyradtran.utils.html#module-pyradtran.utils">module</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.html#pyradtran.interface.PyRadtranAccessor">PyRadtranAccessor (class in pyradtran.interface)</a>
 </li>
-      </ul></li>
-      <li><a href="api/_autosummary/pyradtran.interface.PyRadtranAccessor.html#pyradtran.interface.PyRadtranAccessor">PyRadtranAccessor (class in pyradtran.interface)</a>
-</li>
-      <li><a href="api/_autosummary/pyradtran.exceptions.PyRadtranError.html#pyradtran.exceptions.PyRadtranError">PyRadtranError</a>
+      <li><a href="api/generated/pyradtran.exceptions.PyRadtranError.html#pyradtran.exceptions.PyRadtranError">PyRadtranError</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1006,39 +929,39 @@ document.write(`
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.r_eff_um">r_eff_um (pyradtran.clouds.CloudLayer attribute)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.r_eff_um">r_eff_um (CloudLayer attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.radiosonde_base">radiosonde_base (pyradtran.config.PathsConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.radiosonde_base">radiosonde_base (PathsConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator">RadiosondeAtmosphereGenerator (class in pyradtran.io)</a>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.radiosonde_finder">radiosonde_finder (Simulation attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.exceptions.RadiosondeError.html#pyradtran.exceptions.RadiosondeError">RadiosondeError</a>
+      <li><a href="api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html#pyradtran.io.RadiosondeAtmosphereGenerator">RadiosondeAtmosphereGenerator (class in pyradtran.io)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder">RadiosondeFinder (class in pyradtran.utils)</a>
+      <li><a href="api/generated/pyradtran.exceptions.RadiosondeError.html#pyradtran.exceptions.RadiosondeError">RadiosondeError</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.Raw.html#pyradtran.params.Raw">Raw (class in pyradtran.params)</a>
+      <li><a href="api/generated/pyradtran.utils.RadiosondeFinder.html#pyradtran.utils.RadiosondeFinder">RadiosondeFinder (class in pyradtran.utils)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.era5.recommend_atmosphere.html#pyradtran.era5.recommend_atmosphere">recommend_atmosphere() (in module pyradtran.era5)</a>
+      <li><a href="api/generated/pyradtran.params.Raw.html#pyradtran.params.Raw">Raw (class in pyradtran.params)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.render">render() (pyradtran.input_builder.InputFileBuilder static method)</a>
+      <li><a href="api/generated/pyradtran.era5.recommend_atmosphere.html#pyradtran.era5.recommend_atmosphere">recommend_atmosphere() (in module pyradtran.era5)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.render_annotated">render_annotated() (pyradtran.input_builder.InputFileBuilder static method)</a>
+      <li><a href="api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.render">render() (InputFileBuilder static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.resolve_point">resolve_point() (pyradtran.params.ParamResolver method)</a>
+      <li><a href="api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.render_annotated">render_annotated() (InputFileBuilder static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.resolved">resolved (pyradtran.interface.SimPoint attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.resolve_point">resolve_point() (ParamResolver method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.rte_solver">rte_solver (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.resolved">resolved (SimPoint attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.PyRadtranAccessor.html#pyradtran.interface.PyRadtranAccessor.run">run() (pyradtran.interface.PyRadtranAccessor method)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.rte_solver">rte_solver (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html#pyradtran.interface.run_pyradtran_simulation">run_pyradtran_simulation() (in module pyradtran.interface)</a>
+      <li><a href="api/generated/pyradtran.interface.PyRadtranAccessor.run.html#pyradtran.interface.PyRadtranAccessor.run">run() (PyRadtranAccessor method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.core.Simulation.html#pyradtran.core.Simulation.run_simulation">run_simulation() (pyradtran.core.Simulation method)</a>
+      <li><a href="api/generated/pyradtran.interface.run_pyradtran_simulation.html#pyradtran.interface.run_pyradtran_simulation">run_pyradtran_simulation() (in module pyradtran.interface)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.PyRadtranAccessor.html#pyradtran.interface.PyRadtranAccessor.run_uvspec">run_uvspec() (pyradtran.interface.PyRadtranAccessor method)</a>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation.run_simulation">run_simulation() (Simulation method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1046,45 +969,47 @@ document.write(`
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.save_master_config.html#pyradtran.config.save_master_config">save_master_config() (in module pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.save_master_config.html#pyradtran.config.save_master_config">save_master_config() (in module pyradtran.config)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.NetCDFSaver.html#pyradtran.io.NetCDFSaver.save_results_to_netcdf">save_results_to_netcdf() (pyradtran.io.NetCDFSaver static method)</a>
+      <li><a href="api/generated/pyradtran.io.NetCDFSaver.html#pyradtran.io.NetCDFSaver.save_results_to_netcdf">save_results_to_netcdf() (NetCDFSaver static method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.search_options.html#pyradtran.params.search_options">search_options() (in module pyradtran.params)</a>
+      <li><a href="api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.schema">schema (ParamResolver attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.era5.select_profile.html#pyradtran.era5.select_profile">select_profile() (in module pyradtran.era5)</a>
+      <li><a href="api/generated/pyradtran.params.search_options.html#pyradtran.params.search_options">search_options() (in module pyradtran.params)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint">SimPoint (class in pyradtran.interface)</a>
+      <li><a href="api/generated/pyradtran.era5.select_profile.html#pyradtran.era5.select_profile">select_profile() (in module pyradtran.era5)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.core.Simulation.html#pyradtran.core.Simulation">Simulation (class in pyradtran.core)</a>
+      <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint">SimPoint (class in pyradtran.interface)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.simulation_defaults">simulation_defaults (pyradtran.config.SimulationConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.core.Simulation.html#pyradtran.core.Simulation">Simulation (class in pyradtran.core)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig">SimulationConfig (class in pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.simulation_defaults">simulation_defaults (SimulationConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults">SimulationDefaults (class in pyradtran.config)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig">SimulationConfig (class in pyradtran.config)</a>
+</li>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults">SimulationDefaults (class in pyradtran.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.skipped">skipped (pyradtran.interface.SimPoint attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.skipped">skipped (SimPoint attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.solar_spectrum">solar_spectrum (pyradtran.config.PathsConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.solar_spectrum">solar_spectrum (PathsConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.source">source (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.source">source (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.source_file">source_file (pyradtran.io.ParsedOutput attribute)</a>
+      <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.source_file">source_file (ParsedOutput attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputType.html#pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE">SPECTRAL_MULTI_ALTITUDE (pyradtran.io.OutputType attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputType.html#pyradtran.io.OutputType.SPECTRAL_MULTI_ALTITUDE">SPECTRAL_MULTI_ALTITUDE (OutputType attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.OutputType.html#pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE">SPECTRAL_SINGLE_ALTITUDE (pyradtran.io.OutputType attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputType.html#pyradtran.io.OutputType.SPECTRAL_SINGLE_ALTITUDE">SPECTRAL_SINGLE_ALTITUDE (OutputType attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.static_params">static_params() (pyradtran.params.ParamResolver method)</a>
+      <li><a href="api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.static_params">static_params() (ParamResolver method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.status">status (pyradtran.interface.PointOutcome attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.PointOutcome.html#pyradtran.interface.PointOutcome.status">status (PointOutcome attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.surface_temperature_k">surface_temperature_k (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.surface_temperature_k">surface_temperature_k (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.sza">sza (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.sza">sza (SimulationDefaults attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1092,17 +1017,17 @@ document.write(`
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine.text">text (pyradtran.input_builder.InputLine attribute)</a>
+      <li><a href="api/generated/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine.text">text (InputLine attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.time">time (pyradtran.interface.SimPoint attribute)</a>
+      <li><a href="api/generated/pyradtran.interface.SimPoint.html#pyradtran.interface.SimPoint.time">time (SimPoint attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.timeout_seconds">timeout_seconds (pyradtran.config.ExecutionConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.ExecutionConfig.html#pyradtran.config.ExecutionConfig.timeout_seconds">timeout_seconds (ExecutionConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.to_dict">to_dict() (pyradtran.config.SimulationConfig method)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.to_dict">to_dict() (SimulationConfig method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.to_yaml">to_yaml() (pyradtran.config.SimulationConfig method)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationConfig.html#pyradtran.config.SimulationConfig.to_yaml">to_yaml() (SimulationConfig method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1110,11 +1035,11 @@ document.write(`
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.units">units (pyradtran.params.ParamSpec attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.units">units (ParamSpec attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html#pyradtran.exceptions.UvspecExecutionError">UvspecExecutionError</a>
+      <li><a href="api/generated/pyradtran.exceptions.UvspecExecutionError.html#pyradtran.exceptions.UvspecExecutionError">UvspecExecutionError</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1122,23 +1047,29 @@ document.write(`
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.valid_range">valid_range (pyradtran.params.ParamSpec attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.valid_range">valid_range (ParamSpec attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.validate">validate() (pyradtran.params.ParamSpec method)</a>
+      <li><a href="api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.validate">validate() (ParamSpec method)</a>
+
+      <ul>
+        <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.validate">(SimulationDefaults method)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.validate_against_schema.html#pyradtran.params.validate_against_schema">validate_against_schema() (in module pyradtran.params)</a>
+      </ul></li>
+      <li><a href="api/generated/pyradtran.params.validate_against_schema.html#pyradtran.params.validate_against_schema">validate_against_schema() (in module pyradtran.params)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.validate_var_targets">validate_var_targets() (pyradtran.params.ParamResolver method)</a>
+      <li><a href="api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.validate_var_targets">validate_var_targets() (ParamResolver method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.exceptions.ValidationError.html#pyradtran.exceptions.ValidationError">ValidationError</a>
+      <li><a href="api/generated/pyradtran.exceptions.ValidationError.html#pyradtran.exceptions.ValidationError">ValidationError</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.Raw.html#pyradtran.params.Raw.value">value (pyradtran.params.Raw attribute)</a>
+      <li><a href="api/generated/pyradtran.params.Raw.html#pyradtran.params.Raw.value">value (Raw attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.params.Var.html#pyradtran.params.Var">Var (class in pyradtran.params)</a>
+      <li><a href="api/generated/pyradtran.params.Var.html#pyradtran.params.Var">Var (class in pyradtran.params)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.viewing_geometry">viewing_geometry (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.var_refs">var_refs (ParamResolver attribute)</a>
+</li>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.viewing_geometry">viewing_geometry (SimulationDefaults attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1146,23 +1077,25 @@ document.write(`
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.water_content_g_m3">water_content_g_m3 (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.water_content_g_m3">water_content_g_m3 (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.wavelength_nm">wavelength_nm (pyradtran.config.SimulationDefaults attribute)</a>
+      <li><a href="api/generated/pyradtran.config.SimulationDefaults.html#pyradtran.config.SimulationDefaults.wavelength_nm">wavelength_nm (SimulationDefaults attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.wavelengths">wavelengths (pyradtran.io.ParsedOutput attribute)</a>
+      <li><a href="api/generated/pyradtran.io.OutputParser.html#pyradtran.io.OutputParser.wavelength_range">wavelength_range (OutputParser attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.wc_file">wc_file (pyradtran.config.CloudParameters attribute)</a>
+      <li><a href="api/generated/pyradtran.io.ParsedOutput.html#pyradtran.io.ParsedOutput.wavelengths">wavelengths (ParsedOutput attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.working_dir">working_dir (pyradtran.config.PathsConfig attribute)</a>
+      <li><a href="api/generated/pyradtran.config.CloudParameters.html#pyradtran.config.CloudParameters.wc_file">wc_file (CloudParameters attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.era5.write_atmosphere_file.html#pyradtran.era5.write_atmosphere_file">write_atmosphere_file() (in module pyradtran.era5)</a>
+      <li><a href="api/generated/pyradtran.config.PathsConfig.html#pyradtran.config.PathsConfig.working_dir">working_dir (PathsConfig attribute)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_ice_cloud_file">write_ice_cloud_file() (pyradtran.clouds.CloudFileWriter static method)</a>
+      <li><a href="api/generated/pyradtran.era5.write_atmosphere_file.html#pyradtran.era5.write_atmosphere_file">write_atmosphere_file() (in module pyradtran.era5)</a>
 </li>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_water_cloud_file">write_water_cloud_file() (pyradtran.clouds.CloudFileWriter static method)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_ice_cloud_file">write_ice_cloud_file() (CloudFileWriter static method)</a>
+</li>
+      <li><a href="api/generated/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_water_cloud_file">write_water_cloud_file() (CloudFileWriter static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1170,11 +1103,11 @@ document.write(`
 <h2 id="Z">Z</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.z_bottom_km">z_bottom_km (pyradtran.clouds.CloudLayer attribute)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.z_bottom_km">z_bottom_km (CloudLayer attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.z_top_km">z_top_km (pyradtran.clouds.CloudLayer attribute)</a>
+      <li><a href="api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer.z_top_km">z_top_km (CloudLayer attribute)</a>
 </li>
   </ul></td>
 </tr></table>

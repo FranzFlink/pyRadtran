@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -174,152 +175,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -423,33 +421,63 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for pyradtran.era5</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">ERA5 integration: normalisation, atmosphere files, and cloud profiles.</span>
 
-<span class="sd">ERA5 data arrives under several naming conventions — the CDS NetCDF short</span>
+<span class="sd">ERA5 data arrives under several naming conventions: the CDS NetCDF short</span>
 <span class="sd">names (``t``, ``q``, ``o3``, ``clwc``, coordinate ``pressure_level``) and</span>
 <span class="sd">the ARCO-ERA5 Zarr long names (``temperature``, ``specific_humidity``,</span>
-<span class="sd">``geopotential``, coordinate ``level``).  :func:`normalize_era5` maps any</span>
-<span class="sd">of them onto one canonical form so the rest of pyRadtran never has to</span>
-<span class="sd">care which flavour the user opened.</span>
+<span class="sd">``geopotential``, coordinate ``level``).  :func:`normalize_era5` maps</span>
+<span class="sd">either onto one canonical form.</span>
 
-<span class="sd">From a normalised dataset this module can produce, per (time, lat, lon)</span>
+<span class="sd">From a normalised dataset this module produces, per (time, lat, lon)</span>
 <span class="sd">point:</span>
 
-<span class="sd">* a libRadtran ``radiosonde`` atmosphere file — pressure, temperature,</span>
-<span class="sd">  humidity and (when available) an ozone profile</span>
-<span class="sd">  (:func:`write_atmosphere_file`), and</span>
+<span class="sd">* a libRadtran ``radiosonde`` atmosphere file with pressure, temperature,</span>
+<span class="sd">  humidity and, when available, ozone (:func:`write_atmosphere_file`);</span>
 <span class="sd">* dict-valued ``wc_file`` / ``ic_file`` cloud profiles from the ERA5</span>
 <span class="sd">  ``clwc`` / ``ciwc`` fields (:func:`cloud_profiles`).</span>
 
 <span class="sd">:func:`recommend_atmosphere` suggests the AFGL background profile</span>
-<span class="sd">(``atmosphere_file``) that matches a latitude and date.  The background</span>
-<span class="sd">profile still matters when a radiosonde is used: libRadtran takes every</span>
-<span class="sd">level above the radiosonde top — and every gas the radiosonde does not</span>
-<span class="sd">provide — from the ``atmosphere_file``.</span>
+<span class="sd">(``atmosphere_file``) for a latitude and date.  The background still</span>
+<span class="sd">matters with a radiosonde: libRadtran takes every level above the</span>
+<span class="sd">radiosonde top, and every gas the radiosonde lacks, from it.</span>
+
+<span class="sd">.. autosummary::</span>
+
+<span class="sd">   normalize_era5</span>
+<span class="sd">   select_profile</span>
+<span class="sd">   write_atmosphere_file</span>
+<span class="sd">   era5_atmosphere_file</span>
+<span class="sd">   cloud_profiles</span>
+<span class="sd">   recommend_atmosphere</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+<span class="sd">Passing the ERA5 dataset to</span>
+<span class="sd">:meth:`~pyradtran.interface.PyRadtranAccessor.run` does all of it per</span>
+<span class="sd">point (``era5`` is any pressure-level ERA5 dataset, ``ds`` the dataset of</span>
+<span class="sd">points to simulate):</span>
+
+<span class="sd">&gt;&gt;&gt; result = ds.pyradtran.run(  # doctest: +SKIP</span>
+<span class="sd">...     config_path=cfg, era5_atmosphere=era5, era5_clouds=True</span>
+<span class="sd">... )</span>
+
+<span class="sd">The same steps by hand, for one column:</span>
+
+<span class="sd">&gt;&gt;&gt; from pyradtran.era5 import (</span>
+<span class="sd">...     normalize_era5, select_profile, write_atmosphere_file, cloud_profiles</span>
+<span class="sd">... )</span>
+<span class="sd">&gt;&gt;&gt; profile = select_profile(  # doctest: +SKIP</span>
+<span class="sd">...     normalize_era5(era5), latitude=78.2, longitude=15.6, time=&quot;2022-03-21T12&quot;</span>
+<span class="sd">... )</span>
+<span class="sd">&gt;&gt;&gt; path = write_atmosphere_file(profile, &quot;work/era5_atm.dat&quot;)  # doctest: +SKIP</span>
+<span class="sd">&gt;&gt;&gt; wc, ic = cloud_profiles(profile)  # doctest: +SKIP</span>
 
 <span class="sd">See Also</span>
 <span class="sd">--------</span>
+<span class="sd">pyradtran.interface.PyRadtranAccessor.run : ``era5_atmosphere=`` /</span>
+<span class="sd">    ``era5_clouds=`` integration.</span>
 <span class="sd">pyradtran.io.ERA5AtmosphereGenerator : Backwards-compatible wrapper.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -490,7 +518,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="normalize_era5">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.era5.normalize_era5.html#pyradtran.era5.normalize_era5">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.era5.normalize_era5.html#pyradtran.era5.normalize_era5">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">normalize_era5</span><span class="p">(</span><span class="n">ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return *ds* with ERA5 variables/coordinates on canonical names.</span>
 
@@ -498,6 +526,7 @@ document.write(`
 <span class="sd">    canonical dataset (the call is idempotent).  The pressure coordinate</span>
 <span class="sd">    is converted to hPa when it arrives in Pa.  Unit attributes that</span>
 <span class="sd">    ERA5 pipelines commonly strip are restored with their known values.</span>
+<span class="sd">    The input dataset is not modified.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -511,23 +540,122 @@ document.write(`
 <span class="sd">        Same data, canonical names: variables ``t``, ``q``, ``z``,</span>
 <span class="sd">        ``o3``, ``clwc``, ``ciwc``, ``cc``, ``skt``, ``sst`` (those</span>
 <span class="sd">        present), coordinates ``pressure_level`` (hPa) and</span>
-<span class="sd">        ``valid_time``.</span>
+<span class="sd">        ``valid_time``.  Variables and coordinates that are not in the</span>
+<span class="sd">        alias tables below (``latitude``, ``longitude``, ``u``, ...)</span>
+<span class="sd">        pass through untouched.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    InputGenerationError</span>
+<span class="sd">        If the pressure coordinate carries a ``units`` attribute that is</span>
+<span class="sd">        neither ``Pa`` / ``Pascal(s)`` nor one of ``hPa`` /</span>
+<span class="sd">        ``hectopascal(s)`` / ``millibar(s)`` / ``mb`` / ``mbar`` (case</span>
+<span class="sd">        is ignored).</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    select_profile : Pick one column from the normalised dataset.</span>
+<span class="sd">    era5_atmosphere_file : Normalise, select and write in one call.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Accepted names (``VAR_ALIASES`` and ``COORD_ALIASES`` of this module):</span>
+
+<span class="sd">    ================== ======================================== =========</span>
+<span class="sd">    Canonical          Also accepted                            Units set</span>
+<span class="sd">    ================== ======================================== =========</span>
+<span class="sd">    ``t``              ``temperature``                          K</span>
+<span class="sd">    ``q``              ``specific_humidity``                    kg kg-1</span>
+<span class="sd">    ``z``              ``geopotential``                         m2 s-2</span>
+<span class="sd">    ``o3``             ``ozone_mass_mixing_ratio``              kg kg-1</span>
+<span class="sd">    ``clwc``           ``specific_cloud_liquid_water_content``  kg kg-1</span>
+<span class="sd">    ``ciwc``           ``specific_cloud_ice_water_content``     kg kg-1</span>
+<span class="sd">    ``cc``             ``fraction_of_cloud_cover``              —</span>
+<span class="sd">    ``skt``            ``skin_temperature``                     K</span>
+<span class="sd">    ``sst``            ``sea_surface_temperature``              K</span>
+<span class="sd">    ``pressure_level`` ``level``, ``plev``, ``isobaricInhPa``   hPa</span>
+<span class="sd">    ``valid_time``     ``time``                                 —</span>
+<span class="sd">    ================== ======================================== =========</span>
+
+<span class="sd">    * A long name is renamed only when the canonical name is absent; if</span>
+<span class="sd">      both exist the canonical one wins and the alias is left in place.</span>
+<span class="sd">    * &quot;Units set&quot; is the ``units`` attribute written when the variable</span>
+<span class="sd">      has none.  An existing attribute is never overwritten and the data</span>
+<span class="sd">      are never rescaled, except for the pressure coordinate.</span>
+<span class="sd">    * The pressure coordinate is divided by 100 when its ``units``</span>
+<span class="sd">      attribute is ``Pa`` (or ``Pascal``, in any case), or when it has</span>
+<span class="sd">      no ``units`` and its largest value exceeds 2000 (no atmospheric</span>
+<span class="sd">      pressure level in hPa is that large).  Its ``units`` attribute is</span>
+<span class="sd">      always set to ``hPa`` and its values are cast to ``float``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A two-level ARCO-ERA5-flavoured column (long names, pressure in Pa,</span>
+<span class="sd">    no unit attributes on the variables):</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.era5 import normalize_era5</span>
+<span class="sd">    &gt;&gt;&gt; arco = xr.Dataset(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;temperature&quot;: (&quot;level&quot;, [268.0, 284.0]),</span>
+<span class="sd">    ...         &quot;specific_humidity&quot;: (&quot;level&quot;, [1.5e-3, 5.0e-3]),</span>
+<span class="sd">    ...         &quot;geopotential&quot;: (&quot;level&quot;, [29500.0, 1000.0]),</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     coords={&quot;level&quot;: (&quot;level&quot;, [70000, 100000], {&quot;units&quot;: &quot;Pa&quot;})},</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; ds = normalize_era5(arco)</span>
+<span class="sd">    &gt;&gt;&gt; sorted(ds.data_vars)</span>
+<span class="sd">    [&#39;q&#39;, &#39;t&#39;, &#39;z&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; ds.pressure_level.values</span>
+<span class="sd">    array([ 700., 1000.])</span>
+<span class="sd">    &gt;&gt;&gt; ds.pressure_level.attrs[&quot;units&quot;], ds.t.attrs[&quot;units&quot;], ds.z.attrs[&quot;units&quot;]</span>
+<span class="sd">    (&#39;hPa&#39;, &#39;K&#39;, &#39;m2 s-2&#39;)</span>
+
+<span class="sd">    The same column as a CDS download (short names, ``pressure_level``</span>
+<span class="sd">    in hPa) ends up identical:</span>
+
+<span class="sd">    &gt;&gt;&gt; cds = xr.Dataset(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;t&quot;: (&quot;pressure_level&quot;, [268.0, 284.0]),</span>
+<span class="sd">    ...         &quot;q&quot;: (&quot;pressure_level&quot;, [1.5e-3, 5.0e-3]),</span>
+<span class="sd">    ...         &quot;z&quot;: (&quot;pressure_level&quot;, [29500.0, 1000.0]),</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     coords={&quot;pressure_level&quot;: [700.0, 1000.0]},</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; normalize_era5(cds).identical(ds)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    The call is idempotent; an unknown pressure unit is refused, not</span>
+<span class="sd">    guessed:</span>
+
+<span class="sd">    &gt;&gt;&gt; normalize_era5(ds).identical(ds)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; bad = cds.copy()</span>
+<span class="sd">    &gt;&gt;&gt; bad.pressure_level.attrs[&quot;units&quot;] = &quot;bar&quot;</span>
+<span class="sd">    &gt;&gt;&gt; normalize_era5(bad)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.InputGenerationError: Unsupported pressure unit &#39;bar&#39; in ERA5 dataset; expected &#39;Pa&#39; or &#39;hPa&#39;</span>
+
+<span class="sd">    The alias tables are module-level dicts:</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran.era5 import COORD_ALIASES</span>
+<span class="sd">    &gt;&gt;&gt; COORD_ALIASES[&quot;pressure_level&quot;]</span>
+<span class="sd">    (&#39;pressure_level&#39;, &#39;level&#39;, &#39;plev&#39;, &#39;isobaricInhPa&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rename</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">canonical</span><span class="p">,</span> <span class="n">aliases</span> <span class="ow">in</span> <span class="n">VAR_ALIASES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">canonical</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">aliases</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="k">if</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
-                <span class="n">rename</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span> <span class="o">=</span> <span class="n">canonical</span>
-                <span class="k">break</span>
-    <span class="k">for</span> <span class="n">canonical</span><span class="p">,</span> <span class="n">aliases</span> <span class="ow">in</span> <span class="n">COORD_ALIASES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">canonical</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span> <span class="ow">or</span> <span class="n">canonical</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">aliases</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="k">if</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span> <span class="ow">or</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-                <span class="n">rename</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span> <span class="o">=</span> <span class="n">canonical</span>
-                <span class="k">break</span>
+    <span class="k">for</span> <span class="n">table</span><span class="p">,</span> <span class="n">present</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">VAR_ALIASES</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">COORD_ALIASES</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">)),</span>
+    <span class="p">):</span>
+        <span class="k">for</span> <span class="n">canonical</span><span class="p">,</span> <span class="n">aliases</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">canonical</span> <span class="ow">in</span> <span class="n">present</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">aliases</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="k">if</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">present</span><span class="p">:</span>
+                    <span class="n">rename</span><span class="p">[</span><span class="n">alias</span><span class="p">]</span> <span class="o">=</span> <span class="n">canonical</span>
+                    <span class="k">break</span>
     <span class="k">if</span> <span class="n">rename</span><span class="p">:</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;normalize_era5 renamed: </span><span class="si">{</span><span class="n">rename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -536,9 +664,20 @@ document.write(`
         <span class="n">plev</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;pressure_level&quot;</span><span class="p">]</span>
         <span class="n">unit</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">plev</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;units&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">plev</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;Pa&quot;</span> <span class="ow">or</span> <span class="p">(</span><span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">2000.0</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">unit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;pa&quot;</span><span class="p">,</span> <span class="s2">&quot;pascal&quot;</span><span class="p">,</span> <span class="s2">&quot;pascals&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">unit</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">2000.0</span>
+        <span class="p">):</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="n">pressure_level</span><span class="o">=</span><span class="n">values</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">unit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;hpa&quot;</span><span class="p">,</span> <span class="s2">&quot;millibars&quot;</span><span class="p">,</span> <span class="s2">&quot;millibar&quot;</span><span class="p">,</span> <span class="s2">&quot;mb&quot;</span><span class="p">,</span> <span class="s2">&quot;mbar&quot;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="s2">&quot;hpa&quot;</span> <span class="ow">in</span> <span class="n">unit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="n">unit</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;hpa&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;hectopascal&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;hectopascals&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;millibars&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;millibar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mb&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mbar&quot;</span><span class="p">,</span>
+        <span class="p">):</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">assign_coords</span><span class="p">(</span><span class="n">pressure_level</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span>
@@ -565,7 +704,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="select_profile">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.era5.select_profile.html#pyradtran.era5.select_profile">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.era5.select_profile.html#pyradtran.era5.select_profile">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">select_profile</span><span class="p">(</span>
     <span class="n">ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
     <span class="n">latitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -574,22 +713,125 @@ document.write(`
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Select a single vertical profile from a (normalised) ERA5 dataset.</span>
 
-<span class="sd">    Handles datasets that still carry spatial/time dimensions as well as</span>
-<span class="sd">    ones already reduced to a single column.  Selection is</span>
-<span class="sd">    nearest-neighbour.</span>
+<span class="sd">    Works on datasets with spatial/time dimensions and on ones already</span>
+<span class="sd">    reduced to a single column.  Selection is nearest-neighbour without</span>
+<span class="sd">    a distance tolerance: a point outside the domain or time range</span>
+<span class="sd">    returns the closest edge column.  A warning is logged when that</span>
+<span class="sd">    column is more than 1° from the requested position.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds : xarray.Dataset</span>
+<span class="sd">        ERA5 dataset on canonical names (see :func:`normalize_era5`);</span>
+<span class="sd">        the function looks for the dimensions ``latitude``,</span>
+<span class="sd">        ``longitude``, ``valid_time`` and ``pressure_level`` and does</span>
+<span class="sd">        not normalise names itself.</span>
+<span class="sd">    latitude, longitude : float, optional</span>
+<span class="sd">        Target position in degrees north and east.  The longitude may</span>
+<span class="sd">        be given in either convention (0…360 or −180…180); it is wrapped</span>
+<span class="sd">        into the one the dataset uses.  Required when *ds* has a</span>
+<span class="sd">        ``latitude`` or ``longitude`` dimension, ignored otherwise.</span>
+<span class="sd">    time : str, datetime.datetime or numpy.datetime64, optional</span>
+<span class="sd">        Target time, parsed with :func:`pandas.to_datetime`.  Required</span>
+<span class="sd">        when *ds* has a ``valid_time`` dimension, ignored otherwise.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    xarray.Dataset</span>
 <span class="sd">        Profile with ``pressure_level`` as the only remaining dimension,</span>
-<span class="sd">        loaded into memory.</span>
+<span class="sd">        loaded into memory.  The selected ``latitude`` / ``longitude`` /</span>
+<span class="sd">        ``valid_time`` remain as scalar coordinates.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If *ds* has spatial dimensions but *latitude* or *longitude* is</span>
+<span class="sd">        *None*, or has a ``valid_time`` dimension but *time* is *None*.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    normalize_era5 : Bring any ERA5 flavour onto the names expected here.</span>
+<span class="sd">    write_atmosphere_file, cloud_profiles : Consumers of the profile.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Any other dimension still present after the selection (an ensemble</span>
+<span class="sd">    ``number``, ``expver``, ...) is reduced by taking its **first**</span>
+<span class="sd">    element.</span>
+
+<span class="sd">    A dataset whose largest longitude exceeds 180 is taken to use</span>
+<span class="sd">    0…360, any other −180…180.  The nearest-neighbour search is not</span>
+<span class="sd">    cyclic: on a global 0…360 grid a request just west of 0° picks the</span>
+<span class="sd">    last column, not the first (at most one grid cell off).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.era5 import select_profile</span>
+<span class="sd">    &gt;&gt;&gt; era5 = xr.Dataset(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;t&quot;: (</span>
+<span class="sd">    ...             (&quot;valid_time&quot;, &quot;pressure_level&quot;, &quot;latitude&quot;, &quot;longitude&quot;),</span>
+<span class="sd">    ...             250.0 + np.arange(2 * 3 * 3 * 4).reshape(2, 3, 3, 4),</span>
+<span class="sd">    ...         )</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     coords={</span>
+<span class="sd">    ...         &quot;valid_time&quot;: np.array(</span>
+<span class="sd">    ...             [&quot;2024-07-15T00&quot;, &quot;2024-07-15T06&quot;], dtype=&quot;datetime64[ns]&quot;</span>
+<span class="sd">    ...         ),</span>
+<span class="sd">    ...         &quot;pressure_level&quot;: [500.0, 850.0, 1000.0],</span>
+<span class="sd">    ...         &quot;latitude&quot;: [79.0, 78.5, 78.0],</span>
+<span class="sd">    ...         &quot;longitude&quot;: [14.0, 15.0, 16.0, 17.0],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; profile = select_profile(</span>
+<span class="sd">    ...     era5, latitude=78.4, longitude=15.2, time=&quot;2024-07-15T05:00&quot;</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; profile.t.dims</span>
+<span class="sd">    (&#39;pressure_level&#39;,)</span>
+<span class="sd">    &gt;&gt;&gt; float(profile.latitude), float(profile.longitude)</span>
+<span class="sd">    (78.5, 15.0)</span>
+<span class="sd">    &gt;&gt;&gt; str(profile.valid_time.values)[:13]</span>
+<span class="sd">    &#39;2024-07-15T06&#39;</span>
+<span class="sd">    &gt;&gt;&gt; profile.t.values</span>
+<span class="sd">    array([291., 303., 315.])</span>
+
+<span class="sd">    The longitude convention of the request does not matter (15.2° E is</span>
+<span class="sd">    15.2 − 360 = −344.8):</span>
+
+<span class="sd">    &gt;&gt;&gt; float(select_profile(era5, 78.4, -344.8, &quot;2024-07-15T05:00&quot;).longitude)</span>
+<span class="sd">    15.0</span>
+
+<span class="sd">    A gridded dataset needs a position:</span>
+
+<span class="sd">    &gt;&gt;&gt; select_profile(era5, time=&quot;2024-07-15T05:00&quot;)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: Dataset has spatial dimensions; latitude and longitude required</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;latitude&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="s2">&quot;longitude&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">latitude</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">longitude</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Dataset has spatial dimensions; latitude and longitude required&quot;</span>
             <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;longitude&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span> <span class="ow">and</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="c1"># wrap the request into the dataset&#39;s convention</span>
+            <span class="c1"># ponytail: sel is not cyclic across the 0/360 seam (&lt;= 1 cell off)</span>
+            <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mf">180.0</span><span class="p">:</span>
+                <span class="n">longitude</span> <span class="o">=</span> <span class="n">longitude</span> <span class="o">%</span> <span class="mf">360.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">longitude</span> <span class="o">=</span> <span class="p">(</span><span class="n">longitude</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">)</span> <span class="o">%</span> <span class="mf">360.0</span> <span class="o">-</span> <span class="mf">180.0</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="n">longitude</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+        <span class="n">dlat</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="n">latitude</span><span class="p">)</span>
+        <span class="n">dlon</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">])</span> <span class="o">-</span> <span class="n">longitude</span><span class="p">)</span> <span class="o">%</span> <span class="mf">360.0</span>
+        <span class="n">dlon</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dlon</span><span class="p">,</span> <span class="mf">360.0</span> <span class="o">-</span> <span class="n">dlon</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">dlat</span><span class="p">,</span> <span class="n">dlon</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Nearest ERA5 column (</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">) is more than 1 deg from the &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;requested position (</span><span class="si">{</span><span class="n">latitude</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">longitude</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;valid_time&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -604,39 +846,145 @@ document.write(`
 
 
 <div class="viewcode-block" id="write_atmosphere_file">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.era5.write_atmosphere_file.html#pyradtran.era5.write_atmosphere_file">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.era5.write_atmosphere_file.html#pyradtran.era5.write_atmosphere_file">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">write_atmosphere_file</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
     <span class="n">output_filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
     <span class="n">include_ozone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a profile as a libRadtran ``radiosonde`` atmosphere file.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Write a profile as a libRadtran ``radiosonde`` atmosphere file.</span>
 
 <span class="sd">    Columns are pressure (hPa), temperature (K), specific humidity</span>
-<span class="sd">    (MMR, kg/kg) and — when ``o3`` is present and *include_ozone* is</span>
-<span class="sd">    true — ozone MMR.  The column layout is recorded in a</span>
-<span class="sd">    machine-readable header line (``# columns: H2O MMR O3 MMR``) that</span>
-<span class="sd">    the input builder reads back to construct the matching</span>
-<span class="sd">    ``radiosonde`` option line.</span>
+<span class="sd">    (MMR, kg/kg) and, when ``o3`` is present and *include_ozone* is</span>
+<span class="sd">    true, ozone MMR.  A header line (``# columns: H2O MMR O3 MMR``)</span>
+<span class="sd">    records the layout; the input builder reads it back to construct the</span>
+<span class="sd">    matching ``radiosonde`` option line.</span>
 
-<span class="sd">    Levels containing NaN pressure/temperature/humidity (e.g. ERA5</span>
-<span class="sd">    levels below the surface) are dropped; NaN ozone values become</span>
-<span class="sd">    ``-1``, which tells libRadtran to fall back to the</span>
-<span class="sd">    ``atmosphere_file`` value at that level.</span>
+<span class="sd">    Levels with NaN pressure/temperature/humidity (e.g. ERA5 levels</span>
+<span class="sd">    below the surface) are dropped; NaN ozone values become ``-1``,</span>
+<span class="sd">    which tells libRadtran to fall back to the ``atmosphere_file`` value</span>
+<span class="sd">    at that level.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    profile : xarray.Dataset</span>
 <span class="sd">        Single column, canonical names (see :func:`normalize_era5`),</span>
-<span class="sd">        with ``pressure_level`` in hPa and variables ``t`` and ``q``.</span>
+<span class="sd">        with ``pressure_level`` in hPa and variables ``t`` (K) and ``q``</span>
+<span class="sd">        (kg kg\ :sup:`-1`); optionally ``o3`` (kg kg\ :sup:`-1`).  All</span>
+<span class="sd">        other variables are ignored.  Typically the output of</span>
+<span class="sd">        :func:`select_profile`.</span>
 <span class="sd">    output_filepath : str or pathlib.Path</span>
-<span class="sd">        Destination file.</span>
+<span class="sd">        Destination file.  Missing parent directories are created and an</span>
+<span class="sd">        existing file is overwritten.</span>
 <span class="sd">    include_ozone : bool, default ``True``</span>
-<span class="sd">        Write the ozone column when available.</span>
+<span class="sd">        Write the ozone column when ``o3`` is available.  With ``False``</span>
+<span class="sd">        (or without ``o3``) the ozone profile comes entirely from the</span>
+<span class="sd">        background ``atmosphere_file``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    pathlib.Path</span>
+<span class="sd">        *output_filepath* as a :class:`~pathlib.Path`.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    InputGenerationError</span>
+<span class="sd">        If ``t`` or ``q`` is missing, there is no ``pressure_level``</span>
+<span class="sd">        coordinate, or no level has finite pressure, temperature and</span>
+<span class="sd">        humidity.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    era5_atmosphere_file : Normalise, select and write in one call.</span>
+<span class="sd">    recommend_atmosphere : Matching background ``atmosphere_file``.</span>
+<span class="sd">    cloud_profiles : Cloud profiles from the same column.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    **File format.**  Three comment lines, then one row per level in</span>
+<span class="sd">    order of increasing pressure (top of atmosphere first), which is the</span>
+<span class="sd">    order libRadtran&#39;s ``radiosonde`` option expects::</span>
+
+<span class="sd">        # ERA5 atmosphere profile (libRadtran radiosonde format)</span>
+<span class="sd">        # columns: H2O MMR O3 MMR</span>
+<span class="sd">        # p(hPa)  T(K)  H2O_MMR_O3_MMR</span>
+<span class="sd">        &lt;p&gt;  &lt;T&gt;  &lt;q&gt;  &lt;o3&gt;</span>
+
+<span class="sd">    ====== ====================== ================== ==========</span>
+<span class="sd">    Column Quantity               Unit               Format</span>
+<span class="sd">    ====== ====================== ================== ==========</span>
+<span class="sd">    1      pressure               hPa                ``%.2f``</span>
+<span class="sd">    2      temperature            K                  ``%.2f``</span>
+<span class="sd">    3      H\ :sub:`2`\ O MMR     kg kg\ :sup:`-1`   ``%.4e``</span>
+<span class="sd">    4      O\ :sub:`3` MMR        kg kg\ :sup:`-1`   ``%.4e``</span>
+<span class="sd">    ====== ====================== ================== ==========</span>
+
+<span class="sd">    Column 4 is present only when ozone is written; otherwise the second</span>
+<span class="sd">    header line reads ``# columns: H2O MMR``.  The input builder copies</span>
+<span class="sd">    that string verbatim into the uvspec input::</span>
+
+<span class="sd">        radiosonde &lt;file&gt; H2O MMR O3 MMR</span>
+
+<span class="sd">    **Level handling.**  Rows are sorted by pressure regardless of the</span>
+<span class="sd">    order in *profile*.  Levels whose pressure does not strictly</span>
+<span class="sd">    increase after sorting (duplicates) are dropped, because libRadtran</span>
+<span class="sd">    requires a strictly monotonic grid.  The ``%.2f`` format resolves</span>
+<span class="sd">    pressure to 0.01 hPa.</span>
+
+<span class="sd">    **Humidity.**  No conversion is applied: the ERA5 specific humidity</span>
+<span class="sd">    :math:`q` (mass of water vapour per mass of moist air) is written</span>
+<span class="sd">    as is and declared to libRadtran as a mass mixing ratio (``MMR``).</span>
+<span class="sd">    The mixing ratio with respect to dry air would be</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        w = \frac{q}{1 - q}</span>
+
+<span class="sd">    which differs from :math:`q` by the relative amount</span>
+<span class="sd">    :math:`q/(1-q)`: below 2 % even for a very moist tropical boundary</span>
+<span class="sd">    layer (:math:`q \approx 0.02`) and negligible in the upper</span>
+<span class="sd">    troposphere.  Ozone is treated the same way.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A three-level column with one missing ozone value, given bottom-up</span>
+<span class="sd">    on purpose:</span>
+
+<span class="sd">    &gt;&gt;&gt; import pathlib, tempfile</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.era5 import write_atmosphere_file</span>
+<span class="sd">    &gt;&gt;&gt; profile = xr.Dataset(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;t&quot;: (&quot;pressure_level&quot;, [284.0, 276.0, 252.0]),</span>
+<span class="sd">    ...         &quot;q&quot;: (&quot;pressure_level&quot;, [5.0e-3, 3.0e-3, 4.0e-4]),</span>
+<span class="sd">    ...         &quot;o3&quot;: (&quot;pressure_level&quot;, [5.0e-8, np.nan, 9.0e-8]),</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     coords={&quot;pressure_level&quot;: [1000.0, 850.0, 500.0]},</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; with tempfile.TemporaryDirectory() as tmp:</span>
+<span class="sd">    ...     path = write_atmosphere_file(profile, pathlib.Path(tmp) / &quot;era5_atm.dat&quot;)</span>
+<span class="sd">    ...     print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">    # ERA5 atmosphere profile (libRadtran radiosonde format)</span>
+<span class="sd">    # columns: H2O MMR O3 MMR</span>
+<span class="sd">    # p(hPa)  T(K)  H2O_MMR_O3_MMR</span>
+<span class="sd">    500.00  252.00  4.0000e-04  9.0000e-08</span>
+<span class="sd">    850.00  276.00  3.0000e-03  -1.0000e+00</span>
+<span class="sd">    1000.00  284.00  5.0000e-03  5.0000e-08</span>
+
+<span class="sd">    Without the ozone column:</span>
+
+<span class="sd">    &gt;&gt;&gt; with tempfile.TemporaryDirectory() as tmp:</span>
+<span class="sd">    ...     path = write_atmosphere_file(</span>
+<span class="sd">    ...         profile, pathlib.Path(tmp) / &quot;era5_atm.dat&quot;, include_ozone=False</span>
+<span class="sd">    ...     )</span>
+<span class="sd">    ...     print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">    # ERA5 atmosphere profile (libRadtran radiosonde format)</span>
+<span class="sd">    # columns: H2O MMR</span>
+<span class="sd">    # p(hPa)  T(K)  H2O_MMR</span>
+<span class="sd">    500.00  252.00  4.0000e-04</span>
+<span class="sd">    850.00  276.00  3.0000e-03</span>
+<span class="sd">    1000.00  284.00  5.0000e-03</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;q&quot;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
@@ -657,21 +1005,15 @@ document.write(`
     <span class="n">valid</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">q</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
         <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span><span class="s2">&quot;No valid (non-NaN) levels in ERA5 profile&quot;</span><span class="p">)</span>
-    <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="n">valid</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">o3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">o3</span> <span class="o">=</span> <span class="n">o3</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
-        <span class="n">o3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">o3</span><span class="p">),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">o3</span><span class="p">)</span>
 
     <span class="c1"># TOA first: ascending pressure; drop duplicate levels (libRadtran</span>
     <span class="c1"># requires a strictly monotonic grid).</span>
-    <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-    <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="n">sel</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">sel</span><span class="p">])]</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="n">sel</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="kc">True</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">sel</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))]</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">sel</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="n">sel</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">sel</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">o3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">o3</span> <span class="o">=</span> <span class="n">o3</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
-    <span class="n">keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="kc">True</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">o3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">o3</span> <span class="o">=</span> <span class="n">o3</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span>
+        <span class="n">o3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">o3</span><span class="p">[</span><span class="n">sel</span><span class="p">]),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">o3</span><span class="p">[</span><span class="n">sel</span><span class="p">])</span>
 
     <span class="n">columns</span> <span class="o">=</span> <span class="s2">&quot;H2O MMR O3 MMR&quot;</span> <span class="k">if</span> <span class="n">o3</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;H2O MMR&quot;</span>
 
@@ -693,7 +1035,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="era5_atmosphere_file">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html#pyradtran.era5.era5_atmosphere_file">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.era5.era5_atmosphere_file.html#pyradtran.era5.era5_atmosphere_file">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">era5_atmosphere_file</span><span class="p">(</span>
     <span class="n">era5_ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
     <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -702,7 +1044,84 @@ document.write(`
     <span class="n">output_filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
     <span class="n">include_ozone</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;One-step: normalise, select a point, write the atmosphere file.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalise, select a point and write the atmosphere file.</span>
+
+<span class="sd">    Chains :func:`normalize_era5`, :func:`select_profile` and</span>
+<span class="sd">    :func:`write_atmosphere_file`, as</span>
+<span class="sd">    :meth:`~pyradtran.interface.PyRadtranAccessor.run` does for every</span>
+<span class="sd">    point when given ``era5_atmosphere=``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    era5_ds : xarray.Dataset</span>
+<span class="sd">        ERA5 dataset on pressure levels in any supported naming flavour</span>
+<span class="sd">        (see :func:`normalize_era5`).  Needs temperature and specific</span>
+<span class="sd">        humidity; ozone is used when present.</span>
+<span class="sd">    latitude, longitude : float</span>
+<span class="sd">        Position of the column (nearest grid point is taken; the</span>
+<span class="sd">        longitude may be in 0…360 or −180…180, see</span>
+<span class="sd">        :func:`select_profile`).</span>
+<span class="sd">    time : str, datetime.datetime or numpy.datetime64</span>
+<span class="sd">        Time of the column (nearest time step is taken).</span>
+<span class="sd">    output_filepath : str or pathlib.Path</span>
+<span class="sd">        Destination file.</span>
+<span class="sd">    include_ozone : bool, default ``True``</span>
+<span class="sd">        Write the ozone column when the dataset has ozone.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pathlib.Path</span>
+<span class="sd">        Path of the written file.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    InputGenerationError</span>
+<span class="sd">        On any failure.  Errors of the three steps that are not already</span>
+<span class="sd">        an :class:`~pyradtran.exceptions.InputGenerationError` (a</span>
+<span class="sd">        missing coordinate, an unparsable time, an unwritable path, ...)</span>
+<span class="sd">        are wrapped, with the original exception chained as</span>
+<span class="sd">        ``__cause__``.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    write_atmosphere_file : File format and level handling.</span>
+<span class="sd">    recommend_atmosphere : Matching background ``atmosphere_file``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    An ARCO-ERA5-flavoured cube (long names, ``time`` / ``level``):</span>
+
+<span class="sd">    &gt;&gt;&gt; import pathlib, tempfile</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.era5 import era5_atmosphere_file</span>
+<span class="sd">    &gt;&gt;&gt; shape = (2, 3, 2, 2)</span>
+<span class="sd">    &gt;&gt;&gt; t = np.broadcast_to(np.array([252.0, 276.0, 284.0])[:, None, None], shape)</span>
+<span class="sd">    &gt;&gt;&gt; q = np.broadcast_to(np.array([4e-4, 3e-3, 5e-3])[:, None, None], shape)</span>
+<span class="sd">    &gt;&gt;&gt; dims = (&quot;time&quot;, &quot;level&quot;, &quot;latitude&quot;, &quot;longitude&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; era5 = xr.Dataset(</span>
+<span class="sd">    ...     {&quot;temperature&quot;: (dims, t), &quot;specific_humidity&quot;: (dims, q)},</span>
+<span class="sd">    ...     coords={</span>
+<span class="sd">    ...         &quot;time&quot;: np.array(</span>
+<span class="sd">    ...             [&quot;2024-07-15T00&quot;, &quot;2024-07-15T06&quot;], dtype=&quot;datetime64[ns]&quot;</span>
+<span class="sd">    ...         ),</span>
+<span class="sd">    ...         &quot;level&quot;: [500, 850, 1000],</span>
+<span class="sd">    ...         &quot;latitude&quot;: [78.5, 78.0],</span>
+<span class="sd">    ...         &quot;longitude&quot;: [15.0, 16.0],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; with tempfile.TemporaryDirectory() as tmp:</span>
+<span class="sd">    ...     path = era5_atmosphere_file(</span>
+<span class="sd">    ...         era5, 78.2, 15.6, &quot;2024-07-15T05:00&quot;, pathlib.Path(tmp) / &quot;atm.dat&quot;</span>
+<span class="sd">    ...     )</span>
+<span class="sd">    ...     print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">    # ERA5 atmosphere profile (libRadtran radiosonde format)</span>
+<span class="sd">    # columns: H2O MMR</span>
+<span class="sd">    # p(hPa)  T(K)  H2O_MMR</span>
+<span class="sd">    500.00  252.00  4.0000e-04</span>
+<span class="sd">    850.00  276.00  3.0000e-03</span>
+<span class="sd">    1000.00  284.00  5.0000e-03</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">normalize_era5</span><span class="p">(</span><span class="n">era5_ds</span><span class="p">)</span>
         <span class="n">profile</span> <span class="o">=</span> <span class="n">select_profile</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
@@ -739,7 +1158,12 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_altitude_km</span><span class="p">(</span><span class="n">profile</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">p_hpa</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Geometric altitude per level: geopotential when present, else hypsometric.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Altitude (km) per level: from ``z`` when present, else from pressure.</span>
+
+<span class="sd">    With a ``z`` variable the values go through :func:`_z_to_km`.</span>
+<span class="sd">    Otherwise a constant 7 km scale height is assumed,</span>
+<span class="sd">    ``-7 * ln(p / 1013.25 hPa)``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;z&quot;</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">_z_to_km</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">profile</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;units&quot;</span><span class="p">))</span>
@@ -748,14 +1172,14 @@ document.write(`
 
 
 <div class="viewcode-block" id="cloud_profiles">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.era5.cloud_profiles.html#pyradtran.era5.cloud_profiles">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.era5.cloud_profiles.html#pyradtran.era5.cloud_profiles">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cloud_profiles</span><span class="p">(</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
     <span class="n">reff_water_um</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="n">reff_ice_um</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span>
     <span class="n">threshold_g_m3</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build ``wc_file`` / ``ic_file`` profile dicts from an ERA5 column.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Build ``wc_file`` / ``ic_file`` profile dicts from an ERA5 column.</span>
 
 <span class="sd">    Converts ``clwc`` / ``ciwc`` (kg/kg) to g m⁻³ using the ideal-gas</span>
 <span class="sd">    air density, places layer boundaries midway between model levels,</span>
@@ -766,20 +1190,209 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    profile : xarray.Dataset</span>
-<span class="sd">        Single column, canonical names, ``pressure_level`` in hPa.</span>
-<span class="sd">        Needs ``t`` plus at least one of ``clwc`` / ``ciwc``.</span>
-<span class="sd">    reff_water_um, reff_ice_um : float</span>
-<span class="sd">        Effective radii to assign (ERA5 has none).</span>
+<span class="sd">        Single column, canonical names (see :func:`normalize_era5`,</span>
+<span class="sd">        :func:`select_profile`), ``pressure_level`` in hPa.  Needs ``t``</span>
+<span class="sd">        (K) plus at least one of ``clwc`` / ``ciwc``</span>
+<span class="sd">        (kg kg\ :sup:`-1`).  ``z`` (geopotential) is used for the</span>
+<span class="sd">        altitudes when present.</span>
+<span class="sd">    reff_water_um : float, default ``10.0``</span>
+<span class="sd">        Effective radius (µm) assigned to every liquid row; ERA5</span>
+<span class="sd">        carries no particle size.</span>
+<span class="sd">    reff_ice_um : float, default ``20.0``</span>
+<span class="sd">        Effective radius (µm) assigned to every ice row.</span>
 <span class="sd">    threshold_g_m3 : float, default ``1e-4``</span>
-<span class="sd">        Layers below this water content count as cloud-free.</span>
+<span class="sd">        Levels at or below this water content (g m\ :sup:`-3`) count as</span>
+<span class="sd">        cloud-free.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    (wc, ic) : tuple of dict or None</span>
-<span class="sd">        Each a ``{&quot;z&quot;: [...], &quot;lwc&quot;/&quot;iwc&quot;: [...], &quot;reff&quot;: [...]}``</span>
-<span class="sd">        mapping ready for a dict-valued ``wc_file`` / ``ic_file``</span>
-<span class="sd">        parameter, or *None* when that phase has no cloud.</span>
+<span class="sd">    wc : dict or None</span>
+<span class="sd">        ``{&quot;z&quot;: [...], &quot;lwc&quot;: [...], &quot;reff&quot;: [...]}``: altitude (km),</span>
+<span class="sd">        liquid water content (g m\ :sup:`-3`) and effective radius (µm)</span>
+<span class="sd">        as plain lists, ordered **top-down**.  *None* when ``clwc`` is</span>
+<span class="sd">        absent or no level exceeds the threshold.</span>
+<span class="sd">    ic : dict or None</span>
+<span class="sd">        Same with key ``&quot;iwc&quot;`` for ice, from ``ciwc``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    InputGenerationError</span>
+<span class="sd">        If *profile* has no ``pressure_level`` or no ``t``.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    pyradtran.interface.PyRadtranAccessor.run : ``era5_clouds=`` calls</span>
+<span class="sd">        this function per point; a dict passes keyword overrides, e.g.</span>
+<span class="sd">        ``era5_clouds={&quot;reff_ice_um&quot;: 35.0}``.</span>
+<span class="sd">    pyradtran.core.Simulation.format_cloud_profile : Turns the dict into</span>
+<span class="sd">        the three-column file libRadtran reads.</span>
+<span class="sd">    write_atmosphere_file : Thermodynamic profile of the same column.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    **Water content.**  ERA5 gives the cloud water as a mass mixing</span>
+<span class="sd">    ratio :math:`q_c` (kg of condensate per kg of air).  With the dry-air</span>
+<span class="sd">    ideal-gas density at pressure :math:`p` (hPa) and temperature</span>
+<span class="sd">    :math:`T` (K)</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \rho_\mathrm{air} = \frac{100\,p}{R_d\,T},</span>
+<span class="sd">        \qquad R_d = 287.058\ \mathrm{J\,kg^{-1}\,K^{-1}},</span>
+
+<span class="sd">    the volumetric water content in g m\ :sup:`-3` is</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \mathrm{LWC} = 1000\; q_c\; \rho_\mathrm{air}</span>
+
+<span class="sd">    (and likewise IWC from ``ciwc``).  No virtual-temperature correction</span>
+<span class="sd">    is applied, and the grid-box mean is used as is (not divided by the</span>
+<span class="sd">    cloud fraction ``cc``).  Negative values are clipped to zero.</span>
+
+<span class="sd">    **Altitude.**  When *profile* has ``z`` it is converted according to</span>
+<span class="sd">    its ``units`` attribute: a geopotential :math:`\Phi`</span>
+<span class="sd">    (``m2 s-2``, ``m**2 s**-2``, ...) gives the geopotential height</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        z = \frac{\Phi}{g_0}, \qquad g_0 = 9.80665\ \mathrm{m\,s^{-2}},</span>
+
+<span class="sd">    while ``m`` / ``gpm`` / ``km`` are taken as heights.  Without a</span>
+<span class="sd">    recognised unit, values above 10\ :sup:`5` are assumed to be a</span>
+<span class="sd">    geopotential, anything else metres.  Without ``z`` a constant 7 km</span>
+<span class="sd">    scale height is used, :math:`z = -7\,\mathrm{km}\,\ln(p / 1013.25\,</span>
+<span class="sd">    \mathrm{hPa})`, which is only a rough estimate.  Altitudes are above</span>
+<span class="sd">    mean sea level in both cases, not above the local surface.</span>
+
+<span class="sd">    **Layers.**  Levels with NaN pressure, temperature, altitude or</span>
+<span class="sd">    water content are discarded and the rest sorted by altitude,</span>
+<span class="sd">    :math:`z_0 &lt; z_1 &lt; \dots &lt; z_{n-1}`.  Each level :math:`i`</span>
+<span class="sd">    represents the layer between the midpoints to its neighbours,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        b_{i-1/2} = \tfrac12 (z_{i-1} + z_i), \qquad</span>
+<span class="sd">        b_{i+1/2} = \tfrac12 (z_i + z_{i+1}),</span>
+
+<span class="sd">    with the outermost layers extended by half the adjacent spacing</span>
+<span class="sd">    (the lowest boundary is not allowed below 0 km; a single-level</span>
+<span class="sd">    profile gets ±0.05 km).  If :math:`i_\mathrm{lo}` and</span>
+<span class="sd">    :math:`i_\mathrm{hi}` are the lowest and highest level above the</span>
+<span class="sd">    threshold, the returned rows are, from the top down,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        (b_{i_\mathrm{hi}+1/2},\ 0), \quad</span>
+<span class="sd">        (b_{i_\mathrm{hi}-1/2},\ c_{i_\mathrm{hi}}), \quad \dots, \quad</span>
+<span class="sd">        (b_{i_\mathrm{lo}-1/2},\ c_{i_\mathrm{lo}})</span>
+
+<span class="sd">    so that every content value :math:`c_i` sits at the lower boundary</span>
+<span class="sd">    of its layer and the zero on top closes the grid, which is how</span>
+<span class="sd">    libRadtran reads a ``wc_file 1D`` / ``ic_file 1D``.  One contiguous</span>
+<span class="sd">    block is written per phase: levels between two cloud decks keep</span>
+<span class="sd">    their own (sub-threshold) content instead of being set to zero.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A five-level column with liquid water at 850 and 925 hPa and a</span>
+<span class="sd">    little ice at 500 hPa:</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.era5 import cloud_profiles</span>
+<span class="sd">    &gt;&gt;&gt; lev = &quot;pressure_level&quot;</span>
+<span class="sd">    &gt;&gt;&gt; profile = xr.Dataset(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;t&quot;: (lev, [252.0, 268.0, 276.0, 280.0, 284.0]),</span>
+<span class="sd">    ...         &quot;z&quot;: (</span>
+<span class="sd">    ...             lev,</span>
+<span class="sd">    ...             [54000.0, 29500.0, 14500.0, 7500.0, 1000.0],</span>
+<span class="sd">    ...             {&quot;units&quot;: &quot;m2 s-2&quot;},</span>
+<span class="sd">    ...         ),</span>
+<span class="sd">    ...         &quot;clwc&quot;: (lev, [0.0, 0.0, 2.0e-4, 3.0e-4, 0.0]),</span>
+<span class="sd">    ...         &quot;ciwc&quot;: (lev, [2.0e-5, 0.0, 0.0, 0.0, 0.0]),</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     coords={lev: [500.0, 700.0, 850.0, 925.0, 1000.0]},</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; wc, ic = cloud_profiles(profile)</span>
+<span class="sd">    &gt;&gt;&gt; np.round(wc[&quot;z&quot;], 3).tolist()</span>
+<span class="sd">    [2.243, 1.122, 0.433]</span>
+<span class="sd">    &gt;&gt;&gt; np.round(wc[&quot;lwc&quot;], 3).tolist()</span>
+<span class="sd">    [0.0, 0.215, 0.345]</span>
+<span class="sd">    &gt;&gt;&gt; wc[&quot;reff&quot;]</span>
+<span class="sd">    [10.0, 10.0, 10.0]</span>
+
+<span class="sd">    Read from the bottom: 0.345 g m\ :sup:`-3` between 0.433 and</span>
+<span class="sd">    1.122 km (the 925 hPa level at 0.765 km), 0.215 g m\ :sup:`-3` up to</span>
+<span class="sd">    2.243 km (the 850 hPa level at 1.479 km), nothing above.  The ice</span>
+<span class="sd">    cloud is a single layer around the 500 hPa level:</span>
+
+<span class="sd">    &gt;&gt;&gt; np.round(ic[&quot;z&quot;], 3).tolist(), np.round(ic[&quot;iwc&quot;], 4).tolist()</span>
+<span class="sd">    ([6.756, 4.257], [0.0, 0.0138])</span>
+
+<span class="sd">    Raising the threshold removes the thin ice cloud, and other</span>
+<span class="sd">    effective radii can be assigned:</span>
+
+<span class="sd">    &gt;&gt;&gt; wc, ic = cloud_profiles(profile, reff_water_um=8.0, threshold_g_m3=0.05)</span>
+<span class="sd">    &gt;&gt;&gt; ic is None, wc[&quot;reff&quot;]</span>
+<span class="sd">    (True, [8.0, 8.0, 8.0])</span>
+
+<span class="sd">    The dicts are valid ``wc_file`` / ``ic_file`` parameter values:</span>
+
+<span class="sd">    &gt;&gt;&gt; result = ds.pyradtran.run(  # doctest: +SKIP</span>
+<span class="sd">    ...     config_path=cfg, params={&quot;wc_file&quot;: wc}</span>
+<span class="sd">    ... )</span>
+
+<span class="sd">    A deeper synthetic column.  Markers are the ERA5 level values, steps</span>
+<span class="sd">    the layers libRadtran sees:</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        from pyradtran.era5 import cloud_profiles</span>
+
+<span class="sd">        p = np.array([300, 400, 500, 600, 700, 775, 850, 900, 950, 1000.0])</span>
+<span class="sd">        z_km = -7.6 * np.log(p / 1013.25)</span>
+<span class="sd">        t = 288.0 - 6.5 * z_km</span>
+<span class="sd">        clwc = np.array([0, 0, 0, 0, 0.3, 1.6, 2.6, 1.2, 0, 0]) * 1e-4</span>
+<span class="sd">        ciwc = np.array([0.15, 0.5, 0.35, 0.1, 0, 0, 0, 0, 0, 0]) * 1e-4</span>
+<span class="sd">        lev = &quot;pressure_level&quot;</span>
+<span class="sd">        profile = xr.Dataset(</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;t&quot;: (lev, t),</span>
+<span class="sd">                &quot;z&quot;: (lev, z_km * 9806.65, {&quot;units&quot;: &quot;m2 s-2&quot;}),</span>
+<span class="sd">                &quot;clwc&quot;: (lev, clwc),</span>
+<span class="sd">                &quot;ciwc&quot;: (lev, ciwc),</span>
+<span class="sd">            },</span>
+<span class="sd">            coords={lev: p},</span>
+<span class="sd">        )</span>
+<span class="sd">        wc, ic = cloud_profiles(profile)</span>
+<span class="sd">        rho = 100.0 * p / (287.058 * t)</span>
+
+<span class="sd">        fig, ax = plt.subplots(figsize=(5.5, 4.2))</span>
+<span class="sd">        for prof, key, mmr, color, label in (</span>
+<span class="sd">            (wc, &quot;lwc&quot;, clwc, &quot;C0&quot;, &quot;liquid (wc_file)&quot;),</span>
+<span class="sd">            (ic, &quot;iwc&quot;, ciwc, &quot;C1&quot;, &quot;ice (ic_file)&quot;),</span>
+<span class="sd">        ):</span>
+<span class="sd">            edges = prof[&quot;z&quot;][::-1]</span>
+<span class="sd">            values = prof[key][:0:-1]</span>
+<span class="sd">            ax.stairs(values, edges, orientation=&quot;horizontal&quot;, color=color,</span>
+<span class="sd">                      fill=True, alpha=0.3)</span>
+<span class="sd">            ax.stairs(values, edges, orientation=&quot;horizontal&quot;, color=color,</span>
+<span class="sd">                      label=label)</span>
+<span class="sd">            ax.plot(1000.0 * mmr * rho, z_km, &quot;o&quot;, color=color, ms=4)</span>
+<span class="sd">        ax.set_xlabel(&quot;water content (g m$^{-3}$)&quot;)</span>
+<span class="sd">        ax.set_ylabel(&quot;altitude (km)&quot;)</span>
+<span class="sd">        ax.set_ylim(0, 11)</span>
+<span class="sd">        ax.legend()</span>
+<span class="sd">        plt.tight_layout()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;pressure_level&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InputGenerationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;ERA5 profile has no &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;; cloud profiles need &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;pressure_level&#39; and &#39;t&#39; (see normalize_era5)&quot;</span>
+            <span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;pressure_level&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">profile</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
@@ -798,11 +1411,10 @@ document.write(`
         <span class="n">ok</span> <span class="o">=</span> <span class="n">valid</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mmr</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">alt_all</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="k">continue</span>
-        <span class="n">p_v</span><span class="p">,</span> <span class="n">t_v</span><span class="p">,</span> <span class="n">mmr_v</span><span class="p">,</span> <span class="n">alt_v</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">ok</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="n">ok</span><span class="p">],</span> <span class="n">mmr</span><span class="p">[</span><span class="n">ok</span><span class="p">],</span> <span class="n">alt_all</span><span class="p">[</span><span class="n">ok</span><span class="p">]</span>
-
         <span class="c1"># ascending altitude</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">alt_v</span><span class="p">)</span>
-        <span class="n">p_v</span><span class="p">,</span> <span class="n">t_v</span><span class="p">,</span> <span class="n">mmr_v</span><span class="p">,</span> <span class="n">alt_v</span> <span class="o">=</span> <span class="n">p_v</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">t_v</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">mmr_v</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">alt_v</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+        <span class="n">sel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">ok</span><span class="p">)</span>
+        <span class="n">sel</span> <span class="o">=</span> <span class="n">sel</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">alt_all</span><span class="p">[</span><span class="n">sel</span><span class="p">])]</span>
+        <span class="n">p_v</span><span class="p">,</span> <span class="n">t_v</span><span class="p">,</span> <span class="n">mmr_v</span><span class="p">,</span> <span class="n">alt_v</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">sel</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="n">sel</span><span class="p">],</span> <span class="n">mmr</span><span class="p">[</span><span class="n">sel</span><span class="p">],</span> <span class="n">alt_all</span><span class="p">[</span><span class="n">sel</span><span class="p">]</span>
 
         <span class="n">air_density</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_v</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">R_DRY</span> <span class="o">*</span> <span class="n">t_v</span><span class="p">)</span>  <span class="c1"># kg m-3</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">mmr_v</span> <span class="o">*</span> <span class="n">air_density</span> <span class="o">*</span> <span class="mf">1000.0</span>  <span class="c1"># g m-3</span>
@@ -812,9 +1424,8 @@ document.write(`
             <span class="k">continue</span>
 
         <span class="c1"># contiguous index range spanning all cloudy levels</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cloudy</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">idx</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-        <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">cloudy</span><span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># top down</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alt_v</span><span class="p">)</span>
 
         <span class="c1"># boundaries midway between levels; half-spacing at the ends</span>
@@ -837,13 +1448,9 @@ document.write(`
 
         <span class="c1"># rows from cloud top down: top boundary closes the grid (zero),</span>
         <span class="c1"># each lower boundary carries the content of the layer above it.</span>
-        <span class="n">z_rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">boundary_above</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))]</span>
-        <span class="n">c_rows</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
-        <span class="n">r_rows</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">reff</span><span class="p">)]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="n">z_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">boundary_below</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
-            <span class="n">c_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)))</span>
-            <span class="n">r_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">reff</span><span class="p">))</span>
+        <span class="n">z_rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">boundary_above</span><span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span> <span class="o">+</span> <span class="p">[</span><span class="n">boundary_below</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">]</span>
+        <span class="n">c_rows</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">]</span>
+        <span class="n">r_rows</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">reff</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_rows</span><span class="p">)</span>
 
         <span class="n">results</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z_rows</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">c_rows</span><span class="p">,</span> <span class="s2">&quot;reff&quot;</span><span class="p">:</span> <span class="n">r_rows</span><span class="p">}</span>
 
@@ -852,31 +1459,83 @@ document.write(`
 
 
 <div class="viewcode-block" id="recommend_atmosphere">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.era5.recommend_atmosphere.html#pyradtran.era5.recommend_atmosphere">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.era5.recommend_atmosphere.html#pyradtran.era5.recommend_atmosphere">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">recommend_atmosphere</span><span class="p">(</span>
     <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Suggest the AFGL ``atmosphere_file`` shortname for a location/date.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Suggest the AFGL ``atmosphere_file`` shortname for a location/date.</span>
 
-<span class="sd">    The background atmosphere still supplies everything a radiosonde</span>
-<span class="sd">    profile does not: levels above the profile top and all trace gases</span>
-<span class="sd">    without a dedicated column.  Matching it to the season and latitude</span>
-<span class="sd">    band keeps those fill-ins consistent with the profile.</span>
+<span class="sd">    The background atmosphere supplies everything a radiosonde profile</span>
+<span class="sd">    does not: levels above the profile top and all trace gases without a</span>
+<span class="sd">    dedicated column.  Matching it to the season and latitude band keeps</span>
+<span class="sd">    those fill-ins consistent with the profile.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    latitude : float</span>
-<span class="sd">        Degrees north.</span>
-<span class="sd">    time : str, datetime, or numpy.datetime64</span>
-<span class="sd">        Date (month decides the season).</span>
+<span class="sd">        Degrees north (negative in the southern hemisphere).</span>
+<span class="sd">    time : str, datetime.datetime or numpy.datetime64</span>
+<span class="sd">        Date, parsed with :func:`pandas.to_datetime`.  Only the month is</span>
+<span class="sd">        used.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">        One of ``&quot;afglt&quot;``, ``&quot;afglms&quot;``, ``&quot;afglmw&quot;``, ``&quot;afglss&quot;``,</span>
-<span class="sd">        ``&quot;afglsw&quot;`` — accepted directly by</span>
-<span class="sd">        ``paths.atmosphere_profile`` and the ``atmosphere_file`` option.</span>
+<span class="sd">        ``&quot;afglsw&quot;``; accepted directly by ``paths.atmosphere_profile``</span>
+<span class="sd">        and the ``atmosphere_file`` option.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    write_atmosphere_file : The radiosonde file the background completes.</span>
+<span class="sd">    pyradtran.config.list_atmosphere_profiles : Profiles shipped with</span>
+<span class="sd">        libRadtran.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    A lookup on :math:`|\varphi|` (absolute latitude) and the half-year:</span>
+
+<span class="sd">    ================================= ================== ==================</span>
+<span class="sd">    Latitude band                     Summer half-year   Winter half-year</span>
+<span class="sd">    ================================= ================== ==================</span>
+<span class="sd">    :math:`|\varphi| &lt; 30°`           ``afglt``          ``afglt``</span>
+<span class="sd">    :math:`30° \le |\varphi| &lt; 60°`   ``afglms``         ``afglmw``</span>
+<span class="sd">    :math:`|\varphi| \ge 60°`         ``afglss``         ``afglsw``</span>
+<span class="sd">    ================================= ================== ==================</span>
+
+<span class="sd">    &quot;Summer&quot; is April–September for ``latitude &gt;= 0`` and</span>
+<span class="sd">    October–March for ``latitude &lt; 0``.  The band edges belong to the</span>
+<span class="sd">    poleward band (exactly 30° is mid-latitude, exactly 60° subarctic).</span>
+<span class="sd">    The US standard atmosphere (``afglus``) is never returned.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.era5 import recommend_atmosphere</span>
+<span class="sd">    &gt;&gt;&gt; recommend_atmosphere(78.2, &quot;2024-07-15&quot;)  # Svalbard, summer</span>
+<span class="sd">    &#39;afglss&#39;</span>
+<span class="sd">    &gt;&gt;&gt; recommend_atmosphere(78.2, &quot;2024-01-15&quot;)  # polar night</span>
+<span class="sd">    &#39;afglsw&#39;</span>
+<span class="sd">    &gt;&gt;&gt; recommend_atmosphere(48.1, &quot;2024-10-01&quot;)  # Munich, October</span>
+<span class="sd">    &#39;afglmw&#39;</span>
+<span class="sd">    &gt;&gt;&gt; recommend_atmosphere(-33.9, &quot;2024-01-15&quot;)  # Cape Town: austral summer</span>
+<span class="sd">    &#39;afglms&#39;</span>
+<span class="sd">    &gt;&gt;&gt; recommend_atmosphere(5.0, &quot;2024-01-15&quot;)  # tropics, any month</span>
+<span class="sd">    &#39;afglt&#39;</span>
+
+<span class="sd">    Any date-like object works:</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; recommend_atmosphere(-75.0, np.datetime64(&quot;2024-07-01T12:00&quot;))</span>
+<span class="sd">    &#39;afglsw&#39;</span>
+
+<span class="sd">    As a parameter of a run that takes its lower atmosphere from ERA5:</span>
+
+<span class="sd">    &gt;&gt;&gt; result = ds.pyradtran.run(  # doctest: +SKIP</span>
+<span class="sd">    ...     config_path=cfg,</span>
+<span class="sd">    ...     era5_atmosphere=era5,</span>
+<span class="sd">    ...     params={&quot;atmosphere_file&quot;: recommend_atmosphere(78.2, &quot;2024-07-15&quot;)},</span>
+<span class="sd">    ... )</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">month</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">month</span>
     <span class="n">northern_summer</span> <span class="o">=</span> <span class="n">month</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>

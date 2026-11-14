@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -174,152 +175,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -426,25 +424,36 @@ document.write(`
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Instrument-channel convolution and brightness temperature.</span>
 
-<span class="sd">Convolve spectral pyRadtran results with instrument spectral response</span>
-<span class="sd">functions (SRFs) and convert thermal radiances to brightness temperatures.</span>
+<span class="sd">Turn spectral ``uvspec`` output into what an instrument reports:</span>
+<span class="sd">band averages weighted by the spectral response function (SRF) of each</span>
+<span class="sd">channel and, for thermal channels, brightness temperatures.</span>
+
+<span class="sd">.. autosummary::</span>
+
+<span class="sd">   convolve_channels</span>
+<span class="sd">   brightness_temperature</span>
 
 <span class="sd">Examples</span>
 <span class="sd">--------</span>
-<span class="sd">&gt;&gt;&gt; channel_ds = convolve_channels(result_ds, srf)</span>
-<span class="sd">&gt;&gt;&gt; tb = brightness_temperature(channel_ds[&quot;uu&quot;], 10500.0)</span>
+<span class="sd">Post-process a spectral result (``result_ds`` has a ``wavelength``</span>
+<span class="sd">dimension, ``srf`` has dims ``(channel, wavelength)``):</span>
+
+<span class="sd">&gt;&gt;&gt; channel_ds = convolve_channels(result_ds, srf)  # doctest: +SKIP</span>
+<span class="sd">&gt;&gt;&gt; tb = brightness_temperature(  # doctest: +SKIP</span>
+<span class="sd">...     channel_ds[&quot;uu&quot;], 10500.0, radiance_units=&quot;W m-2 nm-1 sr-1&quot;</span>
+<span class="sd">... )</span>
+
+<span class="sd">Or let :meth:`~pyradtran.interface.PyRadtranAccessor.run` convolve:</span>
+
+<span class="sd">&gt;&gt;&gt; channel_ds = ds.pyradtran.run(config_path=cfg, channels=srf)  # doctest: +SKIP</span>
 
 <span class="sd">See Also</span>
 <span class="sd">--------</span>
 <span class="sd">pyradtran.interface.PyRadtranAccessor.run : ``channels=`` integration.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
-
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1"># CODATA 2018</span>
 <span class="n">_H</span> <span class="o">=</span> <span class="mf">6.62607015e-34</span>  <span class="c1"># J s</span>
@@ -459,29 +468,134 @@ document.write(`
 
 
 <div class="viewcode-block" id="convolve_channels">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.channels.convolve_channels.html#pyradtran.channels.convolve_channels">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.channels.convolve_channels.html#pyradtran.channels.convolve_channels">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">convolve_channels</span><span class="p">(</span>
     <span class="n">result</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
     <span class="n">srf</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span>
     <span class="n">keep_spectral</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;SRF-average all spectral variables onto a ``channel`` dimension.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;SRF-average all spectral variables onto a ``channel`` dimension.</span>
+
+<span class="sd">    Every variable with a ``wavelength`` dimension is replaced by its</span>
+<span class="sd">    response-weighted band average, one value per instrument channel.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    result : xarray.Dataset</span>
-<span class="sd">        Spectral simulation result with a ``wavelength`` dimension (nm).</span>
+<span class="sd">        Spectral simulation result with a ``wavelength`` dimension (nm),</span>
+<span class="sd">        e.g. the return value of</span>
+<span class="sd">        :meth:`~pyradtran.interface.PyRadtranAccessor.run`.</span>
 <span class="sd">    srf : xarray.DataArray</span>
-<span class="sd">        Spectral response, dims ``(channel, wavelength)``. Interpolated</span>
-<span class="sd">        onto the result&#39;s wavelength grid; values outside the SRF grid</span>
-<span class="sd">        are treated as zero response.</span>
+<span class="sd">        Spectral response, dims ``(channel, wavelength)`` with</span>
+<span class="sd">        ``wavelength`` in nm. Interpolated linearly onto the result&#39;s</span>
+<span class="sd">        wavelength grid, with zero response outside the SRF&#39;s own grid.</span>
+<span class="sd">        Need not be normalised.</span>
 <span class="sd">    keep_spectral : bool, default ``False``</span>
 <span class="sd">        Keep the original spectral variables under ``&lt;name&gt;_spectral``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    xarray.Dataset</span>
-<span class="sd">        Channel-space dataset; non-spectral variables pass through.</span>
+<span class="sd">        Channel-space dataset: the ``wavelength`` dimension is replaced by</span>
+<span class="sd">        ``channel``. Variables without a ``wavelength`` dimension (e.g.</span>
+<span class="sd">        ``status``) pass through unchanged, as do the dataset attributes.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If *result* has no ``wavelength`` dimension, or a channel&#39;s SRF</span>
+<span class="sd">        does not overlap the simulated wavelength range (its integral</span>
+<span class="sd">        would be zero).</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    brightness_temperature : Convert channel radiances to temperatures.</span>
+<span class="sd">    pyradtran.interface.PyRadtranAccessor.run : ``channels=`` applies this</span>
+<span class="sd">        function to the simulation output.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For a spectral quantity :math:`X(\lambda)` and the response</span>
+<span class="sd">    :math:`\varphi_c(\lambda)` of channel :math:`c`, the channel value is</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \bar{X}_c = \frac{\int X(\lambda)\,\varphi_c(\lambda)\,</span>
+<span class="sd">                     \mathrm{d}\lambda}</span>
+<span class="sd">                    {\int \varphi_c(\lambda)\,\mathrm{d}\lambda}</span>
+
+<span class="sd">    Both integrals use the trapezoidal rule on the *result&#39;s* wavelength</span>
+<span class="sd">    grid. The output keeps the units of the input: a spectral radiance</span>
+<span class="sd">    in mW m\ :sup:`-2` nm\ :sup:`-1` sr\ :sup:`-1` stays a band-mean</span>
+<span class="sd">    spectral radiance, as :func:`brightness_temperature` expects.</span>
+
+<span class="sd">    The simulated grid must resolve the SRF. With a coarse</span>
+<span class="sd">    ``mol_abs_param`` (e.g. ``reptran coarse``) and a narrow channel,</span>
+<span class="sd">    few grid points carry weight and the band average becomes noisy.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A linear spectrum at two time steps, convolved with three Gaussian</span>
+<span class="sd">    channels:</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran import convolve_channels</span>
+<span class="sd">    &gt;&gt;&gt; wl = np.arange(8000.0, 13001.0, 10.0)</span>
+<span class="sd">    &gt;&gt;&gt; result = xr.Dataset(</span>
+<span class="sd">    ...     {&quot;uu&quot;: ((&quot;time&quot;, &quot;wavelength&quot;), np.outer([1.0, 2.0], wl / 1000.0))},</span>
+<span class="sd">    ...     coords={&quot;time&quot;: [0, 1], &quot;wavelength&quot;: wl},</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; centres = xr.DataArray([8600.0, 10800.0, 12000.0], dims=&quot;channel&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; srf = np.exp(-0.5 * ((result.wavelength - centres) / 200.0) ** 2)</span>
+<span class="sd">    &gt;&gt;&gt; srf = srf.assign_coords(channel=[&quot;8.6um&quot;, &quot;10.8um&quot;, &quot;12.0um&quot;])</span>
+<span class="sd">    &gt;&gt;&gt; channel_ds = convolve_channels(result, srf)</span>
+<span class="sd">    &gt;&gt;&gt; channel_ds.uu.dims</span>
+<span class="sd">    (&#39;time&#39;, &#39;channel&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; channel_ds.uu.round(2).values</span>
+<span class="sd">    array([[ 8.6, 10.8, 12. ],</span>
+<span class="sd">           [17.2, 21.6, 24. ]])</span>
+
+<span class="sd">    Keep the spectrum next to the channel values:</span>
+
+<span class="sd">    &gt;&gt;&gt; sorted(convolve_channels(result, srf, keep_spectral=True).data_vars)</span>
+<span class="sd">    [&#39;uu&#39;, &#39;uu_spectral&#39;]</span>
+
+<span class="sd">    A channel outside the simulated range raises:</span>
+
+<span class="sd">    &gt;&gt;&gt; convolve_channels(result, srf.assign_coords(wavelength=wl + 9000.0))</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: SRF for channel(s) [&#39;8.6um&#39;, &#39;10.8um&#39;, &#39;12.0um&#39;] has no overlap with the result wavelength grid (8000.0–13000.0 nm); convolution would divide by zero</span>
+
+<span class="sd">    A thermal spectrum with an ozone-like band and three imager channels:</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        from pyradtran import convolve_channels</span>
+
+<span class="sd">        wl = np.arange(7500.0, 13501.0, 5.0)</span>
+<span class="sd">        # smooth Planck-like continuum with an ozone-like absorption band</span>
+<span class="sd">        spec = 7.0 - 1.5e-7 * (wl - 10000.0) ** 2</span>
+<span class="sd">        spec -= 2.5 * np.exp(-0.5 * ((wl - 9600.0) / 180.0) ** 2)</span>
+<span class="sd">        result = xr.Dataset({&quot;uu&quot;: (&quot;wavelength&quot;, spec)}, coords={&quot;wavelength&quot;: wl})</span>
+
+<span class="sd">        centres = xr.DataArray([8600.0, 9600.0, 11500.0], dims=&quot;channel&quot;)</span>
+<span class="sd">        srf = np.exp(-0.5 * ((result.wavelength - centres) / 250.0) ** 2)</span>
+<span class="sd">        srf = srf.assign_coords(channel=[&quot;8.6 µm&quot;, &quot;9.6 µm&quot;, &quot;11.5 µm&quot;])</span>
+<span class="sd">        channels = convolve_channels(result, srf)</span>
+
+<span class="sd">        fig, ax = plt.subplots()</span>
+<span class="sd">        ax.plot(wl / 1e3, spec, color=&quot;0.25&quot;, label=&quot;spectral radiance&quot;)</span>
+<span class="sd">        for i, name in enumerate(srf.channel.values):</span>
+<span class="sd">            colour = f&quot;C{i}&quot;</span>
+<span class="sd">            ax.fill_between(wl / 1e3, srf.isel(channel=i) * 2.0, alpha=0.25,</span>
+<span class="sd">                            color=colour, label=f&quot;SRF {name} (scaled)&quot;)</span>
+<span class="sd">            ax.plot(centres[i] / 1e3, channels.uu[i], &quot;o&quot;, color=colour, ms=8)</span>
+<span class="sd">        ax.set_xlabel(&quot;wavelength (µm)&quot;)</span>
+<span class="sd">        ax.set_ylabel(&quot;radiance (mW m$^{-2}$ nm$^{-1}$ sr$^{-1}$)&quot;)</span>
+<span class="sd">        ax.set_title(&quot;dots: channel-averaged radiance&quot;)</span>
+<span class="sd">        ax.legend(fontsize=8, ncol=2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;wavelength&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;result has no &#39;wavelength&#39; dimension to convolve&quot;</span><span class="p">)</span>
@@ -503,8 +617,7 @@ document.write(`
     <span class="n">out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">attrs</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">da</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="s2">&quot;wavelength&quot;</span> <span class="ow">in</span> <span class="n">da</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-            <span class="n">conv</span> <span class="o">=</span> <span class="p">(</span><span class="n">da</span> <span class="o">*</span> <span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="s2">&quot;wavelength&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span>
-            <span class="n">out</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">conv</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">da</span> <span class="o">*</span> <span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="s2">&quot;wavelength&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span>
             <span class="k">if</span> <span class="n">keep_spectral</span><span class="p">:</span>
                 <span class="n">out</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_spectral&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">da</span>
         <span class="k">else</span><span class="p">:</span>
@@ -515,10 +628,7 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_interp_srf</span><span class="p">(</span><span class="n">srf</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">wl</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate an SRF onto the result wavelength grid (numpy only).</span>
-
-<span class="sd">    Zero response outside the SRF&#39;s own wavelength grid.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate an SRF onto the result wavelength grid, zero outside.&quot;&quot;&quot;</span>
     <span class="n">srf</span> <span class="o">=</span> <span class="n">srf</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="s2">&quot;wavelength&quot;</span><span class="p">)</span>
     <span class="n">srf_wl</span> <span class="o">=</span> <span class="n">srf</span><span class="p">[</span><span class="s2">&quot;wavelength&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
@@ -540,29 +650,151 @@ document.write(`
 
 
 <div class="viewcode-block" id="brightness_temperature">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.channels.brightness_temperature.html#pyradtran.channels.brightness_temperature">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.channels.brightness_temperature.html#pyradtran.channels.brightness_temperature">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">brightness_temperature</span><span class="p">(</span>
     <span class="n">radiance</span><span class="p">,</span>
     <span class="n">wavelength_nm</span><span class="p">,</span>
     <span class="n">radiance_units</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mW m-2 nm-1 sr-1&quot;</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert monochromatic radiance to brightness temperature (K).</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Convert spectral radiance to brightness temperature (K).</span>
 
-<span class="sd">    Inverse Planck: ``T = c2 / (lambda * ln(1 + c1 / (lambda^5 * L)))``</span>
-<span class="sd">    with ``c1 = 2 h c^2`` and ``c2 = h c / k``.</span>
+<span class="sd">    The brightness temperature is the temperature at which a blackbody</span>
+<span class="sd">    emits the given radiance at the given wavelength (the inverse of the</span>
+<span class="sd">    Planck function).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    radiance : array-like or xarray.DataArray</span>
-<span class="sd">        Spectral radiance.</span>
+<span class="sd">        Spectral radiance :math:`L_\lambda`, e.g. the ``uu`` variable of</span>
+<span class="sd">        a thermal simulation.</span>
 <span class="sd">    wavelength_nm : float or array-like</span>
-<span class="sd">        Wavelength in nanometres.</span>
-<span class="sd">    radiance_units : str, default ``&quot;mW m-2 nm-1 sr-1&quot;``</span>
-<span class="sd">        Units of *radiance* (uvspec&#39;s default radiance unit).</span>
+<span class="sd">        Wavelength in nanometres. Must broadcast against *radiance*; for</span>
+<span class="sd">        channel-averaged radiances use the channel&#39;s central (or</span>
+<span class="sd">        effective) wavelength.</span>
+<span class="sd">    radiance_units : {&quot;mW m-2 nm-1 sr-1&quot;, &quot;W m-2 nm-1 sr-1&quot;}</span>
+<span class="sd">        Units of *radiance*, which must be *per nanometre*. The Notes</span>
+<span class="sd">        list which uvspec settings produce which unit.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    Brightness temperature in K, same shape as *radiance*.</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Brightness temperature in K, same shape as the broadcast inputs.</span>
+<span class="sd">        Coordinates of an :class:`xarray.DataArray` input are dropped;</span>
+<span class="sd">        wrap the result with :meth:`xarray.DataArray.copy` (``data=...``)</span>
+<span class="sd">        to keep them (see Examples).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If *radiance_units* is not one of the supported unit strings.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    convolve_channels : Band-average spectral radiances first.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The spectral radiance of a blackbody at temperature :math:`T` is</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        B_\lambda(T) = \frac{2 h c^2}{\lambda^5}\,</span>
+<span class="sd">                       \frac{1}{\exp\!\left(\dfrac{h c}{\lambda k_B T}\right) - 1}</span>
+
+<span class="sd">    Solving :math:`B_\lambda(T_b) = L_\lambda` for the temperature gives</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        T_b = \frac{c_2}{\lambda\,</span>
+<span class="sd">              \ln\!\left(1 + \dfrac{c_1}{\lambda^5 L_\lambda}\right)},</span>
+<span class="sd">        \qquad c_1 = 2 h c^2, \quad c_2 = \frac{h c}{k_B}</span>
+
+<span class="sd">    with the CODATA 2018 values of :math:`h`, :math:`c` and :math:`k_B`.</span>
+<span class="sd">    The logarithm is evaluated with :func:`numpy.log1p`, so the conversion</span>
+<span class="sd">    stays accurate in the Rayleigh–Jeans limit</span>
+<span class="sd">    (:math:`c_1 / \lambda^5 L_\lambda \ll 1`).</span>
+
+<span class="sd">    The unit uvspec writes depends on the source:</span>
+
+<span class="sd">    * ``source thermal``: by default uvspec reports thermal quantities</span>
+<span class="sd">      *per spectral band* (1 cm\ :sup:`-1` wide unless changed), not per</span>
+<span class="sd">      nanometre. Add ``params={&quot;output_process&quot;: &quot;per_nm&quot;}`` to get</span>
+<span class="sd">      W m\ :sup:`-2` nm\ :sup:`-1` sr\ :sup:`-1` and pass</span>
+<span class="sd">      ``radiance_units=&quot;W m-2 nm-1 sr-1&quot;``.</span>
+<span class="sd">    * ``source solar``: the unit follows the solar spectrum file. The</span>
+<span class="sd">      spectra shipped with libRadtran are in</span>
+<span class="sd">      mW m\ :sup:`-2` nm\ :sup:`-1`, hence the default.</span>
+
+<span class="sd">    For brightness temperatures at the simulated resolution, uvspec can</span>
+<span class="sd">    do the inversion itself: ``params={&quot;output_quantity&quot;: &quot;brightness&quot;}``</span>
+<span class="sd">    returns every radiance and irradiance column in kelvin. Use this</span>
+<span class="sd">    function to post-process radiances first (channel convolution,</span>
+<span class="sd">    window corrections, noise) and convert afterwards.</span>
+
+<span class="sd">    The conversion is monochromatic. Applied to a band-averaged radiance</span>
+<span class="sd">    with the channel&#39;s central wavelength, it is a good approximation</span>
+<span class="sd">    for narrow channels (width :math:`\lesssim 1` µm in the thermal</span>
+<span class="sd">    window). For broad channels use an effective wavelength or a</span>
+<span class="sd">    band-correction fit.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A radiance of 7.045 mW m\ :sup:`-2` nm\ :sup:`-1` sr\ :sup:`-1` at</span>
+<span class="sd">    10.5 µm corresponds to a 280 K blackbody:</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran import brightness_temperature</span>
+<span class="sd">    &gt;&gt;&gt; float(brightness_temperature(7.045267, 10500.0).round(2))</span>
+<span class="sd">    280.0</span>
+
+<span class="sd">    Several channels in one call:</span>
+
+<span class="sd">    &gt;&gt;&gt; brightness_temperature([5.0, 7.5, 10.0], [8600.0, 10800.0, 12000.0]).round(1)</span>
+<span class="sd">    array([268.6, 283.9, 308.3])</span>
+
+<span class="sd">    After a thermal simulation with instrument channels</span>
+<span class="sd">    (``output_process per_nm`` gives radiances in W per nanometre;</span>
+<span class="sd">    ``center_nm`` holds the central wavelength of each channel):</span>
+
+<span class="sd">    &gt;&gt;&gt; channel_ds = ds.pyradtran.run(  # doctest: +SKIP</span>
+<span class="sd">    ...     config_path=&quot;config/thermal_spectral.yaml&quot;,</span>
+<span class="sd">    ...     params={&quot;output_process&quot;: &quot;per_nm&quot;},</span>
+<span class="sd">    ...     channels=srf,</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; tb = channel_ds[&quot;uu&quot;].copy(  # doctest: +SKIP</span>
+<span class="sd">    ...     data=brightness_temperature(</span>
+<span class="sd">    ...         channel_ds[&quot;uu&quot;], channel_ds[&quot;center_nm&quot;], &quot;W m-2 nm-1 sr-1&quot;</span>
+<span class="sd">    ...     )</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; tb.attrs[&quot;units&quot;] = &quot;K&quot;  # doctest: +SKIP</span>
+
+<span class="sd">    The Planck curves being inverted, in the default radiance units:</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        from pyradtran import brightness_temperature</span>
+
+<span class="sd">        h, c, kB = 6.62607015e-34, 2.99792458e8, 1.380649e-23</span>
+
+<span class="sd">        def planck(wl_nm, T):</span>
+<span class="sd">            lam = wl_nm * 1e-9</span>
+<span class="sd">            return 2 * h * c**2 / lam**5 / np.expm1(h * c / (lam * kB * T)) * 1e-6</span>
+
+<span class="sd">        wl = np.linspace(4000.0, 20000.0, 400)</span>
+<span class="sd">        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8.5, 3.6))</span>
+<span class="sd">        for T in (220, 240, 260, 280, 300):</span>
+<span class="sd">            ax1.plot(wl / 1e3, planck(wl, T), label=f&quot;{T} K&quot;)</span>
+<span class="sd">        ax1.set_xlabel(&quot;wavelength (µm)&quot;)</span>
+<span class="sd">        ax1.set_ylabel(&quot;$B_\\lambda$ (mW m$^{-2}$ nm$^{-1}$ sr$^{-1}$)&quot;)</span>
+<span class="sd">        ax1.set_title(&quot;Planck function&quot;)</span>
+<span class="sd">        ax1.legend(fontsize=8)</span>
+
+<span class="sd">        L = np.linspace(0.5, 12.0, 200)</span>
+<span class="sd">        for wl_um in (8.6, 10.8, 12.0):</span>
+<span class="sd">            ax2.plot(L, brightness_temperature(L, wl_um * 1e3), label=f&quot;{wl_um} µm&quot;)</span>
+<span class="sd">        ax2.set_xlabel(&quot;radiance (mW m$^{-2}$ nm$^{-1}$ sr$^{-1}$)&quot;)</span>
+<span class="sd">        ax2.set_ylabel(&quot;$T_b$ (K)&quot;)</span>
+<span class="sd">        ax2.set_title(&quot;brightness_temperature()&quot;)</span>
+<span class="sd">        ax2.legend(fontsize=8)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">radiance_units</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_UNIT_TO_SI</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>

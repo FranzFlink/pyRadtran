@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -174,152 +175,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -423,42 +421,106 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for pyradtran.schema</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">libRadtran option-schema extraction.</span>
 
 <span class="sd">libRadtran ships a machine-readable description of every ``uvspec``</span>
 <span class="sd">option in ``&lt;root&gt;/src_py/*_options.py`` (used by its GUI). This module</span>
-<span class="sd">extracts that description from the *locally installed* libRadtran — so</span>
-<span class="sd">validation always matches the exact binary being run — and caches it as</span>
-<span class="sd">JSON under ``~/.pyradtran/``.</span>
+<span class="sd">extracts that description from the locally installed libRadtran, so</span>
+<span class="sd">validation matches the binary being run, and caches it as JSON under</span>
+<span class="sd">``~/.pyradtran/``.</span>
+
+<span class="sd">.. autosummary::</span>
+
+<span class="sd">   load_schema</span>
+<span class="sd">   extract_schema</span>
+<span class="sd">   find_libradtran_root</span>
+
+<span class="sd">Most users never call this module directly. The schema is what makes</span>
+<span class="sd">``params={&quot;wc_modfy&quot;: ...}`` fail with a &quot;did you mean ``wc_modify``?&quot;</span>
+<span class="sd">before any simulation starts, and what</span>
+<span class="sd">:func:`~pyradtran.params.describe` and</span>
+<span class="sd">:func:`~pyradtran.params.search_options` print.</span>
 
 <span class="sd">The extraction runs in a subprocess to keep libRadtran&#39;s GUI modules out</span>
-<span class="sd">of the pyradtran process. Nothing from libRadtran is redistributed with</span>
-<span class="sd">pyradtran; the schema is generated on the user&#39;s machine from their own</span>
-<span class="sd">installation.</span>
+<span class="sd">of the pyradtran process. Nothing from libRadtran is redistributed; the</span>
+<span class="sd">schema is generated on the user&#39;s machine from their own installation.</span>
 
-<span class="sd">Schema format (one entry per uvspec option)::</span>
+<span class="sd">Notes</span>
+<span class="sd">-----</span>
+<span class="sd">**Cache.** The schema is stored as</span>
+<span class="sd">``~/.pyradtran/option_schema_&lt;fingerprint&gt;.json`` (:data:`CACHE_DIR`).</span>
+<span class="sd">The fingerprint is a hash of the ``src_py`` path and the name, size and</span>
+<span class="sd">modification time of every ``*_options.py`` file, so switching to</span>
+<span class="sd">another libRadtran install, or patching the current one, regenerates</span>
+<span class="sd">the schema. Only the file for the current fingerprint is kept. Deleting</span>
+<span class="sd">it is safe; it is regenerated on the next use.</span>
+
+<span class="sd">**Structure.** The schema is a ``dict`` mapping each option name to one</span>
+<span class="sd">entry. A real entry from libRadtran 2.0.6 (``doc`` shortened)::</span>
 
 <span class="sd">    {</span>
 <span class="sd">      &quot;name&quot;: &quot;wc_modify&quot;,</span>
 <span class="sd">      &quot;group&quot;: &quot;Water and ice clouds&quot;,</span>
 <span class="sd">      &quot;help&quot;: &quot;Modify water cloud optical properties.&quot;,</span>
-<span class="sd">      &quot;doc&quot;: &quot;...&quot;,                      # long documentation text</span>
-<span class="sd">      &quot;non_unique&quot;: true,                # option may appear on several lines</span>
+<span class="sd">      &quot;doc&quot;: &quot;Modify water cloud optical properties.\n \\fcode{ ...&quot;,</span>
+<span class="sd">      &quot;non_unique&quot;: true,</span>
 <span class="sd">      &quot;mandatory&quot;: false,</span>
-<span class="sd">      &quot;parents&quot;: [&quot;wc_file&quot;],            # requires one of these</span>
-<span class="sd">      &quot;childs&quot;: [...],</span>
-<span class="sd">      &quot;tokens&quot;: [                        # user-supplied tokens, in order</span>
+<span class="sd">      &quot;unmodeled&quot;: false,</span>
+<span class="sd">      &quot;parents&quot;: [&quot;wc_file&quot;],</span>
+<span class="sd">      &quot;childs&quot;: [],</span>
+<span class="sd">      &quot;tokens&quot;: [</span>
 <span class="sd">        {&quot;kind&quot;: &quot;choice&quot;, &quot;choices&quot;: [&quot;gg&quot;, &quot;ssa&quot;, &quot;tau&quot;, &quot;tau550&quot;],</span>
-<span class="sd">         &quot;optional&quot;: false, &quot;file_allowed&quot;: false},</span>
-<span class="sd">        {&quot;kind&quot;: &quot;value&quot;, &quot;datatype&quot;: &quot;float&quot;, &quot;valid_range&quot;: [0, 1],</span>
+<span class="sd">         &quot;file_allowed&quot;: false, &quot;optional&quot;: false},</span>
+<span class="sd">        {&quot;kind&quot;: &quot;choice&quot;, &quot;choices&quot;: [&quot;set&quot;, &quot;scale&quot;],</span>
+<span class="sd">         &quot;file_allowed&quot;: false, &quot;optional&quot;: false},</span>
+<span class="sd">        {&quot;kind&quot;: &quot;value&quot;, &quot;datatype&quot;: &quot;float&quot;, &quot;valid_range&quot;: null,</span>
 <span class="sd">         &quot;optional&quot;: false}</span>
 <span class="sd">      ]</span>
 <span class="sd">    }</span>
 
+<span class="sd">``name``</span>
+<span class="sd">    The uvspec option keyword.</span>
+<span class="sd">``group``</span>
+<span class="sd">    Section of the libRadtran manual / GUI, e.g. ``&quot;Surface&quot;``.</span>
+<span class="sd">``help``, ``doc``</span>
+<span class="sd">    One-line help and the long documentation (LaTeX-flavoured).</span>
+<span class="sd">``non_unique``</span>
+<span class="sd">    The option may appear on several input lines (``wc_modify``,</span>
+<span class="sd">    ``mol_modify``, ``crs_model``, ...). A ``params`` list on such an</span>
+<span class="sd">    option becomes one line per element.</span>
+<span class="sd">``mandatory``</span>
+<span class="sd">    libRadtran&#39;s own &quot;must be present&quot; flag.</span>
+<span class="sd">``unmodeled``</span>
+<span class="sd">    The option takes arguments that libRadtran&#39;s description does not</span>
+<span class="sd">    spell out (e.g. ``radiosonde``): only the name is validated.</span>
+<span class="sd">``parents``, ``childs``</span>
+<span class="sd">    Options this one requires / enables. Informational: shown by</span>
+<span class="sd">    :func:`~pyradtran.params.describe`, not enforced.</span>
+<span class="sd">``tokens``</span>
+<span class="sd">    The values the user supplies after the keyword, in order. A</span>
+<span class="sd">    ``&quot;choice&quot;`` token lists the allowed ``choices``</span>
+<span class="sd">    (``file_allowed`` means a file name is accepted as well); a</span>
+<span class="sd">    ``&quot;value&quot;`` token has a ``datatype`` (``float``, ``int``, ``str``,</span>
+<span class="sd">    ``file`` or one of the variable-length types ``floats``, ``ints``,</span>
+<span class="sd">    ``files``, ``lines``) and, for numbers, an inclusive</span>
+<span class="sd">    ``valid_range`` or ``null``. ``optional`` tokens may be left out.</span>
+<span class="sd">    An empty list is a flag option such as ``aerosol_default``.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+<span class="sd">&gt;&gt;&gt; from pyradtran import load_config</span>
+<span class="sd">&gt;&gt;&gt; from pyradtran.schema import load_schema</span>
+<span class="sd">&gt;&gt;&gt; schema = load_schema(load_config())  # doctest: +SKIP</span>
+<span class="sd">&gt;&gt;&gt; len(schema)  # doctest: +SKIP</span>
+<span class="sd">244</span>
+<span class="sd">&gt;&gt;&gt; schema[&quot;albedo&quot;][&quot;tokens&quot;]  # doctest: +SKIP</span>
+<span class="sd">[{&#39;kind&#39;: &#39;value&#39;, &#39;datatype&#39;: &#39;float&#39;, &#39;valid_range&#39;: [0.0, 1.0], &#39;optional&#39;: False}]</span>
+
 <span class="sd">See Also</span>
 <span class="sd">--------</span>
 <span class="sd">pyradtran.params : Uses the schema for parameter validation.</span>
+<span class="sd">pyradtran.params.describe : Human-readable view of one schema entry.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
@@ -471,7 +533,8 @@ document.write(`
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="c1">#: Where cached schema files live.</span>
+<span class="c1">#: Directory holding the cached schema files</span>
+<span class="c1">#: (``~/.pyradtran/option_schema_&lt;fingerprint&gt;.json``).</span>
 <span class="n">CACHE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.pyradtran&quot;</span>
 
 <span class="c1"># Runs inside the subprocess with cwd = &lt;root&gt;/src_py.</span>
@@ -569,13 +632,62 @@ document.write(`
 
 
 <div class="viewcode-block" id="find_libradtran_root">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.schema.find_libradtran_root.html#pyradtran.schema.find_libradtran_root">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.schema.find_libradtran_root.html#pyradtran.schema.find_libradtran_root">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_libradtran_root</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Locate the libRadtran installation root from config paths.</span>
 
-<span class="sd">    Tries the parents of ``paths.libradtran_bin`` (``&lt;root&gt;/bin/uvspec``)</span>
-<span class="sd">    and ``paths.libradtran_data`` (``&lt;root&gt;/data``); returns the first</span>
-<span class="sd">    candidate that contains ``src_py``.</span>
+<span class="sd">    The root is the directory that contains ``src_py`` (libRadtran&#39;s</span>
+<span class="sd">    option descriptions), i.e. a source/build tree rather than a bare</span>
+<span class="sd">    ``bin`` + ``data`` installation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : SimulationConfig</span>
+<span class="sd">        Only ``config.paths.libradtran_bin`` and</span>
+<span class="sd">        ``config.paths.libradtran_data`` are read; either may be missing</span>
+<span class="sd">        or ``None``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pathlib.Path or None</span>
+<span class="sd">        The first of these candidates that has a ``src_py``</span>
+<span class="sd">        sub-directory, in this order: two and one levels above</span>
+<span class="sd">        ``libradtran_bin`` (``&lt;root&gt;/bin/uvspec`` or ``&lt;root&gt;/uvspec``),</span>
+<span class="sd">        then one and two levels above ``libradtran_data``</span>
+<span class="sd">        (``&lt;root&gt;/data`` or ``&lt;root&gt;/share/data``). ``None`` when no</span>
+<span class="sd">        candidate qualifies.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    load_schema : Uses the root to extract and cache the schema.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A fake installation tree (any object with a ``paths`` attribute</span>
+<span class="sd">    works as *config*):</span>
+
+<span class="sd">    &gt;&gt;&gt; import tempfile</span>
+<span class="sd">    &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">    &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.schema import find_libradtran_root</span>
+<span class="sd">    &gt;&gt;&gt; tmp = Path(tempfile.mkdtemp())</span>
+<span class="sd">    &gt;&gt;&gt; (tmp / &quot;src_py&quot;).mkdir()</span>
+<span class="sd">    &gt;&gt;&gt; paths = SimpleNamespace(libradtran_bin=tmp / &quot;bin&quot; / &quot;uvspec&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; find_libradtran_root(SimpleNamespace(paths=paths)) == tmp</span>
+<span class="sd">    True</span>
+
+<span class="sd">    Without a ``src_py`` directory there is no root, and schema</span>
+<span class="sd">    validation is switched off:</span>
+
+<span class="sd">    &gt;&gt;&gt; paths = SimpleNamespace(libradtran_bin=tmp / &quot;elsewhere&quot; / &quot;bin&quot; / &quot;uvspec&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; print(find_libradtran_root(SimpleNamespace(paths=paths)))</span>
+<span class="sd">    None</span>
+
+<span class="sd">    With a real configuration:</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran import load_config</span>
+<span class="sd">    &gt;&gt;&gt; find_libradtran_root(load_config())  # doctest: +SKIP</span>
+<span class="sd">    PosixPath(&#39;/opt/libRadtran-2.0.6&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">bin_path</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="p">,</span> <span class="s2">&quot;libradtran_bin&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -609,14 +721,53 @@ document.write(`
 
 
 <div class="viewcode-block" id="extract_schema">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.schema.extract_schema.html#pyradtran.schema.extract_schema">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.schema.extract_schema.html#pyradtran.schema.extract_schema">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">extract_schema</span><span class="p">(</span><span class="n">root</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the option schema from ``&lt;root&gt;/src_py`` (no cache).</span>
+
+<span class="sd">    Imports every ``*_options.py`` module of libRadtran&#39;s ``src_py``</span>
+<span class="sd">    directory in a separate Python subprocess (same interpreter, working</span>
+<span class="sd">    directory ``src_py``, 120 s timeout) and converts the option objects</span>
+<span class="sd">    to plain JSON-compatible dictionaries. Modules, option groups or</span>
+<span class="sd">    single options that fail to import are skipped; the skip notes are</span>
+<span class="sd">    logged at ``DEBUG`` level.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    root : str or pathlib.Path</span>
+<span class="sd">        libRadtran installation root (the directory containing</span>
+<span class="sd">        ``src_py``).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        ``{option_name: schema_entry}``; see the module docstring of</span>
+<span class="sd">        :mod:`pyradtran.schema` for the entry structure.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    RuntimeError</span>
-<span class="sd">        If the extraction subprocess fails or returns no options.</span>
+<span class="sd">        If the extraction subprocess exits with an error or finds no</span>
+<span class="sd">        options.</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If ``&lt;root&gt;/src_py`` does not exist.</span>
+<span class="sd">    subprocess.TimeoutExpired</span>
+<span class="sd">        If the extraction takes longer than 120 s.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    load_schema : Cached variant that returns ``None`` instead of raising.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.schema import extract_schema</span>
+<span class="sd">    &gt;&gt;&gt; schema = extract_schema(&quot;/opt/libRadtran-2.0.6&quot;)  # doctest: +SKIP</span>
+<span class="sd">    &gt;&gt;&gt; len(schema)  # doctest: +SKIP</span>
+<span class="sd">    244</span>
+<span class="sd">    &gt;&gt;&gt; sorted(schema[&quot;wc_modify&quot;])  # doctest: +SKIP</span>
+<span class="sd">    [&#39;childs&#39;, &#39;doc&#39;, &#39;group&#39;, &#39;help&#39;, &#39;mandatory&#39;, &#39;name&#39;, &#39;non_unique&#39;, &#39;parents&#39;, &#39;tokens&#39;, &#39;unmodeled&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; schema[&quot;sza&quot;][&quot;tokens&quot;]  # doctest: +SKIP</span>
+<span class="sd">    [{&#39;kind&#39;: &#39;value&#39;, &#39;datatype&#39;: &#39;float&#39;, &#39;valid_range&#39;: [0.0, 180.0], &#39;optional&#39;: False}]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">src_py</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;src_py&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
@@ -638,24 +789,70 @@ document.write(`
 
 
 <div class="viewcode-block" id="load_schema">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.schema.load_schema.html#pyradtran.schema.load_schema">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.schema.load_schema.html#pyradtran.schema.load_schema">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_schema</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the option schema for the local libRadtran install, cached.</span>
+
+<span class="sd">    The first call for an installation runs :func:`extract_schema` and</span>
+<span class="sd">    writes ``~/.pyradtran/option_schema_&lt;fingerprint&gt;.json``; later calls</span>
+<span class="sd">    (in any process) read that file. A changed installation is</span>
+<span class="sd">    re-extracted and the stale cache file removed (see the cache note in</span>
+<span class="sd">    :mod:`pyradtran.schema`).</span>
+
+<span class="sd">    A missing or broken installation never raises. The function returns</span>
+<span class="sd">    ``None`` (with a logged warning if the extraction fails) and</span>
+<span class="sd">    parameter validation falls back to the curated</span>
+<span class="sd">    :data:`~pyradtran.params.REGISTRY`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : SimulationConfig, optional</span>
-<span class="sd">        Used to locate the installation when *root* is not given.</span>
-<span class="sd">    root : pathlib.Path, optional</span>
+<span class="sd">        Used to locate the installation (via</span>
+<span class="sd">        :func:`find_libradtran_root`) when *root* is not given.</span>
+<span class="sd">    root : str or pathlib.Path, optional</span>
 <span class="sd">        libRadtran installation root (the directory containing</span>
-<span class="sd">        ``src_py``).</span>
+<span class="sd">        ``src_py``). Takes precedence over *config*.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    dict or None</span>
-<span class="sd">        ``{option_name: schema_entry}``, or *None* when no local</span>
-<span class="sd">        libRadtran source tree can be found (validation then falls back</span>
-<span class="sd">        to the curated registry only).</span>
+<span class="sd">        ``{option_name: schema_entry}`` (see the module docstring of</span>
+<span class="sd">        :mod:`pyradtran.schema`), or ``None`` when neither *config* nor</span>
+<span class="sd">        *root* is given, no ``src_py`` directory can be found, or the</span>
+<span class="sd">        extraction fails.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    pyradtran.params.get_schema : Same, memoised in-process per root.</span>
+<span class="sd">    pyradtran.params.describe : Pretty-print one entry.</span>
+<span class="sd">    extract_schema : The uncached extraction.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    A cache file that cannot be read or parsed is regenerated; a cache</span>
+<span class="sd">    directory that cannot be written only produces a warning (the schema</span>
+<span class="sd">    is then re-extracted in every new process).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Without an installation:</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran.schema import load_schema</span>
+<span class="sd">    &gt;&gt;&gt; print(load_schema())</span>
+<span class="sd">    None</span>
+<span class="sd">    &gt;&gt;&gt; print(load_schema(root=&quot;/no/such/libRadtran&quot;))</span>
+<span class="sd">    None</span>
+
+<span class="sd">    With a working configuration (libRadtran 2.0.6):</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran import load_config</span>
+<span class="sd">    &gt;&gt;&gt; schema = load_schema(load_config())  # doctest: +SKIP</span>
+<span class="sd">    &gt;&gt;&gt; len(schema)  # doctest: +SKIP</span>
+<span class="sd">    244</span>
+<span class="sd">    &gt;&gt;&gt; schema[&quot;wc_modify&quot;][&quot;tokens&quot;][0]  # doctest: +SKIP</span>
+<span class="sd">    {&#39;kind&#39;: &#39;choice&#39;, &#39;choices&#39;: [&#39;gg&#39;, &#39;ssa&#39;, &#39;tau&#39;, &#39;tau550&#39;], &#39;file_allowed&#39;: False, &#39;optional&#39;: False}</span>
+<span class="sd">    &gt;&gt;&gt; schema[&quot;wc_modify&quot;][&quot;non_unique&quot;]  # doctest: +SKIP</span>
+<span class="sd">    True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -683,7 +880,7 @@ document.write(`
     <span class="k">try</span><span class="p">:</span>
         <span class="n">CACHE_DIR</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">cache_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
-        <span class="c1"># keep only the current fingerprint — stale caches never expire</span>
+        <span class="c1"># keep only the current fingerprint; stale caches never expire</span>
         <span class="c1"># on their own</span>
         <span class="k">for</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">CACHE_DIR</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;option_schema_*.json&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">old</span> <span class="o">!=</span> <span class="n">cache_file</span><span class="p">:</span>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Advanced: Mixed-Phase Clouds (+ ERA5 data) &#8212; PyRadtran</title>
+    <title>Mixed-phase clouds (+ ERA5 data) &#8212; PyRadtran</title>
   
   
   
@@ -34,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -57,12 +58,14 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/mixed_phase_cloud';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Radiosonde Atmosphere Generator" href="get_radiosonde.html" />
-    <link rel="prev" title="Advanced: Water Clouds" href="water_cloud.html" />
+    <link rel="next" title="Instruments &amp; special geometries" href="../tutorials/instruments.html" />
+    <link rel="prev" title="Water clouds" href="water_cloud.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -175,152 +178,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorials/clouds.html">Clouds</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -459,7 +459,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Advanced: Mixed-Phase Clouds (+ ERA5 data)</h1>
+    <h1>Mixed-phase clouds (+ ERA5 data)</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -469,11 +469,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-the-mixed-phase-cloud-layers">Defining the Mixed-Phase Cloud Layers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-the-arctic-scenario">Setting Up the Arctic Scenario</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-an-era5-atmospheric-profile">Loading an ERA5 Atmospheric Profile</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-solar-and-thermal-simulations">Running Solar and Thermal Simulations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualising-the-net-irradiance-profiles">Visualising the Net Irradiance Profiles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cloud-files">Cloud files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arctic-scenario">Arctic scenario</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5-atmospheric-profile">ERA5 atmospheric profile</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solar-and-thermal-runs">Solar and thermal runs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#net-irradiance-profiles">Net irradiance profiles</a></li>
 </ul>
             </nav>
         </div>
@@ -485,10 +485,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="advanced-mixed-phase-clouds-era5-data">
-<h1>Advanced: Mixed-Phase Clouds (+ ERA5 data)<a class="headerlink" href="#advanced-mixed-phase-clouds-era5-data" title="Link to this heading">#</a></h1>
-<p>In this notebook, we’ll build a idealized mixed-phase cloud profile from text files and include it in our simulation. Mixed-phase clouds — containing both liquid water and ice crystals — are common in the Arctic region.
-Also we will use a reanalysis profile from ERA5, streamed from google’s cloud bucket</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="mixed-phase-clouds-era5-data">
+<h1>Mixed-phase clouds (+ ERA5 data)<a class="headerlink" href="#mixed-phase-clouds-era5-data" title="Link to this heading">#</a></h1>
+<p>An idealised mixed-phase cloud, defined by a liquid and an ice profile file, over open ocean and over sea ice. Mixed-phase clouds contain both liquid water and ice crystals and are common in the Arctic. The atmosphere is an ERA5 reanalysis profile streamed from Google Cloud Storage, which needs <code class="docutils literal notranslate"><span class="pre">gcsfs</span></code> and network access.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyradtran</span>  <span class="c1"># Registers the .pyradtran xarray accessor</span>
@@ -501,7 +500,7 @@ Also we will use a reanalysis profile from ERA5, streamed from google’s cloud 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pyradtran&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pyradtran&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>  <span class="c1"># warnings only</span>
 
 <span class="c1"># ── Solar config ─────────────────────────────────────────────────────────────</span>
 <span class="n">cfg_solar</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
@@ -510,8 +509,9 @@ Also we will use a reanalysis profile from ERA5, streamed from google’s cloud 
 <span class="n">cfg_solar</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span>               <span class="o">=</span> <span class="s2">&quot;solar&quot;</span>
 <span class="n">cfg_solar</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span>        <span class="o">=</span> <span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">3200</span><span class="p">]</span>
 <span class="n">cfg_solar</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">cfg_solar</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span>       <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;zout&quot;</span><span class="p">,</span> <span class="s2">&quot;lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;sza&quot;</span><span class="p">,</span> <span class="s2">&quot;edir&quot;</span><span class="p">,</span> <span class="s2">&quot;eglo&quot;</span><span class="p">,</span> <span class="s2">&quot;edn&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;enet&quot;</span><span class="p">,</span> <span class="s2">&quot;albedo&quot;</span><span class="p">]</span>
-<span class="n">cfg_solar</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span>                    <span class="o">=</span> <span class="mi">16</span>
+<span class="n">cfg_solar</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span>       <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;edir&quot;</span><span class="p">,</span> <span class="s2">&quot;edn&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;enet&quot;</span><span class="p">]</span>
+<span class="n">cfg_solar</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">atmosphere_profile</span>                 <span class="o">=</span> <span class="s2">&quot;afglsw&quot;</span>   <span class="c1"># sub-arctic winter background above ERA5</span>
+<span class="n">cfg_solar</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span>                    <span class="o">=</span> <span class="mi">8</span>
 <span class="n">cfg_solar</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span>             <span class="o">=</span> <span class="kc">False</span>
 <span class="n">solar_config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;config/cloud_solar.yaml&quot;</span><span class="p">)</span>
 <span class="n">cfg_solar</span><span class="o">.</span><span class="n">to_yaml</span><span class="p">(</span><span class="n">solar_config_path</span><span class="p">)</span>
@@ -523,8 +523,9 @@ Also we will use a reanalysis profile from ERA5, streamed from google’s cloud 
 <span class="n">cfg_thermal</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span>               <span class="o">=</span> <span class="s2">&quot;thermal&quot;</span>
 <span class="n">cfg_thermal</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span>        <span class="o">=</span> <span class="p">[</span><span class="mi">4500</span><span class="p">,</span> <span class="mi">42000</span><span class="p">]</span>
 <span class="n">cfg_thermal</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">cfg_thermal</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span>       <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;zout&quot;</span><span class="p">,</span> <span class="s2">&quot;lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;sza&quot;</span><span class="p">,</span> <span class="s2">&quot;edir&quot;</span><span class="p">,</span> <span class="s2">&quot;eglo&quot;</span><span class="p">,</span> <span class="s2">&quot;edn&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;enet&quot;</span><span class="p">,</span> <span class="s2">&quot;albedo&quot;</span><span class="p">]</span>
-<span class="n">cfg_thermal</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span>                    <span class="o">=</span> <span class="mi">16</span>
+<span class="n">cfg_thermal</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span>       <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;edn&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;enet&quot;</span><span class="p">]</span>
+<span class="n">cfg_thermal</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">atmosphere_profile</span>                 <span class="o">=</span> <span class="s2">&quot;afglsw&quot;</span>
+<span class="n">cfg_thermal</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span>                    <span class="o">=</span> <span class="mi">8</span>
 <span class="n">cfg_thermal</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span>             <span class="o">=</span> <span class="kc">False</span>
 <span class="n">thermal_config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;config/cloud_thermal.yaml&quot;</span><span class="p">)</span>
 <span class="n">cfg_thermal</span><span class="o">.</span><span class="n">to_yaml</span><span class="p">(</span><span class="n">thermal_config_path</span><span class="p">)</span>
@@ -535,99 +536,89 @@ Also we will use a reanalysis profile from ERA5, streamed from google’s cloud 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2026-04-19 00:50:31,067 - pyradtran.config - INFO - Configuration written to config/cloud_solar.yaml
-2026-04-19 00:50:31,070 - pyradtran.config - INFO - Configuration written to config/cloud_thermal.yaml
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Solar config:   config/cloud_solar.yaml
 Thermal config: config/cloud_thermal.yaml
 </pre></div>
 </div>
 </div>
 </div>
-<section id="defining-the-mixed-phase-cloud-layers">
-<h2>Defining the Mixed-Phase Cloud Layers<a class="headerlink" href="#defining-the-mixed-phase-cloud-layers" title="Link to this heading">#</a></h2>
-<p>A mixed-phase cloud in libRadtran is specified by providing <strong>two separate files</strong>: one for the liquid water component (<code class="docutils literal notranslate"><span class="pre">.wc</span></code>) and one for the ice crystal component (<code class="docutils literal notranslate"><span class="pre">.ic</span></code>). Each file lists altitude, content (LWC or IWC in g/m³), and effective radius (μm).</p>
-<p><strong>Liquid water layer</strong> (<code class="docutils literal notranslate"><span class="pre">water_cloud.wc</span></code>):</p>
+<section id="cloud-files">
+<h2>Cloud files<a class="headerlink" href="#cloud-files" title="Link to this heading">#</a></h2>
+<p>libRadtran takes a mixed-phase cloud as two separate files: one for liquid water (<code class="docutils literal notranslate"><span class="pre">wc_file</span></code>) and one for ice crystals (<code class="docutils literal notranslate"><span class="pre">ic_file</span></code>). Each lists altitude, content (LWC or IWC in g m⁻³) and effective radius (µm), top first. The value on a row applies to the layer between that level and the row above; the top row only closes the cloud (<a class="reference internal" href="../guide/clouds.html"><span class="doc">Clouds</span></a>).</p>
+<p>Liquid water (<code class="docutils literal notranslate"><span class="pre">work/mixed_phase.wc</span></code>), LWC increasing towards cloud top:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#      z     LWC    R_eff
-#     (km)  (g/m³)  (μm)
-      4.000   5.0    15.0
-      3.000   3.0    12.0
-      2.000   0.0    10.0
+#     (km)  (g/m³)  (µm)
+      4.0    0.00   12.0     &lt;- cloud top, value unused
+      3.5    0.05   12.0     &lt;- layer 3.5-4.0 km
+      3.0    0.04   11.0
+      2.5    0.03   10.0
+      2.0    0.02    8.0     &lt;- layer 2.0-2.5 km, cloud base
 </pre></div>
 </div>
-<p><strong>Ice crystal layer</strong> (<code class="docutils literal notranslate"><span class="pre">ice_cloud.ic</span></code>):</p>
+<p>Ice crystals (<code class="docutils literal notranslate"><span class="pre">work/mixed_phase.ic</span></code>), constant IWC:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#      z     IWC    R_eff
-#     (km)  (g/m³)  (μm)
-    4.000     0.02    20.0
-    3.000     0.02    20.0
-    2.500     0.02    20.0
-    2.000     0.02    20.0
+#     (km)  (g/m³)  (µm)
+      4.0    0.00   20.0
+      2.0    0.02   20.0     &lt;- layer 2.0-4.0 km
 </pre></div>
 </div>
-<p>We write both files to disk so they can be passed to pyRadtran.</p>
+<p>The liquid water path is 0.5 km × (0.02 + 0.03 + 0.04 + 0.05) g m⁻³ = 70 g m⁻², a visible optical thickness of about 10; the ice water path is 40 g m⁻² (<span class="math notranslate nohighlight">\(\tau \approx 3\)</span> with 20 µm crystals).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wc_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">#      z     LWC    R_eff</span>
-<span class="s2">#     (km)  (g/m^3) (um)  </span>
-<span class="s2">      4.000   5.0    15.0 </span>
-<span class="s2">      3.000   3.0    12.0  </span>
-<span class="s2">      2.000   0.0    10.0  </span>
+<span class="s2">#     (km)  (g/m^3) (um)</span>
+<span class="s2">      4.0    0.00   12.0</span>
+<span class="s2">      3.5    0.05   12.0</span>
+<span class="s2">      3.0    0.04   11.0</span>
+<span class="s2">      2.5    0.03   10.0</span>
+<span class="s2">      2.0    0.02    8.0</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="n">ic_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">#      z     IWC    R_eff</span>
 <span class="s2">#     (km)  (g/m^3) (um)</span>
-<span class="s2">    4.000     0.02    20.0</span>
-<span class="s2">    3.000     0.02    20.0</span>
-<span class="s2">    2.500     0.02    20.0</span>
-<span class="s2">    2.000     0.02    20.0</span>
+<span class="s2">      4.0    0.00   20.0</span>
+<span class="s2">      2.0    0.02   20.0</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="c1"># Write both cloud definition files to the work directory</span>
-<span class="n">wc_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;work/water_cloud.wc&#39;</span><span class="p">)</span>
+<span class="n">wc_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;work/mixed_phase.wc&#39;</span><span class="p">)</span>
+<span class="n">ic_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;work/mixed_phase.ic&#39;</span><span class="p">)</span>
 <span class="n">wc_file_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">wc_file_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">wc_content</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Water cloud definition written to </span><span class="si">{</span><span class="n">wc_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="n">ic_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;work/ice_cloud.ic&#39;</span><span class="p">)</span>
-<span class="n">ic_file_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">ic_file_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">ic_content</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ice cloud definition written to </span><span class="si">{</span><span class="n">ic_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cloud files written to </span><span class="si">{</span><span class="n">wc_file_path</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">ic_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Water cloud definition written to work/water_cloud.wc
-Ice cloud definition written to work/ice_cloud.ic
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cloud files written to work/mixed_phase.wc and work/mixed_phase.ic
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="setting-up-the-arctic-scenario">
-<h2>Setting Up the Arctic Scenario<a class="headerlink" href="#setting-up-the-arctic-scenario" title="Link to this heading">#</a></h2>
-<p>We define two simulation timesteps representing contrasting Arctic surface conditions:</p>
+<section id="arctic-scenario">
+<h2>Arctic scenario<a class="headerlink" href="#arctic-scenario" title="Link to this heading">#</a></h2>
+<p>80° N, 0° E on 3 April 2020 at 12 UTC, over two contrasting surfaces on a <code class="docutils literal notranslate"><span class="pre">surface</span></code> dimension:</p>
 <ol class="arabic simple">
-<li><p><strong>Open ocean</strong> — low albedo (0.2) and surface temperature at 0 °C</p></li>
-<li><p><strong>Sea ice</strong> — high albedo (0.8) and surface temperature at −15 °C</p></li>
+<li><p>Open ocean: albedo 0.06, surface temperature −1.8 °C (sea water at its freezing point)</p></li>
+<li><p>Sea ice: albedo 0.8, surface temperature −15 °C</p></li>
 </ol>
-<p>This allows us to compare how the mixed-phase cloud’s radiative effect changes over these two surfaces.</p>
+<p>In the thermal run the albedo sets the emissivity, <span class="math notranslate nohighlight">\(\varepsilon = 1 - \alpha\)</span>. A thermal emissivity of 0.2 for snow-covered sea ice would be far too low, so the thermal run uses albedo 0.02 (<span class="math notranslate nohighlight">\(\varepsilon = 0.98\)</span>) for both surfaces. The cloud is the same in both, so the difference in its radiative effect comes from the surface.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N_timesteps</span> <span class="o">=</span> <span class="mi">2</span>
-
-<span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
     <span class="n">coords</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;time&#39;</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">&#39;2020-04-03T12:00:00&#39;</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">N_timesteps</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;latitude&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">80.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">N_timesteps</span><span class="p">),</span>
-        <span class="s1">&#39;longitude&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">N_timesteps</span><span class="p">),</span>
-        <span class="s1">&#39;altitude&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)),</span>
+        <span class="s1">&#39;time&#39;</span>      <span class="p">:</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s1">&#39;2020-04-03T12:00:00&#39;</span><span class="p">)],</span>
+        <span class="s1">&#39;latitude&#39;</span>  <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">80.0</span><span class="p">]),</span>
+        <span class="s1">&#39;longitude&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]),</span>
+        <span class="s1">&#39;surface&#39;</span>   <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;sea ice&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;altitude&#39;</span>  <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)),</span>   <span class="c1"># output levels, km</span>
     <span class="p">},</span>
     <span class="n">data_vars</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;surface_temperature&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">273.15</span><span class="p">,</span> <span class="mf">273.15</span> <span class="o">-</span> <span class="mi">15</span><span class="p">]),</span>  <span class="c1"># 0 °C and -15 °C</span>
-        <span class="s1">&#39;albedo&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]),</span>  <span class="c1"># Ocean vs. sea-ice albedo</span>
+        <span class="s1">&#39;surface_temperature&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;surface&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">271.35</span><span class="p">,</span> <span class="mf">258.15</span><span class="p">]),</span>  <span class="c1"># K: -1.8 °C and -15 °C</span>
+        <span class="s1">&#39;solar_albedo&#39;</span>        <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;surface&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]),</span>
     <span class="p">}</span>
 <span class="p">)</span>
 
@@ -1079,154 +1070,163 @@ dl.xr-attrs {
   filter: drop-shadow(1px 1px 5px var(--xr-font-color2));
   stroke-width: 0.8px;
 }
-</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt; Size: 240B
-Dimensions:              (time: 2, altitude: 20)
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt; Size: 272B
+Dimensions:              (surface: 2, time: 1, altitude: 20)
 Coordinates:
-  * time                 (time) datetime64[ns] 16B 2020-04-03T12:00:00 2020-0...
-    latitude             (time) float64 16B 80.0 80.0
-    longitude            (time) float64 16B 0.0 0.0
+  * time                 (time) datetime64[ns] 8B 2020-04-03T12:00:00
+    latitude             (time) float64 8B 80.0
+    longitude            (time) float64 8B 0.0
+  * surface              (surface) &lt;U7 56B &#x27;ocean&#x27; &#x27;sea ice&#x27;
   * altitude             (altitude) float64 160B 0.0 0.5 1.0 1.5 ... 8.5 9.0 9.5
 Data variables:
-    surface_temperature  (time) float64 16B 273.1 258.1
-    albedo               (time) float64 16B 0.2 0.8</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-be9d44b9-5675-495b-b66c-f60d6f093e23' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-be9d44b9-5675-495b-b66c-f60d6f093e23' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 2</li><li><span class='xr-has-index'>altitude</span>: 20</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-1bcf0891-075b-4fad-a1aa-8c81acbe67f7' class='xr-section-summary-in' type='checkbox'  checked><label for='section-1bcf0891-075b-4fad-a1aa-8c81acbe67f7' class='xr-section-summary' >Coordinates: <span>(4)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>2020-04-03T12:00:00 2020-04-03T1...</div><input id='attrs-cd6057e0-7447-401c-a87b-925642df68c7' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-cd6057e0-7447-401c-a87b-925642df68c7' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-0bb7ef2d-5c73-4924-9d33-a78fd79a67bc' class='xr-var-data-in' type='checkbox'><label for='data-0bb7ef2d-5c73-4924-9d33-a78fd79a67bc' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;2020-04-03T12:00:00.000000000&#x27;, &#x27;2020-04-03T12:00:01.000000000&#x27;],
-      dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>latitude</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>80.0 80.0</div><input id='attrs-78972bd9-d447-4c98-93bf-b0043d335589' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-78972bd9-d447-4c98-93bf-b0043d335589' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-ba842403-1700-40d9-b8f4-3d8d37c9de7d' class='xr-var-data-in' type='checkbox'><label for='data-ba842403-1700-40d9-b8f4-3d8d37c9de7d' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([80., 80.])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>longitude</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.0</div><input id='attrs-e46d2f9f-959e-4c5e-bee3-bd95b4d03cc9' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-e46d2f9f-959e-4c5e-bee3-bd95b4d03cc9' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-140e4295-fd2f-4afb-ad95-bb4e8e44ec4a' class='xr-var-data-in' type='checkbox'><label for='data-140e4295-fd2f-4afb-ad95-bb4e8e44ec4a' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0., 0.])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>altitude</span></div><div class='xr-var-dims'>(altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.5 1.0 1.5 ... 8.0 8.5 9.0 9.5</div><input id='attrs-be86c9aa-aa7f-4a1c-88d4-bb2c6a3b0357' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-be86c9aa-aa7f-4a1c-88d4-bb2c6a3b0357' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-13c3ad76-d024-4e90-bce2-a368f8ac5eab' class='xr-var-data-in' type='checkbox'><label for='data-13c3ad76-d024-4e90-bce2-a368f8ac5eab' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0. , 0.5, 1. , 1.5, 2. , 2.5, 3. , 3.5, 4. , 4.5, 5. , 5.5, 6. , 6.5,
-       7. , 7.5, 8. , 8.5, 9. , 9.5])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-8cbb3980-0727-4de4-ab82-427e66be77be' class='xr-section-summary-in' type='checkbox'  checked><label for='section-8cbb3980-0727-4de4-ab82-427e66be77be' class='xr-section-summary' >Data variables: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>surface_temperature</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>273.1 258.1</div><input id='attrs-28ff4b8c-3748-41f1-b833-28a0cb47cf37' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-28ff4b8c-3748-41f1-b833-28a0cb47cf37' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-f038fe46-80c3-496f-8243-8563c0aefa9f' class='xr-var-data-in' type='checkbox'><label for='data-f038fe46-80c3-496f-8243-8563c0aefa9f' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([273.15, 258.15])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>albedo</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.2 0.8</div><input id='attrs-7c9d8a65-a479-496f-8cba-f407641b679d' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-7c9d8a65-a479-496f-8cba-f407641b679d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-078d93c2-f862-48a5-b745-dced79a7df8d' class='xr-var-data-in' type='checkbox'><label for='data-078d93c2-f862-48a5-b745-dced79a7df8d' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0.2, 0.8])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-6afb4041-f1af-4ef5-8d90-622c8e886b0d' class='xr-section-summary-in' type='checkbox'  ><label for='section-6afb4041-f1af-4ef5-8d90-622c8e886b0d' class='xr-section-summary' >Indexes: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>time</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-050eb7d0-7cef-4f8f-8bae-4280c35fd888' class='xr-index-data-in' type='checkbox'/><label for='index-050eb7d0-7cef-4f8f-8bae-4280c35fd888' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(DatetimeIndex([&#x27;2020-04-03 12:00:00&#x27;, &#x27;2020-04-03 12:00:01&#x27;], dtype=&#x27;datetime64[ns]&#x27;, name=&#x27;time&#x27;, freq=&#x27;s&#x27;))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>altitude</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-2581c9e5-7c5e-48c5-824e-d1b98ddf5fc4' class='xr-index-data-in' type='checkbox'/><label for='index-2581c9e5-7c5e-48c5-824e-d1b98ddf5fc4' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5,
+    surface_temperature  (surface) float64 16B 271.4 258.1
+    solar_albedo         (surface) float64 16B 0.06 0.8</pre><div class='xr-wrap' style='display:none'><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-aa2f14a6-e6eb-496f-9380-70c422ac0e33' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-aa2f14a6-e6eb-496f-9380-70c422ac0e33' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>surface</span>: 2</li><li><span class='xr-has-index'>time</span>: 1</li><li><span class='xr-has-index'>altitude</span>: 20</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-fa07d8c5-5c6a-4101-96d1-c7ffa5f8765d' class='xr-section-summary-in' type='checkbox'  checked><label for='section-fa07d8c5-5c6a-4101-96d1-c7ffa5f8765d' class='xr-section-summary' >Coordinates: <span>(5)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>2020-04-03T12:00:00</div><input id='attrs-ff729b85-4146-475f-a788-12bfd08e2e63' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-ff729b85-4146-475f-a788-12bfd08e2e63' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-11ff0e8b-3024-4a33-93ae-fb3338cca2e5' class='xr-var-data-in' type='checkbox'><label for='data-11ff0e8b-3024-4a33-93ae-fb3338cca2e5' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;2020-04-03T12:00:00.000000000&#x27;], dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>latitude</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>80.0</div><input id='attrs-b643d078-f144-4d24-88d4-5d75df482727' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-b643d078-f144-4d24-88d4-5d75df482727' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-1c808199-72d6-4ab6-8b94-eb4599bca4a3' class='xr-var-data-in' type='checkbox'><label for='data-1c808199-72d6-4ab6-8b94-eb4599bca4a3' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([80.])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>longitude</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0</div><input id='attrs-40eea664-b3e4-436a-bbb7-60b42cf24aef' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-40eea664-b3e4-436a-bbb7-60b42cf24aef' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-8f9e0f72-7b4c-4795-aed2-beab04adad42' class='xr-var-data-in' type='checkbox'><label for='data-8f9e0f72-7b4c-4795-aed2-beab04adad42' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0.])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>surface</span></div><div class='xr-var-dims'>(surface)</div><div class='xr-var-dtype'>&lt;U7</div><div class='xr-var-preview xr-preview'>&#x27;ocean&#x27; &#x27;sea ice&#x27;</div><input id='attrs-d028da12-0879-43aa-bdba-1e555316bee2' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-d028da12-0879-43aa-bdba-1e555316bee2' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-e6ddc748-c768-49a4-88e2-82ece4858e17' class='xr-var-data-in' type='checkbox'><label for='data-e6ddc748-c768-49a4-88e2-82ece4858e17' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;ocean&#x27;, &#x27;sea ice&#x27;], dtype=&#x27;&lt;U7&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>altitude</span></div><div class='xr-var-dims'>(altitude)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.0 0.5 1.0 1.5 ... 8.0 8.5 9.0 9.5</div><input id='attrs-7124c768-e2bb-4e84-ad0b-cc0aa4df5db1' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-7124c768-e2bb-4e84-ad0b-cc0aa4df5db1' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-a1a175cc-3cb6-48e5-ab76-fd78450a19fb' class='xr-var-data-in' type='checkbox'><label for='data-a1a175cc-3cb6-48e5-ab76-fd78450a19fb' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0. , 0.5, 1. , 1.5, 2. , 2.5, 3. , 3.5, 4. , 4.5, 5. , 5.5, 6. , 6.5,
+       7. , 7.5, 8. , 8.5, 9. , 9.5])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-d5526344-29f0-4768-9b42-831b9e3257bf' class='xr-section-summary-in' type='checkbox'  checked><label for='section-d5526344-29f0-4768-9b42-831b9e3257bf' class='xr-section-summary' >Data variables: <span>(2)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>surface_temperature</span></div><div class='xr-var-dims'>(surface)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>271.4 258.1</div><input id='attrs-53824e1f-7c01-4024-ad92-bb53bafd316c' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-53824e1f-7c01-4024-ad92-bb53bafd316c' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-03cce420-b2a6-4ce0-8976-b61606b8bcc3' class='xr-var-data-in' type='checkbox'><label for='data-03cce420-b2a6-4ce0-8976-b61606b8bcc3' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([271.35, 258.15])</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>solar_albedo</span></div><div class='xr-var-dims'>(surface)</div><div class='xr-var-dtype'>float64</div><div class='xr-var-preview xr-preview'>0.06 0.8</div><input id='attrs-c93956fc-a36a-4791-8fee-91d4ca935353' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-c93956fc-a36a-4791-8fee-91d4ca935353' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-689688dc-fe6c-449c-83f9-f144fef4ff19' class='xr-var-data-in' type='checkbox'><label for='data-689688dc-fe6c-449c-83f9-f144fef4ff19' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([0.06, 0.8 ])</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-4b0afcdf-a32f-4bfd-a7f0-c093327e2347' class='xr-section-summary-in' type='checkbox'  ><label for='section-4b0afcdf-a32f-4bfd-a7f0-c093327e2347' class='xr-section-summary' >Indexes: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-index-name'><div>time</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-64cc745e-fb2a-4c04-b431-9e428c2c200d' class='xr-index-data-in' type='checkbox'/><label for='index-64cc745e-fb2a-4c04-b431-9e428c2c200d' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(DatetimeIndex([&#x27;2020-04-03 12:00:00&#x27;], dtype=&#x27;datetime64[ns]&#x27;, name=&#x27;time&#x27;, freq=None))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>surface</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-756d856f-e4e2-49e6-8a8f-f4f7c761492f' class='xr-index-data-in' type='checkbox'/><label for='index-756d856f-e4e2-49e6-8a8f-f4f7c761492f' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([&#x27;ocean&#x27;, &#x27;sea ice&#x27;], dtype=&#x27;object&#x27;, name=&#x27;surface&#x27;))</pre></div></li><li class='xr-var-item'><div class='xr-index-name'><div>altitude</div></div><div class='xr-index-preview'>PandasIndex</div><input type='checkbox' disabled/><label></label><input id='index-a5e07f4f-dd22-456c-b752-579582a03a54' class='xr-index-data-in' type='checkbox'/><label for='index-a5e07f4f-dd22-456c-b752-579582a03a54' title='Show/Hide index repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-index-data'><pre>PandasIndex(Index([0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5,
        7.0, 7.5, 8.0, 8.5, 9.0, 9.5],
-      dtype=&#x27;float64&#x27;, name=&#x27;altitude&#x27;))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-2dfcb619-97e6-466c-bf74-1f1502fe9855' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-2dfcb619-97e6-466c-bf74-1f1502fe9855' class='xr-section-summary'  title='Expand/collapse section'>Attributes: <span>(0)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'></dl></div></li></ul></div></div></div></div>
+      dtype=&#x27;float64&#x27;, name=&#x27;altitude&#x27;))</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-7505c04e-2fc7-4362-8206-a0c69095aa78' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-7505c04e-2fc7-4362-8206-a0c69095aa78' class='xr-section-summary'  title='Expand/collapse section'>Attributes: <span>(0)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'></dl></div></li></ul></div></div></div></div>
 </div>
 </section>
-<section id="loading-an-era5-atmospheric-profile">
-<h2>Loading an ERA5 Atmospheric Profile<a class="headerlink" href="#loading-an-era5-atmospheric-profile" title="Link to this heading">#</a></h2>
-<p>To supply a realistic atmospheric profile (temperature, humidity, geopotential) for the simulation, we load ERA5 reanalysis data from Google Cloud Storage. The profile is selected at 80° N, 0° E on 3 April 2020 — matching our Arctic scenario.</p>
+<section id="era5-atmospheric-profile">
+<h2>ERA5 atmospheric profile<a class="headerlink" href="#era5-atmospheric-profile" title="Link to this heading">#</a></h2>
+<p>Temperature, humidity and geopotential come from the ERA5 grid point nearest to 80° N, 0° E at the time of the scenario, 3 April 2020, 12 UTC. A coarse (2.8°) ARCO-ERA5 copy is enough here. <code class="docutils literal notranslate"><span class="pre">era5_atmosphere=</span></code> accepts the raw ARCO names; <a class="reference internal" href="era5_atmosphere.html"><span class="doc">ERA5 atmosphere</span></a> explains the ERA5 input.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gcsfs</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;GRPC_VERBOSITY&#39;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">)</span>   <span class="c1"># silence gRPC fork notices from gcsfs</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;google&#39;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;IProgress not found&#39;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gcsfs</span>
 
-<span class="c1"># Access the ERA5 reanalysis data stored in Google Cloud Storage</span>
 <span class="n">gcs</span> <span class="o">=</span> <span class="n">gcsfs</span><span class="o">.</span><span class="n">GCSFileSystem</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="s1">&#39;anon&#39;</span><span class="p">)</span>
 <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;gs://gcp-public-data-arco-era5/ar/1959-2022-6h-128x64_equiangular_with_poles_conservative.zarr/&#39;</span>
-<span class="n">full_era5</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_zarr</span><span class="p">(</span><span class="n">gcs</span><span class="o">.</span><span class="n">get_mapper</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+<span class="n">full_era5</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_zarr</span><span class="p">(</span><span class="n">gcs</span><span class="o">.</span><span class="n">get_mapper</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
-<span class="n">era5_to_sim</span> <span class="o">=</span> <span class="n">full_era5</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span>
-    <span class="s1">&#39;sea_surface_temperature&#39;</span><span class="p">:</span> <span class="s1">&#39;surface_temperature&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;specific_humidity&#39;</span><span class="p">:</span> <span class="s1">&#39;q&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;geopotential&#39;</span><span class="p">:</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="s1">&#39;pressure_level&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;time&#39;</span> <span class="p">:</span> <span class="s1">&#39;valid_time&#39;</span><span class="p">,</span>
-<span class="p">})</span>
-
-<span class="n">era5_to_sim</span> <span class="o">=</span> <span class="n">era5_to_sim</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span>
-    <span class="n">valid_time</span><span class="o">=</span><span class="s1">&#39;2020-04-01T12:00:00&#39;</span><span class="p">,</span>
-    <span class="n">latitude</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span>
-    <span class="n">longitude</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span>
+<span class="c1"># One column at the scenario time, loaded into memory</span>
+<span class="n">era5</span> <span class="o">=</span> <span class="n">full_era5</span><span class="p">[[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;specific_humidity&#39;</span><span class="p">,</span> <span class="s1">&#39;geopotential&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span>
+    <span class="n">time</span><span class="o">=</span><span class="s1">&#39;2020-04-03T12:00:00&#39;</span><span class="p">,</span> <span class="n">latitude</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
 <span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 
-<span class="c1"># Assign units required by pyRadtran</span>
-<span class="n">era5_to_sim</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;K&#39;</span>
-<span class="n">era5_to_sim</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;kg/kg&#39;</span>
-<span class="n">era5_to_sim</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-<span class="n">era5_to_sim</span><span class="p">[</span><span class="s1">&#39;pressure_level&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;hPa&#39;</span>
-
-<span class="c1"># Quick look at the humidity profile</span>
-<span class="n">era5_to_sim</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;pressure_level&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;ERA5 Specific Humidity Profile — 80° N&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/josh/micromamba/envs/mamba_josh/lib/python3.13/site-packages/pyproj/network.py:59: UserWarning: pyproj unable to set PROJ database path.
-  _set_context_ca_bundle_path(ca_bundle_path)
-</pre></div>
-</div>
-<img alt="../_images/2ba45993fee6cf62d8822c4841d52011225ff97284fcd78bb4127d460e47e05f.png" src="../_images/2ba45993fee6cf62d8822c4841d52011225ff97284fcd78bb4127d460e47e05f.png" />
-</div>
-</div>
-</section>
-<section id="running-solar-and-thermal-simulations">
-<h2>Running Solar and Thermal Simulations<a class="headerlink" href="#running-solar-and-thermal-simulations" title="Link to this heading">#</a></h2>
-<p>We run two separate simulations — <strong>solar</strong> (shortwave) and <strong>thermal</strong> (longwave) — each using our mixed-phase cloud files as overrides. The <code class="docutils literal notranslate"><span class="pre">wc_modify</span> <span class="pre">tau</span> <span class="pre">set</span> <span class="pre">10</span></code> parameter normalises the liquid water cloud optical depth to 10.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_sim_solar</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-    <span class="n">config_path</span><span class="o">=</span><span class="n">solar_config_path</span><span class="p">,</span>
-    <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">save_to_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">era5_atmosphere</span><span class="o">=</span><span class="n">era5_to_sim</span><span class="p">,</span>
-    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;sur_temperature&#39;</span><span class="p">:</span> <span class="n">Var</span><span class="p">(</span><span class="s1">&#39;surface_temperature&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;albedo&#39;</span><span class="p">:</span> <span class="n">Var</span><span class="p">(</span><span class="s1">&#39;albedo&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;wc_file 1D&#39;</span> <span class="p">:</span> <span class="s1">&#39;work/water_cloud.wc&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;ic_file 1D&#39;</span> <span class="p">:</span> <span class="s1">&#39;work/ice_cloud.ic&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;wc_modify tau set 10&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">ds_sim_thermal</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-    <span class="n">config_path</span><span class="o">=</span><span class="n">thermal_config_path</span><span class="p">,</span>
-    <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">save_to_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">era5_atmosphere</span><span class="o">=</span><span class="n">era5_to_sim</span><span class="p">,</span>
-    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;sur_temperature&#39;</span><span class="p">:</span> <span class="n">Var</span><span class="p">(</span><span class="s1">&#39;surface_temperature&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;albedo&#39;</span><span class="p">:</span> <span class="n">Var</span><span class="p">(</span><span class="s1">&#39;albedo&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;wc_file 1D&#39;</span> <span class="p">:</span> <span class="s1">&#39;work/water_cloud.wc&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;ic_file 1D&#39;</span> <span class="p">:</span> <span class="s1">&#39;work/ice_cloud.ic&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;wc_modify tau set 10&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<section id="visualising-the-net-irradiance-profiles">
-<h2>Visualising the Net Irradiance Profiles<a class="headerlink" href="#visualising-the-net-irradiance-profiles" title="Link to this heading">#</a></h2>
-<p>Below we plot the net irradiance (thermal, solar, and total) as a function of altitude for each surface type. The grey shading marks the mixed-phase cloud layer (2–4 km).</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-
-<span class="c1"># --- Left panel: open ocean ---</span>
-<span class="n">ds_sim_thermal</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Thermal&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="p">(</span><span class="n">ds_sim_solar</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Solar&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">fnet</span> <span class="o">=</span> <span class="n">ds_sim_solar</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="o">/</span> <span class="mf">1e3</span> <span class="o">+</span> <span class="n">ds_sim_thermal</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fnet</span><span class="p">,</span> <span class="n">ds_sim_solar</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Total Net&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fill_betweenx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mixed-Phase Cloud&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Net Irradiance (W/m²)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Altitude (km)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Ocean: $\alpha=0.2$,  $T_\mathrm</span><span class="si">{S}</span><span class="s1">=0\,$°C&#39;</span><span class="p">)</span>
-
-<span class="c1"># --- Right panel: sea ice ---</span>
-<span class="n">ds_sim_thermal</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Thermal&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="p">(</span><span class="n">ds_sim_solar</span><span class="o">/</span><span class="mf">1e3</span><span class="p">)</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net Solar&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">fnet</span> <span class="o">=</span> <span class="n">ds_sim_solar</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="o">/</span> <span class="mf">1e3</span> <span class="o">+</span> <span class="n">ds_sim_thermal</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fnet</span><span class="p">,</span> <span class="n">ds_sim_solar</span><span class="o">.</span><span class="n">altitude</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Total Net&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">fill_betweenx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mixed-Phase Cloud&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Net Irradiance (W/m²)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Altitude (km)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Sea Ice: $\alpha=0.8$,  $T_\mathrm</span><span class="si">{S}</span><span class="s1">=-15\,$°C&#39;</span><span class="p">)</span>
-
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">(</span><span class="n">era5</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mf">273.15</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="p">(</span><span class="n">era5</span><span class="p">[</span><span class="s1">&#39;specific_humidity&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Temperature (°C)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Specific humidity (g kg$^{-1}$)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Pressure (hPa)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERA5 at </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">era5</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">° N, </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">era5</span><span class="o">.</span><span class="n">longitude</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">° E, &quot;</span>
+             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">era5</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="si">:</span><span class="s2">%Y-%m-%d %H</span><span class="si">}</span><span class="s2"> UTC&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/7a5bd48d44bd020a842a46b16471f237612e630fcfdda149a0aaeb7370756792.png" src="../_images/7a5bd48d44bd020a842a46b16471f237612e630fcfdda149a0aaeb7370756792.png" />
+<img alt="../_images/4f99ac73038f3b02f612f9f4da1070bc980aee50625417a90b527f50084718b0.png" src="../_images/4f99ac73038f3b02f612f9f4da1070bc980aee50625417a90b527f50084718b0.png" />
 </div>
 </div>
+</section>
+<section id="solar-and-thermal-runs">
+<h2>Solar and thermal runs<a class="headerlink" href="#solar-and-thermal-runs" title="Link to this heading">#</a></h2>
+<p>Both runs use the two cloud files. In the solar run <code class="docutils literal notranslate"><span class="pre">'wc_modify':</span> <span class="pre">['tau550</span> <span class="pre">set</span> <span class="pre">10']</span></code> pins the liquid-cloud optical thickness at 550 nm to 10 and scales the other wavelengths accordingly. The option needs 550 nm inside the simulated band, so the thermal run (4.5–42 µm) uses the file as it is, whose optical thickness is about 10 already.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clouds</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;wc_file 1D&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">wc_file_path</span><span class="p">),</span>
+    <span class="s1">&#39;ic_file 1D&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ic_file_path</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">ds_sim_solar</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">config_path</span><span class="o">=</span><span class="n">solar_config_path</span><span class="p">,</span>
+    <span class="n">era5_atmosphere</span><span class="o">=</span><span class="n">era5</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+        <span class="o">**</span><span class="n">clouds</span><span class="p">,</span>
+        <span class="s1">&#39;albedo&#39;</span><span class="p">:</span> <span class="n">Var</span><span class="p">(</span><span class="s1">&#39;solar_albedo&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;wc_modify&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;tau550 set 10&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ds_sim_thermal</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">config_path</span><span class="o">=</span><span class="n">thermal_config_path</span><span class="p">,</span>
+    <span class="n">era5_atmosphere</span><span class="o">=</span><span class="n">era5</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+        <span class="o">**</span><span class="n">clouds</span><span class="p">,</span>
+        <span class="s1">&#39;sur_temperature&#39;</span><span class="p">:</span> <span class="n">Var</span><span class="p">(</span><span class="s1">&#39;surface_temperature&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;albedo&#39;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>          <span class="c1"># emissivity 0.98</span>
+    <span class="p">},</span>
+    <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="net-irradiance-profiles">
+<h2>Net irradiance profiles<a class="headerlink" href="#net-irradiance-profiles" title="Link to this heading">#</a></h2>
+<p>Net thermal, solar and total irradiance against altitude for each surface (solar output converted from mW m⁻² to W m⁻²). The grey band marks the cloud layer (2–4 km).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">net_solar</span> <span class="o">=</span> <span class="n">ds_sim_solar</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e3</span>     <span class="c1"># W m-2</span>
+<span class="n">net_thermal</span> <span class="o">=</span> <span class="n">ds_sim_thermal</span><span class="o">.</span><span class="n">enet</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>       <span class="c1"># W m-2</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">net_solar</span> <span class="o">+</span> <span class="n">net_thermal</span>
+
+<span class="n">titles</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;ocean&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;Ocean: $\alpha=0.06$, $T_\mathrm</span><span class="si">{s}</span><span class="s1">=-1.8\,$°C&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sea ice&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;Sea ice: $\alpha=0.8$, $T_\mathrm</span><span class="si">{s}</span><span class="s1">=-15\,$°C&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">surf</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mixed-phase cloud&#39;</span><span class="p">)</span>
+    <span class="n">net_thermal</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">surface</span><span class="o">=</span><span class="n">surf</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net thermal&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">net_solar</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">surface</span><span class="o">=</span><span class="n">surf</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net solar&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">surface</span><span class="o">=</span><span class="n">surf</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Net total&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Net irradiance, $E^\downarrow - E^\uparrow$ (W m$^{-2}$)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Altitude (km)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">titles</span><span class="p">[</span><span class="n">surf</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s1">&#39;small&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="s1">&#39;net solar&#39;</span><span class="p">:</span> <span class="n">net_solar</span><span class="p">,</span> <span class="s1">&#39;net thermal&#39;</span><span class="p">:</span> <span class="n">net_thermal</span><span class="p">,</span> <span class="s1">&#39;net total&#39;</span><span class="p">:</span> <span class="n">net</span><span class="p">})</span>
+      <span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">])</span><span class="o">.</span><span class="n">to_dataframe</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d97b30fd3c2cd777e48d25504bda6dabb739180477692381d8b35d7f6cc3ddbc.png" src="../_images/d97b30fd3c2cd777e48d25504bda6dabb739180477692381d8b35d7f6cc3ddbc.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                  net solar  net thermal  net total
+surface altitude                                   
+ocean   0.0            64.2        -95.3      -31.1
+        2.0            65.2        -57.3        8.0
+        2.5            66.3        -10.2       56.2
+        3.5            72.1         -7.8       64.3
+        4.0            85.0        -96.9      -12.0
+        9.5           100.0       -126.3      -26.4
+sea ice 0.0            25.7        -43.3      -17.6
+        2.0            28.0        -29.7       -1.7
+        2.5            30.0         -5.9       24.1
+        3.5            37.0         -7.7       29.3
+        4.0            50.2        -96.9      -46.7
+        9.5            65.3       -126.3      -61.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>The flux difference across a layer is the energy it absorbs:</p>
+<ul class="simple">
+<li><p><strong>Cloud top</strong> (3.5–4.0 km): thermal emission to space dominates. The layer loses about 76 W m⁻² in total over both surfaces; the solar absorption in the cloud (about 20 W m⁻²) offsets only a small part of the longwave loss.</p></li>
+<li><p><strong>Cloud base</strong> (2.0–2.5 km): the layer absorbs thermal emission from below and warms, by about 48 W m⁻² over the ocean and 26 W m⁻² over the colder sea ice.</p></li>
+<li><p><strong>Surface</strong>: the dark ocean absorbs 64 W m⁻² of sunlight, sea ice only 26 W m⁻². The warmer ocean also emits more, so its net thermal loss (−95 W m⁻²) is about twice that of sea ice (−43 W m⁻²). The total surface budget is negative in both cases, −31 W m⁻² over the ocean and −18 W m⁻² over sea ice.</p></li>
+<li><p><strong>Above the cloud</strong> the net thermal irradiance is the same for both surfaces: the cloud hides the surface from space. The net solar irradiance at 9.5 km is lower over sea ice because more sunlight is reflected through the cloud.</p></li>
+</ul>
+<p>A clear-sky run of the same scene (drop the two cloud files) gives the cloud radiative effect; see <a class="reference internal" href="../guide/clouds.html"><span class="doc">Clouds</span></a>.</p>
 </section>
 </section>
 
@@ -1266,15 +1266,15 @@ Data variables:
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Advanced: Water Clouds</p>
+        <p class="prev-next-title">Water clouds</p>
       </div>
     </a>
     <a class="right-next"
-       href="get_radiosonde.html"
+       href="../tutorials/instruments.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Radiosonde Atmosphere Generator</p>
+        <p class="prev-next-title">Instruments &amp; special geometries</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1294,11 +1294,11 @@ Data variables:
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#defining-the-mixed-phase-cloud-layers">Defining the Mixed-Phase Cloud Layers</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-the-arctic-scenario">Setting Up the Arctic Scenario</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-an-era5-atmospheric-profile">Loading an ERA5 Atmospheric Profile</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-solar-and-thermal-simulations">Running Solar and Thermal Simulations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualising-the-net-irradiance-profiles">Visualising the Net Irradiance Profiles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cloud-files">Cloud files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#arctic-scenario">Arctic scenario</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5-atmospheric-profile">ERA5 atmospheric profile</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solar-and-thermal-runs">Solar and thermal runs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#net-irradiance-profiles">Net irradiance profiles</a></li>
 </ul>
   </nav></div>
 

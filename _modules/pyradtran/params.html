@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -174,152 +175,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -424,19 +422,200 @@ document.write(`
                   
   <h1>Source code for pyradtran.params</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Parameter registry and resolution for pyRadtran.</span>
+<span class="sd">The ``params`` system: registry, markers, validation and discovery.</span>
 
-<span class="sd">Defines the single source of truth for every uvspec parameter the package</span>
-<span class="sd">understands (:data:`REGISTRY`), the :class:`Var` marker for per-point</span>
-<span class="sd">dataset references, and :class:`ParamResolver`, which turns a user</span>
-<span class="sd">``params`` mapping into validated, provenance-tagged per-point values.</span>
+<span class="sd">Every per-run setting of</span>
+<span class="sd">:meth:`~pyradtran.interface.PyRadtranAccessor.run` travels through one</span>
+<span class="sd">mapping, ``params={key: value}``. This module defines the allowed keys</span>
+<span class="sd">and values, validates them before any ``uvspec`` process starts, and</span>
+<span class="sd">lists the options that exist:</span>
+
+<span class="sd">.. autosummary::</span>
+
+<span class="sd">   Var</span>
+<span class="sd">   Raw</span>
+<span class="sd">   describe</span>
+<span class="sd">   search_options</span>
+<span class="sd">   ParamResolver</span>
+<span class="sd">   ParamSpec</span>
+<span class="sd">   validate_against_schema</span>
+<span class="sd">   get_schema</span>
+
+<span class="sd">Notes</span>
+<span class="sd">-----</span>
+<span class="sd">.. rubric:: Keys</span>
+
+<span class="sd">A key selects what is set:</span>
+
+<span class="sd">``&quot;albedo&quot;``, ``&quot;aerosol_default&quot;``, ...</span>
+<span class="sd">    A uvspec option name. Any option of the local libRadtran install is</span>
+<span class="sd">    accepted (see :func:`search_options` / :func:`describe`); a</span>
+<span class="sd">    misspelt name is rejected with a &quot;did you mean ...?&quot; hint.</span>
+<span class="sd">``&quot;mol_modify O3&quot;``, ``&quot;wc_modify tau550 set&quot;``, ...</span>
+<span class="sd">    A multi-word key: the option name followed by its leading</span>
+<span class="sd">    arguments; the value supplies the remaining ones. Several lines of a</span>
+<span class="sd">    repeatable option can be set, and replaced, independently this way.</span>
+<span class="sd">``&quot;simulation_defaults.rte_solver&quot;``, ...</span>
+<span class="sd">    A dotted configuration path ``&lt;section&gt;.&lt;field&gt;`` (a ``.`` and no</span>
+<span class="sd">    space in the key). The value is written into the</span>
+<span class="sd">    :class:`~pyradtran.config.SimulationConfig` of the run and the entry</span>
+<span class="sd">    is consumed; it never reaches the input file directly. Use it for</span>
+<span class="sd">    settings that change how the input file is built (``source``,</span>
+<span class="sd">    ``integrate_wavelength``, ``output_altitudes_km``, ...). An unknown</span>
+<span class="sd">    path is rejected with a &quot;did you mean ...?&quot; hint.</span>
+
+<span class="sd">.. rubric:: Values</span>
+
+<span class="sd">A value selects how the option is set:</span>
+
+<span class="sd">literal number or string</span>
+<span class="sd">    Written after the keyword: ``{&quot;albedo&quot;: 0.85}`` → ``albedo 0.85``.</span>
+<span class="sd">:class:`Var`</span>
+<span class="sd">    Taken per simulation point from a variable of the input dataset.</span>
+<span class="sd">:class:`Raw`</span>
+<span class="sd">    Written verbatim without any validation.</span>
+<span class="sd">``True``</span>
+<span class="sd">    A flag option without arguments: ``{&quot;aerosol_default&quot;: True}`` →</span>
+<span class="sd">    ``aerosol_default``.</span>
+<span class="sd">``False``</span>
+<span class="sd">    Omit the option, removing a line the configuration would otherwise</span>
+<span class="sd">    write: ``{&quot;mol_modify O3&quot;: False}``.</span>
+<span class="sd">``tuple``</span>
+<span class="sd">    Space-joined into one line: ``{&quot;wavelength&quot;: (400, 700)}``.</span>
+<span class="sd">``list``</span>
+<span class="sd">    On a repeatable option (``non_unique`` in the schema, e.g.</span>
+<span class="sd">    ``wc_modify``, ``crs_model``) one input line per element; on any</span>
+<span class="sd">    other option space-joined like a tuple.</span>
+
+<span class="sd">A plain string that is also the name of a dataset variable is rejected</span>
+<span class="sd">as ambiguous; write ``Var(&quot;name&quot;)`` if the variable is meant.</span>
+
+<span class="sd">.. rubric:: Provenance</span>
+
+<span class="sd">Every resolved value carries a tag saying where it came from. The tags</span>
+<span class="sd">appear in :meth:`~pyradtran.interface.PyRadtranAccessor.explain`:</span>
+
+<span class="sd">========================  ====================  ==========================</span>
+<span class="sd">Constant                  Tag                   Meaning</span>
+<span class="sd">========================  ====================  ==========================</span>
+<span class="sd">:data:`PROV_CONFIG`       ``&quot;config&quot;``          line derived from the</span>
+<span class="sd">                                                configuration</span>
+<span class="sd">:data:`PROV_LITERAL`      ``&quot;params-literal&quot;``  validated literal from</span>
+<span class="sd">                                                ``params``</span>
+<span class="sd">:data:`PROV_DATASET`      ``&quot;dataset-var&quot;``     per-point value from a</span>
+<span class="sd">                                                :class:`Var`</span>
+<span class="sd">:data:`PROV_UNVALIDATED`  ``&quot;unvalidated&quot;``     :class:`Raw` value, or any</span>
+<span class="sd">                                                non-registry key when no</span>
+<span class="sd">                                                option schema is available</span>
+<span class="sd">========================  ====================  ==========================</span>
+
+<span class="sd">``params`` entries always win over the configuration.</span>
+
+<span class="sd">.. rubric:: Validation</span>
+
+<span class="sd">Two layers check a value. The curated :data:`REGISTRY` below knows</span>
+<span class="sd">units, ranges and special formatting for the most common parameters.</span>
+<span class="sd">Everything else is checked against the option schema extracted from the</span>
+<span class="sd">local libRadtran install (:mod:`pyradtran.schema`): option name, number</span>
+<span class="sd">of arguments, allowed choices, numeric ranges. Without a schema (no</span>
+<span class="sd">``src_py`` directory next to ``uvspec``) only the registry is applied</span>
+<span class="sd">and other keys pass through tagged ``unvalidated``.</span>
+
+<span class="sd">The curated registry (:data:`REGISTRY`):</span>
+
+<span class="sd">===================  =====  =======================  =========================</span>
+<span class="sd">Key                  Units  Valid range / choices    Notes</span>
+<span class="sd">===================  =====  =======================  =========================</span>
+<span class="sd">``albedo``           –      0 … 1                    Lambertian surface albedo</span>
+<span class="sd">``sur_temperature``  K      0 … 1000                 surface temperature</span>
+<span class="sd">                                                     (thermal source)</span>
+<span class="sd">``sza``              deg    0 … 180                  solar zenith angle</span>
+<span class="sd">``zout``             km     –                        output level(s); numeric</span>
+<span class="sd">                                                     levels are sorted and</span>
+<span class="sd">                                                     de-duplicated</span>
+<span class="sd">``brdf_rpv_type``    –      1 … 20                   IGBP surface type; drops</span>
+<span class="sd">                                                     ``albedo`` and writes</span>
+<span class="sd">                                                     ``brdf_rpv_library IGBP``</span>
+<span class="sd">                                                     unless a surface library</span>
+<span class="sd">                                                     or file is given</span>
+<span class="sd">``wavelength``       nm     –                        wavelength range</span>
+<span class="sd">                                                     ``(min, max)``</span>
+<span class="sd">``mol_modify O3``    DU     0 … 1000                 total ozone column; a</span>
+<span class="sd">                                                     bare number gets the</span>
+<span class="sd">                                                     unit appended, a string</span>
+<span class="sd">                                                     with its own unit</span>
+<span class="sd">                                                     (``&quot;320 DU&quot;``) is kept</span>
+<span class="sd">``mol_modify H2O``   MM     0 … 200                  precipitable water in</span>
+<span class="sd">                                                     mm; as for O3</span>
+<span class="sd">``rte_solver``       –      any solver of the local  RTE solver (checked</span>
+<span class="sd">                            libRadtran               against the option</span>
+<span class="sd">                                                     schema; without one,</span>
+<span class="sd">                                                     against the libRadtran</span>
+<span class="sd">                                                     2.0.6 list)</span>
+<span class="sd">``mol_abs_param``    –      –                        molecular absorption</span>
+<span class="sd">                                                     parameterisation</span>
+<span class="sd">``umu``              –      −1 … 1                   cosine of the viewing</span>
+<span class="sd">                                                     zenith angle</span>
+<span class="sd">``output_user``      –      –                        output columns</span>
+<span class="sd">``source``           –      ``solar``, ``thermal``   radiation source</span>
+<span class="sd">``day_of_year``      –      1 … 366                  day of year (Sun–Earth</span>
+<span class="sd">                                                     distance)</span>
+<span class="sd">===================  =====  =======================  =========================</span>
+
+<span class="sd">Ranges are inclusive. For the keys in :data:`CONFIG_FIELD_MAP`</span>
+<span class="sd">(``albedo``, ``sur_temperature``, ``sza``, ``rte_solver``,</span>
+<span class="sd">``mol_abs_param``, ``source``, ``mol_modify O3``, ``mol_modify H2O``)</span>
+<span class="sd">the configuration holds a default that ``params`` overrides.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+<span class="sd">A typical mapping (``ds`` has the variables ``albedo_sw`` and ``cod``):</span>
+
+<span class="sd">&gt;&gt;&gt; from pyradtran import Var, Raw</span>
+<span class="sd">&gt;&gt;&gt; params = {</span>
+<span class="sd">...     &quot;albedo&quot;: Var(&quot;albedo_sw&quot;),  # per point, from the dataset</span>
+<span class="sd">...     &quot;mol_modify O3&quot;: 320,  # curated: -&gt; &quot;mol_modify O3 320 DU&quot;</span>
+<span class="sd">...     &quot;wc_modify tau550 set&quot;: Var(&quot;cod&quot;),  # multi-word key</span>
+<span class="sd">...     &quot;crs_model&quot;: [&quot;rayleigh Bodhaine&quot;, &quot;o3 Bass_and_Paur&quot;],  # two lines</span>
+<span class="sd">...     &quot;aerosol_default&quot;: True,  # flag</span>
+<span class="sd">...     &quot;pseudospherical&quot;: Raw(True),  # not validated</span>
+<span class="sd">...     &quot;simulation_defaults.rte_solver&quot;: &quot;disort&quot;,  # config override</span>
+<span class="sd">... }</span>
+<span class="sd">&gt;&gt;&gt; result = ds.pyradtran.run(params=params)  # doctest: +SKIP</span>
+
+<span class="sd">Check before you run: which options exist, what they take and what the</span>
+<span class="sd">input file will be.</span>
+
+<span class="sd">&gt;&gt;&gt; from pyradtran import describe, search_options</span>
+<span class="sd">&gt;&gt;&gt; search_options(&quot;visibility&quot;)  # doctest: +SKIP</span>
+<span class="sd">[&#39;aerosol_default&#39;, &#39;aerosol_visibility&#39;]</span>
+<span class="sd">&gt;&gt;&gt; print(describe(&quot;aerosol_visibility&quot;))  # doctest: +SKIP</span>
+<span class="sd">aerosol_visibility &lt;float in [0.0, 1000000.0]&gt;</span>
+<span class="sd">group: Aerosol</span>
+<span class="sd">...</span>
+<span class="sd">&gt;&gt;&gt; print(ds.pyradtran.explain(params=params))  # doctest: +SKIP</span>
+<span class="sd">rte_solver disort                                                   # config</span>
+<span class="sd">...</span>
+<span class="sd">mol_modify O3 320 DU                                                # params-literal</span>
+<span class="sd">crs_model rayleigh Bodhaine                                         # params-literal</span>
+<span class="sd">crs_model o3 Bass_and_Paur                                          # params-literal</span>
+<span class="sd">aerosol_default                                                     # params-literal</span>
+<span class="sd">pseudospherical                                                     # unvalidated</span>
+<span class="sd">albedo 0.82                                                         # dataset-var</span>
+<span class="sd">wc_modify tau550 set 12.0                                           # dataset-var</span>
+<span class="sd">quiet                                                               # config</span>
 
 <span class="sd">See Also</span>
 <span class="sd">--------</span>
 <span class="sd">pyradtran.input_builder : Renders resolved parameters to uvspec input lines.</span>
+<span class="sd">pyradtran.schema : Extraction of the libRadtran option schema.</span>
+<span class="sd">pyradtran.interface.PyRadtranAccessor.run : Where ``params`` is passed.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">difflib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
@@ -444,23 +623,132 @@ document.write(`
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="c1">#: Provenance tags (exact strings used in explain() output)</span>
+<span class="c1"># Provenance tags (exact strings used in explain() output)</span>
+
+<span class="c1">#: Provenance tag of input lines derived from the configuration.</span>
 <span class="n">PROV_CONFIG</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span>
+<span class="c1">#: Provenance tag of validated literal values from ``params``.</span>
 <span class="n">PROV_LITERAL</span> <span class="o">=</span> <span class="s2">&quot;params-literal&quot;</span>
+<span class="c1">#: Provenance tag of per-point values resolved from a :class:`Var`.</span>
 <span class="n">PROV_DATASET</span> <span class="o">=</span> <span class="s2">&quot;dataset-var&quot;</span>
+<span class="c1">#: Provenance tag of values that were not validated: :class:`Raw` values,</span>
+<span class="c1">#: and any non-registry key when no libRadtran option schema is available.</span>
 <span class="n">PROV_UNVALIDATED</span> <span class="o">=</span> <span class="s2">&quot;unvalidated&quot;</span>
 
 
 <div class="viewcode-block" id="Var">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.Var.html#pyradtran.params.Var">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.Var.html#pyradtran.params.Var">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Var</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Marker: resolve this parameter per point from a dataset variable.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-point reference to a variable of the input dataset.</span>
+
+<span class="sd">    Used as a value in the ``params`` mapping of</span>
+<span class="sd">    :meth:`~pyradtran.interface.PyRadtranAccessor.run`: the parameter</span>
+<span class="sd">    takes, at every simulation point, the value of the named variable at</span>
+<span class="sd">    that point.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name : str</span>
-<span class="sd">        Name of the variable in the input dataset.</span>
+<span class="sd">        Name of a data variable or coordinate of the input dataset.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Raw : Pass a literal value through without validation.</span>
+<span class="sd">    ParamResolver.resolve_point : Where references are resolved.</span>
+<span class="sd">    pyradtran.interface.PyRadtranAccessor.explain : Preview the resolved</span>
+<span class="sd">        input file of one point.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    * **Missing variable.** If *name* is not in the dataset,</span>
+<span class="sd">      :class:`~pyradtran.exceptions.ValidationError` is raised before</span>
+<span class="sd">      any simulation starts.</span>
+<span class="sd">    * **Validation.** Each per-point value is validated exactly like a</span>
+<span class="sd">      literal (range, choices, option schema); a bad value raises</span>
+<span class="sd">      :class:`~pyradtran.exceptions.ValidationError` naming the key.</span>
+<span class="sd">    * **NaN means &quot;not set here&quot;.** Where the variable is NaN the</span>
+<span class="sd">      parameter is omitted for that point: the configuration&#39;s line for</span>
+<span class="sd">      that option is used if there is one, otherwise uvspec&#39;s default.</span>
+<span class="sd">      The point is still simulated.</span>
+<span class="sd">    * **Strings are literals.** ``{&quot;albedo&quot;: &quot;albedo_sw&quot;}`` is not a</span>
+<span class="sd">      reference; a bare string that matches a dataset variable name is</span>
+<span class="sd">      rejected as ambiguous.</span>
+<span class="sd">    * Lines produced by a reference are tagged ``dataset-var``</span>
+<span class="sd">      (:data:`PROV_DATASET`).</span>
+
+<span class="sd">    The key may be any key that accepts a literal, including multi-word</span>
+<span class="sd">    keys: ``{&quot;wc_modify tau550 set&quot;: Var(&quot;cod&quot;)}`` writes</span>
+<span class="sd">    ``wc_modify tau550 set &lt;cod at this point&gt;``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Surface albedo and surface temperature from the dataset, everything</span>
+<span class="sd">    else from the configuration:</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran import Var</span>
+<span class="sd">    &gt;&gt;&gt; result = ds.pyradtran.run(  # doctest: +SKIP</span>
+<span class="sd">    ...     config_path=&quot;thermal.yaml&quot;,</span>
+<span class="sd">    ...     params={</span>
+<span class="sd">    ...         &quot;albedo&quot;: Var(&quot;albedo_lw&quot;),</span>
+<span class="sd">    ...         &quot;sur_temperature&quot;: Var(&quot;surface_temperature&quot;),</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ... )</span>
+
+<span class="sd">    Per point, shown with the resolver that ``run`` uses (``schema=None``</span>
+<span class="sd">    keeps the example independent of libRadtran; the stand-in ``config``</span>
+<span class="sd">    is normally a :class:`~pyradtran.config.SimulationConfig`):</span>
+
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">    &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.params import ParamResolver</span>
+<span class="sd">    &gt;&gt;&gt; ds = xr.Dataset({&quot;albedo_sw&quot;: (&quot;time&quot;, [0.82, np.nan, 1.7])})</span>
+<span class="sd">    &gt;&gt;&gt; config = SimpleNamespace()</span>
+<span class="sd">    &gt;&gt;&gt; resolver = ParamResolver(config, {&quot;albedo&quot;: Var(&quot;albedo_sw&quot;)}, schema=None)</span>
+<span class="sd">    &gt;&gt;&gt; resolver.resolve_point(ds.isel(time=0))</span>
+<span class="sd">    ({&#39;albedo&#39;: (0.82, &#39;dataset-var&#39;)}, [])</span>
+
+<span class="sd">    NaN: the parameter is left out for this point and reported as</span>
+<span class="sd">    skipped:</span>
+
+<span class="sd">    &gt;&gt;&gt; resolver.resolve_point(ds.isel(time=1))</span>
+<span class="sd">    ({}, [&#39;albedo&#39;])</span>
+
+<span class="sd">    An invalid value is caught before uvspec sees it:</span>
+
+<span class="sd">    &gt;&gt;&gt; resolver.resolve_point(ds.isel(time=2))</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: Invalid per-point value(s): &#39;albedo&#39; must be in [0.0, 1.0], got 1.7</span>
+
+<span class="sd">    A reference to a variable the dataset does not have:</span>
+
+<span class="sd">    &gt;&gt;&gt; ParamResolver(</span>
+<span class="sd">    ...     config, {&quot;albedo&quot;: Var(&quot;albedo&quot;)}, schema=None</span>
+<span class="sd">    ... ).validate_var_targets(ds)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: &#39;albedo&#39; references dataset variable &#39;albedo&#39; which is not in the dataset</span>
+
+<span class="sd">    In the annotated input file the two points differ only in the albedo</span>
+<span class="sd">    line (``albedo_sw`` is 0.82 at the first time and NaN at the second;</span>
+<span class="sd">    the configuration has ``albedo_value: 0.85``):</span>
+
+<span class="sd">    &gt;&gt;&gt; params = {&quot;albedo&quot;: Var(&quot;albedo_sw&quot;)}</span>
+<span class="sd">    &gt;&gt;&gt; print(ds.pyradtran.explain(params=params))  # doctest: +SKIP</span>
+<span class="sd">    rte_solver twostr                                                   # config</span>
+<span class="sd">    ...</span>
+<span class="sd">    albedo 0.82                                                         # dataset-var</span>
+<span class="sd">    quiet                                                               # config</span>
+<span class="sd">    &gt;&gt;&gt; print(  # doctest: +SKIP</span>
+<span class="sd">    ...     ds.pyradtran.explain(point={&quot;time&quot;: &quot;2024-06-21 13:00&quot;}, params=params)</span>
+<span class="sd">    ... )</span>
+<span class="sd">    rte_solver twostr                                                   # config</span>
+<span class="sd">    ...</span>
+<span class="sd">    albedo 0.85                                                         # config</span>
+<span class="sd">    ...</span>
+<span class="sd">    quiet                                                               # config</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span></div>
@@ -468,19 +756,58 @@ document.write(`
 
 
 <div class="viewcode-block" id="Raw">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.Raw.html#pyradtran.params.Raw">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.Raw.html#pyradtran.params.Raw">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Raw</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Marker: pass this value through without any validation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pass a ``params`` value through without any validation.</span>
 
-<span class="sd">    Escape hatch for options the local libRadtran schema does not know</span>
-<span class="sd">    (e.g. a patched uvspec build). The value reaches the input file</span>
-<span class="sd">    verbatim, tagged with ``unvalidated`` provenance.</span>
+<span class="sd">    For options, or option values, that validation rejects although your</span>
+<span class="sd">    ``uvspec`` accepts them: an option the local libRadtran schema does</span>
+<span class="sd">    not know (e.g. a patched build), or a value outside the range of the</span>
+<span class="sd">    curated :data:`REGISTRY`. The value reaches the input file verbatim,</span>
+<span class="sd">    tagged ``unvalidated`` (:data:`PROV_UNVALIDATED`).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    value : Any</span>
-<span class="sd">        The literal value to emit.</span>
+<span class="sd">        The literal value to emit after the keyword. ``True`` emits the</span>
+<span class="sd">        bare keyword (flag option); a ``list`` emits one line per</span>
+<span class="sd">        element.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Var : Per-point values from the dataset.</span>
+<span class="sd">    describe : Check what an option expects before bypassing validation.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    ``Raw`` also switches off the typo protection: a misspelt option name</span>
+<span class="sd">    is written to the input file as is, and only uvspec will complain.</span>
+<span class="sd">    A ``Raw`` value is the same for every point; it cannot wrap a</span>
+<span class="sd">    :class:`Var`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran import Raw</span>
+<span class="sd">    &gt;&gt;&gt; params = {</span>
+<span class="sd">    ...     &quot;my_patched_option&quot;: Raw(&quot;on&quot;),  # unknown to the local schema</span>
+<span class="sd">    ...     &quot;pseudospherical&quot;: Raw(True),  # flag option</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; result = ds.pyradtran.run(params=params)  # doctest: +SKIP</span>
+
+<span class="sd">    With a stand-in schema that only knows ``albedo``, an unknown option</span>
+<span class="sd">    name is rejected unless wrapped in ``Raw``:</span>
+
+<span class="sd">    &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.params import ParamResolver</span>
+<span class="sd">    &gt;&gt;&gt; schema = {&quot;albedo&quot;: {&quot;name&quot;: &quot;albedo&quot;, &quot;tokens&quot;: []}}</span>
+<span class="sd">    &gt;&gt;&gt; config = SimpleNamespace()</span>
+<span class="sd">    &gt;&gt;&gt; ParamResolver(config, {&quot;albedoo&quot;: 0.5}, schema=schema)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: Invalid parameter value(s): &#39;albedoo&#39; is not a known uvspec option of the local libRadtran install; did you mean albedo? (wrap the value in Raw(...) to bypass validation)</span>
+<span class="sd">    &gt;&gt;&gt; ParamResolver(config, {&quot;albedoo&quot;: Raw(0.5)}, schema=schema).static_params()</span>
+<span class="sd">    {&#39;albedoo&#39;: (0.5, &#39;unvalidated&#39;)}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">value</span><span class="p">:</span> <span class="n">Any</span></div>
@@ -488,29 +815,64 @@ document.write(`
 
 
 <div class="viewcode-block" id="ParamSpec">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ParamSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Declarative description of one uvspec parameter.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Declarative description of one curated uvspec parameter.</span>
+
+<span class="sd">    The entries of :data:`REGISTRY` are instances of this class. A spec</span>
+<span class="sd">    knows how to check a value (:meth:`validate`) and how to write the</span>
+<span class="sd">    input line (:meth:`format_line`).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    keyword : str</span>
 <span class="sd">        The uvspec keyword (possibly multi-word, e.g. ``&quot;mol_modify O3&quot;``).</span>
 <span class="sd">    dtype : type, default ``float``</span>
-<span class="sd">        Expected scalar type; used for coercion before validation.</span>
+<span class="sd">        Expected scalar type. Values are not converted. When this is</span>
+<span class="sd">        ``float`` or ``int``, :meth:`validate` rejects booleans and</span>
+<span class="sd">        applies the range check.</span>
 <span class="sd">    units : str, optional</span>
 <span class="sd">        Physical units, for documentation and error messages.</span>
 <span class="sd">    valid_range : tuple of float, optional</span>
 <span class="sd">        Inclusive ``(lo, hi)`` range for numeric values.</span>
 <span class="sd">    choices : tuple, optional</span>
-<span class="sd">        Allowed values for enumerated parameters.</span>
-<span class="sd">    applicability : {&quot;solar&quot;, &quot;thermal&quot;, &quot;both&quot;}, default ``&quot;both&quot;``</span>
-<span class="sd">        Which source modes the parameter applies to.</span>
+<span class="sd">        Allowed values for enumerated parameters (exact, case-sensitive</span>
+<span class="sd">        match).</span>
+<span class="sd">    applicability : {&quot;both&quot;, &quot;solar&quot;, &quot;thermal&quot;}</span>
+<span class="sd">        Which source modes the parameter applies to. Informational</span>
+<span class="sd">        only; not enforced.</span>
 <span class="sd">    formatter : callable, optional</span>
 <span class="sd">        ``value -&gt; full input line``. Defaults to ``&quot;{keyword} {value}&quot;``.</span>
-<span class="sd">    doc : str</span>
+<span class="sd">    doc : str, default ``&quot;&quot;``</span>
 <span class="sd">        One-line description.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    REGISTRY : The curated specs shipped with pyradtran.</span>
+<span class="sd">    validate_against_schema : Validation of all other uvspec options.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A spec from the registry:</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran import REGISTRY</span>
+<span class="sd">    &gt;&gt;&gt; spec = REGISTRY[&quot;mol_modify O3&quot;]</span>
+<span class="sd">    &gt;&gt;&gt; spec.units, spec.valid_range</span>
+<span class="sd">    (&#39;DU&#39;, (0.0, 1000.0))</span>
+<span class="sd">    &gt;&gt;&gt; spec.format_line(320)</span>
+<span class="sd">    &#39;mol_modify O3 320 DU&#39;</span>
+
+<span class="sd">    Defining one (specs are plain frozen dataclasses):</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran import ParamSpec</span>
+<span class="sd">    &gt;&gt;&gt; pressure = ParamSpec(&quot;pressure&quot;, float, &quot;hPa&quot;, (0, 1100), doc=&quot;Surface pressure&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; pressure.format_line(950.0)</span>
+<span class="sd">    &#39;pressure 950.0&#39;</span>
+<span class="sd">    &gt;&gt;&gt; pressure.validate(2000)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: &#39;pressure&#39; must be in [0, 1100] hPa, got 2000.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span>
@@ -523,12 +885,75 @@ document.write(`
     <span class="n">doc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
 <div class="viewcode-block" id="ParamSpec.validate">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.validate">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raise :class:`ValidationError` if *value* is out of spec.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raise ``ValidationError`` if *value* is out of spec.</span>
 
-<span class="sd">        String values are passed through unvalidated (escape hatch for</span>
-<span class="sd">        raw uvspec syntax), except for ``choices`` parameters.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : Any</span>
+<span class="sd">            The candidate value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            The value is not converted or returned.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValidationError</span>
+<span class="sd">            If the spec has ``choices`` and *value* is not one of them;</span>
+<span class="sd">            or the spec is numeric and *value* is a ``bool``; or the</span>
+<span class="sd">            spec is numeric with a ``valid_range`` and *value* is not a</span>
+<span class="sd">            number or lies outside the (inclusive) range.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The checks, in order:</span>
+
+<span class="sd">        1. A spec with ``choices`` accepts exactly those values.</span>
+<span class="sd">        2. Otherwise a ``str`` is accepted as is, which allows raw uvspec</span>
+<span class="sd">           syntax such as ``&quot;0 toa&quot;`` for ``zout``.</span>
+<span class="sd">           (:class:`ParamResolver` also checks such strings against the</span>
+<span class="sd">           libRadtran option schema when one is available.)</span>
+<span class="sd">        3. Otherwise a ``float`` / ``int`` spec rejects ``True`` /</span>
+<span class="sd">           ``False`` (a boolean is a flag, not a number).</span>
+<span class="sd">        4. Otherwise, for ``float`` / ``int`` specs with a</span>
+<span class="sd">           ``valid_range``, the value must convert with :class:`float`</span>
+<span class="sd">           and satisfy ``lo &lt;= value &lt;= hi``.</span>
+
+<span class="sd">        Specs without ``choices`` and without ``valid_range`` (e.g.</span>
+<span class="sd">        ``wavelength``, ``zout``) accept anything but a boolean.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran import REGISTRY</span>
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;albedo&quot;].validate(0.3)  # fine: returns None</span>
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;albedo&quot;].validate(1.5)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        pyradtran.exceptions.ValidationError: &#39;albedo&#39; must be in [0.0, 1.0], got 1.5</span>
+
+<span class="sd">        Units are part of the message where the spec has them:</span>
+
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;sza&quot;].validate(200)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        pyradtran.exceptions.ValidationError: &#39;sza&#39; must be in [0.0, 180.0] deg, got 200.0</span>
+
+<span class="sd">        Enumerated parameters:</span>
+
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;source&quot;].validate(&quot;lunar&quot;)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        pyradtran.exceptions.ValidationError: &#39;source&#39; must be one of (&#39;solar&#39;, &#39;thermal&#39;), got &#39;lunar&#39;</span>
+
+<span class="sd">        A boolean is not a number:</span>
+
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;albedo&quot;].validate(True)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        pyradtran.exceptions.ValidationError: &#39;albedo&#39; expects a number, got True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="p">:</span>
@@ -538,6 +963,8 @@ document.write(`
             <span class="k">return</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&#39; expects a number, got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_range</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -554,9 +981,42 @@ document.write(`
 
 
 <div class="viewcode-block" id="ParamSpec.format_line">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.format_line">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.ParamSpec.html#pyradtran.params.ParamSpec.format_line">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">format_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the full uvspec input line for *value*.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the full uvspec input line for *value*.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : Any</span>
+<span class="sd">            The (already validated) value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The spec&#39;s ``formatter(value)`` if it has one, otherwise</span>
+<span class="sd">            ``&quot;&lt;keyword&gt; &lt;value&gt;&quot;``.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran import REGISTRY</span>
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;albedo&quot;].format_line(0.3)</span>
+<span class="sd">        &#39;albedo 0.3&#39;</span>
+
+<span class="sd">        Custom formatters append units, cast to integer, or tidy lists.</span>
+<span class="sd">        ``zout`` levels are sorted and de-duplicated, because uvspec</span>
+<span class="sd">        rejects anything else:</span>
+
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;mol_modify H2O&quot;].format_line(14.5)</span>
+<span class="sd">        &#39;mol_modify H2O 14.5 MM&#39;</span>
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;mol_modify O3&quot;].format_line(&quot;320 DU&quot;)  # unit given: kept</span>
+<span class="sd">        &#39;mol_modify O3 320 DU&#39;</span>
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;brdf_rpv_type&quot;].format_line(7.0)</span>
+<span class="sd">        &#39;brdf_rpv_type 7&#39;</span>
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;zout&quot;].format_line([10, 0, 2, 2])</span>
+<span class="sd">        &#39;zout 0 2 10&#39;</span>
+<span class="sd">        &gt;&gt;&gt; REGISTRY[&quot;zout&quot;].format_line(&quot;0 toa&quot;)</span>
+<span class="sd">        &#39;zout 0 toa&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatter</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">keyword</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span></div>
@@ -565,7 +1025,15 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fmt_mol_modify</span><span class="p">(</span><span class="n">gas</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a formatter writing ``mol_modify &lt;gas&gt; &lt;value&gt; &lt;unit&gt;``.</span>
+
+<span class="sd">    A string value that already carries a unit (``&quot;320 DU&quot;``) is written</span>
+<span class="sd">    as given.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;mol_modify </span><span class="si">{</span><span class="n">gas</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;mol_modify </span><span class="si">{</span><span class="n">gas</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">return</span> <span class="n">fmt</span>
@@ -591,12 +1059,17 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_fmt_zout</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format the ``zout`` line from sorted, de-duplicated levels.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;zout &quot;</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_zout_tokens</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="p">)</span>
 
 
-<span class="c1">#: Registry of known uvspec parameters (single source of truth).</span>
+<span class="c1">#: Curated registry ``{params key: ParamSpec}`` of the most common uvspec</span>
+<span class="c1">#: parameters, with units, valid ranges and special formatting. Keys not</span>
+<span class="c1">#: listed here are validated against the libRadtran option schema instead</span>
+<span class="c1">#: (see :func:`validate_against_schema`). The module docstring of</span>
+<span class="c1">#: :mod:`pyradtran.params` tabulates the entries.</span>
 <span class="n">REGISTRY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ParamSpec</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;albedo&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
         <span class="s2">&quot;albedo&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Lambertian surface albedo&quot;</span>
@@ -652,21 +1125,10 @@ document.write(`
         <span class="n">formatter</span><span class="o">=</span><span class="n">_fmt_mol_modify</span><span class="p">(</span><span class="s2">&quot;H2O&quot;</span><span class="p">,</span> <span class="s2">&quot;MM&quot;</span><span class="p">),</span>
         <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Precipitable water column&quot;</span><span class="p">,</span>
     <span class="p">),</span>
+    <span class="c1"># No curated ``choices``: the local libRadtran schema is authoritative</span>
+    <span class="c1"># (see ParamResolver._validate_key_value for the no-schema fallback).</span>
     <span class="s2">&quot;rte_solver&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
-        <span class="s2">&quot;rte_solver&quot;</span><span class="p">,</span>
-        <span class="nb">str</span><span class="p">,</span>
-        <span class="n">choices</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;twostr&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;disort&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;fdisort1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;fdisort2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;rodents&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;sslidar&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;montecarlo&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;mystic&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;sdisort&quot;</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Radiative transfer equation solver&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rte_solver&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Radiative transfer equation solver&quot;</span>
     <span class="p">),</span>
     <span class="s2">&quot;mol_abs_param&quot;</span><span class="p">:</span> <span class="n">ParamSpec</span><span class="p">(</span>
         <span class="s2">&quot;mol_abs_param&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;Molecular absorption parameterisation&quot;</span>
@@ -688,7 +1150,12 @@ document.write(`
     <span class="p">),</span>
 <span class="p">}</span>
 
-<span class="c1">#: Registry key -&gt; SimulationDefaults attribute providing the config default.</span>
+<span class="c1">#: Registry key -&gt; name of the</span>
+<span class="c1">#: :class:`~pyradtran.config.SimulationDefaults` attribute that provides the</span>
+<span class="c1">#: configuration default for that parameter (e.g. ``&quot;albedo&quot;`` -&gt;</span>
+<span class="c1">#: ``&quot;albedo_value&quot;``). Used by</span>
+<span class="c1">#: :meth:`~pyradtran.interface.PyRadtranAccessor.jacobian` to find the base</span>
+<span class="c1">#: value of a parameter that is not in ``params``.</span>
 <span class="n">CONFIG_FIELD_MAP</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;albedo&quot;</span><span class="p">:</span> <span class="s2">&quot;albedo_value&quot;</span><span class="p">,</span>
     <span class="s2">&quot;sur_temperature&quot;</span><span class="p">:</span> <span class="s2">&quot;surface_temperature_k&quot;</span><span class="p">,</span>
@@ -701,17 +1168,56 @@ document.write(`
 <span class="p">}</span>
 
 
+<span class="c1">#: ``rte_solver`` values of libRadtran 2.0.6. Only consulted when no local</span>
+<span class="c1">#: option schema is available; otherwise the schema decides.</span>
+<span class="n">_RTE_SOLVERS_FALLBACK</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span>
+    <span class="s2">&quot;disort twostr mystic rodents sslidar null sdisort spsdisort fdisort1 &quot;</span>
+    <span class="s2">&quot;fdisort2 sos ftwostr montecarlo tzs sssi sss twostrebe schwarzschild &quot;</span>
+    <span class="s2">&quot;twomaxrnd twomaxrnd3C dynamic_twostream dynamic_tenstream&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="p">)</span>
+
 <span class="c1">#: Memo of loaded schemas, keyed by libRadtran root path.</span>
 <span class="n">_SCHEMA_MEMO</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
 
 
 <div class="viewcode-block" id="get_schema">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.get_schema.html#pyradtran.params.get_schema">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.get_schema.html#pyradtran.params.get_schema">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_schema</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load (and memoise) the libRadtran option schema for *config*.</span>
 
-<span class="sd">    Returns *None* when no local libRadtran source tree is available;</span>
-<span class="sd">    validation then falls back to the curated registry only.</span>
+<span class="sd">    Thin wrapper around :func:`pyradtran.schema.load_schema` that keeps</span>
+<span class="sd">    the parsed schema in memory, so the JSON cache is read at most once</span>
+<span class="sd">    per libRadtran installation and process.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : SimulationConfig</span>
+<span class="sd">        ``config.paths.libradtran_bin`` / ``libradtran_data`` locate the</span>
+<span class="sd">        installation (see :func:`pyradtran.schema.find_libradtran_root`).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict or None</span>
+<span class="sd">        ``{option_name: schema_entry}``, or ``None`` when no local</span>
+<span class="sd">        libRadtran source tree (a directory with ``src_py``) is</span>
+<span class="sd">        available or the extraction failed. Validation then falls back</span>
+<span class="sd">        to the curated :data:`REGISTRY` only. The same object is</span>
+<span class="sd">        returned on every call; treat it as read-only.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    pyradtran.schema : Extraction, on-disk cache and entry structure.</span>
+<span class="sd">    describe, search_options : Human-readable views of the schema.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran import load_config</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.params import get_schema</span>
+<span class="sd">    &gt;&gt;&gt; schema = get_schema(load_config())  # doctest: +SKIP</span>
+<span class="sd">    &gt;&gt;&gt; len(schema)  # doctest: +SKIP</span>
+<span class="sd">    244</span>
+<span class="sd">    &gt;&gt;&gt; schema[&quot;sza&quot;][&quot;tokens&quot;]  # doctest: +SKIP</span>
+<span class="sd">    [{&#39;kind&#39;: &#39;value&#39;, &#39;datatype&#39;: &#39;float&#39;, &#39;valid_range&#39;: [0.0, 180.0], &#39;optional&#39;: False}]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_libradtran_root</span><span class="p">,</span> <span class="n">load_schema</span>
 
@@ -729,8 +1235,7 @@ document.write(`
 <span class="sd">    Returns *None* when the value is not token-like (dict/list cloud</span>
 <span class="sd">    profiles), meaning schema validation must be skipped.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">key_parts</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-    <span class="n">extra</span> <span class="o">=</span> <span class="n">key_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
@@ -743,6 +1248,7 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_is_number</span><span class="p">(</span><span class="n">tok</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether *tok* converts with :class:`float`.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="nb">float</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
@@ -751,23 +1257,118 @@ document.write(`
 
 
 <div class="viewcode-block" id="validate_against_schema">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html#pyradtran.params.validate_against_schema">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.validate_against_schema.html#pyradtran.params.validate_against_schema">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_against_schema</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate one params entry against a schema option definition.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate one ``params`` entry against a schema option definition.</span>
+
+<span class="sd">    The key and value are split into the whitespace-separated tokens</span>
+<span class="sd">    that will follow the option name in the input file, and the tokens</span>
+<span class="sd">    are matched one by one against the option&#39;s declared signature.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    entry : dict</span>
+<span class="sd">        Schema entry of the option (``schema[option_name]``; structure</span>
+<span class="sd">        in :mod:`pyradtran.schema`).</span>
+<span class="sd">    key : str</span>
+<span class="sd">        The ``params`` key. Words after the option name count as leading</span>
+<span class="sd">        tokens (``&quot;wc_modify tau550&quot;`` contributes ``tau550``).</span>
+<span class="sd">    value : Any</span>
+<span class="sd">        The ``params`` value. A string is split on whitespace, a list or</span>
+<span class="sd">        tuple contributes one token per element, any other scalar one</span>
+<span class="sd">        token. ``True``, ``None`` and ``&quot;&quot;`` contribute no token (flag</span>
+<span class="sd">        usage). A ``dict`` (cloud-profile machinery) is not validated</span>
+<span class="sd">        here.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValidationError</span>
 <span class="sd">        On a choice mismatch, an out-of-range or non-numeric value,</span>
-<span class="sd">        a missing required token, or extra tokens on a fixed-arity</span>
-<span class="sd">        option.</span>
+<span class="sd">        a missing required token, a value given to a flag option, or</span>
+<span class="sd">        extra tokens on a fixed-arity option.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    ParamSpec.validate : The curated check that takes precedence for</span>
+<span class="sd">        :data:`REGISTRY` keys.</span>
+<span class="sd">    describe : Shows the signature this function checks against.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Matching rules, per declared token:</span>
+
+<span class="sd">    * ``choice`` tokens compare case-insensitively. If the token also</span>
+<span class="sd">      accepts a file name (``file_allowed``), any value is accepted.</span>
+<span class="sd">    * ``float`` / ``int`` tokens must be numeric and inside the</span>
+<span class="sd">      inclusive ``valid_range``, if the schema has one.</span>
+<span class="sd">    * ``str`` / ``file`` tokens accept anything; as the *last* declared</span>
+<span class="sd">      token they swallow all remaining values (this is how</span>
+<span class="sd">      ``zout 0 5 10`` passes).</span>
+<span class="sd">    * The variable-length types ``floats`` / ``ints`` / ``files`` /</span>
+<span class="sd">      ``lines`` swallow all remaining values; for the numeric ones every</span>
+<span class="sd">      value must be a number.</span>
+<span class="sd">    * ``optional`` tokens may be absent.</span>
+
+<span class="sd">    Options flagged ``unmodeled`` (signature unknown to the schema, e.g.</span>
+<span class="sd">    ``radiosonde``) are accepted with any arguments. Only the syntax of</span>
+<span class="sd">    a single line is checked: neither whether the option makes sense in</span>
+<span class="sd">    combination with others (``parents`` are not enforced) nor whether a</span>
+<span class="sd">    file exists.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A hand-written entry in the format of the real schema</span>
+<span class="sd">    (``schema[&quot;wc_modify&quot;]``):</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran.params import validate_against_schema</span>
+<span class="sd">    &gt;&gt;&gt; entry = {</span>
+<span class="sd">    ...     &quot;name&quot;: &quot;wc_modify&quot;,</span>
+<span class="sd">    ...     &quot;tokens&quot;: [</span>
+<span class="sd">    ...         {&quot;kind&quot;: &quot;choice&quot;, &quot;choices&quot;: [&quot;gg&quot;, &quot;ssa&quot;, &quot;tau&quot;, &quot;tau550&quot;]},</span>
+<span class="sd">    ...         {&quot;kind&quot;: &quot;choice&quot;, &quot;choices&quot;: [&quot;set&quot;, &quot;scale&quot;]},</span>
+<span class="sd">    ...         {&quot;kind&quot;: &quot;value&quot;, &quot;datatype&quot;: &quot;float&quot;},</span>
+<span class="sd">    ...     ],</span>
+<span class="sd">    ... }</span>
+
+<span class="sd">    Three equivalent, valid spellings (nothing is returned):</span>
+
+<span class="sd">    &gt;&gt;&gt; validate_against_schema(entry, &quot;wc_modify&quot;, &quot;tau550 set 12&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; validate_against_schema(entry, &quot;wc_modify&quot;, [&quot;tau550&quot;, &quot;set&quot;, 12])</span>
+<span class="sd">    &gt;&gt;&gt; validate_against_schema(entry, &quot;wc_modify tau550&quot;, &quot;set 12&quot;)</span>
+
+<span class="sd">    Typical mistakes:</span>
+
+<span class="sd">    &gt;&gt;&gt; validate_against_schema(entry, &quot;wc_modify&quot;, &quot;tau551 set 12&quot;)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: &#39;wc_modify&#39;: &#39;tau551&#39; is not one of [&#39;gg&#39;, &#39;ssa&#39;, &#39;tau&#39;, &#39;tau550&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; validate_against_schema(entry, &quot;wc_modify&quot;, &quot;tau set&quot;)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: &#39;wc_modify&#39; is missing a required value (expected value token #3)</span>
+<span class="sd">    &gt;&gt;&gt; validate_against_schema(entry, &quot;wc_modify&quot;, &quot;tau set 1 2&quot;)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: &#39;wc_modify&#39; got extra value(s) [&#39;2&#39;]; expected 3 token(s)</span>
+
+<span class="sd">    A flag option takes ``True`` but no value:</span>
+
+<span class="sd">    &gt;&gt;&gt; flag = {&quot;name&quot;: &quot;aerosol_default&quot;, &quot;tokens&quot;: []}</span>
+<span class="sd">    &gt;&gt;&gt; validate_against_schema(flag, &quot;aerosol_default&quot;, True)</span>
+<span class="sd">    &gt;&gt;&gt; validate_against_schema(flag, &quot;aerosol_default&quot;, 3)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: &#39;aerosol_default&#39; takes no value, got 3</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">tokens</span> <span class="o">=</span> <span class="n">_tokenize_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">tokens</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">_tokenize_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>  <span class="c1"># dict-valued (cloud machinery) — validated downstream</span>
     <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unmodeled&quot;</span><span class="p">):</span>
         <span class="k">return</span>  <span class="c1"># option name is valid; its signature isn&#39;t in the schema</span>
-    <span class="n">queue</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
     <span class="n">spec_tokens</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">spec_tokens</span> <span class="ow">and</span> <span class="n">queue</span><span class="p">:</span>
@@ -825,8 +1426,7 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_unknown_option_error</span><span class="p">(</span><span class="n">base</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">difflib</span>
-
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the &quot;not a known uvspec option&quot; message with close matches.&quot;&quot;&quot;</span>
     <span class="n">known</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span> <span class="o">|</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">REGISTRY</span><span class="p">}</span>
     <span class="n">matches</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">known</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
     <span class="n">hint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;; did you mean </span><span class="si">{</span><span class="s1">&#39; / &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span><span class="si">}</span><span class="s2">?&quot;</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
@@ -836,10 +1436,26 @@ document.write(`
     <span class="p">)</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_unknown_config_key_error</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Message for a dotted key matching no ``&lt;section&gt;.&lt;field&gt;``.&quot;&quot;&quot;</span>
+    <span class="n">section_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">field_name</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s2">&quot;__dict__&quot;</span><span class="p">):</span>  <span class="c1"># known section: suggest its fields</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">section</span><span class="p">)),</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># suggest sections</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">config</span><span class="p">)),</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="n">hint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;; did you mean </span><span class="si">{</span><span class="s1">&#39; / &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span><span class="si">}</span><span class="s2">?&quot;</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is not a configuration field</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_clean_latex</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Light cleanup of libRadtran&#39;s LaTeX-flavoured documentation.&quot;&quot;&quot;</span>
-    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">code\{([^}]*)\}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;`\1`&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">file\{([^}]*)\}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">fcode\{([^}]*)\}&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
@@ -856,7 +1472,7 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_signature</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a usage signature like ``wc_modify &lt;gg|ssa|tau|tau550&gt; &lt;set|scale&gt; &lt;float&gt;``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a usage signature such as ``albedo &lt;float in [0.0, 1.0]&gt;``.&quot;&quot;&quot;</span>
     <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="p">[]):</span>
         <span class="k">if</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;choice&quot;</span><span class="p">:</span>
@@ -875,53 +1491,161 @@ document.write(`
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_schema_arg</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return *schema* if given, else the schema of *config* (or defaults).</span>
+
+<span class="sd">    Raises :class:`RuntimeError` when no schema is available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">schema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">schema</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">get_schema</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="describe">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.describe.html#pyradtran.params.describe">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return usage, help, and documentation for one uvspec option.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    name : str</span>
-<span class="sd">        The uvspec option name (e.g. ``&quot;wc_modify&quot;``).</span>
-<span class="sd">    config : SimulationConfig, optional</span>
-<span class="sd">        Used to locate the local libRadtran install; package defaults</span>
-<span class="sd">        when *None*.</span>
-<span class="sd">    schema : dict, optional</span>
-<span class="sd">        Pre-loaded schema (mainly for tests).</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    KeyError</span>
-<span class="sd">        If the option is unknown, with close-match suggestions.</span>
-<span class="sd">    RuntimeError</span>
-<span class="sd">        If no local libRadtran schema is available.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">schema</span> <span class="o">=</span> <span class="n">_resolve_schema_arg</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">get_schema</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">schema</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
             <span class="s2">&quot;No local libRadtran option schema available; check that &quot;</span>
             <span class="s2">&quot;paths.libradtran_bin points inside a libRadtran source tree&quot;</span>
         <span class="p">)</span>
+    <span class="k">return</span> <span class="n">schema</span>
+
+
+<div class="viewcode-block" id="describe">
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.describe.html#pyradtran.params.describe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return usage, help, and documentation for one uvspec option.</span>
+
+<span class="sd">    The text comes from the locally installed libRadtran, so it describes</span>
+<span class="sd">    the ``uvspec`` binary you run. Use it to find out what to write as</span>
+<span class="sd">    the value of a ``params`` entry.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The uvspec option name (e.g. ``&quot;wc_modify&quot;``), without</span>
+<span class="sd">        arguments.</span>
+<span class="sd">    config : SimulationConfig, optional</span>
+<span class="sd">        Used to locate the local libRadtran install. Defaults to</span>
+<span class="sd">        :func:`pyradtran.load_config() &lt;pyradtran.config.load_config&gt;`</span>
+<span class="sd">        (package defaults merged with ``~/.pyradtran/config.yaml``).</span>
+<span class="sd">    schema : dict, optional</span>
+<span class="sd">        Pre-loaded schema; overrides *config* (mainly for tests).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Multi-line text, meant to be printed:</span>
+
+<span class="sd">        * line 1: the usage signature. ``&lt;a|b&gt;`` is a required choice,</span>
+<span class="sd">          ``&lt;float&gt;`` a required value (with its valid range, if any),</span>
+<span class="sd">          ``[...]`` an optional token, ``|&lt;file&gt;`` marks a choice that</span>
+<span class="sd">          also accepts a file name, and a trailing ``&lt;...&gt;`` means the</span>
+<span class="sd">          schema does not describe the arguments;</span>
+<span class="sd">        * line 2: the option group, plus ``(repeatable)`` if the option</span>
+<span class="sd">          may be given several times (pass a ``list`` in ``params``);</span>
+<span class="sd">        * ``requires: ...``: options this one depends on, if any;</span>
+<span class="sd">        * the one-line help and the long documentation from the</span>
+<span class="sd">          libRadtran manual (LaTeX markup lightly cleaned up).</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    KeyError</span>
+<span class="sd">        If the option is unknown; the message lists close matches.</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If no local libRadtran schema is available (no ``src_py``</span>
+<span class="sd">        directory next to the configured ``uvspec``).</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    search_options : Find option names by keyword.</span>
+<span class="sd">    pyradtran.interface.PyRadtranAccessor.explain : Preview the input</span>
+<span class="sd">        file a ``params`` mapping produces.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The arguments of ``wc_modify`` (libRadtran 2.0.6; output shortened):</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran import describe</span>
+<span class="sd">    &gt;&gt;&gt; print(describe(&quot;wc_modify&quot;))  # doctest: +SKIP</span>
+<span class="sd">    wc_modify &lt;gg|ssa|tau|tau550&gt; &lt;set|scale&gt; &lt;float&gt;</span>
+<span class="sd">    group: Water and ice clouds   (repeatable)</span>
+<span class="sd">    requires: wc_file</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Modify water cloud optical properties.</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">        wc_modify variable scale/set value</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">        `variable` can be one of the following parameter:</span>
+<span class="sd">    ...</span>
+<span class="sd">        ** tau550 **</span>
+<span class="sd">        Set the water cloud optical thickness at 550nm.</span>
+<span class="sd">        The optical thickness defined here</span>
+<span class="sd">        is the integral from the surface at the user-defined `altitude`</span>
+<span class="sd">        to TOA (top of atmosphere). Other wavelengths are scaled accordingly.</span>
+<span class="sd">        Note that this option requires for technical reasons that the</span>
+<span class="sd">        wavelength interval defined by `wavelength` does contain 550nm.</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    A cloud optical thickness of 12 at 550 nm is therefore</span>
+<span class="sd">    ``params={&quot;wc_modify&quot;: &quot;tau550 set 12&quot;}`` or, because the option is</span>
+<span class="sd">    repeatable, a list such as</span>
+<span class="sd">    ``{&quot;wc_modify&quot;: [&quot;tau550 set 12&quot;, &quot;gg set 0.85&quot;]}``.</span>
+
+<span class="sd">    A simple numeric option shows its valid range:</span>
+
+<span class="sd">    &gt;&gt;&gt; print(describe(&quot;albedo&quot;))  # doctest: +SKIP</span>
+<span class="sd">    albedo &lt;float in [0.0, 1.0]&gt;</span>
+<span class="sd">    group: Surface</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Lambertian surface albedo</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    The Lambertian surface albedo</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">            albedo value</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">        where `value` is a number between 0.0 and 1.0,</span>
+<span class="sd">        constant for all wavelengths. For wavelength dependent surface albedo</span>
+<span class="sd">        use `albedo_file`. The default albedo is 0.0.</span>
+
+<span class="sd">    A misspelt name suggests the nearest options:</span>
+
+<span class="sd">    &gt;&gt;&gt; describe(&quot;wc_modfy&quot;)  # doctest: +SKIP</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    KeyError: &quot;Unknown uvspec option &#39;wc_modfy&#39;; close matches: wc_modify, ic_modify, mol_modify&quot;</span>
+
+<span class="sd">    On a hand-written schema (runs without libRadtran):</span>
+
+<span class="sd">    &gt;&gt;&gt; schema = {</span>
+<span class="sd">    ...     &quot;wc_modify&quot;: {</span>
+<span class="sd">    ...         &quot;name&quot;: &quot;wc_modify&quot;,</span>
+<span class="sd">    ...         &quot;group&quot;: &quot;Water and ice clouds&quot;,</span>
+<span class="sd">    ...         &quot;help&quot;: &quot;Modify water cloud optical properties.&quot;,</span>
+<span class="sd">    ...         &quot;non_unique&quot;: True,</span>
+<span class="sd">    ...         &quot;parents&quot;: [&quot;wc_file&quot;],</span>
+<span class="sd">    ...         &quot;tokens&quot;: [</span>
+<span class="sd">    ...             {&quot;kind&quot;: &quot;choice&quot;, &quot;choices&quot;: [&quot;gg&quot;, &quot;ssa&quot;, &quot;tau&quot;, &quot;tau550&quot;]},</span>
+<span class="sd">    ...             {&quot;kind&quot;: &quot;choice&quot;, &quot;choices&quot;: [&quot;set&quot;, &quot;scale&quot;]},</span>
+<span class="sd">    ...             {&quot;kind&quot;: &quot;value&quot;, &quot;datatype&quot;: &quot;float&quot;},</span>
+<span class="sd">    ...         ],</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; print(describe(&quot;wc_modify&quot;, schema=schema))</span>
+<span class="sd">    wc_modify &lt;gg|ssa|tau|tau550&gt; &lt;set|scale&gt; &lt;float&gt;</span>
+<span class="sd">    group: Water and ice clouds   (repeatable)</span>
+<span class="sd">    requires: wc_file</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Modify water cloud optical properties.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">_resolve_schema_arg</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
     <span class="n">entry</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">difflib</span>
-
         <span class="n">matches</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">schema</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">hint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;; close matches: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">matches</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown uvspec option &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_signature</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">_signature</span><span class="p">(</span><span class="n">entry</span><span class="p">),</span>
         <span class="sa">f</span><span class="s2">&quot;group: </span><span class="si">{</span><span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;group&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;?&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="o">+</span> <span class="p">(</span><span class="s2">&quot;   (repeatable)&quot;</span> <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;non_unique&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
     <span class="p">]</span>
@@ -940,57 +1664,253 @@ document.write(`
 
 
 <div class="viewcode-block" id="search_options">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.search_options.html#pyradtran.params.search_options">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.search_options.html#pyradtran.params.search_options">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">search_options</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return uvspec option names whose name, group, or help match *text*.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return uvspec option names whose name, group, or help match *text*.</span>
+
+<span class="sd">    A plain, case-insensitive substring search over each option&#39;s name,</span>
+<span class="sd">    group, one-line help and long documentation in the local libRadtran</span>
+<span class="sd">    option schema. Follow up with :func:`describe` on a hit.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        Search text, e.g. ``&quot;ozone&quot;`` or ``&quot;brdf&quot;``. No wildcards or</span>
+<span class="sd">        regular expressions.</span>
+<span class="sd">    config : SimulationConfig, optional</span>
+<span class="sd">        Used to locate the local libRadtran install. Defaults to</span>
+<span class="sd">        :func:`pyradtran.load_config() &lt;pyradtran.config.load_config&gt;`.</span>
+<span class="sd">    schema : dict, optional</span>
+<span class="sd">        Pre-loaded schema; overrides *config* (mainly for tests).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of str</span>
+<span class="sd">        Matching option names in alphabetical order. Empty when nothing</span>
+<span class="sd">        matches.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeError</span>
+<span class="sd">        If no local libRadtran schema is available (no ``src_py``</span>
+<span class="sd">        directory next to the configured ``uvspec``), as for</span>
+<span class="sd">        :func:`describe`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    describe : Usage and documentation of one option.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The long documentation is searched too, so an option is also returned</span>
+<span class="sd">    when its text only mentions the term in passing. Short search terms</span>
+<span class="sd">    can return many hits.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    With libRadtran 2.0.6:</span>
+
+<span class="sd">    &gt;&gt;&gt; from pyradtran import search_options</span>
+<span class="sd">    &gt;&gt;&gt; search_options(&quot;brdf_rpv&quot;)  # doctest: +SKIP</span>
+<span class="sd">    [&#39;albedo_library&#39;, &#39;brdf_rpv&#39;, &#39;brdf_rpv_file&#39;, &#39;brdf_rpv_library&#39;, &#39;brdf_rpv_type&#39;, &#39;surface_type_map&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; search_options(&quot;ozone&quot;)  # doctest: +SKIP</span>
+<span class="sd">    [&#39;ECMWF_ozone_climatology&#39;, &#39;atmosphere_file&#39;, &#39;crs_model&#39;, &#39;mol_file&#39;, &#39;radiosonde&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; search_options(&quot;visibility&quot;)  # doctest: +SKIP</span>
+<span class="sd">    [&#39;aerosol_default&#39;, &#39;aerosol_visibility&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; len(search_options(&quot;cloud&quot;))  # doctest: +SKIP</span>
+<span class="sd">    50</span>
+
+<span class="sd">    On a hand-written schema (runs without libRadtran):</span>
+
+<span class="sd">    &gt;&gt;&gt; schema = {</span>
+<span class="sd">    ...     &quot;albedo&quot;: {&quot;name&quot;: &quot;albedo&quot;, &quot;group&quot;: &quot;Surface&quot;, &quot;help&quot;: &quot;Lambertian surface albedo&quot;},</span>
+<span class="sd">    ...     &quot;wc_modify&quot;: {&quot;name&quot;: &quot;wc_modify&quot;, &quot;group&quot;: &quot;Water and ice clouds&quot;},</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; search_options(&quot;CLOUD&quot;, schema=schema)</span>
+<span class="sd">    [&#39;wc_modify&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; search_options(&quot;a&quot;, schema=schema)</span>
+<span class="sd">    [&#39;albedo&#39;, &#39;wc_modify&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; search_options(&quot;aerosol&quot;, schema=schema)</span>
+<span class="sd">    []</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">_resolve_schema_arg</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">schema</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[]</span>
     <span class="n">needle</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">hits</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-        <span class="n">haystack</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">name</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">needle</span>
+        <span class="ow">in</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;doc&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)]</span>
         <span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">needle</span> <span class="ow">in</span> <span class="n">haystack</span><span class="p">:</span>
-            <span class="n">hits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">hits</span></div>
+    <span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="ParamResolver">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ParamResolver</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve a user ``params`` mapping into validated per-point values.</span>
 
-<span class="sd">    Responsibilities:</span>
+<span class="sd">    The engine behind the ``params`` argument of</span>
+<span class="sd">    :meth:`~pyradtran.interface.PyRadtranAccessor.run` and</span>
+<span class="sd">    :meth:`~pyradtran.interface.PyRadtranAccessor.explain`. It</span>
 
-<span class="sd">    * Apply and **consume** dotted config overrides</span>
-<span class="sd">      (``&quot;simulation_defaults.albedo_value&quot;``) onto *config* — they never</span>
-<span class="sd">      reach the uvspec input file.</span>
-<span class="sd">    * Split remaining entries into literals (validated immediately) and</span>
-<span class="sd">      :class:`Var` references (validated per point).</span>
-<span class="sd">    * Tag every value with its provenance.</span>
+<span class="sd">    * applies and consumes dotted config overrides</span>
+<span class="sd">      (``&quot;simulation_defaults.albedo_value&quot;``) on *config*; they never</span>
+<span class="sd">      reach the uvspec input file directly;</span>
+<span class="sd">    * splits the remaining entries into literals (validated in the</span>
+<span class="sd">      constructor) and :class:`Var` references (validated per point, in</span>
+<span class="sd">      :meth:`resolve_point`);</span>
+<span class="sd">    * tags every value with its provenance (``PROV_*`` constants).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : SimulationConfig</span>
-<span class="sd">        Mutated in place by dotted keys.</span>
+<span class="sd">        Configuration of the run. **Mutated in place** by dotted keys.</span>
 <span class="sd">    params : dict, optional</span>
-<span class="sd">        Mapping of registry keys / raw uvspec keywords to literal values</span>
-<span class="sd">        or :class:`Var` references.</span>
+<span class="sd">        The user mapping; see the module docstring of</span>
+<span class="sd">        :mod:`pyradtran.params` for the accepted keys and values.</span>
+<span class="sd">    schema : {&quot;auto&quot;, None} or dict, default ``&quot;auto&quot;``</span>
+<span class="sd">        libRadtran option schema used to validate keys outside the</span>
+<span class="sd">        curated :data:`REGISTRY`. ``&quot;auto&quot;`` discovers it from *config*</span>
+<span class="sd">        (:func:`get_schema`); ``None`` disables schema validation</span>
+<span class="sd">        (registry only; unknown keys pass through as ``unvalidated``);</span>
+<span class="sd">        a ``dict`` is used as given (tests).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : SimulationConfig</span>
+<span class="sd">        The (possibly modified) configuration.</span>
+<span class="sd">    schema : dict or None</span>
+<span class="sd">        The schema in use.</span>
+<span class="sd">    var_refs : dict</span>
+<span class="sd">        ``{key: Var}`` for all per-point references.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValidationError</span>
-<span class="sd">        If any literal value fails its registry validation. All offending</span>
-<span class="sd">        keys are reported in one exception.</span>
+<span class="sd">        If any literal value fails validation, a key is not a known</span>
+<span class="sd">        uvspec option, or a dotted key names no ``&lt;section&gt;.&lt;field&gt;`` of</span>
+<span class="sd">        the configuration. All offending entries are reported in one</span>
+<span class="sd">        exception.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Var, Raw : Value markers.</span>
+<span class="sd">    pyradtran.input_builder.InputFileBuilder.build : Consumes the</span>
+<span class="sd">        resolved mapping.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    How one literal entry is validated:</span>
+
+<span class="sd">    1. ``False`` is kept as is (it tells the builder to omit the</span>
+<span class="sd">       option); :class:`Raw` values are unwrapped and tagged</span>
+<span class="sd">       ``unvalidated``.</span>
+<span class="sd">    2. A key of :data:`REGISTRY` is checked by its</span>
+<span class="sd">       :meth:`ParamSpec.validate` (lists and tuples are space-joined</span>
+<span class="sd">       first). If the value is a string and a schema is available, its</span>
+<span class="sd">       tokens are additionally checked by</span>
+<span class="sd">       :func:`validate_against_schema`.</span>
+<span class="sd">    3. Any other key is looked up in the schema by its first word. An</span>
+<span class="sd">       unknown option raises, with close-match suggestions; a known one</span>
+<span class="sd">       is checked by :func:`validate_against_schema`. A ``list`` on a</span>
+<span class="sd">       repeatable (``non_unique``) option is validated element-wise and</span>
+<span class="sd">       kept as a list of lines; other lists and tuples are space-joined.</span>
+<span class="sd">    4. Without a schema, non-registry keys are accepted as they are and</span>
+<span class="sd">       tagged ``unvalidated``.</span>
+
+<span class="sd">    A dotted key that names no existing ``&lt;section&gt;.&lt;field&gt;`` of the</span>
+<span class="sd">    configuration raises, with close-match suggestions. Afterwards</span>
+<span class="sd">    ``config.simulation_defaults`` is re-validated</span>
+<span class="sd">    (:meth:`SimulationDefaults.validate</span>
+<span class="sd">    &lt;pyradtran.config.SimulationDefaults.validate&gt;`), so an invalid</span>
+<span class="sd">    value set through a dotted key or by attribute assignment is</span>
+<span class="sd">    reported here too. ``rte_solver`` is checked against the schema;</span>
+<span class="sd">    without one, against the solver list of libRadtran 2.0.6.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The examples use ``schema=None`` and a stand-in configuration so</span>
+<span class="sd">    that they run without libRadtran; normally *config* comes from</span>
+<span class="sd">    :func:`~pyradtran.config.load_config` and the schema is discovered</span>
+<span class="sd">    automatically.</span>
+
+<span class="sd">    &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran import ParamResolver, Raw, Var</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.config import SimulationDefaults</span>
+<span class="sd">    &gt;&gt;&gt; config = SimpleNamespace(simulation_defaults=SimulationDefaults())</span>
+<span class="sd">    &gt;&gt;&gt; resolver = ParamResolver(</span>
+<span class="sd">    ...     config,</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;albedo&quot;: 0.85,</span>
+<span class="sd">    ...         &quot;zout&quot;: [0, 5],</span>
+<span class="sd">    ...         &quot;mol_modify O3&quot;: False,</span>
+<span class="sd">    ...         &quot;pseudospherical&quot;: Raw(True),</span>
+<span class="sd">    ...         &quot;sur_temperature&quot;: Var(&quot;tsurf&quot;),</span>
+<span class="sd">    ...         &quot;simulation_defaults.rte_solver&quot;: &quot;disort&quot;,</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     schema=None,</span>
+<span class="sd">    ... )</span>
+
+<span class="sd">    Literals are available immediately, with their provenance:</span>
+
+<span class="sd">    &gt;&gt;&gt; resolver.static_params()</span>
+<span class="sd">    {&#39;albedo&#39;: (0.85, &#39;params-literal&#39;), &#39;zout&#39;: (&#39;0 5&#39;, &#39;params-literal&#39;), &#39;mol_modify O3&#39;: (False, &#39;params-literal&#39;), &#39;pseudospherical&#39;: (True, &#39;unvalidated&#39;)}</span>
+
+<span class="sd">    The reference waits for a dataset, and the dotted key went into the</span>
+<span class="sd">    configuration:</span>
+
+<span class="sd">    &gt;&gt;&gt; resolver.var_refs</span>
+<span class="sd">    {&#39;sur_temperature&#39;: Var(name=&#39;tsurf&#39;)}</span>
+<span class="sd">    &gt;&gt;&gt; config.simulation_defaults.rte_solver</span>
+<span class="sd">    &#39;disort&#39;</span>
+
+<span class="sd">    All invalid literals are reported together:</span>
+
+<span class="sd">    &gt;&gt;&gt; ParamResolver(config, {&quot;albedo&quot;: 1.5, &quot;sza&quot;: 999.0}, schema=None)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: Invalid parameter value(s): &#39;albedo&#39; must be in [0.0, 1.0], got 1.5; &#39;sza&#39; must be in [0.0, 180.0] deg, got 999.0</span>
+
+<span class="sd">    With a schema, non-registry options are validated too. A list on a</span>
+<span class="sd">    repeatable option becomes one input line per element:</span>
+
+<span class="sd">    &gt;&gt;&gt; schema = {</span>
+<span class="sd">    ...     &quot;wc_modify&quot;: {</span>
+<span class="sd">    ...         &quot;name&quot;: &quot;wc_modify&quot;,</span>
+<span class="sd">    ...         &quot;non_unique&quot;: True,</span>
+<span class="sd">    ...         &quot;tokens&quot;: [</span>
+<span class="sd">    ...             {&quot;kind&quot;: &quot;choice&quot;, &quot;choices&quot;: [&quot;gg&quot;, &quot;ssa&quot;, &quot;tau&quot;, &quot;tau550&quot;]},</span>
+<span class="sd">    ...             {&quot;kind&quot;: &quot;choice&quot;, &quot;choices&quot;: [&quot;set&quot;, &quot;scale&quot;]},</span>
+<span class="sd">    ...             {&quot;kind&quot;: &quot;value&quot;, &quot;datatype&quot;: &quot;float&quot;},</span>
+<span class="sd">    ...         ],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     &quot;aerosol_default&quot;: {&quot;name&quot;: &quot;aerosol_default&quot;, &quot;tokens&quot;: []},</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; ParamResolver(</span>
+<span class="sd">    ...     config,</span>
+<span class="sd">    ...     {&quot;wc_modify&quot;: [&quot;tau550 set 12&quot;, &quot;gg set 0.85&quot;], &quot;aerosol_default&quot;: True},</span>
+<span class="sd">    ...     schema=schema,</span>
+<span class="sd">    ... ).static_params()</span>
+<span class="sd">    {&#39;wc_modify&#39;: ([&#39;tau550 set 12&#39;, &#39;gg set 0.85&#39;], &#39;params-literal&#39;), &#39;aerosol_default&#39;: (True, &#39;params-literal&#39;)}</span>
+<span class="sd">    &gt;&gt;&gt; ParamResolver(config, {&quot;wc_modfy&quot;: &quot;tau550 set 12&quot;}, schema=schema)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: Invalid parameter value(s): &#39;wc_modfy&#39; is not a known uvspec option of the local libRadtran install; did you mean wc_modify / mol_modify? (wrap the value in Raw(...) to bypass validation)</span>
+
+<span class="sd">    A misspelt configuration path is also an error:</span>
+
+<span class="sd">    &gt;&gt;&gt; ParamResolver(config, {&quot;simulation_defaults.rte_solvr&quot;: &quot;disort&quot;}, schema=None)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    pyradtran.exceptions.ValidationError: Invalid parameter value(s): &#39;simulation_defaults.rte_solvr&#39; is not a configuration field; did you mean simulation_defaults.rte_solver?</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ParamResolver.__init__">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.__init__">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">,</span>
@@ -1003,7 +1923,8 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">get_schema</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">if</span> <span class="n">schema</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span> <span class="k">else</span> <span class="n">schema</span>
         <span class="n">remaining</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">params</span> <span class="ow">or</span> <span class="p">{})</span>
 
-        <span class="c1"># 1. Dotted config overrides: apply to config, consume (B1 fix).</span>
+        <span class="c1"># 1. Dotted config overrides: apply to config, consume.</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">remaining</span> <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">k</span> <span class="ow">and</span> <span class="s2">&quot; &quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">k</span><span class="p">]:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="n">section_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">field_name</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
@@ -1011,13 +1932,26 @@ document.write(`
             <span class="k">if</span> <span class="n">section</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Overriding config: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">section_name</span> <span class="o">==</span> <span class="s2">&quot;paths&quot;</span><span class="p">:</span>
+                    <span class="c1"># str -&gt; Path, short names, validation, directories</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">section</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown config parameter: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_unknown_config_key_error</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">config</span><span class="p">))</span>
+        <span class="c1"># Re-check the configuration: dotted keys above and attribute</span>
+        <span class="c1"># assignment by the user both bypass the dataclass validation.</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;simulation_defaults&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="s2">&quot;validate&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">defaults</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
         <span class="c1"># 2. Split literals vs Var refs.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">var_refs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Var</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">remaining</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="c1"># explicit &quot;omit this option&quot;: reaches the builder, which</span>
@@ -1043,32 +1977,33 @@ document.write(`
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_join</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Space-join a sequence into one uvspec argument string.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_key_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate and normalise one literal entry.</span>
 
-<span class="sd">        Curated :data:`REGISTRY` entries win; otherwise the libRadtran</span>
-<span class="sd">        schema (when available) validates tokens and rejects unknown</span>
-<span class="sd">        option names. Without a schema, unknown keys pass through</span>
-<span class="sd">        unvalidated (legacy behaviour). Tuples become space-joined</span>
-<span class="sd">        strings; a list on a repeatable (``non_unique``) option becomes</span>
-<span class="sd">        a list of line strings (the builder emits one line each), while</span>
-<span class="sd">        a list on a single-line option is space-joined.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        (value, provenance)</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        ValidationError</span>
+<span class="sd">        :data:`REGISTRY` entries win; otherwise the schema, when</span>
+<span class="sd">        available, validates tokens and rejects unknown option names.</span>
+<span class="sd">        Without a schema, unknown keys pass through unvalidated. Tuples</span>
+<span class="sd">        are space-joined; a list on a repeatable (``non_unique``) option</span>
+<span class="sd">        becomes a list of line strings, any other list is space-joined.</span>
+<span class="sd">        Returns ``(value, provenance)``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">spec</span> <span class="o">=</span> <span class="n">REGISTRY</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_join</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="n">spec</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;rte_solver&quot;</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_RTE_SOLVERS_FALLBACK</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;rte_solver&#39; must be one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_RTE_SOLVERS_FALLBACK</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> (wrap the value in Raw(...) to bypass validation)&quot;</span>
+                <span class="p">)</span>
             <span class="c1"># Curated validation passes strings through; the schema can</span>
             <span class="c1"># still check their tokens (choices, arity, numbers).</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1098,23 +2033,75 @@ document.write(`
         <span class="k">return</span> <span class="n">value</span><span class="p">,</span> <span class="n">PROV_UNVALIDATED</span>
 
 <div class="viewcode-block" id="ParamResolver.static_params">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.static_params">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.static_params">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">static_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``key -&gt; (value, provenance)`` for point-independent values.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``key -&gt; (value, provenance)`` for point-independent values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A copy of the validated literal entries: plain values tagged</span>
+<span class="sd">            ``params-literal``, :class:`Raw` values (and, without a</span>
+<span class="sd">            schema, non-registry keys) tagged ``unvalidated``, and</span>
+<span class="sd">            ``False`` for options to omit. :class:`Var` references are</span>
+<span class="sd">            not included; see :meth:`resolve_point`.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran import ParamResolver, Var</span>
+<span class="sd">        &gt;&gt;&gt; resolver = ParamResolver(</span>
+<span class="sd">        ...     SimpleNamespace(),</span>
+<span class="sd">        ...     {&quot;albedo&quot;: 0.85, &quot;wavelength&quot;: (400, 700), &quot;sza&quot;: Var(&quot;sza&quot;)},</span>
+<span class="sd">        ...     schema=None,</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; resolver.static_params()</span>
+<span class="sd">        {&#39;albedo&#39;: (0.85, &#39;params-literal&#39;), &#39;wavelength&#39;: (&#39;400 700&#39;, &#39;params-literal&#39;)}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ParamResolver.validate_var_targets">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.validate_var_targets">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.validate_var_targets">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_var_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check every :class:`Var` target (and hijack-suspects) against *ds*.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check :class:`Var` targets and ambiguous strings against *ds*.</span>
+
+<span class="sd">        Called once per run, before any point is resolved, so that a</span>
+<span class="sd">        misspelt variable name fails before any simulation starts.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ds : xarray.Dataset</span>
+<span class="sd">            The input dataset of the run.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValidationError</span>
 <span class="sd">            If a ``Var`` names a variable missing from *ds*, or if a bare</span>
-<span class="sd">            string literal matches a dataset variable name (ambiguous —</span>
-<span class="sd">            the user almost certainly meant ``Var``).</span>
+<span class="sd">            string literal matches a dataset variable name (ambiguous;</span>
+<span class="sd">            the user almost certainly meant ``Var``). All problems are</span>
+<span class="sd">            reported in one exception.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">        &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran import ParamResolver, Var</span>
+<span class="sd">        &gt;&gt;&gt; ds = xr.Dataset({&quot;tsurf&quot;: (&quot;time&quot;, [271.3, 268.9])})</span>
+<span class="sd">        &gt;&gt;&gt; config = SimpleNamespace()</span>
+<span class="sd">        &gt;&gt;&gt; ParamResolver(</span>
+<span class="sd">        ...     config, {&quot;sur_temperature&quot;: Var(&quot;tsurf&quot;)}, schema=None</span>
+<span class="sd">        ... ).validate_var_targets(ds)</span>
+
+<span class="sd">        A forgotten ``Var``; the string would otherwise be written to</span>
+<span class="sd">        the input file literally:</span>
+
+<span class="sd">        &gt;&gt;&gt; ParamResolver(</span>
+<span class="sd">        ...     config, {&quot;sur_temperature&quot;: &quot;tsurf&quot;}, schema=None</span>
+<span class="sd">        ... ).validate_var_targets(ds)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        pyradtran.exceptions.ValidationError: &#39;sur_temperature&#39; has string value &#39;tsurf&#39; which matches a dataset variable name; use Var(&#39;tsurf&#39;) for a per-point reference or change the literal</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_refs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1135,7 +2122,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="ParamResolver.resolve_point">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.resolve_point">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.params.ParamResolver.html#pyradtran.params.ParamResolver.resolve_point">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">resolve_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_ds</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve all parameters for one stacked point.</span>
 
@@ -1149,12 +2136,43 @@ document.write(`
 <span class="sd">        -------</span>
 <span class="sd">        resolved : dict</span>
 <span class="sd">            ``key -&gt; (value, provenance)`` merged from literals and</span>
-<span class="sd">            per-point references.</span>
+<span class="sd">            per-point references. Values from a :class:`Var` are tagged</span>
+<span class="sd">            ``dataset-var``.</span>
 <span class="sd">        skipped : list of str</span>
 <span class="sd">            Keys omitted for this point because the dataset value was NaN.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="sd">            They are absent from *resolved*, so the configuration&#39;s own</span>
+<span class="sd">            line for that option (if any) stays in effect.</span>
 
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValidationError</span>
+<span class="sd">            If a referenced variable is missing from *point_ds*, or a</span>
+<span class="sd">            per-point value fails the same validation a literal would</span>
+<span class="sd">            get. All problems of the point are reported together.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">        &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran import ParamResolver, Var</span>
+<span class="sd">        &gt;&gt;&gt; ds = xr.Dataset({&quot;tsurf&quot;: (&quot;time&quot;, [271.3, np.nan])})</span>
+<span class="sd">        &gt;&gt;&gt; resolver = ParamResolver(</span>
+<span class="sd">        ...     SimpleNamespace(),</span>
+<span class="sd">        ...     {&quot;albedo&quot;: 0.85, &quot;sur_temperature&quot;: Var(&quot;tsurf&quot;)},</span>
+<span class="sd">        ...     schema=None,</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; resolved, skipped = resolver.resolve_point(ds.isel(time=0))</span>
+<span class="sd">        &gt;&gt;&gt; resolved</span>
+<span class="sd">        {&#39;albedo&#39;: (0.85, &#39;params-literal&#39;), &#39;sur_temperature&#39;: (271.3, &#39;dataset-var&#39;)}</span>
+<span class="sd">        &gt;&gt;&gt; skipped</span>
+<span class="sd">        []</span>
+
+<span class="sd">        At the second point the temperature is NaN and is left out:</span>
+
+<span class="sd">        &gt;&gt;&gt; resolver.resolve_point(ds.isel(time=1))</span>
+<span class="sd">        ({&#39;albedo&#39;: (0.85, &#39;params-literal&#39;)}, [&#39;sur_temperature&#39;])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">resolved</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_static</span><span class="p">)</span>
         <span class="n">skipped</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1168,7 +2186,7 @@ document.write(`
             <span class="n">value</span> <span class="o">=</span> <span class="n">point_ds</span><span class="p">[</span><span class="n">ref</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="n">skipped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="k">try</span><span class="p">:</span>

@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -174,152 +175,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -429,8 +427,36 @@ document.write(`
 <span class="sd">:class:`InputFileBuilder` turns a :class:`~pyradtran.config.SimulationConfig`</span>
 <span class="sd">plus a resolved parameter mapping (from</span>
 <span class="sd">:class:`~pyradtran.params.ParamResolver`) into an ordered list of</span>
-<span class="sd">:class:`InputLine` objects. Each line knows which layer produced it, which</span>
-<span class="sd">powers ``ds.pyradtran.explain()``.</span>
+<span class="sd">:class:`InputLine` objects. Each line records which layer produced it;</span>
+<span class="sd">:meth:`~pyradtran.interface.PyRadtranAccessor.explain` shows this.</span>
+
+<span class="sd">.. autosummary::</span>
+
+<span class="sd">   InputFileBuilder</span>
+<span class="sd">   InputLine</span>
+<span class="sd">   calculate_solar_zenith_angle</span>
+<span class="sd">   effective_output_columns</span>
+<span class="sd">   effective_output_altitudes</span>
+<span class="sd">   parametric_cloud_profiles</span>
+
+<span class="sd">:func:`effective_output_columns` and :func:`effective_output_altitudes`</span>
+<span class="sd">decide what a run reports. The builder (which writes the ``output_user``</span>
+<span class="sd">/ ``zout`` lines) and the output parser (which reads the file) share</span>
+<span class="sd">them, so the two cannot disagree.</span>
+
+<span class="sd">Examples</span>
+<span class="sd">--------</span>
+<span class="sd">Preview a generated input file through the accessor (``ds`` has</span>
+<span class="sd">``time``, ``latitude``, ``longitude`` and an ``albedo_sw`` variable):</span>
+
+<span class="sd">&gt;&gt;&gt; from pyradtran import Var</span>
+<span class="sd">&gt;&gt;&gt; print(ds.pyradtran.explain(params={&quot;albedo&quot;: Var(&quot;albedo_sw&quot;)}))  # doctest: +SKIP</span>
+<span class="sd">rte_solver twostr                                                   # config</span>
+<span class="sd">mol_abs_param lowtran per_nm                                        # config</span>
+<span class="sd">...</span>
+<span class="sd">umu 1.0                                                             # config</span>
+<span class="sd">albedo 0.82                                                         # dataset-var</span>
+<span class="sd">quiet                                                               # config</span>
 
 <span class="sd">See Also</span>
 <span class="sd">--------</span>
@@ -440,29 +466,50 @@ document.write(`
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ATMOSPHERE_PROFILES</span><span class="p">,</span>
+    <span class="n">SOLAR_SPECTRA</span><span class="p">,</span>
+    <span class="n">_resolve_libradtran_shortname</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">PROV_CONFIG</span><span class="p">,</span> <span class="n">REGISTRY</span><span class="p">,</span> <span class="n">_zout_tokens</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="InputLine">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.InputLine.html#pyradtran.input_builder.InputLine">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">InputLine</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;One uvspec input line with provenance.</span>
+
+<span class="sd">    Immutable record produced by :meth:`InputFileBuilder.build`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    keyword : str</span>
 <span class="sd">        The (possibly multi-word) uvspec keyword, e.g. ``&quot;mol_modify O3&quot;``.</span>
+<span class="sd">        Lines are replaced by keyword: a ``params`` entry removes every</span>
+<span class="sd">        config line with the same keyword before adding its own.</span>
 <span class="sd">    text : str</span>
-<span class="sd">        The complete input line.</span>
+<span class="sd">        The complete input line, keyword included.</span>
 <span class="sd">    provenance : str</span>
-<span class="sd">        One of the ``PROV_*`` constants in :mod:`pyradtran.params`.</span>
+<span class="sd">        Which layer produced the line: one of the ``PROV_*`` constants in</span>
+<span class="sd">        :mod:`pyradtran.params` (``&quot;config&quot;``, ``&quot;params-literal&quot;``,</span>
+<span class="sd">        ``&quot;dataset-var&quot;``, ``&quot;unvalidated&quot;``), or ``&quot;era5&quot;`` for cloud</span>
+<span class="sd">        files derived from an ERA5 dataset.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.input_builder import InputLine</span>
+<span class="sd">    &gt;&gt;&gt; line = InputLine(&quot;mol_modify O3&quot;, &quot;mol_modify O3 320 DU&quot;, &quot;params-literal&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; line.text</span>
+<span class="sd">    &#39;mol_modify O3 320 DU&#39;</span>
+<span class="sd">    &gt;&gt;&gt; line.provenance</span>
+<span class="sd">    &#39;params-literal&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span>
@@ -472,39 +519,251 @@ document.write(`
 
 
 <div class="viewcode-block" id="calculate_solar_zenith_angle">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html#pyradtran.input_builder.calculate_solar_zenith_angle">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html#pyradtran.input_builder.calculate_solar_zenith_angle">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_solar_zenith_angle</span><span class="p">(</span>
     <span class="n">dt</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Approximate solar zenith angle (degrees) from time and location.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Solar zenith angle (degrees) from time and location.</span>
+
+<span class="sd">    :class:`InputFileBuilder` uses this estimate for solar runs when</span>
+<span class="sd">    neither the configuration nor ``params`` supplies ``sza``.</span>
+<span class="sd">    Declination and equation of time follow Spencer&#39;s (1971) Fourier</span>
+<span class="sd">    series; the result is good to about 0.2° (see Notes).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dt : datetime.datetime</span>
+<span class="sd">        Time of the observation. Naive datetimes are taken as **UTC**;</span>
+<span class="sd">        aware ones are converted to UTC.</span>
+<span class="sd">    latitude : float</span>
+<span class="sd">        Geographic latitude :math:`\varphi` in degrees, north positive.</span>
+<span class="sd">    longitude : float</span>
+<span class="sd">        Geographic longitude :math:`\lambda` in degrees, east positive.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Solar zenith angle in degrees, in :math:`[0, 180]`, rounded to</span>
+<span class="sd">        two decimals. Above 90° the sun is below the horizon.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    InputFileBuilder.build : Writes the result as the ``sza`` line.</span>
+<span class="sd">    pyradtran.params.Var : Supply your own per-point ``sza`` instead.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Spencer&#39;s series are functions of the fractional-year angle</span>
+<span class="sd">    :math:`\gamma = 2\pi (N - 1)/365` with :math:`N` the day of the</span>
+<span class="sd">    year. The plain day number drifts by up to a day over the leap</span>
+<span class="sd">    cycle (up to :math:`0.4^\circ` in declination near the equinoxes),</span>
+<span class="sd">    so the angle is computed from continuous time and the tropical year,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \gamma = 2\pi\,\frac{d}{365.2422},</span>
+
+<span class="sd">    where :math:`d` is the time in days (with fraction) since</span>
+<span class="sd">    2000-01-01 00:00 UTC. In the year 2000 this is Spencer&#39;s angle with</span>
+<span class="sd">    a fractional day number.</span>
+
+<span class="sd">    Spencer [1]_ gives the solar declination (in radians) as</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \delta = 0.006918 - 0.399912\cos\gamma + 0.070257\sin\gamma</span>
+<span class="sd">                 - 0.006758\cos 2\gamma + 0.000907\sin 2\gamma</span>
+<span class="sd">                 - 0.002697\cos 3\gamma + 0.00148\sin 3\gamma</span>
+
+<span class="sd">    and the equation of time (in minutes) as</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        E = 229.18\,(0.000075 + 0.001868\cos\gamma - 0.032077\sin\gamma</span>
+<span class="sd">            - 0.014615\cos 2\gamma - 0.040849\sin 2\gamma)</span>
+
+<span class="sd">    The hour angle follows from *true* solar time,</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        h = 15^\circ\,\mathrm{h}^{-1}\,(t_\mathrm{UTC} - 12\,\mathrm{h})</span>
+<span class="sd">            + \lambda + \frac{E}{4\,\mathrm{min}/^\circ}</span>
+
+<span class="sd">    and the zenith angle :math:`\theta_0` from</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \cos\theta_0 = \sin\varphi\,\sin\delta</span>
+<span class="sd">                     + \cos\varphi\,\cos\delta\,\cos h</span>
+
+<span class="sd">    (:math:`\cos\theta_0` is clipped to :math:`[-1, 1]` before taking</span>
+<span class="sd">    the arc cosine).</span>
+
+<span class="sd">    **Accuracy.** Against the algorithm of the NOAA Solar Calculator</span>
+<span class="sd">    (Meeus&#39; *Astronomical Algorithms*), evaluated hourly over 1990–2050</span>
+<span class="sd">    for latitudes 80° S – 80° N, the result deviates by at most 0.2°</span>
+<span class="sd">    (declination within :math:`0.05^\circ`, equation of time within</span>
+<span class="sd">    0.7 min). The angle is geometric (no refraction, no parallax) and</span>
+<span class="sd">    refers to the centre of the solar disc.</span>
+
+<span class="sd">    The relative error in :math:`\cos\theta_0`, and hence in the direct</span>
+<span class="sd">    irradiance, is largest for a low sun. If that matters, compute the</span>
+<span class="sd">    zenith angle with an ephemeris and pass it per point,</span>
+<span class="sd">    ``params={&quot;sza&quot;: Var(&quot;sza&quot;)}``.</span>
+
+<span class="sd">    Scalar arguments only; arrays raise :class:`TypeError`.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Spencer, J. W. (1971). Fourier series representation of the</span>
+<span class="sd">       position of the sun. *Search*, 2(5), 172.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    At the June solstice the sun is nearly overhead at 23.44° N at</span>
+<span class="sd">    12 UTC on the Greenwich meridian (true solar noon is at 12:02):</span>
+
+<span class="sd">    &gt;&gt;&gt; from datetime import datetime</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.input_builder import calculate_solar_zenith_angle</span>
+<span class="sd">    &gt;&gt;&gt; calculate_solar_zenith_angle(datetime(2024, 6, 21, 12), 23.45, 0.0)</span>
+<span class="sd">    0.38</span>
+<span class="sd">    &gt;&gt;&gt; calculate_solar_zenith_angle(datetime(2024, 6, 21, 12), 0.0, 0.0)</span>
+<span class="sd">    23.46</span>
+
+<span class="sd">    Ny-Ålesund (78.9° N, 11.9° E) in midsummer and in the polar night:</span>
+
+<span class="sd">    &gt;&gt;&gt; calculate_solar_zenith_angle(datetime(2024, 6, 21, 12), 78.9, 11.9)</span>
+<span class="sd">    55.69</span>
+<span class="sd">    &gt;&gt;&gt; calculate_solar_zenith_angle(datetime(2024, 12, 21, 12), 78.9, 11.9)</span>
+<span class="sd">    102.56</span>
+
+<span class="sd">    Longitude shifts local solar time by one hour per 15°: 06 UTC at</span>
+<span class="sd">    90° E is local noon, like 12 UTC at Greenwich (the small difference</span>
+<span class="sd">    is the sun&#39;s motion during those six hours):</span>
+
+<span class="sd">    &gt;&gt;&gt; calculate_solar_zenith_angle(datetime(2024, 3, 20, 6), 51.5, 90.0)</span>
+<span class="sd">    51.44</span>
+<span class="sd">    &gt;&gt;&gt; calculate_solar_zenith_angle(datetime(2024, 3, 20, 12), 51.5, 0.0)</span>
+<span class="sd">    51.34</span>
+
+<span class="sd">    Aware datetimes are converted to UTC (14:00 CEST is 12:00 UTC):</span>
+
+<span class="sd">    &gt;&gt;&gt; from datetime import timedelta, timezone</span>
+<span class="sd">    &gt;&gt;&gt; cest = timezone(timedelta(hours=2))</span>
+<span class="sd">    &gt;&gt;&gt; calculate_solar_zenith_angle(datetime(2024, 6, 21, 14, tzinfo=cest), 0.0, 0.0)</span>
+<span class="sd">    23.46</span>
+
+<span class="sd">    Diurnal cycle at the June solstice (dashed: horizon):</span>
+
+<span class="sd">    .. plot::</span>
+
+<span class="sd">        from datetime import datetime, timedelta</span>
+<span class="sd">        from pyradtran.input_builder import calculate_solar_zenith_angle</span>
+
+<span class="sd">        start = datetime(2024, 6, 21)</span>
+<span class="sd">        hours = np.arange(0.0, 24.01, 0.25)</span>
+<span class="sd">        fig, ax = plt.subplots()</span>
+<span class="sd">        for lat in (0, 23.44, 50, 66.56, 78.9):</span>
+<span class="sd">            sza = [</span>
+<span class="sd">                calculate_solar_zenith_angle(start + timedelta(hours=h), lat, 0.0)</span>
+<span class="sd">                for h in hours</span>
+<span class="sd">            ]</span>
+<span class="sd">            ax.plot(hours, sza, label=f&quot;{lat:g}° N&quot;)</span>
+<span class="sd">        ax.axhline(90.0, color=&quot;0.4&quot;, ls=&quot;--&quot;, lw=1)</span>
+<span class="sd">        ax.set_xlabel(&quot;time on 21 June (UTC, longitude 0°)&quot;)</span>
+<span class="sd">        ax.set_ylabel(&quot;solar zenith angle (°)&quot;)</span>
+<span class="sd">        ax.set_xlim(0, 24)</span>
+<span class="sd">        ax.set_xticks(range(0, 25, 3))</span>
+<span class="sd">        ax.invert_yaxis()</span>
+<span class="sd">        ax.legend(title=&quot;latitude&quot;, fontsize=8)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-    <span class="n">day_of_year</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">timetuple</span><span class="p">()</span><span class="o">.</span><span class="n">tm_yday</span>
-    <span class="n">declination</span> <span class="o">=</span> <span class="mf">23.45</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">((</span><span class="mi">360</span> <span class="o">*</span> <span class="p">(</span><span class="mi">284</span> <span class="o">+</span> <span class="n">day_of_year</span><span class="p">))</span> <span class="o">/</span> <span class="mi">365</span><span class="p">))</span>
-    <span class="n">time_decimal</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="n">dt</span><span class="o">.</span><span class="n">minute</span> <span class="o">/</span> <span class="mf">60.0</span> <span class="o">+</span> <span class="n">dt</span><span class="o">.</span><span class="n">second</span> <span class="o">/</span> <span class="mf">3600.0</span>
-    <span class="n">hour_angle</span> <span class="o">=</span> <span class="mi">15</span> <span class="o">*</span> <span class="p">(</span><span class="n">time_decimal</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">+</span> <span class="n">longitude</span>
-
+    <span class="k">if</span> <span class="n">dt</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">hours</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">hour</span> <span class="o">+</span> <span class="n">dt</span><span class="o">.</span><span class="n">minute</span> <span class="o">/</span> <span class="mf">60.0</span> <span class="o">+</span> <span class="n">dt</span><span class="o">.</span><span class="n">second</span> <span class="o">/</span> <span class="mf">3600.0</span>
+    <span class="c1"># fractional-year angle from continuous time (no leap-cycle drift)</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="p">(</span><span class="n">dt</span> <span class="o">-</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mf">86400.0</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">days</span> <span class="o">/</span> <span class="mf">365.2422</span>
+    <span class="c1"># Spencer (1971): declination (rad) and equation of time (minutes)</span>
+    <span class="n">decl</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="mf">0.006918</span>
+        <span class="o">-</span> <span class="mf">0.399912</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.070257</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.006758</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.000907</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.002697</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span>
+        <span class="o">+</span> <span class="mf">0.00148</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">eot</span> <span class="o">=</span> <span class="mf">229.18</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="mf">0.000075</span>
+        <span class="o">+</span> <span class="mf">0.001868</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.032077</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.014615</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.040849</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">hour_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">15</span> <span class="o">*</span> <span class="p">(</span><span class="n">hours</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">+</span> <span class="n">longitude</span> <span class="o">+</span> <span class="n">eot</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
     <span class="n">lat_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">latitude</span><span class="p">)</span>
-    <span class="n">decl_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">declination</span><span class="p">)</span>
-    <span class="n">hour_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">hour_angle</span><span class="p">)</span>
 
-    <span class="n">cos_sza</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">decl_rad</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span>
-        <span class="n">decl_rad</span>
-    <span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">hour_rad</span><span class="p">)</span>
+    <span class="n">cos_sza</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">decl</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat_rad</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">decl</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span>
+        <span class="n">hour_rad</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">cos_sza</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))),</span> <span class="mi">2</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="effective_output_altitudes">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html#pyradtran.input_builder.effective_output_altitudes">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.effective_output_altitudes.html#pyradtran.input_builder.effective_output_altitudes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">effective_output_altitudes</span><span class="p">(</span>
     <span class="n">config</span><span class="p">,</span> <span class="n">overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Altitudes this run reports at: per-run ``zout`` override, else config.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Output altitudes of a run: the ``zout`` override, else the config.</span>
 
-<span class="sd">    Numeric levels come back sorted and deduplicated — matching the</span>
-<span class="sd">    ``zout`` line the builder writes (uvspec rejects unsorted levels).</span>
-<span class="sd">    Symbolic levels (``toa``, ``sur``) pass through as strings.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : SimulationConfig</span>
+<span class="sd">        Only ``config.simulation_defaults.output_altitudes_km`` is read.</span>
+<span class="sd">    overrides : dict, optional</span>
+<span class="sd">        Plain ``{key: value}`` parameters of the run (no provenance</span>
+<span class="sd">        tags). A ``&quot;zout&quot;`` entry (number, sequence or space-separated</span>
+<span class="sd">        string) replaces the config altitudes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        Levels in km as sorted, de-duplicated floats, matching the</span>
+<span class="sd">        ``zout`` line the builder writes (uvspec rejects unsorted or</span>
+<span class="sd">        repeated levels). If any level is symbolic (``toa``, ``sur``,</span>
+<span class="sd">        ``cpt``), all tokens are returned as strings in their original</span>
+<span class="sd">        order. An empty or missing config list gives ``[0.0]`` (the</span>
+<span class="sd">        surface, uvspec&#39;s default).</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    effective_output_columns : Injects ``zout`` for multi-level runs.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Only ``simulation_defaults`` is read, so a stand-in for</span>
+<span class="sd">    :class:`~pyradtran.config.SimulationConfig` is enough:</span>
+
+<span class="sd">    &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.config import SimulationDefaults</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.input_builder import effective_output_altitudes</span>
+<span class="sd">    &gt;&gt;&gt; config = SimpleNamespace(simulation_defaults=SimulationDefaults())</span>
+<span class="sd">    &gt;&gt;&gt; effective_output_altitudes(config)</span>
+<span class="sd">    [0.0]</span>
+
+<span class="sd">    A ``zout`` override is sorted and de-duplicated:</span>
+
+<span class="sd">    &gt;&gt;&gt; effective_output_altitudes(config, {&quot;zout&quot;: [10, 0, 2, 2]})</span>
+<span class="sd">    [0.0, 2.0, 10.0]</span>
+
+<span class="sd">    Symbolic levels are kept verbatim:</span>
+
+<span class="sd">    &gt;&gt;&gt; effective_output_altitudes(config, {&quot;zout&quot;: &quot;0 toa&quot;})</span>
+<span class="sd">    [&#39;0&#39;, &#39;toa&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">overrides</span> <span class="o">=</span> <span class="n">overrides</span> <span class="ow">or</span> <span class="p">{}</span>
     <span class="n">zout</span> <span class="o">=</span> <span class="n">overrides</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;zout&quot;</span><span class="p">)</span>
@@ -515,36 +774,97 @@ document.write(`
 
 
 <div class="viewcode-block" id="effective_output_columns">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.effective_output_columns.html#pyradtran.input_builder.effective_output_columns">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.effective_output_columns.html#pyradtran.input_builder.effective_output_columns">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">effective_output_columns</span><span class="p">(</span>
     <span class="n">config</span><span class="p">,</span> <span class="n">overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Columns the ``output_user`` line requests, in file order.</span>
 
 <span class="sd">    A per-run ``output_user`` override replaces the config columns.</span>
-<span class="sd">    Spectral runs get ``lambda`` injected and multi-altitude runs get</span>
-<span class="sd">    ``zout``, so the output file can always be mapped back onto its</span>
-<span class="sd">    wavelength/altitude axes — without them the batch converter cannot</span>
-<span class="sd">    reshape the rows and every value ends up NaN. The</span>
-<span class="sd">    :class:`~pyradtran.io.OutputParser` uses this same function, so the</span>
+<span class="sd">    Spectral runs get ``lambda`` and multi-altitude runs get ``zout``;</span>
+<span class="sd">    without them the batch converter cannot reshape the rows onto the</span>
+<span class="sd">    wavelength/altitude axes and every value becomes NaN.</span>
+<span class="sd">    :class:`~pyradtran.io.OutputParser` uses the same function, so the</span>
 <span class="sd">    file and the parser cannot disagree.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : SimulationConfig</span>
+<span class="sd">        ``simulation_defaults.output_columns``, ``integrate_wavelength``</span>
+<span class="sd">        and ``output_altitudes_km`` are read.</span>
+<span class="sd">    overrides : dict, optional</span>
+<span class="sd">        Plain ``{key: value}`` parameters of the run (no provenance</span>
+<span class="sd">        tags). Only ``&quot;output_user&quot;`` (string or sequence of column</span>
+<span class="sd">        names), ``&quot;zout&quot;`` and ``&quot;output_quantity&quot;`` are read.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of str</span>
+<span class="sd">        Column names in the order uvspec writes them. Rules, in order:</span>
+
+<span class="sd">        1. ``overrides[&quot;output_user&quot;]`` if given, else the config&#39;s</span>
+<span class="sd">           ``output_columns``. An empty list is returned as is: no</span>
+<span class="sd">           ``output_user`` line, uvspec&#39;s default output.</span>
+<span class="sd">        2. With ``output_quantity brightness`` the ``albedo`` column is</span>
+<span class="sd">           dropped (meaningless for brightness temperatures).</span>
+<span class="sd">        3. Unless ``integrate_wavelength`` is set, ``lambda`` is put</span>
+<span class="sd">           first if missing.</span>
+<span class="sd">        4. With more than one output altitude</span>
+<span class="sd">           (:func:`effective_output_altitudes`), ``zout`` is put first if</span>
+<span class="sd">           missing.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    effective_output_altitudes : The altitude list used for rule 4.</span>
+<span class="sd">    InputFileBuilder.build : Writes the ``output_user`` line.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The default configuration is spectral with one output level:</span>
+
+<span class="sd">    &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.config import SimulationDefaults</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.input_builder import effective_output_columns</span>
+<span class="sd">    &gt;&gt;&gt; config = SimpleNamespace(simulation_defaults=SimulationDefaults())</span>
+<span class="sd">    &gt;&gt;&gt; effective_output_columns(config)</span>
+<span class="sd">    [&#39;lambda&#39;, &#39;sza&#39;, &#39;eglo&#39;, &#39;eup&#39;, &#39;albedo&#39;]</span>
+
+<span class="sd">    Several output levels add the ``zout`` column:</span>
+
+<span class="sd">    &gt;&gt;&gt; effective_output_columns(config, {&quot;zout&quot;: [0, 5, 10]})</span>
+<span class="sd">    [&#39;zout&#39;, &#39;lambda&#39;, &#39;sza&#39;, &#39;eglo&#39;, &#39;eup&#39;, &#39;albedo&#39;]</span>
+
+<span class="sd">    A per-run ``output_user`` replaces the configured columns;</span>
+<span class="sd">    ``lambda`` is still added:</span>
+
+<span class="sd">    &gt;&gt;&gt; effective_output_columns(config, {&quot;output_user&quot;: &quot;edir edn eup&quot;})</span>
+<span class="sd">    [&#39;lambda&#39;, &#39;edir&#39;, &#39;edn&#39;, &#39;eup&#39;]</span>
+
+<span class="sd">    Brightness-temperature output drops ``albedo``:</span>
+
+<span class="sd">    &gt;&gt;&gt; effective_output_columns(config, {&quot;output_quantity&quot;: &quot;brightness&quot;})</span>
+<span class="sd">    [&#39;lambda&#39;, &#39;sza&#39;, &#39;eglo&#39;, &#39;eup&#39;]</span>
+
+<span class="sd">    Wavelength-integrated runs have no ``lambda`` column:</span>
+
+<span class="sd">    &gt;&gt;&gt; config.simulation_defaults.integrate_wavelength = True</span>
+<span class="sd">    &gt;&gt;&gt; effective_output_columns(config)</span>
+<span class="sd">    [&#39;sza&#39;, &#39;eglo&#39;, &#39;eup&#39;, &#39;albedo&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">overrides</span> <span class="o">=</span> <span class="n">overrides</span> <span class="ow">or</span> <span class="p">{}</span>
     <span class="n">sd</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span>
     <span class="n">output_user</span> <span class="o">=</span> <span class="n">overrides</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_user&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">output_user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cols</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">output_user</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_user</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-            <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_user</span><span class="p">)</span>
+            <span class="n">output_user</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_user</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">output_user</span><span class="p">)</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">output_columns</span> <span class="ow">or</span> <span class="p">[])</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">cols</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">cols</span>  <span class="c1"># empty means uvspec&#39;s default output — leave untouched</span>
+        <span class="k">return</span> <span class="n">cols</span>  <span class="c1"># empty means uvspec&#39;s default output</span>
     <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">overrides</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_quantity&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;brightness&quot;</span><span class="p">:</span>
         <span class="c1"># albedo is meaningless for brightness temperatures; filtering it</span>
-        <span class="c1"># here keeps the output_user line and the parser in lock-step</span>
+        <span class="c1"># here keeps the output_user line and the parser consistent</span>
         <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s2">&quot;albedo&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sd</span><span class="p">,</span> <span class="s2">&quot;integrate_wavelength&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;lambda&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
         <span class="n">cols</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;lambda&quot;</span><span class="p">)</span>
@@ -554,25 +874,145 @@ document.write(`
 
 
 
-<div class="viewcode-block" id="InputFileBuilder">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">InputFileBuilder</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build provenance-tagged uvspec input lines.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parametric_cloud_profiles</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Cloud profiles of a ``cloud_source: parametric`` configuration.</span>
+
+<span class="sd">    ``uvspec`` has no option for a parametric cloud layer. The layer in</span>
+<span class="sd">    ``simulation_defaults.clouds`` is therefore expressed as a</span>
+<span class="sd">    dict-valued ``wc_file`` / ``ic_file`` parameter, as in</span>
+<span class="sd">    ``params={&quot;wc_file&quot;: {...}}``, which</span>
+<span class="sd">    :meth:`~pyradtran.core.Simulation.run_simulation` writes to a</span>
+<span class="sd">    temporary cloud file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : SimulationConfig</span>
-<span class="sd">        Merged configuration.</span>
+<span class="sd">        Only ``config.simulation_defaults.clouds`` is read.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        ``{&quot;wc_file&quot;: profile}`` and/or ``{&quot;ic_file&quot;: profile}``</span>
+<span class="sd">        depending on ``cloud_type`` (``wc``, ``ic``, ``mixed``). Empty</span>
+<span class="sd">        unless clouds are enabled with ``cloud_source: parametric``.</span>
+<span class="sd">        Each profile is a homogeneous layer in two rows, top first:</span>
+<span class="sd">        ``{&quot;z&quot;: [top, bottom], &quot;lwc&quot; | &quot;iwc&quot;: [w, w], &quot;reff&quot;: [r, r]}``</span>
+<span class="sd">        (km, g m\ :sup:`-3`, µm). libRadtran reads the value at a level</span>
+<span class="sd">        as the content of the layer above it, so the bottom row carries</span>
+<span class="sd">        the cloud.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    pyradtran.core.Simulation.format_cloud_profile : Writes the profile.</span>
+<span class="sd">    pyradtran.config.CloudParameters : The configuration section.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from types import SimpleNamespace</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.config import CloudParameters, SimulationDefaults</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.input_builder import parametric_cloud_profiles</span>
+<span class="sd">    &gt;&gt;&gt; clouds = CloudParameters(</span>
+<span class="sd">    ...     enabled=True, cloud_source=&quot;parametric&quot;, water_content_g_m3=0.3</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; config = SimpleNamespace(simulation_defaults=SimulationDefaults(clouds=clouds))</span>
+<span class="sd">    &gt;&gt;&gt; parametric_cloud_profiles(config)</span>
+<span class="sd">    {&#39;wc_file&#39;: {&#39;z&#39;: [2.0, 1.0], &#39;lwc&#39;: [0.3, 0.3], &#39;reff&#39;: [10.0, 10.0]}}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">clouds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">clouds</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">and</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_source</span> <span class="o">==</span> <span class="s2">&quot;parametric&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{}</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_top_km</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_bottom_km</span><span class="p">)]</span>
+    <span class="n">reff</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">clouds</span><span class="o">.</span><span class="n">effective_radius_um</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">profiles</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;wc&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">):</span>
+        <span class="n">lwc</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">clouds</span><span class="o">.</span><span class="n">water_content_g_m3</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">profiles</span><span class="p">[</span><span class="s2">&quot;wc_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s2">&quot;lwc&quot;</span><span class="p">:</span> <span class="n">lwc</span><span class="p">,</span> <span class="s2">&quot;reff&quot;</span><span class="p">:</span> <span class="n">reff</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ic&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">):</span>
+        <span class="n">iwc</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">clouds</span><span class="o">.</span><span class="n">ice_content_g_m3</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">profiles</span><span class="p">[</span><span class="s2">&quot;ic_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s2">&quot;iwc&quot;</span><span class="p">:</span> <span class="n">iwc</span><span class="p">,</span> <span class="s2">&quot;reff&quot;</span><span class="p">:</span> <span class="n">reff</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">profiles</span>
+
+
+<div class="viewcode-block" id="InputFileBuilder">
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InputFileBuilder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build provenance-tagged uvspec input lines.</span>
+
+<span class="sd">    The merged configuration provides the baseline input file. The</span>
+<span class="sd">    resolved ``params`` of one point (from</span>
+<span class="sd">    :meth:`~pyradtran.params.ParamResolver.resolve_point`) replace or</span>
+<span class="sd">    extend it. Every line records its origin.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : SimulationConfig</span>
+<span class="sd">        Merged configuration (package defaults, master config and</span>
+<span class="sd">        project YAML, with dotted ``params`` overrides already applied).</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : SimulationConfig</span>
+<span class="sd">        The configuration passed in; read on every :meth:`build` call.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    pyradtran.params.ParamResolver : Produces the *resolved* mapping.</span>
+<span class="sd">    pyradtran.interface.PyRadtranAccessor.explain : User-facing preview</span>
+<span class="sd">        built on :meth:`build` and :meth:`render_annotated`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The input file for one point (needs valid libRadtran paths; output</span>
+<span class="sd">    from libRadtran 2.0.6):</span>
+
+<span class="sd">    &gt;&gt;&gt; from datetime import datetime</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran import ParamResolver, load_config</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.input_builder import InputFileBuilder</span>
+<span class="sd">    &gt;&gt;&gt; config = load_config()  # doctest: +SKIP</span>
+<span class="sd">    &gt;&gt;&gt; resolver = ParamResolver(  # doctest: +SKIP</span>
+<span class="sd">    ...     config,</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;albedo&quot;: 0.85,</span>
+<span class="sd">    ...         &quot;wc_modify&quot;: [&quot;tau550 set 12&quot;],</span>
+<span class="sd">    ...         &quot;aerosol_default&quot;: True,</span>
+<span class="sd">    ...         &quot;mol_modify O3&quot;: False,</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; builder = InputFileBuilder(config)  # doctest: +SKIP</span>
+<span class="sd">    &gt;&gt;&gt; lines = builder.build(  # doctest: +SKIP</span>
+<span class="sd">    ...     datetime(2024, 6, 21, 12), 78.9, 11.9, resolver.static_params()</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; print(builder.render_annotated(lines))  # doctest: +SKIP</span>
+<span class="sd">    rte_solver twostr                                                   # config</span>
+<span class="sd">    mol_abs_param lowtran per_nm                                        # config</span>
+<span class="sd">    data_files_path /opt/libRadtran-2.0.6/data                          # config</span>
+<span class="sd">    atmosphere_file /opt/libRadtran-2.0.6/data/atmmod/afglus.dat        # config</span>
+<span class="sd">    mol_modify H2O 2.0 MM                                               # config</span>
+<span class="sd">    source solar /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat  # config</span>
+<span class="sd">    sza 55.69                                                           # config</span>
+<span class="sd">    day_of_year 173                                                     # config</span>
+<span class="sd">    wavelength 400 3600                                                 # config</span>
+<span class="sd">    output_user lambda sza eglo eup albedo                              # config</span>
+<span class="sd">    zout 0.0000                                                         # config</span>
+<span class="sd">    umu 1.0                                                             # config</span>
+<span class="sd">    albedo 0.85                                                         # params-literal</span>
+<span class="sd">    wc_modify tau550 set 12                                             # params-literal</span>
+<span class="sd">    aerosol_default                                                     # params-literal</span>
+<span class="sd">    quiet                                                               # config</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+
+<span class="sd">    ``&quot;mol_modify O3&quot;: False`` removed the config&#39;s ozone line; ``sza``</span>
+<span class="sd">    was computed from time and position.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="InputFileBuilder.__init__">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.__init__">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span></div>
 
 
 <div class="viewcode-block" id="InputFileBuilder.build">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.build">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.build">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">dt</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
@@ -582,7 +1022,112 @@ document.write(`
         <span class="n">radiosonde_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">era5_atmosphere_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">InputLine</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the full ordered line list for one simulation point.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the full ordered line list for one simulation point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dt : datetime.datetime</span>
+<span class="sd">            Time of the point (UTC). Sets ``day_of_year`` and, when no</span>
+<span class="sd">            ``sza`` is configured, the solar zenith angle.</span>
+<span class="sd">        latitude, longitude : float</span>
+<span class="sd">            Position in degrees (north / east positive). Used only for</span>
+<span class="sd">            the computed solar zenith angle.</span>
+<span class="sd">        resolved : dict, optional</span>
+<span class="sd">            ``{key: (value, provenance)}`` as returned by</span>
+<span class="sd">            :meth:`~pyradtran.params.ParamResolver.resolve_point`. Not</span>
+<span class="sd">            modified.</span>
+<span class="sd">        radiosonde_path : pathlib.Path, optional</span>
+<span class="sd">            Radiosonde file. Used (as ``radiosonde &lt;path&gt; H2O RH``) only</span>
+<span class="sd">            when the config has ``h2o_source: radiosonde`` and no ERA5</span>
+<span class="sd">            file is given.</span>
+<span class="sd">        era5_atmosphere_file : pathlib.Path, optional</span>
+<span class="sd">            Atmosphere file written by :mod:`pyradtran.era5`. Takes</span>
+<span class="sd">            precedence over *radiosonde_path*. Its gas columns are read</span>
+<span class="sd">            from the file header.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of InputLine</span>
+<span class="sd">            The input file, one entry per line, in output order.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        render, render_annotated : Turn the lines into text.</span>
+<span class="sd">        calculate_solar_zenith_angle : Fallback for the ``sza`` line.</span>
+<span class="sd">        effective_output_columns : Decides the ``output_user`` line.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Lines tagged ``config`` are written first, in a fixed order:</span>
+
+<span class="sd">        1. ``rte_solver``, ``mol_abs_param``, ``data_files_path``,</span>
+<span class="sd">           ``atmosphere_file``;</span>
+<span class="sd">        2. ``radiosonde`` (ERA5 or radiosonde profile, if any);</span>
+<span class="sd">        3. ``mol_modify O3 ... DU`` / ``mol_modify H2O ... MM`` from</span>
+<span class="sd">           ``ozone_du`` / ``h2o_mm``, skipped for a gas whose profile</span>
+<span class="sd">           comes from the radiosonde/ERA5 file, so a measured column is</span>
+<span class="sd">           never rescaled by the config scalar;</span>
+<span class="sd">        4. ``source``; for solar runs ``sza`` (config value, else</span>
+<span class="sd">           :func:`calculate_solar_zenith_angle`) and ``day_of_year``; for</span>
+<span class="sd">           thermal runs ``sur_temperature`` if configured;</span>
+<span class="sd">        5. ``wavelength`` and, for integrated runs,</span>
+<span class="sd">           ``output_process integrate``;</span>
+<span class="sd">        6. ``albedo`` (if configured), ``output_user``, ``zout`` (levels</span>
+<span class="sd">           in km, sorted and de-duplicated), ``umu 1.0`` for nadir</span>
+<span class="sd">           viewing, and the ``wc_file`` / ``ic_file`` lines of a</span>
+<span class="sd">           ``cloud_source: file`` configuration.</span>
+
+<span class="sd">        Catalog short names (``afglss``, ``kurudz_1.0nm``; see</span>
+<span class="sd">        :func:`~pyradtran.config.list_atmosphere_profiles` and</span>
+<span class="sd">        :func:`~pyradtran.config.list_solar_spectra`) are resolved to</span>
+<span class="sd">        files in ``paths.libradtran_data`` on the ``atmosphere_file`` and</span>
+<span class="sd">        ``source solar &lt;file&gt;`` lines, whether they come from the</span>
+<span class="sd">        configuration or from *resolved*. Anything else is taken as a</span>
+<span class="sd">        path and written unchanged.</span>
+
+<span class="sd">        A ``cloud_source: parametric`` configuration is added to</span>
+<span class="sd">        *resolved* as a dict-valued ``wc_file`` / ``ic_file`` (see</span>
+<span class="sd">        :func:`parametric_cloud_profiles`) unless *resolved* already has</span>
+<span class="sd">        that key. A dict-valued ``wc_file`` / ``ic_file`` is rendered as</span>
+<span class="sd">        the placeholder ``wc_file 1D &lt;generated: 2 levels, 1-2 km&gt;``.</span>
+<span class="sd">        Only :meth:`~pyradtran.core.Simulation.run_simulation` writes</span>
+<span class="sd">        the cloud file, and it passes the path here instead of the dict.</span>
+
+<span class="sd">        The *resolved* parameters are then applied in mapping order.</span>
+<span class="sd">        Each one **removes every existing line with the same keyword**</span>
+<span class="sd">        and appends its own line(s) at the end:</span>
+
+<span class="sd">        * ``False``: remove only (switch a config-supplied option off);</span>
+<span class="sd">        * a ``list``: one line per element (repeatable options such as</span>
+<span class="sd">          ``wc_modify``);</span>
+<span class="sd">        * a key of :data:`~pyradtran.params.REGISTRY`: formatted by its</span>
+<span class="sd">          :meth:`~pyradtran.params.ParamSpec.format_line`</span>
+<span class="sd">          (``mol_modify O3 320 DU``);</span>
+<span class="sd">        * ``True``, ``None`` or ``&quot;&quot;`` on any other key: the bare</span>
+<span class="sd">          keyword (flag options such as ``aerosol_default``);</span>
+<span class="sd">        * anything else: ``&quot;&lt;key&gt; &lt;value&gt;&quot;``.</span>
+
+<span class="sd">        Special cases: ``sza``, ``sur_temperature``, ``albedo`` and</span>
+<span class="sd">        ``zout`` in *resolved* suppress the corresponding config line;</span>
+<span class="sd">        ``output_user`` is merged through</span>
+<span class="sd">        :func:`effective_output_columns`; ``brdf_rpv_type`` drops any</span>
+<span class="sd">        ``albedo`` line (config or resolved) and adds</span>
+<span class="sd">        ``brdf_rpv_library IGBP`` unless ``albedo_library``,</span>
+<span class="sd">        ``brdf_rpv_library`` or ``brdf_rpv_file`` is given. The file always</span>
+<span class="sd">        ends with ``quiet``.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        :class:`InputFileBuilder` shows a complete annotated input file.</span>
+<span class="sd">        Per-point values carry the ``dataset-var`` tag:</span>
+
+<span class="sd">        &gt;&gt;&gt; lines = builder.build(  # doctest: +SKIP</span>
+<span class="sd">        ...     datetime(2024, 6, 21, 12), 78.9, 11.9,</span>
+<span class="sd">        ...     {&quot;albedo&quot;: (0.82, &quot;dataset-var&quot;)},</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; [ln for ln in lines if ln.keyword == &quot;albedo&quot;]  # doctest: +SKIP</span>
+<span class="sd">        [InputLine(keyword=&#39;albedo&#39;, text=&#39;albedo 0.82&#39;, provenance=&#39;dataset-var&#39;)]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">resolved</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">resolved</span> <span class="ow">or</span> <span class="p">{})</span>
         <span class="n">sd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span>
         <span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">InputLine</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -594,9 +1139,21 @@ document.write(`
         <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">mol_abs_param</span><span class="p">:</span>
             <span class="n">add</span><span class="p">(</span><span class="s2">&quot;mol_abs_param&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;mol_abs_param </span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">mol_abs_param</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="n">add</span><span class="p">(</span><span class="s2">&quot;data_files_path&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;data_files_path </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">data_file</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">catalog</span><span class="p">):</span>
+            <span class="c1"># catalog short name (&quot;afglss&quot;) -&gt; file in the data directory;</span>
+            <span class="c1"># anything else is a path and passes through unchanged</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">catalog</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">_resolve_libradtran_shortname</span><span class="p">(</span>
+                    <span class="n">value</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="p">),</span> <span class="n">catalog</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="n">add</span><span class="p">(</span><span class="s2">&quot;data_files_path&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;data_files_path </span><span class="si">{</span><span class="n">paths</span><span class="o">.</span><span class="n">libradtran_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">add</span><span class="p">(</span>
-            <span class="s2">&quot;atmosphere_file&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;atmosphere_file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">atmosphere_profile</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;atmosphere_file&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;atmosphere_file </span><span class="si">{</span><span class="n">data_file</span><span class="p">(</span><span class="n">paths</span><span class="o">.</span><span class="n">atmosphere_profile</span><span class="p">,</span><span class="w"> </span><span class="n">ATMOSPHERE_PROFILES</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Atmosphere: ERA5 file wins over radiosonde</span>
@@ -609,10 +1166,10 @@ document.write(`
             <span class="n">radiosonde_columns</span> <span class="o">=</span> <span class="s2">&quot;H2O RH&quot;</span>
             <span class="n">add</span><span class="p">(</span><span class="s2">&quot;radiosonde&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;radiosonde </span><span class="si">{</span><span class="n">radiosonde_path</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">radiosonde_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Molecular columns (B2 fix: emit when configured).  A gas whose</span>
-        <span class="c1"># profile comes from the radiosonde file must not additionally be</span>
-        <span class="c1"># rescaled by mol_modify — that would silently overwrite the</span>
-        <span class="c1"># measured/reanalysis column with the config scalar.</span>
+        <span class="c1"># Molecular columns, when configured. A gas whose profile comes</span>
+        <span class="c1"># from the radiosonde file must not also be rescaled by</span>
+        <span class="c1"># mol_modify: that would overwrite the measured/reanalysis column</span>
+        <span class="c1"># with the config scalar.</span>
         <span class="n">profile_gases</span> <span class="o">=</span> <span class="p">(</span>
             <span class="nb">set</span><span class="p">(</span><span class="n">radiosonde_columns</span><span class="o">.</span><span class="n">split</span><span class="p">()[::</span><span class="mi">2</span><span class="p">])</span> <span class="k">if</span> <span class="n">radiosonde_columns</span> <span class="k">else</span> <span class="nb">set</span><span class="p">()</span>
         <span class="p">)</span>
@@ -623,10 +1180,9 @@ document.write(`
 
         <span class="c1"># Source</span>
         <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;solar&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">integrate_wavelength</span><span class="p">:</span>
-                <span class="n">add</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;source solar </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="si">}</span><span class="s2"> per_nm&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">add</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;source solar </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">solar_file</span> <span class="o">=</span> <span class="n">data_file</span><span class="p">(</span><span class="n">paths</span><span class="o">.</span><span class="n">solar_spectrum</span><span class="p">,</span> <span class="n">SOLAR_SPECTRA</span><span class="p">)</span>
+            <span class="n">per_nm</span> <span class="o">=</span> <span class="s2">&quot; per_nm&quot;</span> <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">integrate_wavelength</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;source solar </span><span class="si">{</span><span class="n">solar_file</span><span class="si">}{</span><span class="n">per_nm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="s2">&quot;sza&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span><span class="p">:</span>
                 <span class="n">sza</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">sd</span><span class="o">.</span><span class="n">sza</span>
@@ -640,7 +1196,6 @@ document.write(`
             <span class="p">)</span>
         <span class="k">elif</span> <span class="n">sd</span><span class="o">.</span><span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;thermal&quot;</span><span class="p">:</span>
             <span class="n">add</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;source thermal&quot;</span><span class="p">)</span>
-            <span class="c1"># B3 fix: explicit None check, no `or`</span>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="s2">&quot;sur_temperature&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span>
                 <span class="ow">and</span> <span class="n">sd</span><span class="o">.</span><span class="n">surface_temperature_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -658,9 +1213,12 @@ document.write(`
             <span class="n">add</span><span class="p">(</span><span class="s2">&quot;output_process&quot;</span><span class="p">,</span> <span class="s2">&quot;output_process integrate&quot;</span><span class="p">)</span>
 
         <span class="c1"># Surface: BRDF type disables plain albedo</span>
-        <span class="k">if</span> <span class="s2">&quot;brdf_rpv_type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">&quot;albedo&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span> <span class="ow">and</span> <span class="n">sd</span><span class="o">.</span><span class="n">albedo_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">add</span><span class="p">(</span><span class="s2">&quot;albedo&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;albedo </span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">albedo_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="s2">&quot;brdf_rpv_type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span>
+            <span class="ow">and</span> <span class="s2">&quot;albedo&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span>
+            <span class="ow">and</span> <span class="n">sd</span><span class="o">.</span><span class="n">albedo_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="n">add</span><span class="p">(</span><span class="s2">&quot;albedo&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;albedo </span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">albedo_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Output columns: per-run output_user override wins; lambda/zout</span>
         <span class="c1"># are injected so the output stays parseable (see</span>
@@ -678,7 +1236,7 @@ document.write(`
                 <span class="n">output_user_override</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">output_user_override</span> <span class="k">else</span> <span class="n">PROV_CONFIG</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="c1"># Output altitudes (sorted+deduped — uvspec rejects unsorted zout)</span>
+        <span class="c1"># Output altitudes (sorted+deduped: uvspec rejects unsorted zout)</span>
         <span class="k">if</span> <span class="s2">&quot;zout&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span> <span class="ow">and</span> <span class="n">sd</span><span class="o">.</span><span class="n">output_altitudes_km</span><span class="p">:</span>
             <span class="n">alt_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">alt</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">alt</span> <span class="ow">in</span> <span class="n">effective_output_altitudes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
@@ -689,15 +1247,31 @@ document.write(`
         <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">viewing_geometry</span> <span class="o">==</span> <span class="s2">&quot;nadir&quot;</span><span class="p">:</span>
             <span class="n">add</span><span class="p">(</span><span class="s2">&quot;umu&quot;</span><span class="p">,</span> <span class="s2">&quot;umu 1.0&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Static cloud settings from config</span>
-        <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">clouds</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_add_cloud_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="c1"># Static cloud settings from config: files become lines, a</span>
+        <span class="c1"># parametric layer becomes a dict-valued wc_file/ic_file parameter</span>
+        <span class="c1"># (explicit params win)</span>
+        <span class="n">clouds</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">clouds</span>
+        <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_source</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;wc&quot;</span><span class="p">,</span> <span class="s2">&quot;ic&quot;</span><span class="p">):</span>
+                    <span class="n">cloud_file</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">clouds</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">_file&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cloud_file</span><span class="p">:</span>
+                        <span class="n">add</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">_file&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">_file </span><span class="si">{</span><span class="n">cloud_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">parametric_cloud_profiles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">resolved</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">PROV_CONFIG</span><span class="p">))</span>
 
         <span class="c1"># BRDF surface type unconditionally replaces plain albedo,</span>
-        <span class="c1"># regardless of dict ordering.</span>
+        <span class="c1"># regardless of dict ordering (the config albedo line was already</span>
+        <span class="c1"># skipped above).</span>
         <span class="k">if</span> <span class="s2">&quot;brdf_rpv_type&quot;</span> <span class="ow">in</span> <span class="n">resolved</span><span class="p">:</span>
             <span class="n">resolved</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;albedo&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">ln</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">ln</span><span class="o">.</span><span class="n">keyword</span> <span class="o">!=</span> <span class="s2">&quot;albedo&quot;</span><span class="p">]</span>
+
+        <span class="c1"># A user-chosen surface library/file keeps brdf_rpv_type meaning</span>
+        <span class="c1"># &quot;type N of that library&quot; (e.g. albedo_library IGBP).</span>
+        <span class="n">own_surface</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">k</span> <span class="ow">in</span> <span class="n">resolved</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;albedo_library&quot;</span><span class="p">,</span> <span class="s2">&quot;brdf_rpv_library&quot;</span><span class="p">,</span> <span class="s2">&quot;brdf_rpv_file&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
 
         <span class="c1"># Apply resolved parameters: replace same-keyword lines, then append</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">provenance</span><span class="p">)</span> <span class="ow">in</span> <span class="n">resolved</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -705,79 +1279,117 @@ document.write(`
             <span class="n">keyword</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">keyword</span> <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">key</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">ln</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">ln</span><span class="o">.</span><span class="n">keyword</span> <span class="o">!=</span> <span class="n">keyword</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-                <span class="k">continue</span>  <span class="c1"># flag explicitly switched off — emit nothing</span>
+                <span class="k">continue</span>  <span class="c1"># flag switched off: emit nothing</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="c1"># Repeatable option (non_unique): one line per entry</span>
                 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
                     <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputLine</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">provenance</span><span class="p">))</span>
                 <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Short names in params, as in the config</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;atmosphere_file&quot;</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">data_file</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ATMOSPHERE_PROFILES</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span>
+                <span class="n">toks</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">toks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;solar&quot;</span><span class="p">:</span>
+                    <span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data_file</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">SOLAR_SPECTRA</span><span class="p">))</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">toks</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;wc_file&quot;</span><span class="p">,</span> <span class="s2">&quot;ic_file&quot;</span><span class="p">):</span>
+                <span class="c1"># Preview only: Simulation.run_simulation replaces the</span>
+                <span class="c1"># dict by the temporary file before building.</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> 1D &lt;generated: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="si">}</span><span class="s2"> levels, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2"> km&gt;&quot;</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">text</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">format_line</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
                 <span class="n">text</span> <span class="o">=</span> <span class="n">keyword</span>  <span class="c1"># flag option, e.g. aerosol_default</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputLine</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">provenance</span><span class="p">))</span>
-            <span class="c1"># brdf implies the IGBP library line</span>
+            <span class="c1"># brdf_rpv_type alone implies the IGBP BRDF library</span>
             <span class="k">if</span> <span class="n">keyword</span> <span class="o">==</span> <span class="s2">&quot;brdf_rpv_type&quot;</span><span class="p">:</span>
-                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="n">ln</span>
-                    <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span>
-                    <span class="k">if</span> <span class="n">ln</span><span class="o">.</span><span class="n">keyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;albedo&quot;</span><span class="p">,</span> <span class="s2">&quot;brdf_rpv_library&quot;</span><span class="p">)</span>
-                <span class="p">]</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">InputLine</span><span class="p">(</span><span class="s2">&quot;brdf_rpv_library&quot;</span><span class="p">,</span> <span class="s2">&quot;brdf_rpv_library IGBP&quot;</span><span class="p">,</span> <span class="n">provenance</span><span class="p">)</span>
-                <span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">ln</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">ln</span><span class="o">.</span><span class="n">keyword</span> <span class="o">!=</span> <span class="s2">&quot;albedo&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">own_surface</span><span class="p">:</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">ln</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">ln</span><span class="o">.</span><span class="n">keyword</span> <span class="o">!=</span> <span class="s2">&quot;brdf_rpv_library&quot;</span><span class="p">]</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">InputLine</span><span class="p">(</span>
+                            <span class="s2">&quot;brdf_rpv_library&quot;</span><span class="p">,</span> <span class="s2">&quot;brdf_rpv_library IGBP&quot;</span><span class="p">,</span> <span class="n">provenance</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
 
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputLine</span><span class="p">(</span><span class="s2">&quot;quiet&quot;</span><span class="p">,</span> <span class="s2">&quot;quiet&quot;</span><span class="p">,</span> <span class="n">PROV_CONFIG</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">lines</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_cloud_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">InputLine</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append config-driven cloud lines (file or parametric).&quot;&quot;&quot;</span>
-        <span class="n">clouds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">clouds</span>
-        <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_source</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wc&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">clouds</span><span class="o">.</span><span class="n">wc_file</span><span class="p">:</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">InputLine</span><span class="p">(</span><span class="s2">&quot;wc_file&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;wc_file </span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">wc_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">PROV_CONFIG</span><span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ic&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">clouds</span><span class="o">.</span><span class="n">ic_file</span><span class="p">:</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">InputLine</span><span class="p">(</span><span class="s2">&quot;ic_file&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;ic_file </span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">ic_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">PROV_CONFIG</span><span class="p">)</span>
-                <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_source</span> <span class="o">==</span> <span class="s2">&quot;parametric&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wc&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]:</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">InputLine</span><span class="p">(</span>
-                        <span class="s2">&quot;wc_layer&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;wc_layer </span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_bottom_km</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_top_km</span><span class="si">}</span><span class="s2"> &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">water_content_g_m3</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">effective_radius_um</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">PROV_CONFIG</span><span class="p">,</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">if</span> <span class="n">clouds</span><span class="o">.</span><span class="n">cloud_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ic&quot;</span><span class="p">,</span> <span class="s2">&quot;mixed&quot;</span><span class="p">]:</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">InputLine</span><span class="p">(</span>
-                        <span class="s2">&quot;ic_layer&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;ic_layer </span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_bottom_km</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">layer_top_km</span><span class="si">}</span><span class="s2"> &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">ice_content_g_m3</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">clouds</span><span class="o">.</span><span class="n">effective_radius_um</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">PROV_CONFIG</span><span class="p">,</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-
 <div class="viewcode-block" id="InputFileBuilder.render">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.render">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.render">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">InputLine</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render lines to the plain uvspec input file content.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render lines as plain uvspec input file content.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lines : list of InputLine</span>
+<span class="sd">            Lines from :meth:`build`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            One ``text`` per line, newline-terminated: the content of</span>
+<span class="sd">            the ``.inp`` file passed to ``uvspec``.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran.input_builder import InputFileBuilder, InputLine</span>
+<span class="sd">        &gt;&gt;&gt; lines = [</span>
+<span class="sd">        ...     InputLine(&quot;albedo&quot;, &quot;albedo 0.85&quot;, &quot;params-literal&quot;),</span>
+<span class="sd">        ...     InputLine(&quot;sza&quot;, &quot;sza 55.45&quot;, &quot;config&quot;),</span>
+<span class="sd">        ...     InputLine(&quot;quiet&quot;, &quot;quiet&quot;, &quot;config&quot;),</span>
+<span class="sd">        ... ]</span>
+<span class="sd">        &gt;&gt;&gt; print(InputFileBuilder.render(lines), end=&quot;&quot;)</span>
+<span class="sd">        albedo 0.85</span>
+<span class="sd">        sza 55.45</span>
+<span class="sd">        quiet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ln</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="InputFileBuilder.render_annotated">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.render_annotated">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html#pyradtran.input_builder.InputFileBuilder.render_annotated">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">render_annotated</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">InputLine</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render lines with aligned ``# &lt;provenance&gt;`` annotations.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render lines with aligned ``# &lt;provenance&gt;`` annotations.</span>
+
+<span class="sd">        :meth:`~pyradtran.interface.PyRadtranAccessor.explain` returns</span>
+<span class="sd">        this text. It is for reading, not for ``uvspec``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lines : list of InputLine</span>
+<span class="sd">            Lines from :meth:`build`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Each line padded to a common width and followed by</span>
+<span class="sd">            ``# &lt;provenance&gt;``, newline-terminated. Empty for an empty</span>
+<span class="sd">            list.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran.input_builder import InputFileBuilder, InputLine</span>
+<span class="sd">        &gt;&gt;&gt; lines = [</span>
+<span class="sd">        ...     InputLine(&quot;albedo&quot;, &quot;albedo 0.85&quot;, &quot;params-literal&quot;),</span>
+<span class="sd">        ...     InputLine(&quot;sza&quot;, &quot;sza 55.45&quot;, &quot;config&quot;),</span>
+<span class="sd">        ...     InputLine(&quot;quiet&quot;, &quot;quiet&quot;, &quot;config&quot;),</span>
+<span class="sd">        ... ]</span>
+<span class="sd">        &gt;&gt;&gt; print(InputFileBuilder.render_annotated(lines), end=&quot;&quot;)</span>
+<span class="sd">        albedo 0.85  # params-literal</span>
+<span class="sd">        sza 55.45    # config</span>
+<span class="sd">        quiet        # config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">lines</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
         <span class="n">width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ln</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="k">for</span> <span class="n">ln</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
@@ -789,10 +1401,9 @@ document.write(`
 <span class="k">def</span><span class="w"> </span><span class="nf">_sniff_radiosonde_columns</span><span class="p">(</span><span class="n">era5_abs_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the gas-column spec from an atmosphere file header.</span>
 
-<span class="sd">    Files written by :mod:`pyradtran.era5` carry a machine-readable</span>
-<span class="sd">    ``# columns: H2O MMR O3 MMR`` header line.  Older files without it</span>
-<span class="sd">    fall back to the historical H2O-only sniff (``%`` in the header</span>
-<span class="sd">    means RH, otherwise MMR).</span>
+<span class="sd">    Uses the ``# columns: H2O MMR O3 MMR`` line written by</span>
+<span class="sd">    :mod:`pyradtran.era5`; without it, ``%`` in the header means</span>
+<span class="sd">    ``H2O RH``, otherwise ``H2O MMR``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">era5_abs_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -815,6 +1426,7 @@ document.write(`
     <span class="s2">&quot;calculate_solar_zenith_angle&quot;</span><span class="p">,</span>
     <span class="s2">&quot;effective_output_columns&quot;</span><span class="p">,</span>
     <span class="s2">&quot;effective_output_altitudes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parametric_cloud_profiles&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 

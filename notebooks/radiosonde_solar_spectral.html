@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Advanced: Realistic Clouds from Observations (Solar Spectral) &#8212; PyRadtran</title>
+    <title>Realistic clouds from observations (solar spectral) &#8212; PyRadtran</title>
   
   
   
@@ -34,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -57,12 +58,14 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/radiosonde_solar_spectral';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Processing: ERA5 Sea Ice Profiles" href="sea_ice_era5.html" />
-    <link rel="prev" title="Advanced: Realistic Clouds from Observations (Thermal)" href="radiosonde_thermal.html" />
+    <link rel="next" title="Ny-Ålesund radiation" href="nya_rad.html" />
+    <link rel="prev" title="Realistic clouds from observations (thermal)" href="radiosonde_thermal.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -175,152 +178,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../case_studies/campaigns.html">Campaign validation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -459,7 +459,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Advanced: Realistic Clouds from Observations (Solar Spectral)</h1>
+    <h1>Realistic clouds from observations (solar spectral)</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -469,7 +469,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-results">Simulation Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-observation-data">Load observation data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-flight-track">Prepare the flight track</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-sky-simulation">Clear-sky simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cloud-layers-from-lidar-and-radar">Cloud layers from lidar and radar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cloudy-simulation">Cloudy simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cloud-effect-on-the-spectral-irradiance">Cloud effect on the spectral irradiance</a></li>
 </ul>
             </nav>
         </div>
@@ -481,49 +486,38 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="advanced-realistic-clouds-from-observations-solar-spectral">
-<h1>Advanced: Realistic Clouds from Observations (Solar Spectral)<a class="headerlink" href="#advanced-realistic-clouds-from-observations-solar-spectral" title="Link to this heading">#</a></h1>
-<p>In this notebook, we’ll apply the same cloud-construction approach as the thermal notebook, but for spectral solar simulations. This allows us to study the wavelength-dependent effect of observed cloud properties on downwelling solar radiation.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="realistic-clouds-from-observations-solar-spectral">
+<h1>Realistic clouds from observations (solar spectral)<a class="headerlink" href="#realistic-clouds-from-observations-solar-spectral" title="Link to this heading">#</a></h1>
+<p>Uses the cloud layers of <a class="reference internal" href="radiosonde_thermal.html"><span class="doc">Realistic clouds from observations (thermal)</span></a> (lidar and radar, HALO-(AC)³ RF13, 2022-04-04) for spectral solar simulations between 1024 and 2400 nm, the range of the specMACS SWIR camera. It shows how the observed clouds change the upward and downward spectral irradiance at flight level. It is not a validation: comparing with specMACS needs nadir radiances (<code class="docutils literal notranslate"><span class="pre">uu</span></code>) at the specMACS viewing geometry and a radiometric comparison that is not done here.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong>Campaign data required.</strong> This notebook uses data from the HALO-(AC)³ field experiment that is not publicly available. You can adapt the workflow to your own observational data by replacing the file paths.</p>
+<p>This notebook needs HALO-(AC)³ campaign data from <code class="docutils literal notranslate"><span class="pre">/projekt_agmwend</span></code> (VELOX, lidar, radar) and the dropsondes in <code class="docutils literal notranslate"><span class="pre">radiosonde/</span></code>, none of which are public. It is not executed for the book and has no stored outputs; run it with the campaign data, or replace the file paths with your own observations.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import PyRadtran components</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathsConfig</span><span class="p">,</span> <span class="n">SimulationDefaults</span><span class="p">,</span> <span class="n">SimulationConfig</span><span class="p">,</span> <span class="n">ExecutionConfig</span><span class="p">,</span> <span class="n">OutputConfig</span><span class="p">,</span> <span class="n">load_config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Simulation</span><span class="p">,</span> <span class="n">generate_input_content</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_uvspec_output</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyradtran</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyradtran</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="c1"># Configure logging for pyradtran</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pyradtran&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
 
-<span class="c1"># Build configuration programmatically from master config</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
 <span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">rte_solver</span> <span class="o">=</span> <span class="s2">&quot;disort&quot;</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span> <span class="o">=</span> <span class="s2">&quot;reptran per_nm&quot;</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">mol_abs_param</span> <span class="o">=</span> <span class="s2">&quot;reptran coarse&quot;</span>
 <span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;solar&quot;</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">2400</span><span class="p">]</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">wavelength_nm</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">2400</span><span class="p">]</span>      <span class="c1"># specMACS SWIR range</span>
 <span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">integrate_wavelength</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_value</span> <span class="o">=</span> <span class="mf">0.3</span>                <span class="c1"># assumption; snow albedo drops strongly beyond 1.4 µm</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;zout&quot;</span><span class="p">,</span> <span class="s2">&quot;lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;sza&quot;</span><span class="p">,</span> <span class="s2">&quot;edir&quot;</span><span class="p">,</span> <span class="s2">&quot;edn&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">]</span>
 <span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">h2o_source</span> <span class="o">=</span> <span class="s2">&quot;radiosonde&quot;</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">albedo_value</span> <span class="o">=</span> <span class="mf">0.3</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">surface_temperature_k</span> <span class="o">=</span> <span class="mf">273.15</span>
 <span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">ozone_du</span> <span class="o">=</span> <span class="mf">300.0</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_altitudes_km</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">simulation_defaults</span><span class="o">.</span><span class="n">output_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;zout&quot;</span><span class="p">,</span> <span class="s2">&quot;lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;sza&quot;</span><span class="p">,</span> <span class="s2">&quot;edir&quot;</span><span class="p">,</span> <span class="s2">&quot;eglo&quot;</span><span class="p">,</span> <span class="s2">&quot;edn&quot;</span><span class="p">,</span> <span class="s2">&quot;eup&quot;</span><span class="p">,</span> <span class="s2">&quot;enet&quot;</span><span class="p">,</span> <span class="s2">&quot;albedo&quot;</span><span class="p">]</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span> <span class="o">=</span> <span class="mi">16</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">cleanup_temp_files</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">cfg</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">timeout_seconds</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">radiosonde_base</span> <span class="o">=</span> <span class="s2">&quot;radiosonde&quot;</span>                  <span class="c1"># dropsondes, not shipped</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">max_workers</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">cfg</span><span class="o">.</span><span class="n">execution</span><span class="o">.</span><span class="n">timeout_seconds</span> <span class="o">=</span> <span class="mi">120</span>
 <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">filename_prefix</span> <span class="o">=</span> <span class="s2">&quot;radiosonde_solar_spectral&quot;</span>
 <span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;config/radiosonde_solar_spectral.yaml&quot;</span><span class="p">)</span>
 <span class="n">cfg</span><span class="o">.</span><span class="n">to_yaml</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
@@ -531,9 +525,14 @@ document.write(`
 </div>
 </div>
 </div>
+<section id="load-observation-data">
+<h2>Load observation data<a class="headerlink" href="#load-observation-data" title="Link to this heading">#</a></h2>
+<p>The VELOX channel 3 file (10.74 µm, RF13) provides the flight track and a thermal view of the clouds; <code class="docutils literal notranslate"><span class="pre">BT_2D</span></code> and <code class="docutils literal notranslate"><span class="pre">BT_Center</span></code> are in °C. specMACS is shown as a quick look only.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;/projekt_agmwend/data/HALO-AC3/02_Flights/HALO-AC3_20220404_HALO_RF13/VELOX/VELOX_327kveL/Processed/to_publish/final/HALO-AC3_HALO_VELOX_BT3_10740nm_20220404_RF13_v3.0.nc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s1">&#39;2022-04-04T13:41:00&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-04-04T14:00:00&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
+    <span class="s2">&quot;/projekt_agmwend/data/HALO-AC3/02_Flights/HALO-AC3_20220404_HALO_RF13/VELOX/VELOX_327kveL/Processed/to_publish/final/HALO-AC3_HALO_VELOX_BT3_10740nm_20220404_RF13_v3.0.nc&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s1">&#39;2022-04-04T13:41:00&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-04-04T14:00:00&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 
 <span class="n">ds</span><span class="o">.</span><span class="n">BT_Center</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 </pre></div>
@@ -542,28 +541,27 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_specMACS</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_zarr</span><span class="p">(</span><span class="s1">&#39;/projekt_agmwend/data/HALO-AC3/02_Flights/HALO-AC3_20220404_HALO_RF13/specMACS/specMACS_RF13.zarr/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s1">&#39;2022-04-04T13:41:00&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-04-04T14:00:00&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_specMACS</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_zarr</span><span class="p">(</span>
+    <span class="s2">&quot;/projekt_agmwend/data/HALO-AC3/02_Flights/HALO-AC3_20220404_HALO_RF13/specMACS/specMACS_RF13.zarr/&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s1">&#39;2022-04-04T13:41:00&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-04-04T14:00:00&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="c1"># Quick look at the specMACS radiance at its first wavelength</span>
+<span class="n">ds_specMACS</span><span class="o">.</span><span class="n">radiance</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">wavelength</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_specMACS</span><span class="o">.</span><span class="n">radiance</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">wavelength</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Static plot for a representative time step</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># One VELOX frame and its brightness-temperature histogram</span>
 <span class="n">time_idx</span> <span class="o">=</span> <span class="mi">240</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">ds</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time_idx</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">25</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cbar_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;Brightness Temperature (K)&#39;</span><span class="p">})</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time_idx</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">25</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                  <span class="n">cbar_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;Brightness temperature (°C)&#39;</span><span class="p">})</span>
 <span class="n">ds</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time_idx</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Brightness Temperature (°C)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Brightness temperature (°C)&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Count&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -571,303 +569,138 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+<section id="prepare-the-flight-track">
+<h2>Prepare the flight track<a class="headerlink" href="#prepare-the-flight-track" title="Link to this heading">#</a></h2>
+<p>Only the track goes into the simulation: every dimension of the input dataset is a loop, so the image dimensions <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> must not be passed. The aircraft altitude is a data variable, so each time step is simulated at flight level (<a class="reference internal" href="../guide/concepts.html"><span class="doc">How pyRadtran works</span></a>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_sel</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-    <span class="p">{</span><span class="s1">&#39;lat&#39;</span> <span class="p">:</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="s1">&#39;alt&#39;</span><span class="p">:</span> <span class="s1">&#39;altitude&#39;</span><span class="p">}</span>
-<span class="p">)</span>
-<span class="n">ds_sel</span><span class="p">[</span><span class="s1">&#39;altitude_halo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_sel</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span> 
-<span class="n">ds_sel</span> <span class="o">=</span> <span class="n">ds_sel</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
-<span class="n">ds_sel</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
-<span class="c1">#s_sel[&#39;altitude&#39;] = ds_sel[&#39;altitude&#39;] / 1000  # Convert altitude to km</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">track</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span>
+    <span class="s1">&#39;latitude&#39;</span><span class="p">:</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;longitude&#39;</span><span class="p">:</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;altitude&#39;</span><span class="p">:</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;alt&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span>   <span class="c1"># m -&gt; km, flight level per time step</span>
+<span class="p">})</span>
+<span class="n">track</span>
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="clear-sky-simulation">
+<h2>Clear-sky simulation<a class="headerlink" href="#clear-sky-simulation" title="Link to this heading">#</a></h2>
+<p>Spectral irradiance at flight level without clouds.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_specMACS</span><span class="o">.</span><span class="n">wavelength</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run a clear-sky solar spectral simulation for the dataset</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running batch solar spectral simulation (clear-sky)...&quot;</span><span class="p">)</span>
-<span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;config/radiosonde_solar_spectral.yaml&#39;</span><span class="p">)</span>
-
-<span class="n">ds_sim_cloud_free</span> <span class="o">=</span> <span class="n">ds_sel</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_sim_clear</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
     <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
-    <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">save_to_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">save_to_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Simulation complete!&quot;</span><span class="p">)</span>
-<span class="n">ds_sim_cloud_free</span>
+<span class="n">ds_sim_clear</span>
 </pre></div>
 </div>
 </div>
 </div>
-<section id="simulation-results">
-<h2>Simulation Results<a class="headerlink" href="#simulation-results" title="Link to this heading">#</a></h2>
-<p>Spectral radiative transfer calculations completed using DISORT solver with multi-level output altitude grid.</p>
+</section>
+<section id="cloud-layers-from-lidar-and-radar">
+<h2>Cloud layers from lidar and radar<a class="headerlink" href="#cloud-layers-from-lidar-and-radar" title="Link to this heading">#</a></h2>
+<p>Cloud top and base come from the lidar backscatter ratio (&gt; 100 counts as cloud); the radar reflectivity is shown for context. Each cloudy time step gets one homogeneous liquid layer with 0.1 g m⁻³ and the default effective radius of 10 µm (<a class="reference internal" href="../guide/clouds.html"><span class="doc">Clouds</span></a>). The water content is an assumption, not a retrieval.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate cloud layers using the utility functions</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran.clouds</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudLayer</span><span class="p">,</span> <span class="n">CloudGenerator</span><span class="p">,</span> <span class="n">CloudFileWriter</span>
-
-<span class="c1"># Create simple parametric clouds</span>
-<span class="n">simple_clouds</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_simple_parameters</span><span class="p">(</span>
-    <span class="n">z_base_km</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
-    <span class="n">z_top_km</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
-    <span class="n">lwc_g_m3</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">r_eff_um</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
-    <span class="n">n_layers</span><span class="o">=</span><span class="mi">5</span>
-<span class="p">)</span>
-
-<span class="c1"># Write custom cloud file</span>
-<span class="n">custom_wc_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;work/custom_water_cloud.dat&#39;</span><span class="p">)</span>
-<span class="n">CloudFileWriter</span><span class="o">.</span><span class="n">write_water_cloud_file</span><span class="p">(</span>
-    <span class="n">cloud_layers</span><span class="o">=</span><span class="n">simple_clouds</span><span class="p">,</span>
-    <span class="n">output_path</span><span class="o">=</span><span class="n">custom_wc_file</span><span class="p">,</span>
-    <span class="n">altitude_resolution_km</span><span class="o">=</span><span class="mf">0.1</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lidar</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;/projekt_agmwend/home_rad/Joshua/HALO-AC3_unified_data/unified_bsrgl.nc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lidar</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s2">&quot;/projekt_agmwend/home_rad/Joshua/HALO-AC3_unified_data/unified_bsrgl.nc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 <span class="n">lidar</span> <span class="o">=</span> <span class="n">lidar</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">lidar</span><span class="o">.</span><span class="n">backscatter_ratio</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">radar</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s1">&#39;/projekt_agmwend/home_rad/Joshua/HALO-AC3_unified_data/unified_radar.nc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<span class="n">radar</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s2">&quot;/projekt_agmwend/home_rad/Joshua/HALO-AC3_unified_data/unified_radar.nc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;width_ratios&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">.2</span><span class="p">]})</span>
-
-<span class="n">im_lidar</span> <span class="o">=</span> <span class="n">lidar</span><span class="o">.</span><span class="n">backscatter_ratio</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">lidar</span><span class="o">.</span><span class="n">backscatter_ratio</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
-<span class="n">im_radar</span> <span class="o">=</span> <span class="n">radar</span><span class="o">.</span><span class="n">dBZg</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray_r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">,</span> <span class="n">add_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">lidar</span><span class="o">.</span><span class="n">backscatter_ratio</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">radar</span><span class="o">.</span><span class="n">dBZg</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray_r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">,</span> <span class="n">add_colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">cth_and_layer_thickness</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">ds_lidar</span><span class="o">=</span><span class="n">lidar</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculate cloud top height and layer thickness from lidar data.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># The lidar data is already filtered for backscatter_ratio &gt; 10</span>
-    <span class="c1"># We can find the cloud top and base by finding the max and min altitude where the data is not NaN</span>
-    
-    <span class="c1"># Ensure the lidar data is aligned with the ds time, using nearest neighbor interpolation</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cloud top height, thickness (m) and cloud fraction from lidar data</span>
+<span class="sd">    that are already masked to backscatter_ratio &gt; 100.&quot;&quot;&quot;</span>
     <span class="n">ds_lidar_sel</span> <span class="o">=</span> <span class="n">ds_lidar</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
-    
-    <span class="c1"># Find cloud top height (highest altitude with significant backscatter)</span>
-    <span class="n">cth</span> <span class="o">=</span> <span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">altitude</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">backscatter_ratio</span><span class="o">.</span><span class="n">notnull</span><span class="p">())</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
-    
-    <span class="c1"># Find cloud base height (lowest altitude with significant backscatter)</span>
-    <span class="n">cbh</span> <span class="o">=</span> <span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">altitude</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">backscatter_ratio</span><span class="o">.</span><span class="n">notnull</span><span class="p">())</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
+    <span class="n">cloudy</span> <span class="o">=</span> <span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">backscatter_ratio</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+    <span class="n">cth</span> <span class="o">=</span> <span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">altitude</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cloudy</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
+    <span class="n">cbh</span> <span class="o">=</span> <span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">altitude</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cloudy</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
+    <span class="c1"># Ignore returns below 150 m (surface)</span>
+    <span class="n">cth</span> <span class="o">=</span> <span class="n">cth</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cth</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">cbh</span> <span class="o">=</span> <span class="n">cbh</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cbh</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">)</span>
+    <span class="n">cloudmask</span> <span class="o">=</span> <span class="p">(</span><span class="n">cloudy</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">altitude</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="s1">&#39;cth&#39;</span><span class="p">:</span> <span class="n">cth</span><span class="p">,</span> <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="n">cth</span> <span class="o">-</span> <span class="n">cbh</span><span class="p">,</span> <span class="s1">&#39;cloudmask&#39;</span><span class="p">:</span> <span class="n">cloudmask</span><span class="p">})</span>
 
-    <span class="c1"># if cth is smaller than 150 m, set it to NaN</span>
-    <span class="n">cth</span> <span class="o">=</span> <span class="n">cth</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cth</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-    <span class="n">cbh</span> <span class="o">=</span> <span class="n">cbh</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cbh</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 
-    
-    <span class="c1"># Calculate thickness</span>
-    <span class="n">thickness</span> <span class="o">=</span> <span class="n">cth</span> <span class="o">-</span> <span class="n">cbh</span>
-    <span class="c1"># 1d cloudmask</span>
-    <span class="n">cloudmask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">backscatter_ratio</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">ds_lidar_sel</span><span class="o">.</span><span class="n">altitude</span> <span class="o">&gt;</span> <span class="mi">150</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="n">out_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span>
-        <span class="s1">&#39;cth&#39;</span><span class="p">:</span> <span class="n">cth</span><span class="p">,</span>
-        <span class="s1">&#39;thickness&#39;</span><span class="p">:</span> <span class="n">thickness</span><span class="p">,</span>
-        <span class="s1">&#39;cloudmask&#39;</span><span class="p">:</span> <span class="n">cloudmask</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;altitude&#39;</span><span class="p">)</span>  <span class="c1"># Mean cloud mask over altitude</span>
-    <span class="p">},</span> <span class="n">coords</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">ds</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
-    <span class="p">})</span>
-    <span class="k">return</span> <span class="n">out_ds</span>
-
-<span class="n">cth_ds</span> <span class="o">=</span> <span class="n">cth_and_layer_thickness</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
-<span class="n">cth_ds</span> <span class="o">=</span> <span class="n">cth_ds</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>  <span class="c1"># Drop times with NaN values</span>
+<span class="n">cth_ds</span> <span class="o">=</span> <span class="n">cth_and_layer_thickness</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
 <span class="n">cth</span> <span class="o">=</span> <span class="n">cth_ds</span><span class="o">.</span><span class="n">cth</span>
-<span class="n">thickness</span> <span class="o">=</span> <span class="n">cth_ds</span><span class="o">.</span><span class="n">thickness</span>
-<span class="n">cloudmask</span> <span class="o">=</span> <span class="n">cth_ds</span><span class="o">.</span><span class="n">cloudmask</span>
 
-<span class="n">cth_interp</span> <span class="o">=</span> <span class="n">cth</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">interpolate_na</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
-<span class="n">thickness_interp</span> <span class="o">=</span> <span class="n">thickness</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">interpolate_na</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
-<span class="c1">### assign thickness &lt; 100 to 100</span>
+<span class="c1"># Smooth over 5 time steps, at least 100 m thick, cloudy steps only</span>
+<span class="n">cth_interp</span> <span class="o">=</span> <span class="n">cth</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">interpolate_na</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+<span class="n">thickness_interp</span> <span class="o">=</span> <span class="n">cth_ds</span><span class="o">.</span><span class="n">thickness</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">interpolate_na</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
 <span class="n">thickness_interp</span> <span class="o">=</span> <span class="n">thickness_interp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">thickness_interp</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">thickness_interp</span> <span class="o">=</span> <span class="n">thickness_interp</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">cloudmask</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">cth_interp</span> <span class="o">=</span> <span class="n">cth_interp</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">cloudmask</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">cth_interp</span> <span class="o">=</span> <span class="n">cth_interp</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>  <span class="c1"># Fill NaNs with 0 for plotting</span>
+<span class="n">cloudy_steps</span> <span class="o">=</span> <span class="n">cth_ds</span><span class="o">.</span><span class="n">cloudmask</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="n">thickness_interp</span> <span class="o">=</span> <span class="n">thickness_interp</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">cloudy_steps</span><span class="p">)</span>
+<span class="n">cth_interp</span> <span class="o">=</span> <span class="n">cth_interp</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">cloudy_steps</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>   <span class="c1"># 500 m where no cloud top is left</span>
 
-<span class="c1"># print nans</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cth_interp</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1"> NaNs in CTH; </span><span class="si">{</span><span class="n">thickness_interp</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1"> NaNs in thickness&#39;</span><span class="p">)</span>
-
-
-<span class="n">cth_interp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cloud Top Height&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
-<span class="p">(</span><span class="n">cth_interp</span> <span class="o">-</span> <span class="n">thickness_interp</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cloud Base Height&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
-
-<span class="n">lidar_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanquantile</span><span class="p">(</span><span class="n">lidar</span><span class="o">.</span><span class="n">backscatter_ratio</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nanquantile</span><span class="p">(</span><span class="n">lidar</span><span class="o">.</span><span class="n">backscatter_ratio</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
-
-<span class="c1">#lidar.backscatter_ratio.plot.hist(bins=lidar_bins, color=&#39;gray&#39;, alpha=0.7, histtype=&#39;step&#39;, lw=2)</span>
-<span class="c1"># plot the cloud mask</span>
-
-<span class="n">_</span><span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">cth</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">cth_interp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cloud top height&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">cth_interp</span> <span class="o">-</span> <span class="n">thickness_interp</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cloud base height&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Altitude (m)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">cth</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Cloud top height (m)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="cloudy-simulation">
+<h2>Cloudy simulation<a class="headerlink" href="#cloudy-simulation" title="Link to this heading">#</a></h2>
+<p>One batch run: cloud top, base and water content are dataset variables (<code class="docutils literal notranslate"><span class="pre">cloud_top_var</span></code>, <code class="docutils literal notranslate"><span class="pre">cloud_bottom_var</span></code>, <code class="docutils literal notranslate"><span class="pre">cloud_wc_var</span></code>), so every time step gets its own layer.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_filtered</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">cth_ds</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
-<span class="n">ds_filtered</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run cloudy-sky solar spectral simulations for each filtered timestep</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running batch solar spectral simulation (cloudy)...&quot;</span><span class="p">)</span>
-<span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;config/radiosonde_solar_spectral.yaml&#39;</span><span class="p">)</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pyradtran&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cloudy</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">cth_interp</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+<span class="n">cloudy</span><span class="p">[</span><span class="s1">&#39;cth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cth_interp</span> <span class="o">/</span> <span class="mi">1000</span>                         <span class="c1"># km</span>
+<span class="n">cloudy</span><span class="p">[</span><span class="s1">&#39;cbh&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">cth_interp</span> <span class="o">-</span> <span class="n">thickness_interp</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>    <span class="c1"># km</span>
+<span class="n">cloudy</span><span class="p">[</span><span class="s1">&#39;lwc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">cloudy</span><span class="p">[</span><span class="s1">&#39;cth&#39;</span><span class="p">],</span> <span class="mf">0.1</span><span class="p">)</span>          <span class="c1"># g m-3</span>
 
-<span class="n">ds_sim_cloudy_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cloudy</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">inspect_cloud_file</span><span class="p">(</span><span class="n">selector</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">cloudy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]},</span>
+                                          <span class="n">cloud_wc_var</span><span class="o">=</span><span class="s1">&#39;lwc&#39;</span><span class="p">,</span> <span class="n">cloud_top_var</span><span class="o">=</span><span class="s1">&#39;cth&#39;</span><span class="p">,</span> <span class="n">cloud_bottom_var</span><span class="o">=</span><span class="s1">&#39;cbh&#39;</span><span class="p">))</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ds_filtered</span><span class="o">.</span><span class="n">time</span><span class="p">))):</span>
-    <span class="c1"># Select the current time slice</span>
-    <span class="n">ds_to_sim</span> <span class="o">=</span> <span class="n">ds_filtered</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-        <span class="p">{</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="s1">&#39;longitude&#39;</span><span class="p">}</span>
-    <span class="p">)</span>
-    <span class="n">alt</span> <span class="o">=</span> <span class="n">ds_to_sim</span><span class="o">.</span><span class="n">alt</span> <span class="o">/</span> <span class="mf">1e3</span>  <span class="c1"># Use mean altitude for the simulation</span>
-    <span class="n">ds_to_sim</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-    <span class="n">cth_i</span> <span class="o">=</span> <span class="n">cth_interp</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># Convert to km</span>
-    <span class="n">thickness_i</span> <span class="o">=</span> <span class="n">thickness_interp</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># Convert to km</span>
-
-    <span class="c1"># Create simple parametric clouds</span>
-    <span class="n">simple_clouds</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_simple_parameters</span><span class="p">(</span>
-        <span class="n">z_base_km</span><span class="o">=</span><span class="n">cth_i</span> <span class="o">-</span> <span class="n">thickness_i</span><span class="p">,</span>
-        <span class="n">z_top_km</span><span class="o">=</span><span class="n">cth_i</span><span class="p">,</span>
-        <span class="n">lwc_g_m3</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">r_eff_um</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
-        <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Write custom cloud file</span>
-    <span class="n">custom_wc_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;work/custom_water_cloud.dat&#39;</span><span class="p">)</span>
-    <span class="n">CloudFileWriter</span><span class="o">.</span><span class="n">write_water_cloud_file</span><span class="p">(</span>
-        <span class="n">cloud_layers</span><span class="o">=</span><span class="n">simple_clouds</span><span class="p">,</span>
-        <span class="n">output_path</span><span class="o">=</span><span class="n">custom_wc_file</span><span class="p">,</span>
-        <span class="n">altitude_resolution_km</span><span class="o">=</span><span class="mf">0.01</span>
-    <span class="p">)</span>
-
-    <span class="n">ds_sim_cloudy</span> <span class="o">=</span> <span class="n">ds_to_sim</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
-        <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">save_to_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">&#39;output_quantity&#39;</span> <span class="p">:</span> <span class="s1">&#39;brightness&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;wc_file 1D&#39;</span> <span class="p">:</span> <span class="s1">&#39;custom_water_cloud.dat&#39;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">ds_sim_cloudy</span><span class="p">[</span><span class="s1">&#39;cloud_top_height&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cth_i</span>
-    <span class="n">ds_sim_cloudy</span><span class="p">[</span><span class="s1">&#39;cloud_thickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thickness_i</span>
-
-    <span class="n">ds_sim_cloudy_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_sim_cloudy</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Simulation complete!&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_sim_cloudy</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_sim_cloudy</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">ds_sim_cloudy_list</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+<span class="n">ds_sim_cloudy</span> <span class="o">=</span> <span class="n">cloudy</span><span class="o">.</span><span class="n">pyradtran</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">config_path</span><span class="o">=</span><span class="n">config_path</span><span class="p">,</span>
+    <span class="n">save_to_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">cloud_wc_var</span><span class="o">=</span><span class="s1">&#39;lwc&#39;</span><span class="p">,</span>
+    <span class="n">cloud_top_var</span><span class="o">=</span><span class="s1">&#39;cth&#39;</span><span class="p">,</span>
+    <span class="n">cloud_bottom_var</span><span class="o">=</span><span class="s1">&#39;cbh&#39;</span><span class="p">,</span>
+    <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">ds_sim_cloudy</span>
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="cloud-effect-on-the-spectral-irradiance">
+<h2>Cloud effect on the spectral irradiance<a class="headerlink" href="#cloud-effect-on-the-spectral-irradiance" title="Link to this heading">#</a></h2>
+<p>Upward and downward spectral irradiance at flight level, averaged over the cloudy time steps (mW m⁻² nm⁻¹), and the flight-level albedo <span class="math notranslate nohighlight">\(E^\uparrow / (E_\mathrm{dir} + E^\downarrow_\mathrm{diff})\)</span>. Water-vapour bands near 1.4 and 1.9 µm and the liquid-water absorption beyond 1.5 µm shape the cloudy spectra.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Determine brightness temperature threshold for cloud presence</span>
-<span class="n">ds</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clear</span> <span class="o">=</span> <span class="n">ds_sim_clear</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">cloudy</span><span class="o">.</span><span class="n">time</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+<span class="n">cld</span> <span class="o">=</span> <span class="n">ds_sim_cloudy</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">altitude</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_peaks</span>
-
-<span class="c1"># Compute the median brightness temperature across all pixels and time steps</span>
-<span class="n">median</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">median</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Median BT&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Median brightness temperature: </span><span class="si">{</span><span class="n">median</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> K&quot;</span><span class="p">)</span>
-
-<span class="c1"># Use the median as a threshold to determine cloud presence</span>
-<span class="n">ds_cloudy</span> <span class="o">=</span> <span class="n">ds_filtered</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds_filtered</span><span class="o">.</span><span class="n">BT_2D</span> <span class="o">&lt;</span> <span class="n">median</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_hists</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">ax_scatter</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;width_ratios&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">.3</span><span class="p">]})</span>
-<span class="n">window</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># Define a window size for the scatter plot</span>
-<span class="n">y_max</span> <span class="o">=</span> <span class="mi">270</span>
-<span class="n">y_min</span> <span class="o">=</span> <span class="mi">250</span>
-
-<span class="n">ds_sim_cloudy</span><span class="o">.</span><span class="n">eup</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Simulated Upwelling BT&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
-<span class="p">(</span><span class="n">ds_cloudy</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">635</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="mi">635</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">window</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">507</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="mi">507</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">window</span><span class="p">))</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">273.15</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Measured Cloudy BT&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time (UTC)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Brightness Temperature 10.7µm (K)&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">)</span>
-
-
-<span class="n">X</span> <span class="o">=</span> <span class="n">ds_sim_cloudy</span><span class="o">.</span><span class="n">eup</span><span class="o">.</span><span class="n">values</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds_cloudy</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">635</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="mi">635</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">window</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">507</span><span class="o">//</span><span class="mi">2</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="mi">507</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">window</span><span class="p">))</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">273.15</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
-<span class="n">nan_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">nan_mask</span><span class="p">]</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">nan_mask</span><span class="p">]</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">h</span> <span class="o">=</span> <span class="n">ax_scatter</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Simulated Upwelling BT&#39;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">cmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
-<span class="n">ax_scatter</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Simulated Upwelling BT (K)&#39;</span><span class="p">)</span>
-<span class="n">ax_scatter</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Measured Cloudy BT (K)&#39;</span><span class="p">)</span>
-<span class="c1"># add a colorbar to the scatter plot</span>
-<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax_scatter</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Counts&#39;</span><span class="p">)</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">,</span> <span class="n">mean_absolute_error</span>
-<span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">linregress</span>
-<span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-<span class="n">r2</span> <span class="o">=</span> <span class="n">r_value</span><span class="o">**</span><span class="mi">2</span>
-
-<span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
-<span class="n">bias</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">Y</span><span class="p">)</span>
-
-<span class="n">stats_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;RMSE: </span><span class="si">{</span><span class="n">rmse</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s1">R²: </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s1">MAE: </span><span class="si">{</span><span class="n">mae</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s1">Bias: </span><span class="si">{</span><span class="n">bias</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> K&#39;</span>
-<span class="n">ax_scatter</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">stats_text</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax_scatter</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
-<span class="n">ax_scatter</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">)</span>
-<span class="n">ax_scatter</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">)</span>
-<span class="n">ax_scatter</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">],</span> <span class="p">[</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1:1 Line&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-
-<span class="n">ax_scatter</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
-
-<span class="n">ax_hists</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ds_sim_cloudy</span><span class="o">.</span><span class="n">eup</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;stepfilled&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Simulated Upwelling BT&#39;</span><span class="p">)</span>
-<span class="n">ax_hists</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ds_sim_cloudy</span><span class="o">.</span><span class="n">eup</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="n">ax_hists</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">ds_cloudy</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">273.15</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;stepfilled&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Measured Cloudy BT&#39;</span><span class="p">)</span>
-<span class="n">ax_hists</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">ds_cloudy</span><span class="o">.</span><span class="n">BT_2D</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mf">273.15</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ax_scatter</span><span class="p">,</span> <span class="n">ax_hists</span><span class="p">):</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">spines</span><span class="p">[[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">res</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ls</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">clear</span><span class="p">,</span> <span class="s1">&#39;clear&#39;</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">),</span> <span class="p">(</span><span class="n">cld</span><span class="p">,</span> <span class="s1">&#39;cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)]:</span>
+    <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">edir</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">edn</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">ls</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;down, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">eup</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">ls</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;up, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">eup</span> <span class="o">/</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">edir</span> <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">edn</span><span class="p">))</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="n">ls</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Spectral irradiance (mW m⁻² nm⁻¹)&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Albedo at flight level&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">):</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Wavelength (nm)&#39;</span><span class="p">)</span>
     <span class="n">a</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -911,15 +744,15 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Advanced: Realistic Clouds from Observations (Thermal)</p>
+        <p class="prev-next-title">Realistic clouds from observations (thermal)</p>
       </div>
     </a>
     <a class="right-next"
-       href="sea_ice_era5.html"
+       href="nya_rad.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Processing: ERA5 Sea Ice Profiles</p>
+        <p class="prev-next-title">Ny-Ålesund radiation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -939,7 +772,12 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-results">Simulation Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#load-observation-data">Load observation data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-the-flight-track">Prepare the flight track</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-sky-simulation">Clear-sky simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cloud-layers-from-lidar-and-radar">Cloud layers from lidar and radar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cloudy-simulation">Cloudy simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cloud-effect-on-the-spectral-irradiance">Cloud effect on the spectral irradiance</a></li>
 </ul>
   </nav></div>
 

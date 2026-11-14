@@ -33,6 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -174,152 +175,149 @@
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">PyRadtran Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/concepts.html">How pyRadtran works</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/clouds.html">Clouds</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">The Parameter System: A Deep Dive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Cookbook</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebook Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/albedo_test.html">Quickstart: Surface Albedo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal.html">Quickstart: Broadband Thermal</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager.html">Quickstart: Brightness Temperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/solar_spectral.html">Quickstart: Solar Spectral</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">Quickstart: ERA5 Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/water_cloud.html">Advanced: Water Clouds</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Advanced: Mixed-Phase Clouds (+ ERA5 data)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosonde Atmosphere Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Advanced: Multi-Dimensional Cloud Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">Realistic simulation of VELOX thermal infrared channels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Advanced: Custom Dimension Iteration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud Radiative Forcing with Real ACLOUD Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Advanced: Reproducing Shupe &amp; Intrieri (2004)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Advanced: Reproducing Shupe &amp; Intrieri (2004) Part 2: Adding seasonal ERA5 Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">Advanced: Solar Validation Against HALO-(AC)³ Aircraft Measurements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Advanced: Realistic Clouds from Observations (Thermal)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Advanced: Realistic Clouds from Observations (Solar Spectral)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">Processing: ERA5 Sea Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic Atmosphere in a Warming Climate: ERA5 Sea-Ice Profiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">Processing: CARRA Reanalysis Atmosphere</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/stn2024.html">Processing: Station Nord 2024</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/nya_rad.html">Advanced: Ny-Ålesund Radiation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Configuration Gallery</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.html">pyradtran.channels</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/generated/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.html">pyradtran.clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html">pyradtran.clouds.CloudGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.html">pyradtran.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.html">pyradtran.core</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.html">pyradtran.era5</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.html">pyradtran.exceptions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.html">pyradtran.input_builder</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.html">pyradtran.interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.html">pyradtran.io</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.html">pyradtran.params</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.describe.html">pyradtran.params.describe</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.params.Var.html">pyradtran.params.Var</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.html">pyradtran.schema</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.html">pyradtran.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
-</ul>
-</details></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Example config files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 </ul>
 
     </div>
@@ -424,57 +422,92 @@ document.write(`
                   
   <h1>Source code for pyradtran.clouds</h1><div class="highlight"><pre>
 <span></span><span class="c1"># pyradtran/clouds.py</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Cloud utilities for pyRadtran.</span>
+<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Cloud layers and libRadtran cloud files.</span>
 
-<span class="sd">This module provides tools to create libRadtran-compatible cloud input</span>
-<span class="sd">files from various data sources.  The typical workflow is:</span>
+<span class="sd">Builds 1D cloud input files (``wc_file 1D`` / ``ic_file 1D``) from a</span>
+<span class="sd">list of homogeneous slabs:</span>
 
-<span class="sd">1. Build a list of :class:`CloudLayer` objects — either from simple</span>
-<span class="sd">   parameters (:meth:`CloudGenerator.from_simple_parameters`) or from an</span>
-<span class="sd">   ERA5 dataset (:meth:`CloudGenerator.from_era5_dataset`).</span>
-<span class="sd">2. Write the layers to a ``.dat`` file with :class:`CloudFileWriter`.</span>
-<span class="sd">3. Pass the file path to ``ds.pyradtran.run()`` via</span>
-<span class="sd">   ``parameter_overrides={&#39;wc_file 1D&#39;: &#39;my_cloud.dat&#39;}``.</span>
+<span class="sd">1. Describe the cloud as :class:`CloudLayer` objects, from a few numbers</span>
+<span class="sd">   (:meth:`CloudGenerator.from_simple_parameters`) or from an ERA5 dataset</span>
+<span class="sd">   (:meth:`CloudGenerator.from_era5_dataset`).</span>
+<span class="sd">2. Write them with :class:`CloudFileWriter`, which puts the file rows at</span>
+<span class="sd">   the layer boundaries so that uvspec sees exactly these slabs.</span>
+<span class="sd">3. Pass the file to uvspec through the ``wc_file`` / ``ic_file`` parameter</span>
+<span class="sd">   of :meth:`~pyradtran.interface.PyRadtranAccessor.run`.</span>
+
+<span class="sd">.. autosummary::</span>
+
+<span class="sd">   CloudLayer</span>
+<span class="sd">   CloudGenerator</span>
+<span class="sd">   CloudFileWriter</span>
+<span class="sd">   generate_cloud_file_from_era5</span>
+
+<span class="sd">.. note::</span>
+
+<span class="sd">   This is the file-based cloud path.  A cloud profile can also be</span>
+<span class="sd">   passed to :meth:`~pyradtran.interface.PyRadtranAccessor.run` directly</span>
+<span class="sd">   as a dict (``params={&quot;wc_file&quot;: {&quot;z&quot;: ..., &quot;lwc&quot;: ..., &quot;reff&quot;: ...}}``);</span>
+<span class="sd">   :func:`pyradtran.era5.cloud_profiles` builds such dicts from ERA5.</span>
+<span class="sd">   Both routes describe the same cloud: the ERA5 functions here wrap</span>
+<span class="sd">   :mod:`pyradtran.era5`.</span>
 
 <span class="sd">Examples</span>
 <span class="sd">--------</span>
-<span class="sd">Create a simple water cloud and write it to a file:</span>
+<span class="sd">A 500 m thick stratus deck, written to a file:</span>
 
+<span class="sd">&gt;&gt;&gt; import pathlib, tempfile</span>
 <span class="sd">&gt;&gt;&gt; from pyradtran.clouds import CloudGenerator, CloudFileWriter</span>
-<span class="sd">&gt;&gt;&gt; from pathlib import Path</span>
 <span class="sd">&gt;&gt;&gt; layers = CloudGenerator.from_simple_parameters(</span>
-<span class="sd">...     z_base_km=1.0, z_top_km=2.0, lwc_g_m3=0.3, r_eff_um=10.0, n_layers=5</span>
+<span class="sd">...     z_base_km=1.0, z_top_km=1.5, lwc_g_m3=0.3, r_eff_um=8.0</span>
 <span class="sd">... )</span>
-<span class="sd">&gt;&gt;&gt; CloudFileWriter.write_water_cloud_file(layers, Path(&quot;work/wc.dat&quot;))</span>
+<span class="sd">&gt;&gt;&gt; tmp = tempfile.TemporaryDirectory()</span>
+<span class="sd">&gt;&gt;&gt; path = CloudFileWriter.write_water_cloud_file(</span>
+<span class="sd">...     layers, pathlib.Path(tmp.name) / &quot;wc.dat&quot;</span>
+<span class="sd">... )</span>
+<span class="sd">&gt;&gt;&gt; print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">#        z        LWC    R_eff</span>
+<span class="sd">#       (km)    (g/m^3)     (um)</span>
+<span class="sd">  1.500000   0.000000    8.000</span>
+<span class="sd">  1.000000   0.300000    8.000</span>
+<span class="sd">&gt;&gt;&gt; tmp.cleanup()</span>
+
+<span class="sd">Use the file in a simulation (``1D`` is part of the option value):</span>
+
+<span class="sd">&gt;&gt;&gt; result = ds.pyradtran.run(  # doctest: +SKIP</span>
+<span class="sd">...     config_path=cfg, params={&quot;wc_file&quot;: f&quot;1D {path}&quot;}</span>
+<span class="sd">... )</span>
 
 <span class="sd">See Also</span>
 <span class="sd">--------</span>
+<span class="sd">pyradtran.era5.cloud_profiles : ERA5 cloud profiles as dict-valued</span>
+<span class="sd">    ``wc_file`` / ``ic_file`` parameters.</span>
 <span class="sd">pyradtran.config.CloudParameters : Declarative cloud settings in YAML configs.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.era5</span><span class="w"> </span><span class="kn">import</span> <span class="n">_z_to_km</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.era5</span><span class="w"> </span><span class="kn">import</span> <span class="n">cloud_profiles</span><span class="p">,</span> <span class="n">normalize_era5</span><span class="p">,</span> <span class="n">select_profile</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="CloudLayer">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CloudLayer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A single cloud layer with vertical extent and microphysical properties.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;A homogeneous cloud slab between two altitudes.</span>
 
-<span class="sd">    ``CloudLayer`` is a validated data container.  It is not written to disk</span>
-<span class="sd">    directly — pass a list of layers to :class:`CloudFileWriter` instead.</span>
+<span class="sd">    A validated data container; write lists of layers with</span>
+<span class="sd">    :class:`CloudFileWriter`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -484,30 +517,66 @@ document.write(`
 <span class="sd">        Top altitude of the layer in km above sea level.  Must be greater</span>
 <span class="sd">        than *z_bottom_km*.</span>
 <span class="sd">    lwc_g_m3 : float, default ``0.0``</span>
-<span class="sd">        Liquid water content in g m⁻³.</span>
+<span class="sd">        Liquid water content in g m\ :sup:`-3`.</span>
 <span class="sd">    iwc_g_m3 : float, default ``0.0``</span>
-<span class="sd">        Ice water content in g m⁻³.</span>
+<span class="sd">        Ice water content in g m\ :sup:`-3`.</span>
 <span class="sd">    r_eff_um : float, default ``10.0``</span>
-<span class="sd">        Effective droplet / crystal radius in µm.</span>
+<span class="sd">        Effective droplet / crystal radius in µm.  A layer has a single</span>
+<span class="sd">        radius, used for the liquid and the ice file when the layer</span>
+<span class="sd">        contains both phases.</span>
 <span class="sd">    cloud_fraction : float, default ``1.0``</span>
-<span class="sd">        Cloud fraction (0–1).</span>
+<span class="sd">        Cloud fraction (0–1).  Validated and stored, but nothing in</span>
+<span class="sd">        pyRadtran reads it: :class:`CloudFileWriter` writes the water</span>
+<span class="sd">        content as given and no cloud-overlap option is set.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If *z_bottom_km* &gt;= *z_top_km*, water content is negative,</span>
-<span class="sd">        effective radius is non-positive, or cloud fraction is outside [0, 1].</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; layer = CloudLayer(z_bottom_km=1.0, z_top_km=2.0, lwc_g_m3=0.3)</span>
-<span class="sd">    &gt;&gt;&gt; layer.r_eff_um</span>
-<span class="sd">    10.0</span>
+<span class="sd">        If *z_bottom_km* &gt;= *z_top_km*, a water content is negative,</span>
+<span class="sd">        the effective radius is not positive, or the cloud fraction is</span>
+<span class="sd">        outside [0, 1].</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    CloudGenerator.from_simple_parameters : Build layers from basic numbers.</span>
 <span class="sd">    CloudGenerator.from_era5_dataset : Build layers from ERA5 reanalysis.</span>
+<span class="sd">    CloudFileWriter : Write layers to libRadtran cloud files.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Validation runs once, at construction; attributes changed afterwards</span>
+<span class="sd">    are not re-checked.  No upper limits are enforced; whether an</span>
+<span class="sd">    effective radius is usable depends on the cloud parameterisation</span>
+<span class="sd">    selected in uvspec (``wc_properties`` / ``ic_properties``).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.clouds import CloudLayer</span>
+<span class="sd">    &gt;&gt;&gt; layer = CloudLayer(z_bottom_km=1.0, z_top_km=2.0, lwc_g_m3=0.3)</span>
+<span class="sd">    &gt;&gt;&gt; layer</span>
+<span class="sd">    CloudLayer(z_bottom_km=1.0, z_top_km=2.0, lwc_g_m3=0.3, iwc_g_m3=0.0, r_eff_um=10.0, cloud_fraction=1.0)</span>
+<span class="sd">    &gt;&gt;&gt; layer.z_top_km - layer.z_bottom_km</span>
+<span class="sd">    1.0</span>
+
+
+<span class="sd">    Unphysical layers are rejected:</span>
+
+<span class="sd">    &gt;&gt;&gt; CloudLayer(z_bottom_km=2.0, z_top_km=1.0)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: Bottom altitude (2.0) must be less than top altitude (1.0)</span>
+<span class="sd">    &gt;&gt;&gt; CloudLayer(1.0, 2.0, lwc_g_m3=-0.1)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: Water content cannot be negative</span>
+<span class="sd">    &gt;&gt;&gt; CloudLayer(1.0, 2.0, r_eff_um=0.0)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: Effective radius must be positive</span>
+<span class="sd">    &gt;&gt;&gt; CloudLayer(1.0, 2.0, cloud_fraction=1.5)</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">    ValueError: Cloud fraction must be between 0 and 1</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">z_bottom_km</span><span class="p">:</span> <span class="nb">float</span>
@@ -533,23 +602,31 @@ document.write(`
 
 
 <div class="viewcode-block" id="CloudGenerator">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CloudGenerator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory for :class:`CloudLayer` sequences.</span>
 
-<span class="sd">    All methods are static — no instantiation needed.  Choose a source</span>
-<span class="sd">    method according to your input data:</span>
+<span class="sd">    All methods are static:</span>
 
-<span class="sd">    * :meth:`from_simple_parameters` — uniform slab from a few numbers.</span>
-<span class="sd">    * :meth:`from_era5_dataset` — vertically resolved layers from ERA5.</span>
+<span class="sd">    * :meth:`from_simple_parameters`: uniform slab from a few numbers;</span>
+<span class="sd">    * :meth:`from_era5_dataset`: one layer per cloudy ERA5 level.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    CloudFileWriter : Persist layers to libRadtran ``.dat`` files.</span>
+<span class="sd">    pyradtran.era5.cloud_profiles : ERA5 clouds as dict-valued</span>
+<span class="sd">        ``wc_file`` / ``ic_file`` parameters.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.clouds import CloudGenerator</span>
+<span class="sd">    &gt;&gt;&gt; layers = CloudGenerator.from_simple_parameters(1.0, 2.0, n_layers=2)</span>
+<span class="sd">    &gt;&gt;&gt; [(layer.z_bottom_km, layer.z_top_km) for layer in layers]</span>
+<span class="sd">    [(1.0, 1.5), (1.5, 2.0)]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CloudGenerator.from_era5_dataset">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator.from_era5_dataset">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator.from_era5_dataset">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_era5_dataset</span><span class="p">(</span>
         <span class="n">ds</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
@@ -558,312 +635,204 @@ document.write(`
         <span class="n">lon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cloud_variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">altitude_levels_km</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">lwc_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
-        <span class="n">iwc_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
+        <span class="n">lwc_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
+        <span class="n">iwc_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
         <span class="n">default_r_eff_water</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
-        <span class="n">default_r_eff_ice</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span>
+        <span class="n">default_r_eff_ice</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span>
         <span class="n">pressure_levels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">geopotential_var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">CloudLayer</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract cloud layers from an ERA5 :class:`xarray.Dataset`.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Extract cloud layers from an ERA5 :class:`xarray.Dataset`.</span>
 
-<span class="sd">        The method selects a single profile (time, lat, lon), converts</span>
-<span class="sd">        LWC / IWC from kg kg⁻¹ to g m⁻³, and returns</span>
-<span class="sd">        one :class:`CloudLayer` per model level that exceeds the water-</span>
-<span class="sd">        content thresholds.</span>
+<span class="sd">        Normalises the dataset (:func:`~pyradtran.era5.normalize_era5`),</span>
+<span class="sd">        selects one column (:func:`~pyradtran.era5.select_profile`),</span>
+<span class="sd">        converts it with :func:`~pyradtran.era5.cloud_profiles` and</span>
+<span class="sd">        returns the profiles as :class:`CloudLayer` objects.  Layer</span>
+<span class="sd">        boundaries lie midway between the ERA5 levels, so the layers tile</span>
+<span class="sd">        the cloudy part of the column.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        ds : xarray.Dataset</span>
-<span class="sd">            ERA5 dataset containing, at minimum, cloud water content on</span>
-<span class="sd">            pressure levels.</span>
-<span class="sd">        time : datetime, optional</span>
-<span class="sd">            Time step to select.  Defaults to the first available.</span>
+<span class="sd">            ERA5 dataset on pressure levels in any naming flavour</span>
+<span class="sd">            :func:`~pyradtran.era5.normalize_era5` understands (CDS</span>
+<span class="sd">            short names, ARCO long names, ``time`` or ``valid_time``,</span>
+<span class="sd">            pressure in hPa or Pa).  Needs temperature and at least one</span>
+<span class="sd">            of liquid / ice water content (kg kg\ :sup:`-1`).</span>
+<span class="sd">        time : datetime.datetime, str or numpy.datetime64, optional</span>
+<span class="sd">            Time step to select (nearest).  *None* takes the first time</span>
+<span class="sd">            step.</span>
 <span class="sd">        lat, lon : float, optional</span>
-<span class="sd">            Coordinates for nearest-neighbour selection.  If either is</span>
-<span class="sd">            *None* the spatial mean is used.</span>
+<span class="sd">            Position of the column (nearest grid point).  Required when</span>
+<span class="sd">            *ds* has a ``latitude`` or ``longitude`` dimension.</span>
 <span class="sd">        cloud_variables : dict of str, optional</span>
-<span class="sd">            Mapping ``{&#39;lwc&#39;: &#39;clwc&#39;, &#39;iwc&#39;: &#39;ciwc&#39;, &#39;cc&#39;: &#39;cc&#39;,</span>
-<span class="sd">            &#39;temp&#39;: &#39;t&#39;, &#39;z&#39;: &#39;z&#39;}`` that connects internal keys to</span>
-<span class="sd">            dataset variable names.</span>
+<span class="sd">            Dataset variable names, for datasets with names</span>
+<span class="sd">            ``normalize_era5`` does not know.  Keys: ``&quot;lwc&quot;``,</span>
+<span class="sd">            ``&quot;iwc&quot;``, ``&quot;temp&quot;``, ``&quot;z&quot;``; e.g. ``{&quot;lwc&quot;: &quot;LWC&quot;,</span>
+<span class="sd">            &quot;temp&quot;: &quot;T&quot;}``.  A phase whose key (``&quot;lwc&quot;`` / ``&quot;iwc&quot;``)</span>
+<span class="sd">            is missing from a dict given here is switched off;</span>
+<span class="sd">            ``&quot;temp&quot;`` and ``&quot;z&quot;`` default to ``&quot;t&quot;`` and ``&quot;z&quot;``.  A</span>
+<span class="sd">            ``&quot;cc&quot;`` entry is accepted and ignored.</span>
 <span class="sd">        altitude_levels_km : numpy.ndarray, optional</span>
-<span class="sd">            Pre-computed altitude grid.  When *None*, altitudes are</span>
-<span class="sd">            derived from geopotential height or the hypsometric equation.</span>
-<span class="sd">        lwc_threshold : float, default ``1e-6``</span>
-<span class="sd">            Minimum liquid water content (g m⁻³) to retain.</span>
-<span class="sd">        iwc_threshold : float, default ``1e-6``</span>
-<span class="sd">            Minimum ice water content (g m⁻³) to retain.</span>
+<span class="sd">            Altitude (km) of each pressure level, in the dataset&#39;s own</span>
+<span class="sd">            level order.  Overrides the geopotential variable.</span>
+<span class="sd">        lwc_threshold : float, default ``1e-4``</span>
+<span class="sd">            A level counts as liquid cloud when its LWC is greater than</span>
+<span class="sd">            this value (g m\ :sup:`-3`).</span>
+<span class="sd">        iwc_threshold : float, default ``1e-4``</span>
+<span class="sd">            Same for the IWC (g m\ :sup:`-3`).</span>
 <span class="sd">        default_r_eff_water : float, default ``10.0``</span>
-<span class="sd">            Effective radius for liquid droplets (µm).</span>
-<span class="sd">        default_r_eff_ice : float, default ``30.0``</span>
-<span class="sd">            Effective radius for ice crystals (µm).</span>
+<span class="sd">            Effective radius assigned to liquid layers (µm).</span>
+<span class="sd">        default_r_eff_ice : float, default ``20.0``</span>
+<span class="sd">            Effective radius assigned to ice layers (µm).</span>
 <span class="sd">        pressure_levels : str, optional</span>
-<span class="sd">            Name of the pressure coordinate.  Auto-detected when *None*.</span>
+<span class="sd">            Name of the pressure coordinate, if it is not one of</span>
+<span class="sd">            ``pressure_level``, ``level``, ``plev``, ``isobaricInhPa``.</span>
 <span class="sd">        geopotential_var : str, optional</span>
-<span class="sd">            Name of the geopotential variable.  Auto-detected when *None*.</span>
+<span class="sd">            Name of the geopotential variable; takes precedence over</span>
+<span class="sd">            ``cloud_variables[&quot;z&quot;]``.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list of CloudLayer</span>
-<span class="sd">            One layer per model level with significant cloud content,</span>
-<span class="sd">            sorted from lowest to highest altitude.</span>
+<span class="sd">            Liquid layers (``iwc_g_m3 = 0``) and ice layers</span>
+<span class="sd">            (``lwc_g_m3 = 0``), sorted by base altitude.  Empty when no</span>
+<span class="sd">            level exceeds a threshold.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If no pressure coordinate can be found.</span>
-<span class="sd">        KeyError</span>
-<span class="sd">            If a required cloud variable is missing from *ds*.</span>
-
-<span class="sd">        Examples</span>
-<span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; import xarray as xr</span>
-<span class="sd">        &gt;&gt;&gt; ds = xr.open_dataset(&quot;era5_cloud.nc&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; layers = CloudGenerator.from_era5_dataset(</span>
-<span class="sd">        ...     ds, lat=78.0, lon=15.0, default_r_eff_water=8.0</span>
-<span class="sd">        ... )</span>
+<span class="sd">            If *ds* has spatial dimensions and *lat* or *lon* is *None*,</span>
+<span class="sd">            if it has no pressure-level coordinate, or if it has no</span>
+<span class="sd">            temperature variable (needed for the air density).</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
 <span class="sd">        generate_cloud_file_from_era5 : One-step convenience wrapper.</span>
+<span class="sd">        pyradtran.era5.cloud_profiles : The conversion used here; its</span>
+<span class="sd">            Notes describe water content, altitudes and layer boundaries.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        * **One layer per phase.**  A level with liquid and ice yields</span>
+<span class="sd">          two layers with the same boundaries, each with its own</span>
+<span class="sd">          effective radius.</span>
+<span class="sd">        * Within each phase the layers are contiguous from the lowest to</span>
+<span class="sd">          the highest level above the threshold; levels in between keep</span>
+<span class="sd">          their own (sub-threshold) content, and levels with exactly</span>
+<span class="sd">          zero content are left out.</span>
+<span class="sd">        * The water contents are grid-box means, not divided by the</span>
+<span class="sd">          cloud cover.  ``cloud_fraction`` of the returned layers is</span>
+<span class="sd">          always 1; the ERA5 cloud cover ``cc`` is not read.</span>
+<span class="sd">        * Without a geopotential variable (and without</span>
+<span class="sd">          *altitude_levels_km*) the altitudes are a rough estimate from</span>
+<span class="sd">          pressure with a constant 7 km scale height.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        A synthetic single-column ERA5 cube: liquid water at 850 and</span>
+<span class="sd">        925 hPa, a little ice at 500 hPa.</span>
+
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran.clouds import CloudGenerator</span>
+<span class="sd">        &gt;&gt;&gt; dims = (&quot;time&quot;, &quot;pressure_level&quot;, &quot;latitude&quot;, &quot;longitude&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; def column(values):</span>
+<span class="sd">        ...     return (dims, np.reshape(values, (1, 5, 1, 1)))</span>
+<span class="sd">        &gt;&gt;&gt; era5 = xr.Dataset(</span>
+<span class="sd">        ...     {</span>
+<span class="sd">        ...         &quot;t&quot;: column([252.0, 268.0, 276.0, 280.0, 284.0]),</span>
+<span class="sd">        ...         &quot;z&quot;: column([54000.0, 29500.0, 14500.0, 7500.0, 1000.0]),</span>
+<span class="sd">        ...         &quot;clwc&quot;: column([0.0, 0.0, 2.0e-4, 3.0e-4, 0.0]),</span>
+<span class="sd">        ...         &quot;ciwc&quot;: column([2.0e-5, 0.0, 0.0, 0.0, 0.0]),</span>
+<span class="sd">        ...     },</span>
+<span class="sd">        ...     coords={</span>
+<span class="sd">        ...         &quot;time&quot;: np.array([&quot;2024-07-15T12&quot;], dtype=&quot;datetime64[ns]&quot;),</span>
+<span class="sd">        ...         &quot;pressure_level&quot;: [500.0, 700.0, 850.0, 925.0, 1000.0],</span>
+<span class="sd">        ...         &quot;latitude&quot;: [78.0],</span>
+<span class="sd">        ...         &quot;longitude&quot;: [15.0],</span>
+<span class="sd">        ...     },</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; era5[&quot;z&quot;].attrs[&quot;units&quot;] = &quot;m2 s-2&quot;</span>
+<span class="sd">        &gt;&gt;&gt; layers = CloudGenerator.from_era5_dataset(era5, lat=78.0, lon=15.0)</span>
+<span class="sd">        &gt;&gt;&gt; for layer in layers:</span>
+<span class="sd">        ...     print(</span>
+<span class="sd">        ...         f&quot;{layer.z_bottom_km:.3f}-{layer.z_top_km:.3f} km  &quot;</span>
+<span class="sd">        ...         f&quot;LWC {layer.lwc_g_m3:.3f}  IWC {layer.iwc_g_m3:.4f}  &quot;</span>
+<span class="sd">        ...         f&quot;r_eff {layer.r_eff_um:.0f}&quot;</span>
+<span class="sd">        ...     )</span>
+<span class="sd">        0.433-1.122 km  LWC 0.345  IWC 0.0000  r_eff 10</span>
+<span class="sd">        1.122-2.243 km  LWC 0.215  IWC 0.0000  r_eff 10</span>
+<span class="sd">        4.257-6.756 km  LWC 0.000  IWC 0.0138  r_eff 20</span>
+
+<span class="sd">        The 925 hPa level sits at 7500 / 9.80665 = 765 m; its layer</span>
+<span class="sd">        reaches from the midpoint to the 1000 hPa level (433 m) to the</span>
+<span class="sd">        midpoint to the 850 hPa level (1122 m).  A real file:</span>
+
+<span class="sd">        &gt;&gt;&gt; ds = xr.open_dataset(&quot;era5_cloud.nc&quot;)  # doctest: +SKIP</span>
+<span class="sd">        &gt;&gt;&gt; layers = CloudGenerator.from_era5_dataset(  # doctest: +SKIP</span>
+<span class="sd">        ...     ds, lat=78.0, lon=15.0, default_r_eff_water=8.0</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating cloud layers from ERA5 dataset&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Default variable mappings for ERA5</span>
-        <span class="k">if</span> <span class="n">cloud_variables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cloud_variables</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;lwc&quot;</span><span class="p">:</span> <span class="s2">&quot;clwc&quot;</span><span class="p">,</span>  <span class="c1"># Cloud liquid water content</span>
-                <span class="s2">&quot;iwc&quot;</span><span class="p">:</span> <span class="s2">&quot;ciwc&quot;</span><span class="p">,</span>  <span class="c1"># Cloud ice water content</span>
-                <span class="s2">&quot;cc&quot;</span><span class="p">:</span> <span class="s2">&quot;cc&quot;</span><span class="p">,</span>  <span class="c1"># Cloud cover</span>
-                <span class="s2">&quot;temp&quot;</span><span class="p">:</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span>  <span class="c1"># Temperature (for altitude calculation)</span>
-                <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span>  <span class="c1"># Geopotential height</span>
-            <span class="p">}</span>
-
-        <span class="c1"># Select time</span>
-        <span class="k">if</span> <span class="n">time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">ds_time</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
-            <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2"> not found, using first available time&quot;</span><span class="p">)</span>
-                <span class="n">ds_time</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ds_time</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-        <span class="c1"># Select location or compute spatial mean</span>
-        <span class="k">if</span> <span class="n">lat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">lon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">ds_point</span> <span class="o">=</span> <span class="n">ds_time</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="n">lat</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="n">lon</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selected point: lat=</span><span class="si">{</span><span class="n">lat</span><span class="si">}</span><span class="s2">, lon=</span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Lat/lon not found, using spatial mean&quot;</span><span class="p">)</span>
-                <span class="n">ds_point</span> <span class="o">=</span> <span class="n">ds_time</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="p">],</span> <span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ds_point</span> <span class="o">=</span> <span class="n">ds_time</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="p">],</span> <span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using spatial mean for cloud properties&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Auto-detect pressure coordinate</span>
-        <span class="k">if</span> <span class="n">pressure_levels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">pressure_coords</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">coord</span>
-                <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">ds_point</span><span class="o">.</span><span class="n">coords</span>
-                <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="n">coord</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;plev&quot;</span><span class="p">])</span>
-            <span class="p">]</span>
-            <span class="k">if</span> <span class="n">pressure_coords</span><span class="p">:</span>
-                <span class="n">pressure_levels</span> <span class="o">=</span> <span class="n">pressure_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Auto-detected pressure coordinate: </span><span class="si">{</span><span class="n">pressure_levels</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not find pressure coordinate in dataset&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Get pressure levels (in Pa, convert to hPa if needed)</span>
-        <span class="n">pressure</span> <span class="o">=</span> <span class="n">ds_point</span><span class="p">[</span><span class="n">pressure_levels</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pressure</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">:</span>  <span class="c1"># Likely in Pa, convert to hPa</span>
-            <span class="n">pressure</span> <span class="o">=</span> <span class="n">pressure</span> <span class="o">/</span> <span class="mi">100</span>
-
-        <span class="c1"># Calculate altitude levels - prioritize geopotential height if available</span>
-        <span class="k">if</span> <span class="n">altitude_levels_km</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Try to use geopotential height first</span>
-            <span class="n">geopotential_var</span> <span class="o">=</span> <span class="n">geopotential_var</span> <span class="ow">or</span> <span class="n">cloud_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">geopotential_var</span> <span class="ow">in</span> <span class="n">ds_point</span><span class="p">:</span>
-                <span class="c1"># Use geopotential height (convert from geopotential to geometric height)</span>
-                <span class="n">geopotential</span> <span class="o">=</span> <span class="n">ds_point</span><span class="p">[</span><span class="n">geopotential_var</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-
-                <span class="c1"># Check if it&#39;s 1D (constant across time/space) or needs to be extracted</span>
-                <span class="k">if</span> <span class="n">geopotential</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="c1"># Take mean over any non-level dimensions</span>
-                    <span class="n">non_level_dims</span> <span class="o">=</span> <span class="p">[</span>
-                        <span class="n">dim</span>
-                        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">ds_point</span><span class="p">[</span><span class="n">geopotential_var</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span>
-                        <span class="k">if</span> <span class="n">dim</span> <span class="o">!=</span> <span class="n">pressure_levels</span>
-                    <span class="p">]</span>
-                    <span class="k">if</span> <span class="n">non_level_dims</span><span class="p">:</span>
-                        <span class="n">geopotential</span> <span class="o">=</span> <span class="p">(</span>
-                            <span class="n">ds_point</span><span class="p">[</span><span class="n">geopotential_var</span><span class="p">]</span>
-                            <span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">non_level_dims</span><span class="p">,</span> <span class="n">skipna</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                            <span class="o">.</span><span class="n">values</span>
-                        <span class="p">)</span>
-
-                <span class="c1"># Convert geopotential to geometric height (m -&gt; km); the</span>
-                <span class="c1"># units attribute decides, magnitude only as fallback</span>
-                <span class="n">altitude_levels_km</span> <span class="o">=</span> <span class="n">_z_to_km</span><span class="p">(</span>
-                    <span class="n">geopotential</span><span class="p">,</span> <span class="n">ds_point</span><span class="p">[</span><span class="n">geopotential_var</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;units&quot;</span><span class="p">)</span>
-                <span class="p">)</span>
-
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Using geopotential height data with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">)</span><span class="si">}</span><span class="s2"> levels&quot;</span>
-                <span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Altitude range: </span><span class="si">{</span><span class="n">altitude_levels_km</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">altitude_levels_km</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km&quot;</span>
-                <span class="p">)</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># Fall back to hypsometric equation approximation</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Geopotential variable &#39;</span><span class="si">{</span><span class="n">geopotential_var</span><span class="si">}</span><span class="s2">&#39; not found, using pressure-based approximation&quot;</span>
-                <span class="p">)</span>
-                <span class="c1"># h ≈ -7 * ln(p/p0) where p0 = 1013.25 hPa, h in km</span>
-                <span class="n">altitude_levels_km</span> <span class="o">=</span> <span class="o">-</span><span class="mf">7.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pressure</span> <span class="o">/</span> <span class="mf">1013.25</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Calculated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">)</span><span class="si">}</span><span class="s2"> altitude levels from pressure&quot;</span>
-                <span class="p">)</span>
-
-        <span class="c1"># Extract every per-level array in the dataset&#39;s native level order,</span>
-        <span class="c1"># so the ascending-altitude reordering below moves them all together.</span>
-        <span class="n">lwc_var</span> <span class="o">=</span> <span class="n">cloud_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lwc&quot;</span><span class="p">)</span>
-        <span class="n">iwc_var</span> <span class="o">=</span> <span class="n">cloud_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;iwc&quot;</span><span class="p">)</span>
-        <span class="n">cc_var</span> <span class="o">=</span> <span class="n">cloud_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cc&quot;</span><span class="p">)</span>
-        <span class="n">temp_var</span> <span class="o">=</span> <span class="n">cloud_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">)</span>
-
-        <span class="n">lwc</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">ds_point</span><span class="p">[</span><span class="n">lwc_var</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-            <span class="k">if</span> <span class="n">lwc_var</span> <span class="ow">and</span> <span class="n">lwc_var</span> <span class="ow">in</span> <span class="n">ds_point</span>
-            <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">pressure</span><span class="p">)</span>
+        <span class="n">canonical</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;lwc&quot;</span><span class="p">:</span> <span class="s2">&quot;clwc&quot;</span><span class="p">,</span> <span class="s2">&quot;iwc&quot;</span><span class="p">:</span> <span class="s2">&quot;ciwc&quot;</span><span class="p">,</span> <span class="s2">&quot;temp&quot;</span><span class="p">:</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;z&quot;</span><span class="p">}</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">canonical</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cloud_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;temp&quot;</span><span class="p">:</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">cloud_variables</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">geopotential_var</span><span class="p">:</span>
+            <span class="n">names</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">geopotential_var</span>
+        <span class="n">rename</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">names</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span> <span class="n">var</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">canonical</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">names</span> <span class="ow">and</span> <span class="n">names</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">var</span> <span class="ow">and</span> <span class="n">names</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">variables</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="n">pressure_levels</span> <span class="ow">and</span> <span class="n">pressure_levels</span> <span class="o">!=</span> <span class="s2">&quot;pressure_level&quot;</span><span class="p">:</span>
+            <span class="n">rename</span><span class="p">[</span><span class="n">pressure_levels</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;pressure_level&quot;</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">normalize_era5</span><span class="p">(</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">rename</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">rename</span><span class="p">)</span>
         <span class="p">)</span>
-        <span class="n">iwc</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">ds_point</span><span class="p">[</span><span class="n">iwc_var</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-            <span class="k">if</span> <span class="n">iwc_var</span> <span class="ow">and</span> <span class="n">iwc_var</span> <span class="ow">in</span> <span class="n">ds_point</span>
-            <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">pressure</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">var</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">canonical</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">],</span>
+            <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cc</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">ds_point</span><span class="p">[</span><span class="n">cc_var</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-            <span class="k">if</span> <span class="n">cc_var</span> <span class="ow">and</span> <span class="n">cc_var</span> <span class="ow">in</span> <span class="n">ds_point</span>
-            <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">pressure</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">ds_point</span><span class="p">[</span><span class="n">temp_var</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="k">if</span> <span class="n">temp_var</span> <span class="ow">in</span> <span class="n">ds_point</span> <span class="k">else</span> <span class="kc">None</span>
 
-        <span class="c1"># Ensure altitudes are in ascending order (surface to top)</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
-            <span class="ow">and</span> <span class="n">altitude_levels_km</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">altitude_levels_km</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="p">):</span>
-            <span class="n">altitude_levels_km</span> <span class="o">=</span> <span class="n">altitude_levels_km</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">pressure</span> <span class="o">=</span> <span class="n">pressure</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">lwc</span> <span class="o">=</span> <span class="n">lwc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">iwc</span> <span class="o">=</span> <span class="n">iwc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">cc</span> <span class="o">=</span> <span class="n">cc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">temp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">temp</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Reversed level arrays to ensure ascending altitude order&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;valid_time&quot;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">valid_time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">profile</span> <span class="o">=</span> <span class="n">select_profile</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;pressure_level&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;ERA5 dataset has no pressure-level coordinate &quot;</span>
+                <span class="s2">&quot;(name it with pressure_levels=...)&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;t&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">profile</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;ERA5 dataset has no temperature variable; it is required to &quot;</span>
+                <span class="s2">&quot;convert kg/kg to g m-3 (name it with cloud_variables={&#39;temp&#39;: ...})&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">altitude_levels_km</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">profile</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;pressure_level&quot;</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span>
+                <span class="p">{</span><span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;km&quot;</span><span class="p">},</span>
+            <span class="p">)</span>
 
-        <span class="c1"># Convert from kg/kg to g/m³ (typical ERA5 units) using air density</span>
-        <span class="c1"># ρ_air ≈ p/(R*T) with R ≈ 287 J/(kg·K); rough standard-atmosphere</span>
-        <span class="c1"># fallback without a temperature profile</span>
-        <span class="k">if</span> <span class="n">temp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">air_density</span> <span class="o">=</span> <span class="p">(</span><span class="n">pressure</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">287</span> <span class="o">*</span> <span class="n">temp</span><span class="p">)</span>  <span class="c1"># kg/m³</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">air_density</span> <span class="o">=</span> <span class="n">pressure</span> <span class="o">/</span> <span class="mi">10</span>  <span class="c1"># kg/m³</span>
-        <span class="k">if</span> <span class="n">lwc_var</span> <span class="ow">and</span> <span class="n">lwc_var</span> <span class="ow">in</span> <span class="n">ds_point</span><span class="p">:</span>
-            <span class="n">lwc</span> <span class="o">=</span> <span class="n">lwc</span> <span class="o">*</span> <span class="n">air_density</span> <span class="o">*</span> <span class="mi">1000</span>
-        <span class="k">if</span> <span class="n">iwc_var</span> <span class="ow">and</span> <span class="n">iwc_var</span> <span class="ow">in</span> <span class="n">ds_point</span><span class="p">:</span>
-            <span class="n">iwc</span> <span class="o">=</span> <span class="n">iwc</span> <span class="o">*</span> <span class="n">air_density</span> <span class="o">*</span> <span class="mi">1000</span>
+        <span class="n">reff</span> <span class="o">=</span> <span class="p">(</span><span class="n">default_r_eff_water</span><span class="p">,</span> <span class="n">default_r_eff_ice</span><span class="p">)</span>
+        <span class="n">wc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cloud_profiles</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="o">*</span><span class="n">reff</span><span class="p">,</span> <span class="n">threshold_g_m3</span><span class="o">=</span><span class="n">lwc_threshold</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ic</span> <span class="o">=</span> <span class="n">cloud_profiles</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="o">*</span><span class="n">reff</span><span class="p">,</span> <span class="n">threshold_g_m3</span><span class="o">=</span><span class="n">iwc_threshold</span><span class="p">)</span>
 
-        <span class="n">cloud_layers</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Create cloud layers for each level with significant cloud content</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">alt</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">lwc_val</span><span class="p">,</span> <span class="n">iwc_val</span><span class="p">,</span> <span class="n">cc_val</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
-                <span class="nb">zip</span><span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">,</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">lwc</span><span class="p">,</span> <span class="n">iwc</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span>
-            <span class="p">):</span>
-                <span class="c1"># Check if there&#39;s significant cloud content</span>
-                <span class="n">has_liquid</span> <span class="o">=</span> <span class="n">lwc_val</span> <span class="o">&gt;</span> <span class="n">lwc_threshold</span>
-                <span class="n">has_ice</span> <span class="o">=</span> <span class="n">iwc_val</span> <span class="o">&gt;</span> <span class="n">iwc_threshold</span>
-
-                <span class="k">if</span> <span class="n">has_liquid</span> <span class="ow">or</span> <span class="n">has_ice</span><span class="p">:</span>
-                    <span class="c1"># Determine layer boundaries (midpoint between levels)</span>
-                    <span class="c1"># Use a minimum layer thickness to avoid zero-thickness layers</span>
-                    <span class="n">min_layer_thickness</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># 50 meters minimum</span>
-
-                    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="c1"># Top layer</span>
-                        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                            <span class="n">z_bottom</span> <span class="o">=</span> <span class="p">(</span><span class="n">alt</span> <span class="o">+</span> <span class="n">altitude_levels_km</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="n">z_bottom</span> <span class="o">=</span> <span class="n">alt</span> <span class="o">-</span> <span class="n">min_layer_thickness</span>
-                        <span class="n">z_top</span> <span class="o">=</span> <span class="n">alt</span> <span class="o">+</span> <span class="n">min_layer_thickness</span>
-                    <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="c1"># Bottom layer</span>
-                        <span class="n">z_top</span> <span class="o">=</span> <span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">alt</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-                        <span class="n">z_bottom</span> <span class="o">=</span> <span class="n">alt</span> <span class="o">-</span> <span class="n">min_layer_thickness</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="c1"># Middle layers</span>
-                        <span class="n">z_top</span> <span class="o">=</span> <span class="p">(</span><span class="n">altitude_levels_km</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">alt</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-                        <span class="n">z_bottom</span> <span class="o">=</span> <span class="p">(</span><span class="n">alt</span> <span class="o">+</span> <span class="n">altitude_levels_km</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
-
-                    <span class="c1"># Ensure proper ordering and minimum thickness</span>
-                    <span class="k">if</span> <span class="n">z_bottom</span> <span class="o">&gt;=</span> <span class="n">z_top</span><span class="p">:</span>
-                        <span class="c1"># Fallback: create a thin layer around the level</span>
-                        <span class="n">z_bottom</span> <span class="o">=</span> <span class="n">alt</span> <span class="o">-</span> <span class="n">min_layer_thickness</span> <span class="o">/</span> <span class="mi">2</span>
-                        <span class="n">z_top</span> <span class="o">=</span> <span class="n">alt</span> <span class="o">+</span> <span class="n">min_layer_thickness</span> <span class="o">/</span> <span class="mi">2</span>
-
-                    <span class="c1"># Ensure minimum layer thickness</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">z_top</span> <span class="o">-</span> <span class="n">z_bottom</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_layer_thickness</span><span class="p">:</span>
-                        <span class="n">layer_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_top</span> <span class="o">+</span> <span class="n">z_bottom</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-                        <span class="n">z_bottom</span> <span class="o">=</span> <span class="n">layer_center</span> <span class="o">-</span> <span class="n">min_layer_thickness</span> <span class="o">/</span> <span class="mi">2</span>
-                        <span class="n">z_top</span> <span class="o">=</span> <span class="n">layer_center</span> <span class="o">+</span> <span class="n">min_layer_thickness</span> <span class="o">/</span> <span class="mi">2</span>
-
-                    <span class="c1"># Ensure non-negative altitudes</span>
-                    <span class="k">if</span> <span class="n">z_bottom</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">z_bottom</span> <span class="o">=</span> <span class="mi">0</span>
-                        <span class="n">z_top</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">z_top</span><span class="p">,</span> <span class="n">min_layer_thickness</span><span class="p">)</span>
-
-                    <span class="c1"># Choose appropriate effective radius</span>
-                    <span class="k">if</span> <span class="n">has_liquid</span> <span class="ow">and</span> <span class="n">has_ice</span><span class="p">:</span>
-                        <span class="c1"># Mixed phase - use temperature to decide dominant phase</span>
-                        <span class="n">r_eff</span> <span class="o">=</span> <span class="n">default_r_eff_ice</span> <span class="k">if</span> <span class="n">alt</span> <span class="o">&gt;</span> <span class="mf">8.0</span> <span class="k">else</span> <span class="n">default_r_eff_water</span>
-                    <span class="k">elif</span> <span class="n">has_liquid</span><span class="p">:</span>
-                        <span class="n">r_eff</span> <span class="o">=</span> <span class="n">default_r_eff_water</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">r_eff</span> <span class="o">=</span> <span class="n">default_r_eff_ice</span>
-
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">cloud_layer</span> <span class="o">=</span> <span class="n">CloudLayer</span><span class="p">(</span>
-                            <span class="n">z_bottom_km</span><span class="o">=</span><span class="n">z_bottom</span><span class="p">,</span>
-                            <span class="n">z_top_km</span><span class="o">=</span><span class="n">z_top</span><span class="p">,</span>
-                            <span class="n">lwc_g_m3</span><span class="o">=</span><span class="n">lwc_val</span><span class="p">,</span>
-                            <span class="n">iwc_g_m3</span><span class="o">=</span><span class="n">iwc_val</span><span class="p">,</span>
-                            <span class="n">r_eff_um</span><span class="o">=</span><span class="n">r_eff</span><span class="p">,</span>
-                            <span class="n">cloud_fraction</span><span class="o">=</span><span class="n">cc_val</span><span class="p">,</span>
-                        <span class="p">)</span>
-                        <span class="n">cloud_layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cloud_layer</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;Skipping invalid cloud layer at </span><span class="si">{</span><span class="n">alt</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> km: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-                        <span class="p">)</span>
-                        <span class="k">continue</span>
-
-        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required cloud variable not found in dataset: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">raise</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing cloud data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">raise</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cloud_layers</span><span class="p">)</span><span class="si">}</span><span class="s2"> cloud layers from ERA5 data&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">cloud_layers</span></div>
+        <span class="c1"># A row&#39;s value fills the layer between its altitude and the row above.</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">CloudLayer</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">r_eff_um</span><span class="o">=</span><span class="n">prof</span><span class="p">[</span><span class="s2">&quot;reff&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">_g_m3&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">})</span>
+            <span class="k">for</span> <span class="n">prof</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">((</span><span class="n">wc</span><span class="p">,</span> <span class="s2">&quot;lwc&quot;</span><span class="p">),</span> <span class="p">(</span><span class="n">ic</span><span class="p">,</span> <span class="s2">&quot;iwc&quot;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">prof</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="p">[</span><span class="n">prof</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">prof</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">layer</span><span class="p">:</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CloudGenerator.from_simple_parameters">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator.from_simple_parameters">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.clouds.CloudGenerator.html#pyradtran.clouds.CloudGenerator.from_simple_parameters">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_simple_parameters</span><span class="p">(</span>
         <span class="n">z_base_km</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -874,11 +843,10 @@ document.write(`
         <span class="n">cloud_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">n_layers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">CloudLayer</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create uniform cloud layers from basic parameters.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create uniform cloud layers from basic parameters.</span>
 
-<span class="sd">        The altitude range *z_base_km* … *z_top_km* is split into</span>
-<span class="sd">        *n_layers* sub-layers, each receiving the same microphysical</span>
-<span class="sd">        values.</span>
+<span class="sd">        Splits *z_base_km* … *z_top_km* into *n_layers* sub-layers of</span>
+<span class="sd">        equal thickness with the same microphysical values.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -887,37 +855,133 @@ document.write(`
 <span class="sd">        z_top_km : float</span>
 <span class="sd">            Cloud top altitude (km above sea level).</span>
 <span class="sd">        lwc_g_m3 : float, default ``0.1``</span>
-<span class="sd">            Liquid water content (g m⁻³).</span>
+<span class="sd">            Liquid water content (g m\ :sup:`-3`).  The default is</span>
+<span class="sd">            non-zero: pass ``lwc_g_m3=0.0`` for a pure ice cloud.</span>
 <span class="sd">        iwc_g_m3 : float, default ``0.0``</span>
-<span class="sd">            Ice water content (g m⁻³).</span>
+<span class="sd">            Ice water content (g m\ :sup:`-3`).</span>
 <span class="sd">        r_eff_um : float, default ``10.0``</span>
 <span class="sd">            Effective droplet / crystal radius (µm).</span>
 <span class="sd">        cloud_fraction : float, default ``1.0``</span>
-<span class="sd">            Cloud fraction (0–1).</span>
+<span class="sd">            Cloud fraction (0–1); stored on the layers but not used by</span>
+<span class="sd">            :class:`CloudFileWriter`.</span>
 <span class="sd">        n_layers : int, default ``1``</span>
 <span class="sd">            Number of sub-layers to create.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list of CloudLayer</span>
-<span class="sd">            Layers ordered from bottom to top.</span>
+<span class="sd">            *n_layers* contiguous layers ordered from bottom to top.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If *n_layers* &lt; 1 or *z_base_km* &gt;= *z_top_km*.</span>
-
-<span class="sd">        Examples</span>
-<span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; layers = CloudGenerator.from_simple_parameters(</span>
-<span class="sd">        ...     z_base_km=1.0, z_top_km=2.0, lwc_g_m3=0.3, n_layers=5</span>
-<span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; len(layers)</span>
-<span class="sd">        5</span>
+<span class="sd">            If *n_layers* &lt; 1, or any value fails the</span>
+<span class="sd">            :class:`CloudLayer` validation (*z_base_km* &gt;= *z_top_km*,</span>
+<span class="sd">            negative water content, non-positive radius, cloud fraction</span>
+<span class="sd">            outside [0, 1]).</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
 <span class="sd">        CloudFileWriter.write_water_cloud_file : Write layers to disk.</span>
+<span class="sd">        CloudFileWriter.write_ice_cloud_file : Ice counterpart.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The sub-layers are identical, so *n_layers* does not change the</span>
+<span class="sd">        cloud uvspec sees (the file only gains one row per internal</span>
+<span class="sd">        boundary); it is a starting point for editing single layers.</span>
+
+<span class="sd">        For orientation (pyRadtran computes none of this), the liquid</span>
+<span class="sd">        water path of the cloud is</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            \mathrm{LWP} = \int_{z_\mathrm{base}}^{z_\mathrm{top}}</span>
+<span class="sd">                           \mathrm{LWC}\,\mathrm{d}z</span>
+<span class="sd">                         = \mathrm{LWC}\,(z_\mathrm{top} - z_\mathrm{base})</span>
+
+<span class="sd">        and a common rule of thumb for the visible optical thickness of</span>
+<span class="sd">        a liquid cloud (geometric-optics limit, extinction efficiency</span>
+<span class="sd">        of 2) is</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            \tau \approx \frac{3\,\mathrm{LWP}}{2\,\rho_w\,r_\mathrm{eff}},</span>
+
+<span class="sd">        with the density of liquid water :math:`\rho_w = 1000`</span>
+<span class="sd">        kg m\ :sup:`-3`.  A 1 km thick cloud with 0.3 g m\ :sup:`-3`</span>
+<span class="sd">        and :math:`r_\mathrm{eff}` = 10 µm has LWP = 300 g m\ :sup:`-2`</span>
+<span class="sd">        and :math:`\tau \approx 45`.  The optical thickness uvspec</span>
+<span class="sd">        actually uses follows from the selected ``wc_properties`` /</span>
+<span class="sd">        ``ic_properties`` parameterisation.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran.clouds import CloudGenerator</span>
+<span class="sd">        &gt;&gt;&gt; layers = CloudGenerator.from_simple_parameters(</span>
+<span class="sd">        ...     z_base_km=1.0, z_top_km=2.0, lwc_g_m3=0.3, n_layers=4</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; len(layers)</span>
+<span class="sd">        4</span>
+<span class="sd">        &gt;&gt;&gt; [(layer.z_bottom_km, layer.z_top_km) for layer in layers]</span>
+<span class="sd">        [(1.0, 1.25), (1.25, 1.5), (1.5, 1.75), (1.75, 2.0)]</span>
+<span class="sd">        &gt;&gt;&gt; layers[0]</span>
+<span class="sd">        CloudLayer(z_bottom_km=1.0, z_top_km=1.25, lwc_g_m3=0.3, iwc_g_m3=0.0, r_eff_um=10.0, cloud_fraction=1.0)</span>
+
+<span class="sd">        Liquid water path in g m\ :sup:`-2` (thickness in km × 1000 m ×</span>
+<span class="sd">        g m\ :sup:`-3`):</span>
+
+<span class="sd">        &gt;&gt;&gt; sum(</span>
+<span class="sd">        ...     layer.lwc_g_m3 * (layer.z_top_km - layer.z_bottom_km) * 1000.0</span>
+<span class="sd">        ...     for layer in layers</span>
+<span class="sd">        ... )</span>
+<span class="sd">        300.0</span>
+
+<span class="sd">        Invalid input:</span>
+
+<span class="sd">        &gt;&gt;&gt; CloudGenerator.from_simple_parameters(2.0, 1.0)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        ValueError: Bottom altitude (2.0) must be less than top altitude (1.0)</span>
+<span class="sd">        &gt;&gt;&gt; CloudGenerator.from_simple_parameters(1.0, 2.0, n_layers=0)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        ValueError: Number of layers must be positive</span>
+
+<span class="sd">        A stratus deck below a cirrus layer, drawn from the layer lists:</span>
+
+<span class="sd">        .. plot::</span>
+
+<span class="sd">            from pyradtran.clouds import CloudGenerator</span>
+
+<span class="sd">            stratus = CloudGenerator.from_simple_parameters(</span>
+<span class="sd">                1.0, 2.0, lwc_g_m3=0.3, r_eff_um=10.0, n_layers=4</span>
+<span class="sd">            )</span>
+<span class="sd">            cirrus = CloudGenerator.from_simple_parameters(</span>
+<span class="sd">                8.0, 9.5, lwc_g_m3=0.0, iwc_g_m3=0.02, r_eff_um=30.0, n_layers=3</span>
+<span class="sd">            )</span>
+
+<span class="sd">            fig, ax = plt.subplots(figsize=(5.5, 4.2))</span>
+<span class="sd">            for layers, attr, color, label in (</span>
+<span class="sd">                (stratus, &quot;lwc_g_m3&quot;, &quot;C0&quot;, &quot;liquid, $r_{eff}$ = 10 µm&quot;),</span>
+<span class="sd">                (cirrus, &quot;iwc_g_m3&quot;, &quot;C1&quot;, &quot;ice, $r_{eff}$ = 30 µm&quot;),</span>
+<span class="sd">            ):</span>
+<span class="sd">                for k, layer in enumerate(layers):</span>
+<span class="sd">                    ax.barh(</span>
+<span class="sd">                        layer.z_bottom_km,</span>
+<span class="sd">                        getattr(layer, attr),</span>
+<span class="sd">                        height=layer.z_top_km - layer.z_bottom_km,</span>
+<span class="sd">                        align=&quot;edge&quot;,</span>
+<span class="sd">                        color=color,</span>
+<span class="sd">                        alpha=0.4,</span>
+<span class="sd">                        edgecolor=color,</span>
+<span class="sd">                        label=label if k == 0 else None,</span>
+<span class="sd">                    )</span>
+<span class="sd">            ax.set_xlabel(&quot;water content (g m$^{-3}$)&quot;)</span>
+<span class="sd">            ax.set_ylabel(&quot;altitude (km)&quot;)</span>
+<span class="sd">            ax.set_ylim(0, 11)</span>
+<span class="sd">            ax.legend()</span>
+<span class="sd">            plt.tight_layout()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">n_layers</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Number of layers must be positive&quot;</span><span class="p">)</span>
@@ -944,223 +1008,335 @@ document.write(`
 
 
 
-<div class="viewcode-block" id="CloudFileWriter">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">CloudFileWriter</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Persist :class:`CloudLayer` sequences as libRadtran ``.dat`` files.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_warn_ignored</span><span class="p">(</span><span class="n">include_zero_layers</span><span class="p">,</span> <span class="n">altitude_resolution_km</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Warn about the ignored legacy cloud-writer arguments.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">include_zero_layers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">altitude_resolution_km</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;include_zero_layers and altitude_resolution_km are ignored and &quot;</span>
+            <span class="s2">&quot;will be removed; cloud files use the exact layer boundaries&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="p">)</span>
 
-<span class="sd">    Two static methods are provided — one per cloud phase:</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_cloud_file</span><span class="p">(</span><span class="n">cloud_layers</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">filler_reff</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write the layers with ``attr &gt; 0`` as an exact libRadtran 1D file.</span>
+
+<span class="sd">    See :meth:`CloudFileWriter.write_water_cloud_file` for the row layout.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">layer</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">cloud_layers</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">layer</span><span class="p">:</span> <span class="o">-</span><span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+        <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">top</span> <span class="o">&gt;</span> <span class="n">base</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Cloud layers overlap: a layer with top at </span><span class="si">{</span><span class="n">top</span><span class="si">}</span><span class="s2"> km lies above &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;the base (</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2"> km) of the layer above it&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">top</span> <span class="o">!=</span> <span class="n">base</span><span class="p">:</span>
+            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">top</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">r_eff_um</span><span class="p">))</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">bottom</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">attr</span><span class="p">),</span> <span class="n">layer</span><span class="o">.</span><span class="n">r_eff_um</span><span class="p">))</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">bottom</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No layer with </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> &gt; 0; writing a cloud-free file&quot;</span><span class="p">)</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">filler_reff</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">filler_reff</span><span class="p">)]</span>
+
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+    <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#        z        </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">    R_eff</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#       (km)    (g/m^3)     (um)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">z</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">r_eff</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">content</span><span class="si">:</span><span class="s2">10.6f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r_eff</span><span class="si">:</span><span class="s2">8.3f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrote </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="si">}</span><span class="s2"> levels to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_path</span>
+
+
+<div class="viewcode-block" id="CloudFileWriter">
+<a class="viewcode-back" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CloudFileWriter</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Persist :class:`CloudLayer` sequences as libRadtran ``.dat`` files.</span>
+
+<span class="sd">    One static method per phase:</span>
 
 <span class="sd">    * :meth:`write_water_cloud_file` → ``wc_file 1D``</span>
 <span class="sd">    * :meth:`write_ice_cloud_file`   → ``ic_file 1D``</span>
 
-<span class="sd">    The output format is a three-column ASCII table</span>
-<span class="sd">    (altitude, water-content, effective-radius) understood by</span>
-<span class="sd">    libRadtran&#39;s ``wc_file`` / ``ic_file`` input options.</span>
+<span class="sd">    Both write a three-column ASCII table (altitude in km, water content</span>
+<span class="sd">    in g m\ :sup:`-3`, effective radius in µm), top down, with rows at</span>
+<span class="sd">    the layer boundaries so that uvspec sees exactly the given layers.</span>
+<span class="sd">    The format is described in :meth:`write_water_cloud_file`.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    CloudGenerator : Build :class:`CloudLayer` lists from data or parameters.</span>
+<span class="sd">    pyradtran.core.Simulation.format_cloud_profile : Writer behind</span>
+<span class="sd">        dict-valued ``wc_file`` / ``ic_file`` parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CloudFileWriter.write_water_cloud_file">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_water_cloud_file">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_water_cloud_file">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">write_water_cloud_file</span><span class="p">(</span>
         <span class="n">cloud_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CloudLayer</span><span class="p">],</span>
-        <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">include_zero_layers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">altitude_resolution_km</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+        <span class="n">include_zero_layers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">altitude_resolution_km</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write a water-cloud ``.dat`` file for libRadtran.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Write a water-cloud ``.dat`` file for libRadtran.</span>
 
-<span class="sd">        The file contains three columns — altitude (km), liquid water</span>
-<span class="sd">        content (g m⁻³), and effective radius (µm) — on a</span>
-<span class="sd">        regular altitude grid.</span>
+<span class="sd">        Three columns, altitude (km), liquid water content</span>
+<span class="sd">        (g m\ :sup:`-3`) and effective radius (µm), top down, with rows</span>
+<span class="sd">        at the layer boundaries.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        cloud_layers : list of CloudLayer</span>
-<span class="sd">            Layers to rasterise.  Only entries with ``lwc_g_m3 &gt; 0``</span>
-<span class="sd">            contribute unless *include_zero_layers* is set.</span>
-<span class="sd">        output_path : pathlib.Path</span>
-<span class="sd">            Destination file.  Parent directories are created</span>
-<span class="sd">            automatically.</span>
-<span class="sd">        include_zero_layers : bool, default ``True``</span>
-<span class="sd">            If *True*, grid points outside any layer are written as</span>
-<span class="sd">            zero LWC.  Set to *False* to skip them.</span>
-<span class="sd">        altitude_resolution_km : float, default ``0.1``</span>
-<span class="sd">            Vertical spacing of the output grid (km).</span>
+<span class="sd">            Layers to write, in any order.  Only layers with</span>
+<span class="sd">            ``lwc_g_m3 &gt; 0`` are used.</span>
+<span class="sd">        output_path : str or pathlib.Path</span>
+<span class="sd">            Destination file.  Parent directories are created; an</span>
+<span class="sd">            existing file is overwritten.</span>
+<span class="sd">        include_zero_layers, altitude_resolution_km : optional</span>
+<span class="sd">            Deprecated and ignored (the file is written at the exact</span>
+<span class="sd">            layer boundaries); passing either emits a</span>
+<span class="sd">            :class:`DeprecationWarning`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pathlib.Path</span>
-<span class="sd">            *output_path* (echoed back for convenience).</span>
+<span class="sd">            *output_path* as a :class:`~pathlib.Path`.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If two liquid layers overlap.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        write_ice_cloud_file : Same for ``iwc_g_m3``.</span>
+<span class="sd">        pyradtran.era5.cloud_profiles : ERA5 cloud profiles as dicts.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        **File format.**  Two comment lines, then rows formatted as</span>
+<span class="sd">        ``%10.6f %10.6f %8.3f``, highest altitude first:</span>
+
+<span class="sd">        ====== ======================= =================</span>
+<span class="sd">        Column Quantity                Unit</span>
+<span class="sd">        ====== ======================= =================</span>
+<span class="sd">        1      altitude *z*            km</span>
+<span class="sd">        2      liquid water content    g m\ :sup:`-3`</span>
+<span class="sd">        3      effective radius        µm</span>
+<span class="sd">        ====== ======================= =================</span>
+
+<span class="sd">        **Rows.**  libRadtran reads the value in a ``wc_file 1D`` row as</span>
+<span class="sd">        the property of the layer between that altitude and the next row</span>
+<span class="sd">        above; the value in the topmost row is not used.  Going through</span>
+<span class="sd">        the layers top down, the writer emits</span>
+
+<span class="sd">        * a row with zero LWC at the layer top, unless the layer above</span>
+<span class="sd">          ends exactly there, and</span>
+<span class="sd">        * a row at the layer base with the layer&#39;s LWC and effective</span>
+<span class="sd">          radius.</span>
+
+<span class="sd">        uvspec then sees exactly the :class:`CloudLayer` list: no cloud</span>
+<span class="sd">        above the highest top, in the gaps, or below the lowest base.</span>
+<span class="sd">        Boundaries are compared after rounding to the file resolution of</span>
+<span class="sd">        10\ :sup:`-6` km, so sub-layers whose boundaries differ only by</span>
+<span class="sd">        floating-point rounding count as touching.</span>
+
+<span class="sd">        ``cloud_fraction`` is not used.  When no layer contains liquid</span>
+<span class="sd">        water, a warning is logged and a cloud-free placeholder (two</span>
+<span class="sd">        zero rows at 1 and 0 km) is written.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; from pathlib import Path</span>
+<span class="sd">        &gt;&gt;&gt; import pathlib, tempfile</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran.clouds import CloudFileWriter, CloudGenerator</span>
+<span class="sd">        &gt;&gt;&gt; tmp = tempfile.TemporaryDirectory()</span>
+<span class="sd">        &gt;&gt;&gt; out = pathlib.Path(tmp.name)</span>
 <span class="sd">        &gt;&gt;&gt; layers = CloudGenerator.from_simple_parameters(</span>
-<span class="sd">        ...     z_base_km=1.0, z_top_km=2.0, lwc_g_m3=0.3</span>
+<span class="sd">        ...     z_base_km=1.0, z_top_km=1.5, lwc_g_m3=0.3, r_eff_um=8.0</span>
 <span class="sd">        ... )</span>
-<span class="sd">        &gt;&gt;&gt; CloudFileWriter.write_water_cloud_file(layers, Path(&quot;wc.dat&quot;))</span>
-<span class="sd">        PosixPath(&#39;wc.dat&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; path = CloudFileWriter.write_water_cloud_file(layers, out / &quot;wc.dat&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">        #        z        LWC    R_eff</span>
+<span class="sd">        #       (km)    (g/m^3)     (um)</span>
+<span class="sd">          1.500000   0.000000    8.000</span>
+<span class="sd">          1.000000   0.300000    8.000</span>
+
+<span class="sd">        libRadtran reads this as 0.3 g m\ :sup:`-3` from 1.0 to 1.5 km.</span>
+<span class="sd">        Two separate decks, the lower one made of two touching layers:</span>
+
+<span class="sd">        &gt;&gt;&gt; from pyradtran.clouds import CloudLayer</span>
+<span class="sd">        &gt;&gt;&gt; decks = [</span>
+<span class="sd">        ...     CloudLayer(1.0, 1.5, lwc_g_m3=0.2),</span>
+<span class="sd">        ...     CloudLayer(1.5, 2.0, lwc_g_m3=0.4),</span>
+<span class="sd">        ...     CloudLayer(2.5, 3.0, lwc_g_m3=0.1, r_eff_um=6.0),</span>
+<span class="sd">        ... ]</span>
+<span class="sd">        &gt;&gt;&gt; path = CloudFileWriter.write_water_cloud_file(decks, out / &quot;wc.dat&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">        #        z        LWC    R_eff</span>
+<span class="sd">        #       (km)    (g/m^3)     (um)</span>
+<span class="sd">          3.000000   0.000000    6.000</span>
+<span class="sd">          2.500000   0.100000    6.000</span>
+<span class="sd">          2.000000   0.000000   10.000</span>
+<span class="sd">          1.500000   0.400000   10.000</span>
+<span class="sd">          1.000000   0.200000   10.000</span>
+
+<span class="sd">        The zero row at 2.0 km keeps the gap up to 2.5 km cloud-free.</span>
+<span class="sd">        Overlapping layers are refused:</span>
+
+<span class="sd">        &gt;&gt;&gt; CloudFileWriter.write_water_cloud_file(</span>
+<span class="sd">        ...     [CloudLayer(1.0, 2.0, lwc_g_m3=0.2), CloudLayer(1.5, 2.5, lwc_g_m3=0.1)],</span>
+<span class="sd">        ...     out / &quot;wc.dat&quot;,</span>
+<span class="sd">        ... )</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">            ...</span>
+<span class="sd">        ValueError: Cloud layers overlap: a layer with top at 2.0 km lies above the base (1.5 km) of the layer above it</span>
+<span class="sd">        &gt;&gt;&gt; tmp.cleanup()</span>
+
+<span class="sd">        Use the file in a run:</span>
+
+<span class="sd">        &gt;&gt;&gt; result = ds.pyradtran.run(  # doctest: +SKIP</span>
+<span class="sd">        ...     config_path=cfg, params={&quot;wc_file&quot;: f&quot;1D {path}&quot;}</span>
+<span class="sd">        ... )</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing water cloud file to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Filter for water clouds only</span>
-        <span class="n">water_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">cloud_layers</span> <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">lwc_g_m3</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">water_layers</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">include_zero_layers</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No water cloud layers found&quot;</span><span class="p">)</span>
-            <span class="n">water_layers</span> <span class="o">=</span> <span class="n">cloud_layers</span>  <span class="c1"># Include all layers anyway</span>
-
-        <span class="c1"># Determine altitude range</span>
-        <span class="k">if</span> <span class="n">water_layers</span><span class="p">:</span>
-            <span class="n">z_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">water_layers</span><span class="p">)</span>
-            <span class="n">z_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">water_layers</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">z_min</span><span class="p">,</span> <span class="n">z_max</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">20.0</span>
-
-        <span class="c1"># Create altitude grid</span>
-        <span class="n">z_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-            <span class="n">z_max</span><span class="p">,</span> <span class="n">z_min</span> <span class="o">-</span> <span class="n">altitude_resolution_km</span><span class="p">,</span> <span class="o">-</span><span class="n">altitude_resolution_km</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Interpolate cloud properties to grid</span>
-        <span class="n">lwc_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">z_grid</span><span class="p">)</span>
-        <span class="n">r_eff_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>  <span class="c1"># Default effective radius</span>
-
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">water_layers</span><span class="p">:</span>
-            <span class="c1"># Find grid points within this layer</span>
-            <span class="n">in_layer</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_grid</span> <span class="o">&gt;=</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">z_grid</span> <span class="o">&lt;=</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span><span class="p">)</span>
-            <span class="n">lwc_profile</span><span class="p">[</span><span class="n">in_layer</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">lwc_g_m3</span>
-            <span class="n">r_eff_profile</span><span class="p">[</span><span class="n">in_layer</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">r_eff_um</span>
-
-        <span class="c1"># Write file</span>
-        <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#      z     LWC    R_eff</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#     (km)  (g/m^3) (um)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">z</span><span class="p">,</span> <span class="n">lwc</span><span class="p">,</span> <span class="n">r_eff</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="n">lwc_profile</span><span class="p">,</span> <span class="n">r_eff_profile</span><span class="p">):</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s2">10.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">lwc</span><span class="si">:</span><span class="s2">8.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r_eff</span><span class="si">:</span><span class="s2">8.1f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrote </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">z_grid</span><span class="p">)</span><span class="si">}</span><span class="s2"> altitude levels to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">output_path</span></div>
+        <span class="n">_warn_ignored</span><span class="p">(</span><span class="n">include_zero_layers</span><span class="p">,</span> <span class="n">altitude_resolution_km</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_write_cloud_file</span><span class="p">(</span><span class="n">cloud_layers</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;lwc_g_m3&quot;</span><span class="p">,</span> <span class="s2">&quot;LWC&quot;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CloudFileWriter.write_ice_cloud_file">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_ice_cloud_file">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_ice_cloud_file">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">write_ice_cloud_file</span><span class="p">(</span>
         <span class="n">cloud_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">CloudLayer</span><span class="p">],</span>
-        <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">include_zero_layers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">altitude_resolution_km</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+        <span class="n">include_zero_layers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">altitude_resolution_km</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write an ice-cloud ``.dat`` file for libRadtran.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Write an ice-cloud ``.dat`` file for libRadtran.</span>
 
-<span class="sd">        Analogous to :meth:`write_water_cloud_file` but uses</span>
-<span class="sd">        ``iwc_g_m3`` and defaults to a 30 µm effective radius.</span>
+<span class="sd">        Same format and row layout as :meth:`write_water_cloud_file`,</span>
+<span class="sd">        for the layers with ``iwc_g_m3 &gt; 0``.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        cloud_layers : list of CloudLayer</span>
-<span class="sd">            Layers to rasterise.  Only entries with ``iwc_g_m3 &gt; 0``</span>
-<span class="sd">            contribute unless *include_zero_layers* is set.</span>
-<span class="sd">        output_path : pathlib.Path</span>
-<span class="sd">            Destination file.</span>
-<span class="sd">        include_zero_layers : bool, default ``True``</span>
-<span class="sd">            Write zero-IWC grid points when *True*.</span>
-<span class="sd">        altitude_resolution_km : float, default ``0.1``</span>
-<span class="sd">            Vertical spacing of the output grid (km).</span>
+<span class="sd">            Layers to write, in any order.  Only layers with</span>
+<span class="sd">            ``iwc_g_m3 &gt; 0`` are used.</span>
+<span class="sd">        output_path : str or pathlib.Path</span>
+<span class="sd">            Destination file.  Parent directories are created; an</span>
+<span class="sd">            existing file is overwritten.</span>
+<span class="sd">        include_zero_layers, altitude_resolution_km : optional</span>
+<span class="sd">            Deprecated and ignored (the file is written at the exact</span>
+<span class="sd">            layer boundaries); passing either emits a</span>
+<span class="sd">            :class:`DeprecationWarning`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        pathlib.Path</span>
-<span class="sd">            *output_path*.</span>
+<span class="sd">            *output_path* as a :class:`~pathlib.Path`.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If two ice layers overlap.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        write_water_cloud_file : File format and row layout.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Columns: altitude (km), ice water content (g m\ :sup:`-3`) and</span>
+<span class="sd">        effective radius (µm), highest altitude first, formatted as</span>
+<span class="sd">        ``%10.6f %10.6f %8.3f``.</span>
+
+<span class="sd">        Whether the effective radius of each layer is valid depends on</span>
+<span class="sd">        the ice parameterisation chosen with ``ic_properties``.  When no</span>
+<span class="sd">        layer contains ice, a cloud-free placeholder (two zero rows at 1</span>
+<span class="sd">        and 0 km) is written.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt; CloudFileWriter.write_ice_cloud_file(layers, Path(&quot;ic.dat&quot;))</span>
-<span class="sd">        PosixPath(&#39;ic.dat&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; import pathlib, tempfile</span>
+<span class="sd">        &gt;&gt;&gt; from pyradtran.clouds import CloudFileWriter, CloudGenerator</span>
+<span class="sd">        &gt;&gt;&gt; tmp = tempfile.TemporaryDirectory()</span>
+<span class="sd">        &gt;&gt;&gt; out = pathlib.Path(tmp.name)</span>
+<span class="sd">        &gt;&gt;&gt; cirrus = CloudGenerator.from_simple_parameters(</span>
+<span class="sd">        ...     8.0, 9.0, lwc_g_m3=0.0, iwc_g_m3=0.002, r_eff_um=30.0</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; path = CloudFileWriter.write_ice_cloud_file(cirrus, out / &quot;ic.dat&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">        #        z        IWC    R_eff</span>
+<span class="sd">        #       (km)    (g/m^3)     (um)</span>
+<span class="sd">          9.000000   0.000000   30.000</span>
+<span class="sd">          8.000000   0.002000   30.000</span>
+
+<span class="sd">        Layers without ice give a cloud-free placeholder:</span>
+
+<span class="sd">        &gt;&gt;&gt; stratus = CloudGenerator.from_simple_parameters(1.0, 2.0, lwc_g_m3=0.3)</span>
+<span class="sd">        &gt;&gt;&gt; path = CloudFileWriter.write_ice_cloud_file(stratus, out / &quot;ic.dat&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">        #        z        IWC    R_eff</span>
+<span class="sd">        #       (km)    (g/m^3)     (um)</span>
+<span class="sd">          1.000000   0.000000   30.000</span>
+<span class="sd">          0.000000   0.000000   30.000</span>
+<span class="sd">        &gt;&gt;&gt; tmp.cleanup()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing ice cloud file to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Filter for ice clouds only</span>
-        <span class="n">ice_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">cloud_layers</span> <span class="k">if</span> <span class="n">layer</span><span class="o">.</span><span class="n">iwc_g_m3</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ice_layers</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">include_zero_layers</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No ice cloud layers found&quot;</span><span class="p">)</span>
-            <span class="n">ice_layers</span> <span class="o">=</span> <span class="n">cloud_layers</span>
-
-        <span class="c1"># Determine altitude range</span>
-        <span class="k">if</span> <span class="n">ice_layers</span><span class="p">:</span>
-            <span class="n">z_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">ice_layers</span><span class="p">)</span>
-            <span class="n">z_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">ice_layers</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">z_min</span><span class="p">,</span> <span class="n">z_max</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">15.0</span>  <span class="c1"># Typical ice cloud range</span>
-
-        <span class="c1"># Create altitude grid</span>
-        <span class="n">z_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-            <span class="n">z_max</span><span class="p">,</span> <span class="n">z_min</span> <span class="o">-</span> <span class="n">altitude_resolution_km</span><span class="p">,</span> <span class="o">-</span><span class="n">altitude_resolution_km</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Interpolate cloud properties to grid</span>
-        <span class="n">iwc_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">z_grid</span><span class="p">)</span>
-        <span class="n">r_eff_profile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)</span>  <span class="c1"># Default ice effective radius</span>
-
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">ice_layers</span><span class="p">:</span>
-            <span class="n">in_layer</span> <span class="o">=</span> <span class="p">(</span><span class="n">z_grid</span> <span class="o">&gt;=</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">z_grid</span> <span class="o">&lt;=</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span><span class="p">)</span>
-            <span class="n">iwc_profile</span><span class="p">[</span><span class="n">in_layer</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">iwc_g_m3</span>
-            <span class="n">r_eff_profile</span><span class="p">[</span><span class="n">in_layer</span><span class="p">]</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">r_eff_um</span>
-
-        <span class="c1"># Write file</span>
-        <span class="n">output_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#      z     IWC    R_eff</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#     (km)  (g/m^3) (um)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">z</span><span class="p">,</span> <span class="n">iwc</span><span class="p">,</span> <span class="n">r_eff</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">z_grid</span><span class="p">,</span> <span class="n">iwc_profile</span><span class="p">,</span> <span class="n">r_eff_profile</span><span class="p">):</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s2">10.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">iwc</span><span class="si">:</span><span class="s2">8.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r_eff</span><span class="si">:</span><span class="s2">8.1f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrote </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">z_grid</span><span class="p">)</span><span class="si">}</span><span class="s2"> altitude levels to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">output_path</span></div>
+        <span class="n">_warn_ignored</span><span class="p">(</span><span class="n">include_zero_layers</span><span class="p">,</span> <span class="n">altitude_resolution_km</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_write_cloud_file</span><span class="p">(</span><span class="n">cloud_layers</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;iwc_g_m3&quot;</span><span class="p">,</span> <span class="s2">&quot;IWC&quot;</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)</span></div>
 </div>
 
 
 
 <div class="viewcode-block" id="generate_cloud_file_from_era5">
-<a class="viewcode-back" href="../../api/_autosummary/pyradtran.clouds.generate_cloud_file_from_era5.html#pyradtran.clouds.generate_cloud_file_from_era5">[docs]</a>
+<a class="viewcode-back" href="../../api/generated/pyradtran.clouds.generate_cloud_file_from_era5.html#pyradtran.clouds.generate_cloud_file_from_era5">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_cloud_file_from_era5</span><span class="p">(</span>
     <span class="n">era5_dataset</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">,</span>
-    <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
     <span class="n">cloud_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wc&quot;</span><span class="p">,</span>
     <span class="n">time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">lat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">lon</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;One-step cloud-file generation from an ERA5 dataset.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a cloud file from an ERA5 dataset in one call.</span>
 
-<span class="sd">    Combines :meth:`CloudGenerator.from_era5_dataset` and the</span>
-<span class="sd">    appropriate :class:`CloudFileWriter` method into a single call.</span>
+<span class="sd">    Combines :meth:`CloudGenerator.from_era5_dataset` and the matching</span>
+<span class="sd">    :class:`CloudFileWriter` method.  The file holds the same cloud as</span>
+<span class="sd">    the dict of :func:`pyradtran.era5.cloud_profiles`, which</span>
+<span class="sd">    ``era5_clouds=True`` in</span>
+<span class="sd">    :meth:`~pyradtran.interface.PyRadtranAccessor.run` uses without a</span>
+<span class="sd">    file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    era5_dataset : xarray.Dataset</span>
-<span class="sd">        ERA5 dataset with cloud variables on pressure levels.</span>
-<span class="sd">    output_path : pathlib.Path</span>
+<span class="sd">        ERA5 dataset on pressure levels with temperature and cloud</span>
+<span class="sd">        water content, in any naming flavour</span>
+<span class="sd">        :func:`pyradtran.era5.normalize_era5` understands.</span>
+<span class="sd">    output_path : str or pathlib.Path</span>
 <span class="sd">        Destination ``.dat`` file.</span>
 <span class="sd">    cloud_type : {&quot;wc&quot;, &quot;ic&quot;}, default ``&quot;wc&quot;``</span>
-<span class="sd">        ``&quot;wc&quot;`` for liquid water cloud, ``&quot;ic&quot;`` for ice cloud.</span>
-<span class="sd">    time : datetime, optional</span>
-<span class="sd">        Time step to select from the dataset.</span>
+<span class="sd">        ``&quot;wc&quot;`` for liquid water cloud, ``&quot;ic&quot;`` for ice cloud</span>
+<span class="sd">        (case-insensitive).</span>
+<span class="sd">    time : datetime.datetime, optional</span>
+<span class="sd">        Time step to select (nearest); the first one when *None*.</span>
 <span class="sd">    lat, lon : float, optional</span>
-<span class="sd">        Coordinates for nearest-neighbour selection.</span>
+<span class="sd">        Position of the column (nearest grid point); required when the</span>
+<span class="sd">        dataset has spatial dimensions.</span>
 <span class="sd">    **kwargs</span>
-<span class="sd">        Forwarded to :meth:`CloudGenerator.from_era5_dataset`.</span>
+<span class="sd">        Forwarded to :meth:`CloudGenerator.from_era5_dataset`</span>
+<span class="sd">        (thresholds, effective radii, variable names, ...).  The legacy</span>
+<span class="sd">        writer arguments ``include_zero_layers`` and</span>
+<span class="sd">        ``altitude_resolution_km`` are accepted and ignored.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1170,31 +1346,72 @@ document.write(`
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If *cloud_type* is not ``&quot;wc&quot;`` or ``&quot;ic&quot;``.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; path = generate_cloud_file_from_era5(</span>
-<span class="sd">    ...     ds, Path(&quot;work/wc.dat&quot;), cloud_type=&quot;wc&quot;, lat=78.0, lon=15.0</span>
-<span class="sd">    ... )</span>
+<span class="sd">        If *cloud_type* is not ``&quot;wc&quot;`` or ``&quot;ic&quot;`` (checked before any</span>
+<span class="sd">        work is done), or the dataset lacks a position, a pressure</span>
+<span class="sd">        coordinate or temperature (see</span>
+<span class="sd">        :meth:`CloudGenerator.from_era5_dataset`).</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    CloudGenerator.from_era5_dataset : Extract layers only (no I/O).</span>
 <span class="sd">    CloudFileWriter : Write layers to disk separately.</span>
+<span class="sd">    pyradtran.era5.cloud_profiles : The underlying ERA5 conversion.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    A synthetic column with liquid water at 925 hPa (765 m) and 850 hPa</span>
+<span class="sd">    (1479 m):</span>
+
+<span class="sd">    &gt;&gt;&gt; import pathlib, tempfile</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; import xarray as xr</span>
+<span class="sd">    &gt;&gt;&gt; from pyradtran.clouds import generate_cloud_file_from_era5</span>
+<span class="sd">    &gt;&gt;&gt; dims = (&quot;time&quot;, &quot;pressure_level&quot;, &quot;latitude&quot;, &quot;longitude&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; def column(values):</span>
+<span class="sd">    ...     return (dims, np.reshape(values, (1, 4, 1, 1)))</span>
+<span class="sd">    &gt;&gt;&gt; era5 = xr.Dataset(</span>
+<span class="sd">    ...     {</span>
+<span class="sd">    ...         &quot;t&quot;: column([268.0, 276.0, 280.0, 284.0]),</span>
+<span class="sd">    ...         &quot;z&quot;: column([29500.0, 14500.0, 7500.0, 1000.0]),</span>
+<span class="sd">    ...         &quot;clwc&quot;: column([0.0, 2.0e-4, 3.0e-4, 0.0]),</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ...     coords={</span>
+<span class="sd">    ...         &quot;time&quot;: np.array([&quot;2024-07-15T12&quot;], dtype=&quot;datetime64[ns]&quot;),</span>
+<span class="sd">    ...         &quot;pressure_level&quot;: [700.0, 850.0, 925.0, 1000.0],</span>
+<span class="sd">    ...         &quot;latitude&quot;: [78.0],</span>
+<span class="sd">    ...         &quot;longitude&quot;: [15.0],</span>
+<span class="sd">    ...     },</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; era5[&quot;z&quot;].attrs[&quot;units&quot;] = &quot;m2 s-2&quot;</span>
+<span class="sd">    &gt;&gt;&gt; with tempfile.TemporaryDirectory() as tmp:</span>
+<span class="sd">    ...     path = generate_cloud_file_from_era5(</span>
+<span class="sd">    ...         era5, pathlib.Path(tmp) / &quot;wc.dat&quot;, cloud_type=&quot;wc&quot;, lat=78.0, lon=15.0</span>
+<span class="sd">    ...     )</span>
+<span class="sd">    ...     print(path.read_text(), end=&quot;&quot;)</span>
+<span class="sd">    #        z        LWC    R_eff</span>
+<span class="sd">    #       (km)    (g/m^3)     (um)</span>
+<span class="sd">      2.243376   0.000000   10.000</span>
+<span class="sd">      1.121688   0.214571   10.000</span>
+<span class="sd">      0.433379   0.345251   10.000</span>
+
+<span class="sd">    Each ERA5 level fills the layer between the midpoints to its</span>
+<span class="sd">    neighbours: 0.345 g m\\ :sup:`-3` from 0.433 to 1.122 km and</span>
+<span class="sd">    0.215 g m\\ :sup:`-3` from there to 2.243 km.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Generate cloud layers from ERA5</span>
+    <span class="n">write</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;wc&quot;</span><span class="p">:</span> <span class="n">CloudFileWriter</span><span class="o">.</span><span class="n">write_water_cloud_file</span><span class="p">,</span>
+        <span class="s2">&quot;ic&quot;</span><span class="p">:</span> <span class="n">CloudFileWriter</span><span class="o">.</span><span class="n">write_ice_cloud_file</span><span class="p">,</span>
+    <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cloud_type</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">write</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown cloud type: </span><span class="si">{</span><span class="n">cloud_type</span><span class="si">}</span><span class="s2">. Use &#39;wc&#39; or &#39;ic&#39;&quot;</span><span class="p">)</span>
+    <span class="n">_warn_ignored</span><span class="p">(</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;include_zero_layers&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;altitude_resolution_km&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="p">)</span>
     <span class="n">cloud_layers</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_era5_dataset</span><span class="p">(</span>
         <span class="n">era5_dataset</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="o">=</span><span class="n">lon</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span>
-
-    <span class="c1"># Write appropriate cloud file</span>
-    <span class="k">if</span> <span class="n">cloud_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;wc&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">CloudFileWriter</span><span class="o">.</span><span class="n">write_water_cloud_file</span><span class="p">(</span><span class="n">cloud_layers</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">cloud_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ic&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">CloudFileWriter</span><span class="o">.</span><span class="n">write_ice_cloud_file</span><span class="p">(</span><span class="n">cloud_layers</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown cloud type: </span><span class="si">{</span><span class="n">cloud_type</span><span class="si">}</span><span class="s2">. Use &#39;wc&#39; or &#39;ic&#39;&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">write</span><span class="p">(</span><span class="n">cloud_layers</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></div>
 
 </pre></div>
 

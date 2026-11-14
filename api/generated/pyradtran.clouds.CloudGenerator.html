@@ -1,0 +1,901 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyradtran.clouds.CloudGenerator &#8212; PyRadtran</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/pyradtran.clouds.CloudGenerator';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pyradtran.clouds.CloudFileWriter" href="pyradtran.clouds.CloudFileWriter.html" />
+    <link rel="prev" title="pyradtran.clouds.CloudLayer" href="pyradtran.clouds.CloudLayer.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="PyRadtran - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="PyRadtran - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/concepts.html">How pyRadtran works</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/parameters.html">Parameters &amp; Validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/parameters_deep_dive.html">Deep dive (notebook)</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/atmosphere.html">Atmosphere &amp; ERA5</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/clouds.html">Clouds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/outputs.html">Results &amp; Post-Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Cookbook</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Overview</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/basics.html">Basics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/albedo_test.html">Surface albedo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/solar_spectral.html">Solar spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal.html">Broadband thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager.html">Brightness temperature</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/atmosphere.html">Atmospheres</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_atmosphere.html">ERA5 atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/get_radiosonde.html">Radiosondes (IGRA2)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/lapse_rate_feedback.html">Lapse-rate feedback</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/clouds.html">Clouds</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/water_cloud.html">Water clouds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/mixed_phase_cloud.html">Mixed-phase clouds</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/instruments.html">Instruments &amp; special geometries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/led_horizontal_extinction.html">Horizontal LED extinction</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Case Studies</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/cloud_forcing.html">Cloud radiative effect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/arctic_cloud_experiment.html">Multi-dimensional cloud experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/shupe_and_intrieri_plot.html">Shupe &amp; Intrieri (2004)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/era5_seasonal_sea_ice_profiles.html">Shupe &amp; Intrieri with seasonal ERA5 profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/spectral_albedo_shift_cloud.html">Cloud forcing with ACLOUD data</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/thermal_imaging.html">Thermal imaging</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/velox_realistic_channels.html">VELOX channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/thermal_imager_2.html">Custom dimension iteration</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/campaigns.html">Campaign validation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/halo-ac3_bbr_all_aircraft.html">HALO-(AC)³ broadband radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_thermal.html">Observed clouds, thermal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/radiosonde_solar_spectral.html">Observed clouds, solar spectral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/nya_rad.html">Ny-Ålesund radiation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/stn2024.html">Station Nord 2024</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../case_studies/reanalysis.html">Reanalysis processing</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5.html">ERA5 sea-ice profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/sea_ice_era5_plotting.html">Arctic atmosphere in a warming climate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/carra_atmosphere.html">CARRA atmosphere</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.html">pyradtran.interface.PyRadtranAccessor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.run.html">pyradtran.interface.PyRadtranAccessor.run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.explain.html">pyradtran.interface.PyRadtranAccessor.explain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.jacobian.html">pyradtran.interface.PyRadtranAccessor.jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.PyRadtranAccessor.inspect_cloud_file.html">pyradtran.interface.PyRadtranAccessor.inspect_cloud_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.run_pyradtran_simulation.html">pyradtran.interface.run_pyradtran_simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.execute_simulation_batch.html">pyradtran.interface.execute_simulation_batch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.core.Simulation.html">pyradtran.core.Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.params.Var.html">pyradtran.params.Var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.params.Raw.html">pyradtran.params.Raw</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.params.describe.html">pyradtran.params.describe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.params.search_options.html">pyradtran.params.search_options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.params.ParamSpec.html">pyradtran.params.ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.params.ParamResolver.html">pyradtran.params.ParamResolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.params.get_schema.html">pyradtran.params.get_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.params.validate_against_schema.html">pyradtran.params.validate_against_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.load_config.html">pyradtran.config.load_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.save_master_config.html">pyradtran.config.save_master_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.create_example_config.html">pyradtran.config.create_example_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.list_atmosphere_profiles.html">pyradtran.config.list_atmosphere_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.list_solar_spectra.html">pyradtran.config.list_solar_spectra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.SimulationConfig.html">pyradtran.config.SimulationConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.SimulationDefaults.html">pyradtran.config.SimulationDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.PathsConfig.html">pyradtran.config.PathsConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.ExecutionConfig.html">pyradtran.config.ExecutionConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.OutputConfig.html">pyradtran.config.OutputConfig</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.config.CloudParameters.html">pyradtran.config.CloudParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.channels.convolve_channels.html">pyradtran.channels.convolve_channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.channels.brightness_temperature.html">pyradtran.channels.brightness_temperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.era5.normalize_era5.html">pyradtran.era5.normalize_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.era5.recommend_atmosphere.html">pyradtran.era5.recommend_atmosphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.era5.era5_atmosphere_file.html">pyradtran.era5.era5_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.era5.write_atmosphere_file.html">pyradtran.era5.write_atmosphere_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.era5.select_profile.html">pyradtran.era5.select_profile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.era5.cloud_profiles.html">pyradtran.era5.cloud_profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.io.ERA5AtmosphereGenerator.html">pyradtran.io.ERA5AtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.io.RadiosondeAtmosphereGenerator.html">pyradtran.io.RadiosondeAtmosphereGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.utils.RadiosondeFinder.html">pyradtran.utils.RadiosondeFinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.clouds.CloudLayer.html">pyradtran.clouds.CloudLayer</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">pyradtran.clouds.CloudGenerator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.clouds.CloudFileWriter.html">pyradtran.clouds.CloudFileWriter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.clouds.generate_cloud_file_from_era5.html">pyradtran.clouds.generate_cloud_file_from_era5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.input_builder.InputFileBuilder.html">pyradtran.input_builder.InputFileBuilder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.input_builder.InputLine.html">pyradtran.input_builder.InputLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.input_builder.calculate_solar_zenith_angle.html">pyradtran.input_builder.calculate_solar_zenith_angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.input_builder.effective_output_columns.html">pyradtran.input_builder.effective_output_columns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.input_builder.effective_output_altitudes.html">pyradtran.input_builder.effective_output_altitudes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.io.OutputParser.html">pyradtran.io.OutputParser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.io.ParsedOutput.html">pyradtran.io.ParsedOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.io.OutputType.html">pyradtran.io.OutputType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.io.OutputToXarray.html">pyradtran.io.OutputToXarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.io.NetCDFSaver.html">pyradtran.io.NetCDFSaver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.io.InputDataLoader.html">pyradtran.io.InputDataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.PointOutcome.html">pyradtran.interface.PointOutcome</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.interface.SimPoint.html">pyradtran.interface.SimPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.schema.load_schema.html">pyradtran.schema.load_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.schema.extract_schema.html">pyradtran.schema.extract_schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.schema.find_libradtran_root.html">pyradtran.schema.find_libradtran_root</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.exceptions.PyRadtranError.html">pyradtran.exceptions.PyRadtranError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.exceptions.ConfigurationError.html">pyradtran.exceptions.ConfigurationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.exceptions.ValidationError.html">pyradtran.exceptions.ValidationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.exceptions.InputGenerationError.html">pyradtran.exceptions.InputGenerationError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.exceptions.UvspecExecutionError.html">pyradtran.exceptions.UvspecExecutionError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.exceptions.OutputParsingError.html">pyradtran.exceptions.OutputParsingError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyradtran.exceptions.RadiosondeError.html">pyradtran.exceptions.RadiosondeError</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/config/index.html">Example config files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/api/generated/pyradtran.clouds.CloudGenerator.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>pyradtran.clouds.CloudGenerator</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.clouds.CloudGenerator"><code class="docutils literal notranslate"><span class="pre">CloudGenerator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.clouds.CloudGenerator.from_era5_dataset"><code class="docutils literal notranslate"><span class="pre">CloudGenerator.from_era5_dataset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.clouds.CloudGenerator.from_simple_parameters"><code class="docutils literal notranslate"><span class="pre">CloudGenerator.from_simple_parameters()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyradtran-clouds-cloudgenerator">
+<h1>pyradtran.clouds.CloudGenerator<a class="headerlink" href="#pyradtran-clouds-cloudgenerator" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyradtran.clouds.CloudGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CloudGenerator</span></span><a class="reference internal" href="../../_modules/pyradtran/clouds.html#CloudGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyradtran.clouds.CloudGenerator" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Factory for <a class="reference internal" href="pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer" title="pyradtran.clouds.CloudLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">CloudLayer</span></code></a> sequences.</p>
+<p>All methods are static:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyradtran.clouds.CloudGenerator.from_simple_parameters" title="pyradtran.clouds.CloudGenerator.from_simple_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_simple_parameters()</span></code></a>: uniform slab from a few numbers;</p></li>
+<li><p><a class="reference internal" href="#pyradtran.clouds.CloudGenerator.from_era5_dataset" title="pyradtran.clouds.CloudGenerator.from_era5_dataset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_era5_dataset()</span></code></a>: one layer per cloudy ERA5 level.</p></li>
+</ul>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter" title="pyradtran.clouds.CloudFileWriter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloudFileWriter</span></code></a></dt><dd><p>Persist layers to libRadtran <code class="docutils literal notranslate"><span class="pre">.dat</span></code> files.</p>
+</dd>
+<dt><a class="reference internal" href="pyradtran.era5.cloud_profiles.html#pyradtran.era5.cloud_profiles" title="pyradtran.era5.cloud_profiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyradtran.era5.cloud_profiles</span></code></a></dt><dd><p>ERA5 clouds as dict-valued <code class="docutils literal notranslate"><span class="pre">wc_file</span></code> / <code class="docutils literal notranslate"><span class="pre">ic_file</span></code> parameters.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran.clouds</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudGenerator</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layers</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_simple_parameters</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span><span class="p">)</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">]</span>
+<span class="go">[(1.0, 1.5), (1.5, 2.0)]</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyradtran.clouds.CloudGenerator.from_era5_dataset">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_era5_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloud_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude_levels_km</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lwc_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iwc_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_r_eff_water</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_r_eff_ice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pressure_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geopotential_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyradtran/clouds.html#CloudGenerator.from_era5_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyradtran.clouds.CloudGenerator.from_era5_dataset" title="Link to this definition">#</a></dt>
+<dd><p>Extract cloud layers from an ERA5 <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2026.9.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.</p>
+<p>Normalises the dataset (<a class="reference internal" href="pyradtran.era5.normalize_era5.html#pyradtran.era5.normalize_era5" title="pyradtran.era5.normalize_era5"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalize_era5()</span></code></a>),
+selects one column (<a class="reference internal" href="pyradtran.era5.select_profile.html#pyradtran.era5.select_profile" title="pyradtran.era5.select_profile"><code class="xref py py-func docutils literal notranslate"><span class="pre">select_profile()</span></code></a>),
+converts it with <a class="reference internal" href="pyradtran.era5.cloud_profiles.html#pyradtran.era5.cloud_profiles" title="pyradtran.era5.cloud_profiles"><code class="xref py py-func docutils literal notranslate"><span class="pre">cloud_profiles()</span></code></a> and
+returns the profiles as <a class="reference internal" href="pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer" title="pyradtran.clouds.CloudLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">CloudLayer</span></code></a> objects.  Layer
+boundaries lie midway between the ERA5 levels, so the layers tile
+the cloudy part of the column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2026.9.0)"><em>xarray.Dataset</em></a>) – ERA5 dataset on pressure levels in any naming flavour
+<a class="reference internal" href="pyradtran.era5.normalize_era5.html#pyradtran.era5.normalize_era5" title="pyradtran.era5.normalize_era5"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalize_era5()</span></code></a> understands (CDS
+short names, ARCO long names, <code class="docutils literal notranslate"><span class="pre">time</span></code> or <code class="docutils literal notranslate"><span class="pre">valid_time</span></code>,
+pressure in hPa or Pa).  Needs temperature and at least one
+of liquid / ice water content (kg kg<sup>-1</sup>).</p></li>
+<li><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.15)"><em>datetime.datetime</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#numpy.datetime64" title="(in NumPy v2.5)"><em>numpy.datetime64</em></a><em>, </em><em>optional</em>) – Time step to select (nearest).  <em>None</em> takes the first time
+step.</p></li>
+<li><p><strong>lat</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Position of the column (nearest grid point).  Required when
+<em>ds</em> has a <code class="docutils literal notranslate"><span class="pre">latitude</span></code> or <code class="docutils literal notranslate"><span class="pre">longitude</span></code> dimension.</p></li>
+<li><p><strong>lon</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Position of the column (nearest grid point).  Required when
+<em>ds</em> has a <code class="docutils literal notranslate"><span class="pre">latitude</span></code> or <code class="docutils literal notranslate"><span class="pre">longitude</span></code> dimension.</p></li>
+<li><p><strong>cloud_variables</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – Dataset variable names, for datasets with names
+<code class="docutils literal notranslate"><span class="pre">normalize_era5</span></code> does not know.  Keys: <code class="docutils literal notranslate"><span class="pre">&quot;lwc&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;iwc&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;temp&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code>; e.g. <code class="docutils literal notranslate"><span class="pre">{&quot;lwc&quot;:</span> <span class="pre">&quot;LWC&quot;,</span>
+<span class="pre">&quot;temp&quot;:</span> <span class="pre">&quot;T&quot;}</span></code>.  A phase whose key (<code class="docutils literal notranslate"><span class="pre">&quot;lwc&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;iwc&quot;</span></code>)
+is missing from a dict given here is switched off;
+<code class="docutils literal notranslate"><span class="pre">&quot;temp&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code> default to <code class="docutils literal notranslate"><span class="pre">&quot;t&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;z&quot;</span></code>.  A
+<code class="docutils literal notranslate"><span class="pre">&quot;cc&quot;</span></code> entry is accepted and ignored.</p></li>
+<li><p><strong>altitude_levels_km</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><em>numpy.ndarray</em></a><em>, </em><em>optional</em>) – Altitude (km) of each pressure level, in the dataset’s own
+level order.  Overrides the geopotential variable.</p></li>
+<li><p><strong>lwc_threshold</strong> (float, default <code class="docutils literal notranslate"><span class="pre">1e-4</span></code>) – A level counts as liquid cloud when its LWC is greater than
+this value (g m<sup>-3</sup>).</p></li>
+<li><p><strong>iwc_threshold</strong> (float, default <code class="docutils literal notranslate"><span class="pre">1e-4</span></code>) – Same for the IWC (g m<sup>-3</sup>).</p></li>
+<li><p><strong>default_r_eff_water</strong> (float, default <code class="docutils literal notranslate"><span class="pre">10.0</span></code>) – Effective radius assigned to liquid layers (µm).</p></li>
+<li><p><strong>default_r_eff_ice</strong> (float, default <code class="docutils literal notranslate"><span class="pre">20.0</span></code>) – Effective radius assigned to ice layers (µm).</p></li>
+<li><p><strong>pressure_levels</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the pressure coordinate, if it is not one of
+<code class="docutils literal notranslate"><span class="pre">pressure_level</span></code>, <code class="docutils literal notranslate"><span class="pre">level</span></code>, <code class="docutils literal notranslate"><span class="pre">plev</span></code>, <code class="docutils literal notranslate"><span class="pre">isobaricInhPa</span></code>.</p></li>
+<li><p><strong>geopotential_var</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – Name of the geopotential variable; takes precedence over
+<code class="docutils literal notranslate"><span class="pre">cloud_variables[&quot;z&quot;]</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>list of CloudLayer</em> – Liquid layers (<code class="docutils literal notranslate"><span class="pre">iwc_g_m3</span> <span class="pre">=</span> <span class="pre">0</span></code>) and ice layers
+(<code class="docutils literal notranslate"><span class="pre">lwc_g_m3</span> <span class="pre">=</span> <span class="pre">0</span></code>), sorted by base altitude.  Empty when no
+level exceeds a threshold.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <em>ds</em> has spatial dimensions and <em>lat</em> or <em>lon</em> is <em>None</em>,
+    if it has no pressure-level coordinate, or if it has no
+    temperature variable (needed for the air density).</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="pyradtran.clouds.generate_cloud_file_from_era5.html#pyradtran.clouds.generate_cloud_file_from_era5" title="pyradtran.clouds.generate_cloud_file_from_era5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_cloud_file_from_era5</span></code></a></dt><dd><p>One-step convenience wrapper.</p>
+</dd>
+<dt><a class="reference internal" href="pyradtran.era5.cloud_profiles.html#pyradtran.era5.cloud_profiles" title="pyradtran.era5.cloud_profiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyradtran.era5.cloud_profiles</span></code></a></dt><dd><p>The conversion used here; its Notes describe water content, altitudes and layer boundaries.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p><strong>One layer per phase.</strong>  A level with liquid and ice yields
+two layers with the same boundaries, each with its own
+effective radius.</p></li>
+<li><p>Within each phase the layers are contiguous from the lowest to
+the highest level above the threshold; levels in between keep
+their own (sub-threshold) content, and levels with exactly
+zero content are left out.</p></li>
+<li><p>The water contents are grid-box means, not divided by the
+cloud cover.  <code class="docutils literal notranslate"><span class="pre">cloud_fraction</span></code> of the returned layers is
+always 1; the ERA5 cloud cover <code class="docutils literal notranslate"><span class="pre">cc</span></code> is not read.</p></li>
+<li><p>Without a geopotential variable (and without
+<em>altitude_levels_km</em>) the altitudes are a rough estimate from
+pressure with a constant 7 km scale height.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<p>A synthetic single-column ERA5 cube: liquid water at 850 and
+925 hPa, a little ice at 500 hPa.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran.clouds</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudGenerator</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dims</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;pressure_level&quot;</span><span class="p">,</span> <span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">column</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">era5</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">column</span><span class="p">([</span><span class="mf">252.0</span><span class="p">,</span> <span class="mf">268.0</span><span class="p">,</span> <span class="mf">276.0</span><span class="p">,</span> <span class="mf">280.0</span><span class="p">,</span> <span class="mf">284.0</span><span class="p">]),</span>
+<span class="gp">... </span>        <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">column</span><span class="p">([</span><span class="mf">54000.0</span><span class="p">,</span> <span class="mf">29500.0</span><span class="p">,</span> <span class="mf">14500.0</span><span class="p">,</span> <span class="mf">7500.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">]),</span>
+<span class="gp">... </span>        <span class="s2">&quot;clwc&quot;</span><span class="p">:</span> <span class="n">column</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0e-4</span><span class="p">,</span> <span class="mf">3.0e-4</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+<span class="gp">... </span>        <span class="s2">&quot;ciwc&quot;</span><span class="p">:</span> <span class="n">column</span><span class="p">([</span><span class="mf">2.0e-5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">coords</span><span class="o">=</span><span class="p">{</span>
+<span class="gp">... </span>        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s2">&quot;2024-07-15T12&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;datetime64[ns]&quot;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s2">&quot;pressure_level&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">500.0</span><span class="p">,</span> <span class="mf">700.0</span><span class="p">,</span> <span class="mf">850.0</span><span class="p">,</span> <span class="mf">925.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">78.0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">15.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">era5</span><span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;m2 s-2&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layers</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_era5_dataset</span><span class="p">(</span><span class="n">era5</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mf">78.0</span><span class="p">,</span> <span class="n">lon</span><span class="o">=</span><span class="mf">15.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> km  &quot;</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;LWC </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">lwc_g_m3</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">  IWC </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">iwc_g_m3</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  &quot;</span>
+<span class="gp">... </span>        <span class="sa">f</span><span class="s2">&quot;r_eff </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">r_eff_um</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="go">0.433-1.122 km  LWC 0.345  IWC 0.0000  r_eff 10</span>
+<span class="go">1.122-2.243 km  LWC 0.215  IWC 0.0000  r_eff 10</span>
+<span class="go">4.257-6.756 km  LWC 0.000  IWC 0.0138  r_eff 20</span>
+</pre></div>
+</div>
+<p>The 925 hPa level sits at 7500 / 9.80665 = 765 m; its layer
+reaches from the midpoint to the 1000 hPa level (433 m) to the
+midpoint to the 850 hPa level (1122 m).  A real file:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s2">&quot;era5_cloud.nc&quot;</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layers</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_era5_dataset</span><span class="p">(</span>  
+<span class="gp">... </span>    <span class="n">ds</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="mf">78.0</span><span class="p">,</span> <span class="n">lon</span><span class="o">=</span><span class="mf">15.0</span><span class="p">,</span> <span class="n">default_r_eff_water</span><span class="o">=</span><span class="mf">8.0</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyradtran.clouds.CloudGenerator.from_simple_parameters">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_simple_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_base_km</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_top_km</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lwc_g_m3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iwc_g_m3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_eff_um</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cloud_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyradtran/clouds.html#CloudGenerator.from_simple_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyradtran.clouds.CloudGenerator.from_simple_parameters" title="Link to this definition">#</a></dt>
+<dd><p>Create uniform cloud layers from basic parameters.</p>
+<p>Splits <em>z_base_km</em> … <em>z_top_km</em> into <em>n_layers</em> sub-layers of
+equal thickness with the same microphysical values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_base_km</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Cloud base altitude (km above sea level).</p></li>
+<li><p><strong>z_top_km</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Cloud top altitude (km above sea level).</p></li>
+<li><p><strong>lwc_g_m3</strong> (float, default <code class="docutils literal notranslate"><span class="pre">0.1</span></code>) – Liquid water content (g m<sup>-3</sup>).  The default is
+non-zero: pass <code class="docutils literal notranslate"><span class="pre">lwc_g_m3=0.0</span></code> for a pure ice cloud.</p></li>
+<li><p><strong>iwc_g_m3</strong> (float, default <code class="docutils literal notranslate"><span class="pre">0.0</span></code>) – Ice water content (g m<sup>-3</sup>).</p></li>
+<li><p><strong>r_eff_um</strong> (float, default <code class="docutils literal notranslate"><span class="pre">10.0</span></code>) – Effective droplet / crystal radius (µm).</p></li>
+<li><p><strong>cloud_fraction</strong> (float, default <code class="docutils literal notranslate"><span class="pre">1.0</span></code>) – Cloud fraction (0–1); stored on the layers but not used by
+<a class="reference internal" href="pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter" title="pyradtran.clouds.CloudFileWriter"><code class="xref py py-class docutils literal notranslate"><span class="pre">CloudFileWriter</span></code></a>.</p></li>
+<li><p><strong>n_layers</strong> (int, default <code class="docutils literal notranslate"><span class="pre">1</span></code>) – Number of sub-layers to create.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>list of CloudLayer</em> – <em>n_layers</em> contiguous layers ordered from bottom to top.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <em>n_layers</em> &lt; 1, or any value fails the
+    <a class="reference internal" href="pyradtran.clouds.CloudLayer.html#pyradtran.clouds.CloudLayer" title="pyradtran.clouds.CloudLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">CloudLayer</span></code></a> validation (<em>z_base_km</em> &gt;= <em>z_top_km</em>,
+    negative water content, non-positive radius, cloud fraction
+    outside [0, 1]).</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_water_cloud_file" title="pyradtran.clouds.CloudFileWriter.write_water_cloud_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloudFileWriter.write_water_cloud_file</span></code></a></dt><dd><p>Write layers to disk.</p>
+</dd>
+<dt><a class="reference internal" href="pyradtran.clouds.CloudFileWriter.html#pyradtran.clouds.CloudFileWriter.write_ice_cloud_file" title="pyradtran.clouds.CloudFileWriter.write_ice_cloud_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloudFileWriter.write_ice_cloud_file</span></code></a></dt><dd><p>Ice counterpart.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The sub-layers are identical, so <em>n_layers</em> does not change the
+cloud uvspec sees (the file only gains one row per internal
+boundary); it is a starting point for editing single layers.</p>
+<p>For orientation (pyRadtran computes none of this), the liquid
+water path of the cloud is</p>
+<div class="math notranslate nohighlight">
+\[\mathrm{LWP} = \int_{z_\mathrm{base}}^{z_\mathrm{top}}
+               \mathrm{LWC}\,\mathrm{d}z
+             = \mathrm{LWC}\,(z_\mathrm{top} - z_\mathrm{base})\]</div>
+<p>and a common rule of thumb for the visible optical thickness of
+a liquid cloud (geometric-optics limit, extinction efficiency
+of 2) is</p>
+<div class="math notranslate nohighlight">
+\[\tau \approx \frac{3\,\mathrm{LWP}}{2\,\rho_w\,r_\mathrm{eff}},\]</div>
+<p>with the density of liquid water <span class="math notranslate nohighlight">\(\rho_w = 1000\)</span>
+kg m<sup>-3</sup>.  A 1 km thick cloud with 0.3 g m<sup>-3</sup>
+and <span class="math notranslate nohighlight">\(r_\mathrm{eff}\)</span> = 10 µm has LWP = 300 g m<sup>-2</sup>
+and <span class="math notranslate nohighlight">\(\tau \approx 45\)</span>.  The optical thickness uvspec
+actually uses follows from the selected <code class="docutils literal notranslate"><span class="pre">wc_properties</span></code> /
+<code class="docutils literal notranslate"><span class="pre">ic_properties</span></code> parameterisation.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran.clouds</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudGenerator</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layers</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_simple_parameters</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">z_base_km</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">z_top_km</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">lwc_g_m3</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">4</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">,</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span><span class="p">)</span> <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">]</span>
+<span class="go">[(1.0, 1.25), (1.25, 1.5), (1.5, 1.75), (1.75, 2.0)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">CloudLayer(z_bottom_km=1.0, z_top_km=1.25, lwc_g_m3=0.3, iwc_g_m3=0.0, r_eff_um=10.0, cloud_fraction=1.0)</span>
+</pre></div>
+</div>
+<p>Liquid water path in g m<sup>-2</sup> (thickness in km × 1000 m ×
+g m<sup>-3</sup>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">layer</span><span class="o">.</span><span class="n">lwc_g_m3</span> <span class="o">*</span> <span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span> <span class="o">-</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">300.0</span>
+</pre></div>
+</div>
+<p>Invalid input:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_simple_parameters</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">Bottom altitude (2.0) must be less than top altitude (1.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_simple_parameters</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">Number of layers must be positive</span>
+</pre></div>
+</div>
+<p>A stratus deck below a cirrus layer, drawn from the layer lists:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyradtran.clouds</span><span class="w"> </span><span class="kn">import</span> <span class="n">CloudGenerator</span>
+
+<span class="n">stratus</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_simple_parameters</span><span class="p">(</span>
+    <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">lwc_g_m3</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">r_eff_um</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">4</span>
+<span class="p">)</span>
+<span class="n">cirrus</span> <span class="o">=</span> <span class="n">CloudGenerator</span><span class="o">.</span><span class="n">from_simple_parameters</span><span class="p">(</span>
+    <span class="mf">8.0</span><span class="p">,</span> <span class="mf">9.5</span><span class="p">,</span> <span class="n">lwc_g_m3</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">iwc_g_m3</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">r_eff_um</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">layers</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">(</span>
+    <span class="p">(</span><span class="n">stratus</span><span class="p">,</span> <span class="s2">&quot;lwc_g_m3&quot;</span><span class="p">,</span> <span class="s2">&quot;C0&quot;</span><span class="p">,</span> <span class="s2">&quot;liquid, $r_</span><span class="si">{eff}</span><span class="s2">$ = 10 µm&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">cirrus</span><span class="p">,</span> <span class="s2">&quot;iwc_g_m3&quot;</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="s2">&quot;ice, $r_</span><span class="si">{eff}</span><span class="s2">$ = 30 µm&quot;</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">layers</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">,</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">attr</span><span class="p">),</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">layer</span><span class="o">.</span><span class="n">z_top_km</span> <span class="o">-</span> <span class="n">layer</span><span class="o">.</span><span class="n">z_bottom_km</span><span class="p">,</span>
+            <span class="n">align</span><span class="o">=</span><span class="s2">&quot;edge&quot;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+            <span class="n">edgecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">label</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;water content (g m$^{-3}$)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;altitude (km)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/pyradtran-clouds-CloudGenerator-1.png" class="plot-directive" src="../../_images/pyradtran-clouds-CloudGenerator-1.png" />
+</figure>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./api/generated"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="pyradtran.clouds.CloudLayer.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pyradtran.clouds.CloudLayer</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pyradtran.clouds.CloudFileWriter.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pyradtran.clouds.CloudFileWriter</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.clouds.CloudGenerator"><code class="docutils literal notranslate"><span class="pre">CloudGenerator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.clouds.CloudGenerator.from_era5_dataset"><code class="docutils literal notranslate"><span class="pre">CloudGenerator.from_era5_dataset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyradtran.clouds.CloudGenerator.from_simple_parameters"><code class="docutils literal notranslate"><span class="pre">CloudGenerator.from_simple_parameters()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By PyRadtran Developers
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
