@@ -670,7 +670,9 @@ class InputFileBuilder:
         ``output_user`` is merged through
         :func:`effective_output_columns`; ``brdf_rpv_type`` drops any
         ``albedo`` line (config or resolved) and adds
-        ``brdf_rpv_library IGBP``. The file always ends with ``quiet``.
+        ``brdf_rpv_library IGBP`` unless ``albedo_library``,
+        ``brdf_rpv_library`` or ``brdf_rpv_file`` is given. The file always
+        ends with ``quiet``.
 
         Examples
         --------
@@ -822,6 +824,13 @@ class InputFileBuilder:
         if "brdf_rpv_type" in resolved:
             resolved.pop("albedo", None)
 
+        # A user-chosen surface library/file keeps brdf_rpv_type meaning
+        # "type N of that library" (e.g. albedo_library IGBP).
+        own_surface = any(
+            k in resolved
+            for k in ("albedo_library", "brdf_rpv_library", "brdf_rpv_file")
+        )
+
         # Apply resolved parameters: replace same-keyword lines, then append
         for key, (value, provenance) in resolved.items():
             spec = REGISTRY.get(key)
@@ -857,16 +866,16 @@ class InputFileBuilder:
             else:
                 text = f"{key} {value}"
             lines.append(InputLine(keyword, text, provenance))
-            # brdf implies the IGBP library line
+            # brdf_rpv_type alone implies the IGBP BRDF library
             if keyword == "brdf_rpv_type":
-                lines = [
-                    ln
-                    for ln in lines
-                    if ln.keyword not in ("albedo", "brdf_rpv_library")
-                ]
-                lines.append(
-                    InputLine("brdf_rpv_library", "brdf_rpv_library IGBP", provenance)
-                )
+                lines = [ln for ln in lines if ln.keyword != "albedo"]
+                if not own_surface:
+                    lines = [ln for ln in lines if ln.keyword != "brdf_rpv_library"]
+                    lines.append(
+                        InputLine(
+                            "brdf_rpv_library", "brdf_rpv_library IGBP", provenance
+                        )
+                    )
 
         lines.append(InputLine("quiet", "quiet", PROV_CONFIG))
         return lines

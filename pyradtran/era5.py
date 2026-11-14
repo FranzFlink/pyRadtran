@@ -243,7 +243,7 @@ def normalize_era5(ds: xr.Dataset) -> xr.Dataset:
             unit == "" and values.max() > 2000.0
         ):
             ds = ds.assign_coords(pressure_level=values / 100.0)
-        elif unit.lower() in (
+        elif "hpa" in unit.lower() or unit.lower() in (
             "",
             "hpa",
             "hectopascal",

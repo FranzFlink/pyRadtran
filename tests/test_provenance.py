@@ -71,12 +71,26 @@ class TestProvenanceAttrs:
         assert cfg["simulation_defaults"]["rte_solver"] == "disort"
 
     def test_input_example_annotated(self, ds_in, fake_result, minimal_config):
-        out = _run_mocked(
-            ds_in,
-            fake_result,
-            minimal_config,
-            params={"albedo": Var("surface_albedo")},
-        )
+        # Real batch (it renders the example), fake uvspec runs
+        import pyradtran.interface as interface
+        from pyradtran.interface import PointOutcome
+
+        with (
+            patch.object(
+                interface,
+                "_run_single_simulation_unified",
+                side_effect=lambda cfg, p: PointOutcome(object(), 0, None, p.point_id),
+            ),
+            patch.object(
+                interface.OutputToXarray, "convert_batch", return_value=fake_result
+            ),
+        ):
+            out = ds_in.pyradtran.run(
+                config=minimal_config,
+                params={"albedo": Var("surface_albedo")},
+                save_to_file=False,
+                show_progress=False,
+            )
         example = out.attrs["pyradtran_input_example"]
         assert "rte_solver disort" in example
         assert "# dataset-var" in example  # per-point albedo annotated

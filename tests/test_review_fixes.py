@@ -91,3 +91,50 @@ def test_ignored_cloud_writer_args_warn(tmp_path):
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         CloudFileWriter.write_water_cloud_file(layer, tmp_path / "b.dat")
+
+
+def test_brdf_type_keeps_user_albedo_library(minimal_config):
+    from pyradtran.input_builder import InputFileBuilder
+    from pyradtran.params import PROV_LITERAL
+
+    b = InputFileBuilder(minimal_config)
+    dt = datetime(2022, 7, 1, 12)
+    own = b.render(
+        b.build(
+            dt,
+            78.0,
+            15.0,
+            resolved={
+                "albedo_library": ("IGBP", PROV_LITERAL),
+                "brdf_rpv_type": (19, PROV_LITERAL),
+            },
+        )
+    )
+    assert "albedo_library IGBP" in own and "brdf_rpv_library" not in own
+    assert "\nalbedo " not in own
+    default = b.render(
+        b.build(dt, 78.0, 15.0, resolved={"brdf_rpv_type": (7, PROV_LITERAL)})
+    )
+    assert "brdf_rpv_library IGBP" in default
+
+
+def test_explain_point_with_string_coordinate(minimal_config):
+    ds = _track(1).expand_dims(surface=["open water", "thin ice"])
+    ds["alb"] = ("surface", [0.06, 0.4])
+    text = ds.pyradtran.explain(
+        config=minimal_config,
+        params={"albedo": __import__("pyradtran").Var("alb")},
+        point={"surface": "thin ice", "time": "2022-07-01 12:00"},
+    )
+    assert "albedo 0.4" in text
+
+
+def test_normalize_era5_arco_level_units():
+    from pyradtran.era5 import normalize_era5
+
+    ds = xr.Dataset(
+        {"temperature": (("level",), [250.0, 280.0])},
+        coords={"level": ("level", [500, 1000], {"units": "Hectopascal(hPa)"})},
+    )
+    out = normalize_era5(ds)
+    assert out.pressure_level.values.tolist() == [500.0, 1000.0]

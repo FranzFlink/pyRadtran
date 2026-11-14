@@ -110,10 +110,11 @@ Key                  Units  Valid range / choices    Notes
 ``zout``             km     –                        output level(s); numeric
                                                      levels are sorted and
                                                      de-duplicated
-``brdf_rpv_type``    –      1 … 20                   IGBP surface type; also
-                                                     writes
+``brdf_rpv_type``    –      1 … 20                   IGBP surface type; drops
+                                                     ``albedo`` and writes
                                                      ``brdf_rpv_library IGBP``
-                                                     and drops ``albedo``
+                                                     unless a surface library
+                                                     or file is given
 ``wavelength``       nm     –                        wavelength range
                                                      ``(min, max)``
 ``mol_modify O3``    DU     0 … 1000                 total ozone column; a

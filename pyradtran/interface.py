@@ -240,6 +240,18 @@ def _auto_output_path(config: SimulationConfig) -> Path:
     )
 
 
+def _sel_point(ds: xr.Dataset, selector: Dict[str, Any]) -> xr.Dataset:
+    """``ds.sel(selector)``: nearest for numeric/time axes, exact for labels."""
+    exact = {
+        k: v
+        for k, v in selector.items()
+        if k in ds.indexes and ds.indexes[k].dtype.kind in "OUS"
+    }
+    nearest = {k: v for k, v in selector.items() if k not in exact}
+    ds = ds.sel(exact)
+    return ds.sel(nearest, method="nearest") if nearest else ds
+
+
 def _era5_clouds_requested(era5_clouds) -> bool:
     """True when ERA5 clouds are requested (an empty dict means defaults)."""
     return era5_clouds is not False and era5_clouds is not None
@@ -495,6 +507,7 @@ def execute_simulation_batch(
     cloud_bottom_var: Optional[str] = None,
     show_progress: bool = True,
     return_outcomes: bool = False,
+    _example: Optional[List[str]] = None,
 ) -> List[Optional[ParsedOutput]]:
     r"""Run ``uvspec`` for every point in *input_ds*.
 
@@ -816,6 +829,19 @@ def execute_simulation_batch(
                 point_id=f"{era5_key}_{i}",
             )
         )
+
+    if _example is not None and points:
+        # Provenance: the annotated input of the first runnable point,
+        # including its ERA5 atmosphere and cloud files.
+        p0 = points[0]
+        try:
+            _example.append(
+                Simulation(config).dry_run(
+                    p0.time, p0.latitude, p0.longitude, p0.resolved, p0.era5_file
+                )
+            )
+        except Exception as e:
+            logger.debug(f"Could not render input example for provenance: {e}")
 
     # Points not in `points` were skipped above and already have an outcome
     completed = num_points - len(points)
@@ -1596,6 +1622,7 @@ class PyRadtranAccessor:
             output_path.parent.mkdir(exist_ok=True, parents=True)
 
         # Run the simulation batch (raises if no point succeeds)
+        example: List[str] = []
         outcomes = execute_simulation_batch(
             config=self._config,
             input_ds=ds_to_execute,
@@ -1619,6 +1646,7 @@ class PyRadtranAccessor:
             cloud_bottom_var=cloud_bottom_var,
             show_progress=show_progress,
             return_outcomes=True,
+            _example=example,
         )
         parsed_outputs = [o.parsed if o is not None else None for o in outcomes]
 
@@ -1660,9 +1688,7 @@ class PyRadtranAccessor:
             _provenance_attrs(
                 self._config,
                 params,
-                input_example=self._input_example(
-                    ds_to_execute, params, time_var, lat_var, lon_var
-                ),
+                input_example=example[0] if example else None,
             )
         )
         if channels is not None:
@@ -1727,7 +1753,7 @@ class PyRadtranAccessor:
         if point is None:
             point_ds = ds.isel({d: 0 for d in ds.dims})
         else:
-            point_ds = ds.sel(point, method="nearest")
+            point_ds = _sel_point(ds, point)
 
         resolved, _skipped = resolver.resolve_point(point_ds)
         dt = pd.to_datetime(_scalar(point_ds, time_var)).to_pydatetime()
@@ -1737,23 +1763,6 @@ class PyRadtranAccessor:
             _scalar(point_ds, lon_var),
             resolved_params=resolved,
         )
-
-    def _input_example(
-        self,
-        ds: xr.Dataset,
-        params: Optional[Dict[str, Any]],
-        time_var: str = "time",
-        lat_var: str = "latitude",
-        lon_var: str = "longitude",
-    ) -> Optional[str]:
-        """Annotated input file of the first point, or *None* on any error."""
-        try:
-            return self._render_point(
-                self._config, ds, params, None, time_var, lat_var, lon_var
-            )
-        except Exception as e:
-            logger.debug(f"Could not render input example for provenance: {e}")
-            return None
 
     @staticmethod
     def _apply_channels(
@@ -1936,7 +1945,7 @@ class PyRadtranAccessor:
             # Default to first point
             point_ds = self._obj.isel({d: 0 for d in self._obj.dims})
         else:
-            point_ds = self._obj.sel(selector, method="nearest")
+            point_ds = _sel_point(self._obj, selector)
 
         # Deprecated parameter_overrides: a string naming a dataset
         # variable resolves to its value at the point
