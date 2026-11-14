@@ -345,7 +345,7 @@ def test_scalar_dataset_runs_and_stays_scalar(minimal_config):
             config=minimal_config, save_to_file=False, show_progress=False
         )
     assert len(outs) == 1
-    assert res.eglo.dims == ("altitude",) and float(res.eglo) == 100.0
+    assert res.eglo.dims == ("altitude",) and res.eglo.item() == 100.0
     assert res.status.ndim == 0 and int(res.status) == 0
     assert float(res.latitude) == 78.0 and "time" in res.coords
 
