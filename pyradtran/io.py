@@ -533,7 +533,7 @@ class RadiosondeAtmosphereGenerator:
 
     @staticmethod
     def get_closest_sounding(
-        target_dt: datetime, lat: float, lon: float
+        target_dt: datetime, lat: float, lon: float, max_hours: float = 24.0
     ) -> tuple[Optional[pd.DataFrame], Optional[pd.DataFrame], Optional[str]]:
         """Retrieve the radiosonde sounding nearest in space and time.
 
@@ -545,6 +545,9 @@ class RadiosondeAtmosphereGenerator:
             Target time in UTC, timezone-naive.
         lat, lon : float
             Target location in degrees north / east.
+        max_hours : float, default 24.0
+            Accept soundings launched at most this many hours before or
+            after *target_dt*.
 
         Returns
         -------
@@ -570,16 +573,15 @@ class RadiosondeAtmosphereGenerator:
         -----
         The five closest active stations
         (:meth:`find_closest_active_stations`) are tried in order of
-        distance.  For each station the candidate times
+        distance.  For each station all soundings within
+        ``target_dt ± max_hours`` are requested and the one nearest in
+        time is returned.  A nearer station is preferred over a more
+        distant one with a better time match.
 
-        * *target_dt* itself,
-        * 00 and 12 UTC of the target day,
-        * 12 and 00 UTC of the previous day
-
-        are requested in order of increasing time difference.  The first
-        non-empty sounding wins: a nearer station with a sounding up to
-        a day old is preferred over a more distant one with a better
-        time match.
+        The window matters because IGRA2 files soundings at their actual
+        launch hour, which is not always 00 or 12 UTC (Ny-Ålesund
+        launches at about 11 UTC), and siphon matches a single requested
+        time exactly.
 
         Examples
         --------
@@ -599,17 +601,9 @@ class RadiosondeAtmosphereGenerator:
         if closest.empty:
             return None, None, None
 
-        base_date = datetime(target_dt.year, target_dt.month, target_dt.day)
-        potential_times = [
-            target_dt,
-            base_date + timedelta(hours=12),
-            base_date,
-            base_date - timedelta(hours=12),
-            base_date - timedelta(hours=24),
-        ]
-        potential_times = sorted(
-            set(potential_times),
-            key=lambda x: abs((x - target_dt).total_seconds()),
+        window = (
+            target_dt - timedelta(hours=max_hours),
+            target_dt + timedelta(hours=max_hours),
         )
 
         try:
@@ -623,25 +617,26 @@ class RadiosondeAtmosphereGenerator:
             station_id = station["id"]
             station_name = station["name"].strip()
             station_distance = station["distance_km"]
-            for time_to_check in potential_times:
-                try:
-                    logger.debug(
-                        f"Trying station {station_name} ({station_id}) at {time_to_check}"
-                    )
-                    df, header = IGRAUpperAir.request_data(time_to_check, station_id)
-                    if df is not None and not df.empty:
-                        header_text = f"{station_name} at {time_to_check.strftime('%Y-%m-%d %H:%M')} UTC with distance {station_distance:.2f} km"
-                        logger.info(
-                            f"Found sounding for {station_name} at {time_to_check} UTC with distance {station_distance:.2f} km"
-                        )
-                        return df, header, header_text
-                except Exception as e:
-                    logger.debug(f"No data for {station_name} at {time_to_check}: {e}")
+            logger.debug(f"Trying station {station_name} ({station_id})")
+            try:
+                df, header = IGRAUpperAir.request_data(window, station_id)
+            except Exception as e:
+                logger.debug(f"No data for {station_name} within {window}: {e}")
+                continue
+            if df is None or df.empty:
+                continue
+            launch_times = pd.to_datetime(header["date"])
+            best = launch_times.iloc[(launch_times - target_dt).abs().argmin()]
+            df = df[pd.to_datetime(df["date"]) == best]
+            header = header[launch_times == best]
+            header_text = f"{station_name} at {best:%Y-%m-%d %H:%M} UTC with distance {station_distance:.2f} km"
+            logger.info(f"Found sounding for {header_text}")
+            return df, header, header_text
 
         station_names = [name.strip() for name in closest["name"]]
         logger.warning(
-            f"No radiosonde data found for any of {len(potential_times)} times "
-            f"across {len(station_names)} stations: {station_names}"
+            f"No radiosonde data within {max_hours} h of {target_dt} "
+            f"at any of {len(station_names)} stations: {station_names}"
         )
         return None, None, None
 
