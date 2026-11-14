@@ -3,7 +3,7 @@ is not 00/12 UTC (Ny-Ålesund launches at ~11 UTC)."""
 
 import sys
 import types
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import patch
 
 import pandas as pd
@@ -64,3 +64,23 @@ def test_nearest_station_with_off_synoptic_launch():
     assert text.startswith("NY-ALESUND II at 2022-03-28 11:00 UTC")
     assert list(header["date"]) == [datetime(2022, 3, 28, 11)]
     assert len(df) == 2
+
+
+def test_timezone_aware_target():
+    fake = types.ModuleType("siphon.simplewebservice.igra2")
+    fake.IGRAUpperAir = FakeIGRA
+    modules = {
+        "siphon": types.ModuleType("siphon"),
+        "siphon.simplewebservice": types.ModuleType("siphon.simplewebservice"),
+        "siphon.simplewebservice.igra2": fake,
+    }
+    with (
+        patch.dict(sys.modules, modules),
+        patch.object(
+            RadiosondeAtmosphereGenerator, "get_station_list", return_value=STATIONS
+        ),
+    ):
+        _, _, text = RadiosondeAtmosphereGenerator.get_closest_sounding(
+            datetime(2022, 3, 28, 12, tzinfo=timezone.utc), 78.92, 11.93
+        )
+    assert text.startswith("NY-ALESUND II at 2022-03-28 11:00")

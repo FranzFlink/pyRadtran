@@ -700,6 +700,19 @@ def execute_simulation_batch(
     else:  # unusual layout; fall back to per-point checks
         bad_time = np.zeros(num_points, dtype=bool)
 
+    # Unified params: translate deprecated kwargs, then resolve per point.
+    # Before the ERA5 block: dotted paths.* overrides must apply to atm_dir.
+    params = _translate_legacy_kwargs(
+        params,
+        albedo_var,
+        surface_temperature_var,
+        surface_type_var,
+        altitude_var,
+        parameter_overrides,
+    )
+    resolver = ParamResolver(config, params)
+    resolver.validate_var_targets(input_ds)
+
     # Handle ERA5 atmosphere (and optionally cloud) files if provided
     era5_clouds_on = _era5_clouds_requested(era5_clouds)
     if era5_clouds_on and era5_atmosphere is None:
@@ -714,18 +727,6 @@ def execute_simulation_batch(
         # Create working directory for atmosphere files
         atm_dir = config.paths.working_dir / "era5_atmospheres"
         atm_dir.mkdir(parents=True, exist_ok=True)
-
-    # Unified params: translate deprecated kwargs, then resolve per point.
-    params = _translate_legacy_kwargs(
-        params,
-        albedo_var,
-        surface_temperature_var,
-        surface_type_var,
-        altitude_var,
-        parameter_overrides,
-    )
-    resolver = ParamResolver(config, params)
-    resolver.validate_var_targets(input_ds)
 
     points: List[SimPoint] = []
     outcomes: List[Optional[PointOutcome]] = [None] * num_points
@@ -2132,6 +2133,9 @@ class PyRadtranAccessor:
         # altitude handling adjust the config for this call only.
         cfg = config.copy() if config is not None else load_config(config_path)
         params, ds = self._apply_altitude(cfg, params)
+        if isinstance(point, dict) and "altitude" not in ds.variables:
+            # the altitude levels went into zout; they are not a point axis
+            point = {k: v for k, v in point.items() if k != "altitude"}
         return self._render_point(cfg, ds, params, point, time_var, lat_var, lon_var)
 
     def jacobian(

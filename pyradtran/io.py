@@ -601,6 +601,8 @@ class RadiosondeAtmosphereGenerator:
         if closest.empty:
             return None, None, None
 
+        if target_dt.tzinfo is not None:  # IGRA2 times are naive UTC
+            target_dt = target_dt.astimezone(timezone.utc).replace(tzinfo=None)
         window = (
             target_dt - timedelta(hours=max_hours),
             target_dt + timedelta(hours=max_hours),
@@ -628,7 +630,13 @@ class RadiosondeAtmosphereGenerator:
             launch_times = pd.to_datetime(header["date"])
             best = launch_times.iloc[(launch_times - target_dt).abs().argmin()]
             df = df[pd.to_datetime(df["date"]) == best]
-            header = header[launch_times == best]
+            if (launch_times == best).sum() > 1 and "pressure" in df:
+                # ponytail: duplicate launch hour; keep the first sounding,
+                # which ends where the pressure rises again
+                restart = np.flatnonzero(np.diff(df["pressure"].to_numpy()) > 0)
+                if restart.size:
+                    df = df.iloc[: restart[0] + 1]
+            header = header[launch_times == best].iloc[:1]
             header_text = f"{station_name} at {best:%Y-%m-%d %H:%M} UTC with distance {station_distance:.2f} km"
             logger.info(f"Found sounding for {header_text}")
             return df, header, header_text
@@ -1373,6 +1381,12 @@ class OutputToXarray:
                 altitudes = [0.0]  # placeholder: per-point / unknown / symbolic
                 if numeric:
                     point_zout = [np.nan if z is None else float(z) for z in levels]
+                elif known:
+                    logger.warning(
+                        f"Symbolic output level(s) {sorted(set(map(str, known)))}: "
+                        "the altitude coordinate is a placeholder 0.0, see "
+                        "attrs['zout'] of the altitude coordinate"
+                    )
 
         # Extra dimensions of the output variables: [wavelength,] altitude
         coords = {}
@@ -1419,7 +1433,7 @@ class OutputToXarray:
             # over "sza" that also requests the sza column) cannot keep
             # its name: the coordinate owns it.
             out_name = var_name
-            if var_name in input_ds.coords:
+            if var_name in input_ds.coords or var_name in input_ds.dims:
                 out_name = f"{var_name}_out"
                 renamed.append(var_name)
             data_vars[out_name] = unstack(data_arr, extra_dims)
@@ -1440,10 +1454,23 @@ class OutputToXarray:
         result_ds = xr.Dataset(data_vars, coords=coords)
         if not dims:
             # scalar input: nothing to unstack, carry its coordinates over
-            result_ds = result_ds.assign_coords(input_ds.coords)
+            result_ds = result_ds.assign_coords(
+                {
+                    k: v.variable
+                    for k, v in input_ds.coords.items()
+                    if k not in result_ds.dims
+                }
+            )
         if "wavelength" in result_ds.coords:
             result_ds["wavelength"].attrs["units"] = "nm"
         result_ds["altitude"].attrs["units"] = "km"
+        symbolic = {
+            str(o.metadata.get("zout"))
+            for o in parsed_outputs
+            if o and isinstance(o.metadata.get("zout"), str)
+        }
+        if symbolic and not template_output.altitudes:
+            result_ds["altitude"].attrs["zout"] = " ".join(sorted(symbolic))
 
         # Add attributes (skip per-point fields: they describe only the
         # template point, not the batch)

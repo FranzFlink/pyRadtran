@@ -63,6 +63,7 @@ pyradtran.config.CloudParameters : Declarative cloud settings in YAML configs.
 """
 
 import logging
+import warnings
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -572,6 +573,17 @@ class CloudGenerator:
         return layers
 
 
+def _warn_ignored(include_zero_layers, altitude_resolution_km) -> None:
+    """Warn about the ignored legacy cloud-writer arguments."""
+    if include_zero_layers is not None or altitude_resolution_km is not None:
+        warnings.warn(
+            "include_zero_layers and altitude_resolution_km are ignored and "
+            "will be removed; cloud files use the exact layer boundaries",
+            DeprecationWarning,
+            stacklevel=3,
+        )
+
+
 def _write_cloud_file(cloud_layers, output_path, attr, label, filler_reff) -> Path:
     """Write the layers with ``attr > 0`` as an exact libRadtran 1D file.
 
@@ -633,8 +645,8 @@ class CloudFileWriter:
     def write_water_cloud_file(
         cloud_layers: List[CloudLayer],
         output_path: Union[str, Path],
-        include_zero_layers: bool = True,
-        altitude_resolution_km: float = 0.1,
+        include_zero_layers: Optional[bool] = None,
+        altitude_resolution_km: Optional[float] = None,
     ) -> Path:
         r"""Write a water-cloud ``.dat`` file for libRadtran.
 
@@ -650,10 +662,10 @@ class CloudFileWriter:
         output_path : str or pathlib.Path
             Destination file.  Parent directories are created; an
             existing file is overwritten.
-        include_zero_layers : bool, default ``True``
-            Ignored; accepted for backwards compatibility.
-        altitude_resolution_km : float, default ``0.1``
-            Ignored; accepted for backwards compatibility.
+        include_zero_layers, altitude_resolution_km : optional
+            Deprecated and ignored (the file is written at the exact
+            layer boundaries); passing either emits a
+            :class:`DeprecationWarning`.
 
         Returns
         -------
@@ -756,14 +768,15 @@ class CloudFileWriter:
         ...     config_path=cfg, params={"wc_file": f"1D {path}"}
         ... )
         """
+        _warn_ignored(include_zero_layers, altitude_resolution_km)
         return _write_cloud_file(cloud_layers, output_path, "lwc_g_m3", "LWC", 10.0)
 
     @staticmethod
     def write_ice_cloud_file(
         cloud_layers: List[CloudLayer],
         output_path: Union[str, Path],
-        include_zero_layers: bool = True,
-        altitude_resolution_km: float = 0.1,
+        include_zero_layers: Optional[bool] = None,
+        altitude_resolution_km: Optional[float] = None,
     ) -> Path:
         r"""Write an ice-cloud ``.dat`` file for libRadtran.
 
@@ -778,10 +791,10 @@ class CloudFileWriter:
         output_path : str or pathlib.Path
             Destination file.  Parent directories are created; an
             existing file is overwritten.
-        include_zero_layers : bool, default ``True``
-            Ignored; accepted for backwards compatibility.
-        altitude_resolution_km : float, default ``0.1``
-            Ignored; accepted for backwards compatibility.
+        include_zero_layers, altitude_resolution_km : optional
+            Deprecated and ignored (the file is written at the exact
+            layer boundaries); passing either emits a
+            :class:`DeprecationWarning`.
 
         Returns
         -------
@@ -835,6 +848,7 @@ class CloudFileWriter:
           0.000000   0.000000   30.000
         >>> tmp.cleanup()
         """
+        _warn_ignored(include_zero_layers, altitude_resolution_km)
         return _write_cloud_file(cloud_layers, output_path, "iwc_g_m3", "IWC", 30.0)
 
 
@@ -944,8 +958,10 @@ def generate_cloud_file_from_era5(
     }.get(str(cloud_type).lower())
     if write is None:
         raise ValueError(f"Unknown cloud type: {cloud_type}. Use 'wc' or 'ic'")
-    for legacy in ("include_zero_layers", "altitude_resolution_km"):
-        kwargs.pop(legacy, None)
+    _warn_ignored(
+        kwargs.pop("include_zero_layers", None),
+        kwargs.pop("altitude_resolution_km", None),
+    )
     cloud_layers = CloudGenerator.from_era5_dataset(
         era5_dataset, time=time, lat=lat, lon=lon, **kwargs
     )

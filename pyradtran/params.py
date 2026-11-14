@@ -1477,6 +1477,12 @@ class ParamResolver:
             if section is not None and hasattr(section, field_name):
                 setattr(section, field_name, value)
                 logger.info(f"Overriding config: {key} = {value}")
+                if section_name == "paths":
+                    # str -> Path, short names, validation, directories
+                    try:
+                        section.__post_init__()
+                    except ValueError as e:
+                        errors.append(str(e))
             else:
                 errors.append(_unknown_config_key_error(key, config))
         # Re-check the configuration: dotted keys above and attribute
@@ -1485,7 +1491,7 @@ class ParamResolver:
         if hasattr(defaults, "validate"):
             try:
                 defaults.validate()
-            except ValueError as e:
+            except (ValueError, TypeError) as e:
                 errors.append(str(e))
 
         # 2. Split literals vs Var refs.

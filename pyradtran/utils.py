@@ -42,6 +42,9 @@ from typing import List, Optional, Tuple
 logger = logging.getLogger(__name__)
 
 
+_FAR_WARNED: set = set()  # sondes already reported as far in time
+
+
 class RadiosondeFinder:
     r"""Locate the radiosonde file closest in time to a target datetime.
 
@@ -258,7 +261,8 @@ class RadiosondeFinder:
                 f"{target_dt:%Y-%m-%d %H:%M} UTC (max_hours={max_hours}); none used."
             )
             return None
-        if hours > 12:
+        if hours > 12 and path not in _FAR_WARNED:  # once per file and process
+            _FAR_WARNED.add(path)
             logger.warning(
                 f"Closest radiosonde {path.name} is {hours:.1f} h from "
                 f"{target_dt:%Y-%m-%d %H:%M} UTC."
