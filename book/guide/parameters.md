@@ -41,6 +41,33 @@ nothing — useful to switch a config-supplied flag off for one run).
 Numeric `zout` values are sorted and de-duplicated automatically:
 uvspec hard-errors on unsorted output altitudes.
 
+## Value forms at a glance
+
+| You write | Input file gets | Tag in `explain()` |
+|---|---|---|
+| `"albedo": 0.3` | `albedo 0.3` for every point | `params-literal` |
+| `"albedo": Var("a")` | `albedo <ds["a"] at that point>` | `dataset-var` |
+| `"mol_modify O3": 320.0` | `mol_modify O3 320.0 DU` (multi-word key) | `params-literal` |
+| `"aerosol_default": True` | `aerosol_default` (bare flag) | `params-literal` |
+| `"aerosol_default": False` | nothing — removes a config-supplied line | — |
+| `"wc_modify": ["tau550 set 12", "ssa scale 0.9"]` | one line per entry (repeatable option) | `params-literal` |
+| `"zout": [0, 2, 10]` | `zout 0 2 10` (space-joined, sorted) | `params-literal` |
+| `"wc_file": {"z": …, "lwc": …, "reff": …}` | `wc_file 1D <generated file>` at run time (`explain()` shows the dict) | `params-literal` |
+| `"my_option": Raw("x y")` | `my_option x y`, no validation | `unvalidated` |
+| `"simulation_defaults.sza": 30.0` | changes the config, not a line of its own | `config` |
+
+A handful of frequently used keys have curated units and ranges on top
+of the libRadtran schema — `albedo`, `sza`, `sur_temperature`, `zout`,
+`mol_modify O3` (DU), `mol_modify H2O` (mm), `umu`, `day_of_year`, … —
+the full table is in the {mod}`pyradtran.params` reference.
+
+```{note}
+Switch between solar and thermal with the config field
+(`"simulation_defaults.source": "thermal"`), not with the uvspec option
+`"source"`: only the config field also adjusts the dependent lines
+(solar spectrum, `sza`, `sur_temperature`).
+```
+
 ## Validated against *your* libRadtran
 
 libRadtran ships a machine-readable description of every option. On

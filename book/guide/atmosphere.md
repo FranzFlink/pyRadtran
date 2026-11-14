@@ -34,7 +34,33 @@ pyradtran.recommend_atmosphere(latitude=78.0, time="2022-03-15")
 ```
 
 Set it in your YAML config (`paths.atmosphere_profile: afglsw`) or per
-run via `params={"atmosphere_file": ...}`.
+run via `params={"atmosphere_file": "afglsw"}` — a short name or a full
+path.
+
+| Short name | Atmosphere | Use for |
+|---|---|---|
+| `afglus` | US standard 1976 | mid-latitude annual mean, generic studies |
+| `afglt` | tropical | 15° S – 15° N |
+| `afglms` / `afglmw` | mid-latitude summer / winter | 30–60° |
+| `afglss` / `afglsw` | sub-arctic summer / winter | poleward of 60° |
+
+## What goes into a profile file
+
+ERA5 gives specific humidity $q$ and geopotential $\Phi$ on pressure
+levels. pyRadtran writes pressure, temperature and the gas mixing ratios
+as a libRadtran `radiosonde` file; the conversions involved are
+
+$$
+z = \frac{\Phi}{g_0}, \qquad
+\rho_\mathrm{air} = \frac{p}{R_d\,T}, \qquad
+\mathrm{PWV} = \frac{1}{g_0\,\rho_w}\int_0^{p_s} q\,\mathrm{d}p
+$$
+
+with $g_0 = 9.80665$ m s⁻², $R_d = 287.058$ J kg⁻¹ K⁻¹. The last
+expression is handy for checking a profile against the `h2o_mm` value
+you would otherwise have set: for $q$ in kg kg⁻¹ and $p$ in Pa it gives
+the precipitable water in metres. Details and file format:
+{func}`~pyradtran.era5.write_atmosphere_file`.
 
 ## When to use which source
 

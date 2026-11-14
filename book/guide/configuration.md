@@ -59,3 +59,82 @@ ds.pyradtran.run(
 
 Both end up in the same generated input file;
 `ds.pyradtran.explain()` shows exactly which layer produced each line.
+
+## Field reference
+
+All fields of a simulation config, by section. Authoritative details:
+{class}`~pyradtran.config.SimulationDefaults`,
+{class}`~pyradtran.config.PathsConfig`,
+{class}`~pyradtran.config.ExecutionConfig`,
+{class}`~pyradtran.config.OutputConfig`.
+
+### `simulation_defaults`
+
+| Field | uvspec line it produces | Notes |
+|---|---|---|
+| `source` | `source solar <spectrum>` / `source thermal` | `solar` or `thermal` |
+| `rte_solver` | `rte_solver …` | `twostr` (fast, irradiances), `disort` (accurate, radiances, clouds) |
+| `mol_abs_param` | `mol_abs_param …` | `lowtran`, `reptran coarse\|medium\|fine`, `kato2`, `fu`, … |
+| `wavelength_nm` | `wavelength <min> <max>` | nm; `[min, max]` |
+| `integrate_wavelength` | `output_process integrate` | `true` → one broadband value, no `wavelength` dimension |
+| `output_columns` | `output_user …` | see {doc}`outputs`; `lambda` / `zout` are added automatically |
+| `output_altitudes_km` | `zout …` | km; sorted and de-duplicated; overridden by an `altitude` coordinate in the dataset |
+| `albedo_value` | `albedo …` | 0–1; overridden by `params["albedo"]` |
+| `surface_temperature_k` | `sur_temperature …` | K; thermal source only |
+| `ozone_du` | `mol_modify O3 … DU` | skipped when the atmosphere profile brings its own ozone |
+| `h2o_mm` | `mol_modify H2O … MM` | precipitable water; skipped when a radiosonde/ERA5 profile provides humidity |
+| `h2o_source` | — | `fixed` or `radiosonde` |
+| `sza` | `sza …` | degrees; computed from time and location when unset |
+| `viewing_geometry` | `umu 1.0` | `nadir` |
+| `clouds` | `wc_file` / `ic_file` | one static cloud layer (or cloud files) for every point; for anything per-point use the run-time mechanisms in {doc}`clouds` |
+
+### `paths`
+
+| Field | Meaning |
+|---|---|
+| `libradtran_bin` | the `uvspec` executable |
+| `libradtran_data` | libRadtran's `data/` directory (`data_files_path`) |
+| `atmosphere_profile` | background atmosphere: short name (`afglus`, `afglss`, …) or path |
+| `solar_spectrum` | extraterrestrial spectrum: short name (`NewGuey2003`, `kurudz_1.0nm`, …) or path |
+| `working_dir` | where `.inp` / `.out` files and failure logs go (default `./pyradtran_work`) |
+| `output_dir` | where NetCDF results go (default `./pyradtran_output`) |
+| `radiosonde_base` | root directory of local radiosonde files |
+
+### `execution`
+
+| Field | Meaning |
+|---|---|
+| `max_workers` | parallel uvspec processes |
+| `timeout_seconds` | per-point time limit (default 300) |
+| `cleanup_temp_files` | delete `.inp`/`.out` of successful points (failed points are always kept) |
+| `debug_mode` | verbose logging |
+
+### `output`
+
+| Field | Meaning |
+|---|---|
+| `filename_prefix`, `filename_suffix` | auto-generated name: `<prefix>_<timestamp><suffix>` |
+| `netcdf_encoding` | compression settings passed to xarray |
+
+## Choosing solver and spectral resolution
+
+| Goal | `rte_solver` | `mol_abs_param` |
+|---|---|---|
+| quick look, clear-sky irradiances | `twostr` | `lowtran` |
+| broadband fluxes, clouds | `disort` | `reptran coarse` (or `kato2` solar / `fu` thermal) |
+| narrow-band instrument channels | `disort` | `reptran medium` / `fine` |
+| radiances (`uu`), brightness temperatures | `disort` | `reptran fine` |
+
+```{warning}
+`twostr` is a quick-look solver. With libRadtran 2.0.6 its upward
+irradiance at a reflecting surface comes out as
+$E^\uparrow = \tfrac{2}{\sqrt{3}}\,\alpha\,E_\mathrm{glo}$ — about
+15 % above the Lambertian value $\alpha\,E_\mathrm{glo}$ that `disort`
+and `rodents` return (a plain uvspec property, independent of
+pyRadtran). Use `disort` (or `rodents` for a fast two-stream
+alternative) whenever `eup`, `enet` or the albedo matter.
+```
+
+`pyradtran.describe("mol_abs_param")` and
+`pyradtran.describe("rte_solver")` print the full libRadtran
+documentation for the version you have installed.

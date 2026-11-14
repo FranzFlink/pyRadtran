@@ -61,8 +61,38 @@ sphinx:
     - sphinx.ext.autosummary
     - sphinx.ext.napoleon
     - sphinx.ext.viewcode
+    - sphinx.ext.intersphinx
+    - matplotlib.sphinxext.plot_directive
   config:
     autosummary_generate: true
+    add_module_names: false
+    autodoc_typehints: none          # types live in the numpydoc Parameters sections
+    autodoc_member_order: bysource
+    napoleon_use_rtype: false
+    napoleon_use_admonition_for_examples: false
+    intersphinx_mapping:
+      python: ["https://docs.python.org/3", null]
+      numpy: ["https://numpy.org/doc/stable", null]
+      pandas: ["https://pandas.pydata.org/docs", null]
+      xarray: ["https://docs.xarray.dev/en/stable", null]
+      matplotlib: ["https://matplotlib.org/stable", null]
+    # `.. plot::` blocks in docstrings: pure numpy/matplotlib, no uvspec needed
+    plot_include_source: true
+    plot_html_show_source_link: false
+    plot_html_show_formats: false
+    plot_formats: [["png", 160]]
+    plot_pre_code: |
+      import numpy as np
+      import xarray as xr
+      import matplotlib.pyplot as plt
+    plot_rcparams:
+      figure.figsize: [6.4, 3.8]
+      figure.autolayout: true
+      axes.grid: true
+      grid.alpha: 0.3
+      axes.spines.top: false
+      axes.spines.right: false
+      font.size: 10
     # autosummary stub pages live outside the external TOC by design
     suppress_warnings: ["etoc.toctree"]
     napoleon_google_docstring: true

@@ -2,6 +2,53 @@
 
 ## Version 0.2.0 (Upcoming)
 
+### Documentation
+- API reference rebuilt: every public function and class has a numpydoc
+  docstring with units, formulas (LaTeX), runnable examples (checked as
+  doctests) and — where it helps — a figure; grouped by task in
+  {doc}`api/index`
+- New guide pages {doc}`guide/concepts` and {doc}`guide/clouds`;
+  {doc}`guide/outputs` now defines every output column and its units;
+  a {doc}`cookbook <examples/index>` of short recipes
+- Notebooks grouped by topic (tutorials / case studies) with landing pages
+
+### Fixes
+- **Solar zenith angle**: declination and equation of time from Spencer
+  (1971); agrees with the NOAA solar calculator to ~0.2° (was up to 4°).
+  Timezone-aware timestamps are converted to UTC. Computed `sza` values
+  — and with them irradiances — shift slightly
+- **`altitude` coordinate** carries the simulated level in km as float
+  (was a placeholder `0` for single-level runs). Per-point levels are
+  returned in a new `zout` variable
+- **Clouds from the config** (`clouds.cloud_source: parametric`) work:
+  they are passed as a generated `wc_file` / `ic_file` instead of the
+  invalid `wc_layer` option
+- **`CloudFileWriter`** writes exact layer boundaries (the fixed grid
+  shifted cloud base/top by up to one step) with six decimals;
+  `altitude_resolution_km` / `include_zero_layers` are accepted and
+  ignored
+- **`CloudGenerator.from_era5_dataset`** uses the same conversion as
+  `era5_clouds=True`: correct layer boundaries and air density, CDS and
+  ARCO naming; defaults now 1e-4 g m⁻³ thresholds and 20 µm ice radius;
+  a missing position or temperature raises instead of guessing
+- Atmosphere / solar-spectrum **short names** (`afglss`, `kurudz_1.0nm`)
+  work everywhere — `params`, dotted config keys, attribute assignment
+- A sweep dimension named like an output column (`sza`, `albedo`) no
+  longer hides the column: it is returned as `<name>_out`
+- `explain()` no longer modifies the caller's config and reflects the
+  `altitude` layout; scalar (0-d) datasets run
+- Parameters: all `rte_solver` values of the local libRadtran are
+  accepted; unknown dotted config keys and booleans for numeric options
+  raise `ValidationError`; `"320 DU"` is not given a second unit
+- Configuration: values are re-validated on every run; configuration
+  problems raise `ConfigurationError` (still a `FileNotFoundError` /
+  `ValueError`); `save_master_config` merges into an existing file
+- Package defaults are shipped inside the package
+  (`pyradtran/defaults.yaml`) — a pip-installed wheel previously had none
+- `ValidationError`, `RadiosondeError` and
+  `RadiosondeAtmosphereGenerator` are importable from `pyradtran`
+
+
 ### ERA5 Integration (`pyradtran.era5`)
 - `era5_atmosphere=` accepts raw ERA5 datasets as-is: CDS NetCDF short
   names and ARCO-ERA5 Zarr long names (e.g. straight from gcsfs) are
