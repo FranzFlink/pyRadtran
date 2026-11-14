@@ -1,8 +1,12 @@
 execution:
   cleanup_temp_files: false
   debug_mode: false
-  max_workers: 24
+  max_workers: 8
   timeout_seconds: 120
+
+paths:
+  # Subarctic winter profile: closer to a March Arctic column than US standard.
+  atmosphere_profile: afglsw
 
 simulation_defaults:
   integrate_wavelength: true
@@ -12,7 +16,7 @@ simulation_defaults:
     - lambda
     - eup
     - edn
-    - edir
+    - uu
   ozone_du: 300.0
   rte_solver: disort
   source: thermal

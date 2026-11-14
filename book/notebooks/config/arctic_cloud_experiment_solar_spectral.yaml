@@ -1,33 +1,25 @@
-execution:
-  cleanup_temp_files: false
-  debug_mode: false
-  max_workers: 24
-  timeout_seconds: 3600
-output:
-  filename_prefix: arctic_cloud_experiment_solar
-  filename_suffix: _results.nc
-  netcdf_encoding:
-    complevel: 5
-    zlib: true
+# Spectral solar irradiance at the surface (mW m-2 nm-1), for spectral surface
+# albedo under clouds. Paths come from ~/.pyradtran/config.yaml (master config).
+
+paths:
+  atmosphere_profile: afglss     # subarctic summer
+
 simulation_defaults:
-  h2o_mm: 2.0
-  h2o_source: fixed
-  integrate_wavelength: false
-  mol_abs_param: reptran fine
-  output_columns:
-  - zout
-  - lambda
-  - sza
-  - edir
-  - eglo
-  - edn
-  - eup
-  - enet
-  - albedo
-  ozone_du: 300.0
-  parameter_overrides: {}
-  rte_solver: disort
   source: solar
-  wavelength_nm:
-  - 300
-  - 3000
+  rte_solver: disort
+  mol_abs_param: reptran coarse
+  wavelength_nm: [300, 2500]
+  integrate_wavelength: false
+  output_columns: [edir, edn, eup]
+  output_altitudes_km: [0.0]
+  h2o_mm: null                   # keep the humidity of the profile
+  ozone_du: null                 # keep the ozone of the profile
+
+execution:
+  max_workers: 8
+  timeout_seconds: 300
+  cleanup_temp_files: true
+
+output:
+  filename_prefix: arctic_cloud_experiment_solar_spectral
+  filename_suffix: .nc

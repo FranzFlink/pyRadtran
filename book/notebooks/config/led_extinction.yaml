@@ -41,8 +41,6 @@ simulation_defaults:
   output_altitudes_km:
   - 0.0
   output_columns:
-  - zout
-  - lambda
   - edir
   ozone_du: 300.0
   parameter_overrides: {}

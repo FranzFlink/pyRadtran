@@ -1,7 +1,7 @@
 execution:
   cleanup_temp_files: false
   debug_mode: false
-  max_workers: 32
+  max_workers: 8
   timeout_seconds: 3600
 output:
   filename_prefix: pyradtran_sim
@@ -14,7 +14,7 @@ paths:
   libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
   libradtran_data: /opt/libRadtran-2.0.6/data
   output_dir: pyradtran_output
-  radiosonde_base: /home/josh/pyRadtran/book/notebooks/radiosonde
+  radiosonde_base: radiosonde
   solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
   working_dir: pyradtran_work
 simulation_defaults:

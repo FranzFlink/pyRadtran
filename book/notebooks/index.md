@@ -10,7 +10,7 @@ the {doc}`cookbook </examples/index>`.
 | Group | Notebooks |
 |---|---|
 | {doc}`Basics </tutorials/basics>` | surface albedo, solar spectra, broadband thermal, brightness temperature |
-| {doc}`Atmospheres </tutorials/atmosphere>` | ERA5 profiles, IGRA2 radiosondes |
+| {doc}`Atmospheres </tutorials/atmosphere>` | ERA5 profiles, IGRA2 radiosondes, lapse-rate feedback |
 | {doc}`Clouds </tutorials/clouds>` | water clouds, mixed-phase clouds |
 | {doc}`Instruments & special geometries </tutorials/instruments>` | horizontal LED extinction |
 

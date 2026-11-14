@@ -1,24 +1,58 @@
-# Radiosonde-driven thermal simulation (VELOX 10.74 µm channel)
-# Paths are loaded from ~/.pyradtran/config.yaml (master config)
-
-simulation_defaults:
-  rte_solver: disort
-  mol_abs_param: reptran medium
-  source: thermal
-  wavelength_nm: [10350, 11130]
-  integrate_wavelength: true
-  h2o_source: radiosonde
-  albedo_value: 0.3
-  surface_temperature_k: 273.15
-  ozone_du: 300.0
-  output_altitudes_km: [0]
-  output_columns: [zout, lambda, eup, edn, edir, eglo, enet]
-
 execution:
   cleanup_temp_files: false
-  max_workers: 16
-  timeout_seconds: 60
-
+  debug_mode: false
+  max_workers: 8
+  timeout_seconds: 120
 output:
   filename_prefix: radiosonde_thermal
-  filename_suffix: .nc
+  filename_suffix: _results.nc
+  netcdf_encoding:
+    complevel: 5
+    zlib: true
+paths:
+  atmosphere_profile: /opt/libRadtran-2.0.6/data/atmmod/afglus.dat
+  libradtran_bin: /opt/libRadtran-2.0.6/bin/uvspec
+  libradtran_data: /opt/libRadtran-2.0.6/data
+  output_dir: pyradtran_output
+  radiosonde_base: radiosonde
+  solar_spectrum: /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat
+  working_dir: pyradtran_work
+simulation_defaults:
+  albedo_value: 0.01
+  clouds:
+    cloud_fraction: 1.0
+    cloud_source: parametric
+    cloud_type: wc
+    effective_radius_um: 10.0
+    enabled: false
+    era5_lat: null
+    era5_lon: null
+    era5_time: null
+    ic_file: null
+    ice_content_g_m3: 0.0
+    layer_bottom_km: 1.0
+    layer_top_km: 2.0
+    water_content_g_m3: 0.1
+    wc_file: null
+  h2o_mm: 2.0
+  h2o_source: radiosonde
+  integrate_wavelength: true
+  mol_abs_param: reptran medium
+  output_altitudes_km:
+  - 0.0
+  output_columns:
+  - zout
+  - lambda
+  - eup
+  - edn
+  - uu
+  ozone_du: 300.0
+  parameter_overrides: {}
+  rte_solver: disort
+  source: thermal
+  surface_temperature_k: 273.15
+  sza: null
+  viewing_geometry: nadir
+  wavelength_nm:
+  - 10350
+  - 11130

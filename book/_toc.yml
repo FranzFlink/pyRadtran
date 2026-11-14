@@ -47,6 +47,8 @@ parts:
         title: "ERA5 atmosphere"
       - file: notebooks/get_radiosonde
         title: "Radiosondes (IGRA2)"
+      - file: notebooks/lapse_rate_feedback
+        title: "Lapse-rate feedback"
     - file: tutorials/clouds
       sections:
       - file: notebooks/water_cloud
