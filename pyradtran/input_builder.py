@@ -886,9 +886,12 @@ class InputFileBuilder:
             if ln.keyword == "radiosonde" and ln.provenance != PROV_CONFIG:
                 gases = set(ln.text.split()[2::2])
                 lines = [
-                    x for x in lines
-                    if not (x.provenance == PROV_CONFIG
-                            and x.keyword in {f"mol_modify {g}" for g in gases})
+                    x
+                    for x in lines
+                    if not (
+                        x.provenance == PROV_CONFIG
+                        and x.keyword in {f"mol_modify {g}" for g in gases}
+                    )
                 ]
 
         lines.append(InputLine("quiet", "quiet", PROV_CONFIG))

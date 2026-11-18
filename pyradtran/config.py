@@ -810,7 +810,9 @@ class SimulationDefaults:
     surface_temperature_k: Optional[float] = None  # Surface temperature in Kelvin
 
     # Atmospheric composition (commonly used)
-    ozone_du: Optional[float] = None  # Total ozone column in Dobson Units; None keeps the profile
+    ozone_du: Optional[float] = (
+        None  # Total ozone column in Dobson Units; None keeps the profile
+    )
     h2o_mm: Optional[float] = None  # Precipitable water in mm; None keeps the profile
     h2o_source: str = "fixed"  # H2O source: 'fixed' or 'radiosonde'
 
