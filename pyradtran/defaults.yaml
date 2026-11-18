@@ -31,7 +31,7 @@ simulation_defaults:
     layer_top_km: 2.0
     water_content_g_m3: 0.1
     wc_file: null
-  h2o_mm: 2.0
+  h2o_mm: null
   h2o_source: fixed
   integrate_wavelength: false
   mol_abs_param: lowtran per_nm
@@ -42,7 +42,7 @@ simulation_defaults:
   - eglo
   - eup
   - albedo
-  ozone_du: 300.0
+  ozone_du: null
   rte_solver: twostr
   source: solar
   surface_temperature_k: 273.15

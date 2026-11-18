@@ -55,7 +55,7 @@ Data variables:
     status      (time) int64 24B 0 0 0
 Attributes:
     generated_by:              pyradtran
-    pyradtran_version:         0.2.0
+    pyradtran_version:         0.3.0
     pyradtran_params:          {"albedo": "Var(name='albedo')"}
     ...
 >>> result.eup.sel(wavelength=550).squeeze().values.round(1)  # doctest: +SKIP
@@ -158,7 +158,7 @@ pyradtran.config : Configuration system.
 pyradtran.params : Parameter registry and ``Var`` / ``Raw``.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 import logging
 

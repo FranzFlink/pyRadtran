@@ -57,8 +57,8 @@ so a file lists only what differs from the lower layers:
       output_altitudes_km: [0.0, 10.0]   # zout 0.0000 10.0000   (km)
       albedo_value: 0.85                 # albedo 0.85           (0-1)
       surface_temperature_k: 273.15      # sur_temperature (thermal only, K)
-      ozone_du: 300.0                    # mol_modify O3 300.0 DU
-      h2o_mm: 2.0                        # mol_modify H2O 2.0 MM
+      ozone_du: 300.0                    # mol_modify O3 300.0 DU   (default null: profile column)
+      h2o_mm: 2.0                        # mol_modify H2O 2.0 MM    (default null: profile column)
       sza: null                          # null -> computed from time/lat/lon
       parameter_overrides:               # any other uvspec option, verbatim
         aerosol_default: true            # aerosol_default
@@ -644,16 +644,16 @@ class SimulationDefaults:
         Surface temperature in K, written as ``sur_temperature <value>``
         for ``source="thermal"`` only.  With *None*, ``uvspec`` takes the
         temperature of the lowest atmospheric level.
-    ozone_du : float, optional, default ``300.0``
+    ozone_du : float, optional, default *None*
         Total ozone column in Dobson units, written as
         ``mol_modify O3 <value> DU``.  *None* keeps the column of the
-        atmosphere profile.  Skipped when an ERA5 profile already
-        provides ozone.
-    h2o_mm : float, optional, default ``2.0``
+        atmosphere profile.  Skipped when a radiosonde or ERA5 profile
+        (from the configuration or from ``params``) provides ozone.
+    h2o_mm : float, optional, default *None*
         Precipitable water in mm (kg m⁻²), written as
         ``mol_modify H2O <value> MM``.  *None* keeps the column of the
         atmosphere profile.  Skipped when a radiosonde or ERA5 profile
-        provides the humidity.
+        (from the configuration or from ``params``) provides the humidity.
     h2o_source : {"fixed", "radiosonde"}, default ``"fixed"``
         ``"radiosonde"`` looks up the local sounding closest in time below
         ``paths.radiosonde_base`` (see
@@ -810,8 +810,8 @@ class SimulationDefaults:
     surface_temperature_k: Optional[float] = None  # Surface temperature in Kelvin
 
     # Atmospheric composition (commonly used)
-    ozone_du: Optional[float] = 300.0  # Total ozone column in Dobson Units
-    h2o_mm: Optional[float] = 2.0  # Precipitable water in mm
+    ozone_du: Optional[float] = None  # Total ozone column in Dobson Units; None keeps the profile
+    h2o_mm: Optional[float] = None  # Precipitable water in mm; None keeps the profile
     h2o_source: str = "fixed"  # H2O source: 'fixed' or 'radiosonde'
 
     # Cloud configuration

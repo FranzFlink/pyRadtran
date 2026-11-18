@@ -622,9 +622,11 @@ class InputFileBuilder:
            ``atmosphere_file``;
         2. ``radiosonde`` (ERA5 or radiosonde profile, if any);
         3. ``mol_modify O3 ... DU`` / ``mol_modify H2O ... MM`` from
-           ``ozone_du`` / ``h2o_mm``, skipped for a gas whose profile
-           comes from the radiosonde/ERA5 file, so a measured column is
-           never rescaled by the config scalar;
+           ``ozone_du`` / ``h2o_mm`` (both *None* by default), skipped
+           for a gas whose profile comes from the radiosonde/ERA5 file,
+           whether that file is set in the configuration or passed as
+           ``radiosonde`` in *resolved*, so a measured column is never
+           rescaled by the config scalar;
         4. ``source``; for solar runs ``sza`` (config value, else
            :func:`calculate_solar_zenith_angle`) and ``day_of_year``; for
            thermal runs ``sur_temperature`` if configured;
@@ -876,6 +878,18 @@ class InputFileBuilder:
                             "brdf_rpv_library", "brdf_rpv_library IGBP", provenance
                         )
                     )
+
+        # A radiosonde given through params brings its own gas columns, as
+        # one from the config does: drop the config mol_modify scaling of
+        # those gases (explicit mol_modify params are kept).
+        for ln in lines:
+            if ln.keyword == "radiosonde" and ln.provenance != PROV_CONFIG:
+                gases = set(ln.text.split()[2::2])
+                lines = [
+                    x for x in lines
+                    if not (x.provenance == PROV_CONFIG
+                            and x.keyword in {f"mol_modify {g}" for g in gases})
+                ]
 
         lines.append(InputLine("quiet", "quiet", PROV_CONFIG))
         return lines
