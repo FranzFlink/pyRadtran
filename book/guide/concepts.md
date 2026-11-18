@@ -143,7 +143,6 @@ rte_solver disort                                                          # con
 mol_abs_param reptran coarse                                               # config
 data_files_path /opt/libRadtran-2.0.6/data                                 # config
 atmosphere_file /opt/libRadtran-2.0.6/data/atmmod/afglus.dat               # config
-mol_modify H2O 2.0 MM                                                      # config
 source solar /opt/libRadtran-2.0.6/data/solar_flux/NewGuey2003.dat per_nm  # config
 sza 55.71                                                                  # config
 day_of_year 172                                                            # config

@@ -83,6 +83,36 @@ class TestOverrideReplacement:
         )
         assert "mol_modify H2O 2.0 MM" in text
 
+    def test_params_radiosonde_suppresses_config_scaling(self, minimal_config):
+        # a radiosonde passed through params keeps its own H2O and O3 columns
+        minimal_config.simulation_defaults.ozone_du = 300.0
+        minimal_config.simulation_defaults.h2o_mm = 2.0
+        text, _ = build_text(
+            minimal_config,
+            resolved={"radiosonde": ("/x/profile.dat H2O MMR O3 MMR", PROV_LITERAL)},
+        )
+        assert "radiosonde /x/profile.dat H2O MMR O3 MMR" in text
+        assert "mol_modify" not in text
+
+    def test_params_radiosonde_keeps_other_gas_scaling(self, minimal_config):
+        minimal_config.simulation_defaults.ozone_du = 300.0
+        minimal_config.simulation_defaults.h2o_mm = 2.0
+        text, _ = build_text(
+            minimal_config, resolved={"radiosonde": ("/x/p.dat H2O RH", PROV_LITERAL)}
+        )
+        assert "mol_modify H2O" not in text
+        assert "mol_modify O3 300.0 DU" in text
+
+    def test_params_radiosonde_keeps_explicit_mol_modify(self, minimal_config):
+        text, _ = build_text(
+            minimal_config,
+            resolved={
+                "radiosonde": ("/x/p.dat H2O MMR", PROV_LITERAL),
+                "mol_modify H2O": (5.0, PROV_LITERAL),
+            },
+        )
+        assert "mol_modify H2O 5.0 MM" in text
+
     def test_brdf_type_disables_albedo(self, minimal_config):
         text, _ = build_text(
             minimal_config, resolved={"brdf_rpv_type": (7, PROV_DATASET)}

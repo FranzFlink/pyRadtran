@@ -136,3 +136,15 @@ def test_wavelength_nm_bad_mapping_raises():
         SimulationConfig._dict_to_dataclass(
             {"wavelength_nm": {"lo": 400, "hi": 770}}, SimulationDefaults
         )
+
+
+def test_gas_scalings_off_by_default():
+    # no silent rescaling of the water vapour and ozone columns of the profile
+    import yaml
+
+    from pyradtran.config import _DEFAULT_CONFIG_PATH, SimulationDefaults
+
+    sd = yaml.safe_load(open(_DEFAULT_CONFIG_PATH))["simulation_defaults"]
+    for key in ("h2o_mm", "ozone_du"):
+        assert sd[key] is None
+        assert SimulationDefaults.__dataclass_fields__[key].default is None

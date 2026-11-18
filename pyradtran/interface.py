@@ -1389,8 +1389,8 @@ class PyRadtranAccessor:
         Attributes:
             generated_by:              pyradtran
             generation_date:           2026-11-14T02:32:06.154631
-            pyradtran_version:         0.2.0
-            history:                   2026-11-14T02:32:06: pyradtran 0.2.0 ds.pyradt...
+            pyradtran_version:         0.3.0
+            history:                   2026-11-14T02:32:06: pyradtran 0.3.0 ds.pyradt...
             pyradtran_params:          {}
             pyradtran_libradtran_bin:  /opt/libRadtran-2.0.6/bin/uvspec
             pyradtran_config:          paths: {libradtran_bin: /opt/libRadtran-2.0.6/...

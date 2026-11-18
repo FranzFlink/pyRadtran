@@ -80,8 +80,8 @@ All fields of a simulation config, by section. Details:
 | `output_altitudes_km` | `zout …` | km; sorted and de-duplicated; overridden by an `altitude` coordinate in the dataset |
 | `albedo_value` | `albedo …` | 0–1; overridden by `params["albedo"]` |
 | `surface_temperature_k` | `sur_temperature …` | K; thermal source only |
-| `ozone_du` | `mol_modify O3 … DU` | skipped when the atmosphere profile brings its own ozone |
-| `h2o_mm` | `mol_modify H2O … MM` | precipitable water; skipped when a radiosonde/ERA5 profile provides humidity |
+| `ozone_du` | `mol_modify O3 … DU` | default `null` (profile column); skipped when the atmosphere profile brings its own ozone |
+| `h2o_mm` | `mol_modify H2O … MM` | precipitable water; default `null` (profile column); skipped when a radiosonde/ERA5 profile provides humidity, also one passed through `params` |
 | `h2o_source` | — | `fixed` or `radiosonde` |
 | `sza` | `sza …` | degrees; computed from time and location when unset |
 | `viewing_geometry` | `umu 1.0` | `nadir` |

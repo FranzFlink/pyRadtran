@@ -314,7 +314,7 @@ class TestPublicAPI:
         assert pyradtran.Var is Var
         assert callable(pyradtran.convolve_channels)
         assert callable(pyradtran.brightness_temperature)
-        assert pyradtran.__version__ == "0.2.0"
+        assert pyradtran.__version__ == "0.3.0"
 
 
 # ---------------------------------------------------------------------------

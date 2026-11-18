@@ -7,7 +7,7 @@ type: software
 authors:
   - family-names: Müller
     given-names: Joshua Jeremias
-version: 0.2.0
+version: 0.3.0
 license: MIT
 repository-code: "https://github.com/FranzFlink/pyRadtran"
 url: "https://franzflink.github.io/pyRadtran/"

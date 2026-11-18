@@ -10,7 +10,8 @@ trace gases. Three sources combine:
    (and optionally O3) column from an ERA5 dataset or an IGRA2
    radiosonde. Overlays the background.
 3. **Scalar column scalings** (`ozone_du`, `h2o_mm` /
-   `mol_modify …`): rescale a gas column to a total value.
+   `mol_modify …`): rescale a gas column to a total value. Both are
+   `null` by default, so the columns of the profiles are kept.
 
 ## How the layers combine
 
